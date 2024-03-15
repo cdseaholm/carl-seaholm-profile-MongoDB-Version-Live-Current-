@@ -4,15 +4,15 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-start-rgb: 255, 254, 201;
+  --background-end-rgb: 255, 254, 201;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 38, 38, 38;
+    --background-start-rgb: 255, 254, 201;
+    --background-end-rgb: 255, 254, 201;
   }
 }
 
@@ -30,4 +30,9 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.scale-150 {
+  transition: transform 0.3s;
+  transform: scale(1.5);
 }
