@@ -12,12 +12,9 @@ const HamburgerMenu = () => {
   };
 
   return (
-    <nav className="relative flex justify-center flex-wrap p-3 space-x-4">
-        <div className='absolute left-5 '>
-            Carl Seaholm
-        </div>
+    <nav className="flex justify-center">
       <div onClick={() => setMenuState(!menuState)}>Menu</div>
-      <div className={`absolute w-30 top-10 border-1 border-slate-700 ${menuState ? 'block' : 'hidden'}`} style={{background: 'white'}}>
+      <div className={`absolute w-30 top-10 border-1 border-slate-700 bg-black ${menuState ? 'block' : 'hidden'}`}>
       {menuState && 
             [
                 ["Home", "/"],
@@ -26,7 +23,7 @@ const HamburgerMenu = () => {
                 ["Services", "/services"],
             ].map(([name, route], index) => (
                 <div key={index} className="hover:scale-125">
-                    <Link href={route} onClick={closeMenu} className={`px-10 rounded-lg px-3 py-2 text-slate-700 font-medium hover:text-slate-900 ${pathname === route ? "underline" : ""}`}>
+                    <Link href={route} className={`px-10 rounded-lg px-3 py-2 text-slate-200 font-medium hover:text-slate-900 ${pathname === route ? "underline" : ""}`}>
                             {name}
                     </Link>
                 </div>
