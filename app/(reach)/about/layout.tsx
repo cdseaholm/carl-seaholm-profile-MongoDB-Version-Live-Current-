@@ -5,7 +5,7 @@ export const metadata = {
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="bg-teal-500">
+        <div>
         {children}
         </div>
     );
