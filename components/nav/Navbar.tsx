@@ -3,6 +3,12 @@
 import { useState, useCallback, useEffect } from 'react';
 import HamburgerMenu from './HamburgerMenu';
 import FullMenu from './FullMenu';
+import Image from 'next/image';
+
+const openInNewTab = (url: string) => {
+  const win = window.open(url, '_blank');
+  win?.focus();
+};
 
 const useMediaQuery = (width: number) => {
     const [targetReached, setTargetReached] = useState(false);
@@ -41,7 +47,15 @@ const useMediaQuery = (width: number) => {
 const NavBar = () => {
     const isBreakpoint = useMediaQuery(768);
     return (
-        <div>
+        <div className='justify-between flex p-3 space-x-4'>
+        <div className='pr-5'>
+            Carl Seaholm
+        </div>
+                <div>
+                    <FullMenu/>
+                </div>
+        {/*
+        
             {isBreakpoint ? (
                 <div>
                     <HamburgerMenu />
@@ -51,6 +65,25 @@ const NavBar = () => {
                     <FullMenu/>
                 </div>
             )}
+          
+          <Image
+            rel="icon"
+            height={10}
+            width={10}
+            src="/images/githubicon.png"
+            className='w-10 h-10 full-rounded'
+            alt="Github Icon"
+          />
+          */}
+          <div className='flex flex-row items-start'>
+            <p className='cursor-pointer pr-2 text-1xl font-bold' onClick={() => openInNewTab(`http://www.github.com/cdseaholm`)}>
+              Github
+            </p>
+            <p>|</p>
+            <p className='cursor-pointer pl-2 text-1x1 font-bold' onClick={() => openInNewTab(`https://www.linkedin.com/in/carlseaholm/`)}>
+              LinkedIn
+            </p>
+          </div>
         </div>
     )
 }

@@ -7,7 +7,7 @@ const FullMenu = () => {
     const pathname = usePathname();
 
     return (
-        <nav className="flex justify-center flex-wrap p-3 space-x-4">
+        <nav className="flex justify-center">
             {[
                 ["Home", "/"],
                 ["Blog", "/blog"],
