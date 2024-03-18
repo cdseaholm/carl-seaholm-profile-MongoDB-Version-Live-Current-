@@ -7,6 +7,7 @@ const NavButton = () => {
     return (
         <button
             type="button"
+            className='cursor-pointer'
             onClick={()=> router.push('/')}>Back to Home
         </button>
     )

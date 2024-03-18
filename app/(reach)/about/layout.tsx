@@ -5,7 +5,7 @@ export const metadata = {
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div>
+        <div className="childFirst min-w-screen min-h-screen my-10 mx-20">
         {children}
         </div>
     );
