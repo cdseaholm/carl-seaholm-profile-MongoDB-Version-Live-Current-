@@ -14,7 +14,7 @@ const FullMenu = () => {
                 ["Projects", "/projects"],
                 ["Services", "/services"],
             ].map(([name, route], index) => (
-                <div key={index} className="hover:scale-125">
+                <div key={index} className="hover:scale-125 text-lg">
                     <Link href={route} className={`px-10 rounded-lg px-3 py-2 text-slate-700 font-medium hover:text-slate-900 ${pathname === route ? "underline" : ""}`}>
                             {name}
                     </Link>

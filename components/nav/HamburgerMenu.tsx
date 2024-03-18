@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -14,7 +14,8 @@ const HamburgerMenu = () => {
   return (
     <nav className="flex justify-center">
       <div onClick={() => setMenuState(!menuState)}>Menu</div>
-      <div className={`absolute w-30 top-10 border-1 border-slate-700 bg-black ${menuState ? 'block' : 'hidden'}`}>
+      <div className={`absolute
+      m-5 w-30 space-y-2 top-10 border-1 border-slate-700 bg-transparent backdrop-blur-md ${menuState ? 'block' : 'hidden'} ${menuState ? 'cursor-pointer' : ''} z-10`}>
       {menuState && 
             [
                 ["Home", "/"],
@@ -22,8 +23,8 @@ const HamburgerMenu = () => {
                 ["Projects", "/projects"],
                 ["Services", "/services"],
             ].map(([name, route], index) => (
-                <div key={index} className="hover:scale-125">
-                    <Link href={route} className={`px-10 rounded-lg px-3 py-2 text-slate-200 font-medium hover:text-slate-900 ${pathname === route ? "underline" : ""}`}>
+                <div key={index} className="px-2 py-1 text-xl cursor-pointer">
+                    <Link onClick={closeMenu} href={route} className={`px-10 rounded-lg px-3 py-5 text-slate-900 font-small hover:text-slate-900 hover:scale-125 ${pathname === route ? "underline" : ""}`}>
                             {name}
                     </Link>
                 </div>

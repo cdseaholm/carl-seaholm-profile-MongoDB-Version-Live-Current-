@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SpeedInsights/>
         <Providers>
           <Navbar />
-          <main className="min-h-screen backdrop-opacity-100">
+          <main className="min-h-screen">
           {children}
           </main>
           <FooterNavBar />
