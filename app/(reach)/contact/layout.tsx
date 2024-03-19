@@ -5,7 +5,7 @@ export const metadata = {
 
 export default function ContactLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="childFirst min-w-screen min-h-screen mt-10 mx-20">
+        <div className="childFirst min-w-screen min-h-screen mt-10 mx-10">
         {children}
         </div>
     );

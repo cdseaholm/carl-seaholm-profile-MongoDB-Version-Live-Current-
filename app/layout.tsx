@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <Navbar />
           <main className="min-h-screen">
-          {children}
+            {children}
           </main>
           <FooterNavBar />
         </Providers>

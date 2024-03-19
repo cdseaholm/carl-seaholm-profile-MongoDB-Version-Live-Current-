@@ -1,81 +1,34 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react';
-import HamburgerMenu from './HamburgerMenu';
-import FullMenu from './FullMenu';
 import { SocialIcon } from 'react-social-icons';
+import openInNewTab from '../listeners/OpenInNewTab';
+import SidenavPage from './SideNav';
+import useMediaQuery from '../listeners/WidthSettings';
+import { usePathname } from 'next/navigation';
 
-const iconStyle = {
-  height: 25,
-  width: 25,
-  margin: 5,
-  alignContent: 'center',
-  justifyContent: 'center',
-}
-
-const openInNewTab = (url: string) => {
-  const win = window.open(url, '_blank');
-  win?.focus();
-};
-
-const useMediaQuery = (width: number) => {
-    const [targetReached, setTargetReached] = useState(false);
-
-    const updateTarget = useCallback((e: { matches: any; }) => {
-        if (e.matches) {
-          setTargetReached(true);
-        } else {
-          setTargetReached(false);
-        }
-      }, []);
-
-    useEffect(() => {
-        const media = window.matchMedia(`(max-width: ${width}px)`);if (media.addEventListener) {
-            media.addEventListener("change", updateTarget);
-          } else {
-            media.addEventListener("change", updateTarget);
-          }
-          if (media.matches) {
-            setTargetReached(true);
-          }
-          if (media.removeEventListener) {
-            return () => media.removeEventListener('change', updateTarget);
-          } else {
-            return () => media.removeEventListener("change", updateTarget);
-          }
-        }, []);
-
-    return targetReached;
-
-}
 
 const NavBar = () => {
+    const pathName = usePathname();
     const isBreakpoint = useMediaQuery(768);
+    const iconStyle = {
+      height: 30,
+      width: 30,
+      margin: 5,
+    }
     return (
-        <div className='justify-between flex p-5 space-x-4 items-center'>
-        <div className='pr-5'>
-            Carl Seaholm
-        </div>
-        
-            {isBreakpoint ? (
-                <div>
-                    <HamburgerMenu />
+        <div className={`flex ${isBreakpoint ? 'justify-start' : 'justify-between'}`}>
+          <SidenavPage/>
+            {!isBreakpoint && 
+              <div className='flex items-center justify-end ml-5 mt-5 px-6 pt-2'>
+                <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
+                  <SocialIcon style={iconStyle} network='github'/>
                 </div>
-            ) : (
-                <div>
-                    <FullMenu/>
+                <p>|</p>
+                <div className='cursor-pointer' onClick={() => openInNewTab('https://www.linkedin.com/in/carlseaholm/')}>
+                  <SocialIcon style={iconStyle} network='linkedin' />
                 </div>
-            )}
-  
-          <div className='flex flex-row items-center'>
-            <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
-              <SocialIcon style={iconStyle} network='github'/>
-            </div>
-            <p>|</p>
-            <div className='cursor-pointer' onClick={() => openInNewTab('https://www.linkedin.com/in/carlseaholm/')}>
-              <SocialIcon style={iconStyle} network='linkedin' />
-            </div>
-          </div>
+              </div>
+            }
         </div>
     )
 }
