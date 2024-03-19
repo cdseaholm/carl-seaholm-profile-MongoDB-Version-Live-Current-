@@ -87,7 +87,7 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
     };
     window.addEventListener('mousedown', handleOutsideClick);
     return () => window.removeEventListener('mousedown', handleOutsideClick);
-  }, [open, ref]);
+  }, [open, ref, toggle]);
 
   return (
     <aside
@@ -100,7 +100,7 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
       </button>
       <div className='mx-3 divide-y divide-solid width-4/6'>
       <div className='px-10 rounded-lg px-3 mt-8 pt-5 pb-7 text-slate-200 text-sm'>
-        Carl Seaholm's Portfolio
+        Carl Seaholm&apos;s Portfolio
       </div>
       <div />
       </div>
