@@ -12,7 +12,8 @@ const useMediaQuery = (width: number) => {
       }, []);
 
     useEffect(() => {
-        const media = window.matchMedia(`(max-width: ${width}px)`);if (media.addEventListener) {
+        const media = window.matchMedia(`(max-width: ${width}px)`);
+        if (media.addEventListener) {
             media.addEventListener("change", updateTarget);
           } else {
             media.addEventListener("change", updateTarget);
@@ -25,7 +26,7 @@ const useMediaQuery = (width: number) => {
           } else {
             return () => media.removeEventListener("change", updateTarget);
           }
-        }, []);
+        }, [updateTarget, width]);
 
     return targetReached;
 
