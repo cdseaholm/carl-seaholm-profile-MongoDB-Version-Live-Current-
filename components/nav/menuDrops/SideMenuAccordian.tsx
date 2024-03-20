@@ -22,8 +22,8 @@ export const SideMenuAccordian = ({
   return (
     <>
       <div className="block text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5 cursor-pointer">
-          <Link onClick={toggle} href={"/"} className={`${pathname === "/" ? "underline" : ""}`}>
-          Home
+          <Link onClick={toggle} href={"/dashboard"} className={`${pathname === "/dashboard" ? "underline" : ""}`}>
+          Dashboard
         </Link>
       </div>
       <div className="block text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5 cursor-pointer">
@@ -53,8 +53,9 @@ export const SideMenuAccordian = ({
       </div>
       </AccordionPanel>
       <AccordionItem toggle="panel-2" className="text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5">
-        Services
+        Services - Coming Soon
       </AccordionItem>
+      {/*
       <AccordionPanel id="panel-2">
       <div className="mb-4 px-2 py-1 cursor-pointer">
           <Link onClick={toggle} href={"/services/bugs"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/services/bugs" ? "underline" : ""}`}>
@@ -72,6 +73,7 @@ export const SideMenuAccordian = ({
         </Link>
       </div>
       </AccordionPanel>
+      */}
       <AccordionItem toggle="panel-3" className="text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5">
         About
       </AccordionItem>

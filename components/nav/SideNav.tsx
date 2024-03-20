@@ -17,7 +17,8 @@ const SidenavPage = () => {
 
   return (
     <>
-    <div className='flex items-center ml-5 mt-5 px-6 pt-2'> 
+    <div className='flex items-center ml-5 mt-5 px-6 pt-2'>
+      {pathname !== '/' &&
       <button 
         type='button'
         aria-disabled={open}
@@ -27,6 +28,7 @@ const SidenavPage = () => {
       >
         Menu
       </button>
+}
       {pathname !== '/' &&
       <>
       <div className={`mx-5 ${open ? 'text-transparent' : 'text-black'}`}>|</div>

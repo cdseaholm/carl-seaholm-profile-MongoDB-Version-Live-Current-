@@ -35,6 +35,14 @@ div.childFirst {
   box-shadow: 0 0 10px 10px rgba(51, 65, 85, 0.5);
 }
 
+.landing-page {
+  transition: transform 1s ease-in-out;
+}
+
+.slide-up {
+  transform: translateY(-100%);
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

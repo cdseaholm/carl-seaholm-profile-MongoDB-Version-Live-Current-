@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import useMediaQuery from '../listeners/WidthSettings';
+import path from 'path';
 
 const FooterNavBar = () => {
     const pathname = usePathname();
@@ -11,12 +12,12 @@ const FooterNavBar = () => {
     return (
         <>
         <nav className="flex justify-center flex-wrap pb-5 space-x-4">
-            {!breakpoint &&
+            {!breakpoint && pathname !== '/' &&
             [
                 ["Contact", "/contact"],
             ].map(([name, route], index) => (
                 <div key={index}>
-                    <Link href={route} className={`px-10 rounded-lg py-2 text-slate-900 font-medium hover:text-slate-700 ${pathname === route ? "underline" : ""}`}>
+                    <Link href={route} className={`px-10 rounded-lg py-2 font-medium hover:text-slate-700 ${pathname === route ? "underline" : ""}`}>
                             {name}
                     </Link>
                 </div>
