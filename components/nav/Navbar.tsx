@@ -17,8 +17,10 @@ const NavBar = () => {
     }
     return (
         <div className={`flex ${isBreakpoint ? 'justify-start' : 'justify-between'}`}>
+          
           <SidenavPage/>
-            {!isBreakpoint && 
+          
+            {!isBreakpoint && pathName !== '/' && 
               <div className='flex items-center justify-end ml-5 mt-5 px-6 pt-2'>
                 <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
                   <SocialIcon style={iconStyle} network='github'/>

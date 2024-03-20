@@ -1,21 +1,35 @@
 'use client'
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useRouter } from 'next/navigation';
+  
 
 export default function Home() {
-  const [isHovered, setIsHovered] = useState(false);
-  const [clicked, setClicked] = useState(false);
+  const [isShowing, setIsShowing] = React.useState(false);
+    const router = useRouter();
+
+  const navigateToDashboard = () => {
+    setIsShowing(true);
+    setTimeout(() => {
+        router.push('/dashboard');
+    }, 500);
+  };
+  
 
   return (
     <main>
-      <div className="childFirst min-w-screen min-h-screen my-10 mx-20">
-        <div className='flex justify-evenly pt-10"'>
-        <div className='w-4/6 flex-col justify-center' style={{paddingLeft: clicked ? 14 : 0}}>
-          <p className="text-2xl pt-5">Constantly learning, improving, and trying something new. Follow along, check out my Coding projects, current book I&apos;m trying to publish and the other that I&apos;m writing.</p>
-          <p className="text 2xl pt-5 tp-2 text-black">Currently focusing on improving my JavaScript and TSX applications. As well as learning to site read while playing piano, improving guitar playing, and writing.</p>
+      <div className={`landing-page ${isShowing ? 'slide-up' : ''}`}>
+        <div className="px-5 py-8">
+          <div className='min-h-screen min-w-screen my-10 mx-10'>
+            <h1 className="flex flex-start text-8xl font-semibold text-slate-600">Carl Seaholm</h1>
+            <p className="text-xl text-slate-700 pt-20">So many projects, so little time!</p>
+            <p className="text-xl text-slate-700 pt-20 pb-20">See what he has been up to.</p>
+              <button className="bg-slate-600/70 text-white p-3 rounded-lg" onClick={navigateToDashboard}>
+                Dashboard
+              </button>
+          </div>
+          </div>
         </div>
-        </div>
-      </div>
     </main>
   );
 }

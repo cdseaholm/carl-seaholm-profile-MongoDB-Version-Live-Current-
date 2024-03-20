@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import Navbar from '../components/nav/Navbar';
 import FooterNavBar from "@/components/footer/footerNavbar";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import React from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
