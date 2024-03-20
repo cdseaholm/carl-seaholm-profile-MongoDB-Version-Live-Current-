@@ -11,7 +11,7 @@ const FooterNavBar = () => {
 
     return (
         <>
-        <nav className="flex justify-center flex-wrap pb-5 space-x-4">
+        <nav className={`flex justify-center flex-wrap ${breakpoint ? 'py-2' : ''} pb-5 space-x-4`}>
             {!breakpoint && pathname !== '/' &&
             [
                 ["Contact", "/contact"],

@@ -36,6 +36,7 @@ export default function Professional() {
 
   return (
     <main>
+      <div className="childFirst min-w-screen min-h-screen my-10 mx-10">
               <Image
                 onClick={imageClick}
                 priority
@@ -56,6 +57,7 @@ export default function Professional() {
           <div className='flex justify-center'>
             {professionalView({ category })}
           </div> 
+          </div>
     </main>
   );
 }

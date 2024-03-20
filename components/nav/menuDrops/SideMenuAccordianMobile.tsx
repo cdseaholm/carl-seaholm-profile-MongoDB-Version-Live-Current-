@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export const SideMenuAccordian = ({
+export const SideMenuAccordianMobile = ({
   toggle,
 }: {
   toggle: () => void;
@@ -21,81 +21,81 @@ export const SideMenuAccordian = ({
 
   return (
     <>
-      <div className="block text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5 cursor-pointer">
+      <div className="block text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5 cursor-pointer">
           <Link onClick={toggle} href={"/dashboard"} className={`${pathname === "/dashboard" ? "underline" : ""}`}>
           Dashboard
         </Link>
       </div>
-      <div className="block text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5 cursor-pointer">
+      <div className="block text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5 cursor-pointer">
           <Link onClick={toggle} href={"/blog"} className={`${pathname === "/blog" ? "underline" : ""}`}>
           Blog
         </Link>
       </div>
       <Accordion defaultPanel={defaultPanel}>
-      <AccordionItem toggle="panel-1" className="text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5">
+      <AccordionItem toggle="panel-1" className="text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5">
         Projects
       </AccordionItem>
       <AccordionPanel id="panel-1">
       <div className="mb-4 px-2 py-1 cursor-pointer">
-          <Link onClick={toggle} href={"/projects/npapps"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/projects/npapps" ? "underline" : ""}`}>
+          <Link onClick={toggle} href={"/projects/npapps"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/projects/npapps" ? "underline" : ""}`}>
           - New Progress Applications
         </Link>
       </div>
       <div className="mb-4 px-2 py-1 cursor-pointer">
-          <Link onClick={toggle} href={"/projects/npwebapps"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/projects/npwebapps" ? "underline" : ""}`}>
+          <Link onClick={toggle} href={"/projects/npwebapps"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/projects/npwebapps" ? "underline" : ""}`}>
           - Web Applications
         </Link>
       </div>
       <div className="px-2 py-1 cursor-pointer">
-          <Link onClick={toggle} href={"/projects/writing"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/projects/writing" ? "underline" : ""}`}>
+          <Link onClick={toggle} href={"/projects/writing"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/projects/writing" ? "underline" : ""}`}>
           - Writing Projects
         </Link>
       </div>
       </AccordionPanel>
-      <AccordionItem toggle="panel-2" className="text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5">
-        Services - Coming Soon
+      <AccordionItem toggle="panel-2" className="text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5">
+        Services - Soon
       </AccordionItem>
       {/*
       <AccordionPanel id="panel-2">
       <div className="mb-4 px-2 py-1 cursor-pointer">
-          <Link onClick={toggle} href={"/services/bugs"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/services/bugs" ? "underline" : ""}`}>
+          <Link onClick={toggle} href={"/services/bugs"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/services/bugs" ? "underline" : ""}`}>
           - Bug Fixes
         </Link>
       </div>
       <div className="mb-4 px-2 py-1 cursor-pointer">
-          <Link onClick={toggle} href={"/services/fullsite"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/services/fullsite" ? "underline" : ""}`}>
+          <Link onClick={toggle} href={"/services/fullsite"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/services/fullsite" ? "underline" : ""}`}>
           - Single Page Creation
         </Link>
       </div>
       <div className="px-2 py-1 cursor-pointer">
-          <Link onClick={toggle} href={"/services/singlepage"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/services/singlepage" ? "underline" : ""}`}>
+          <Link onClick={toggle} href={"/services/singlepage"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/services/singlepage" ? "underline" : ""}`}>
           - Full Site/App Creation
         </Link>
       </div>
       </AccordionPanel>
       */}
-      <AccordionItem toggle="panel-3" className="text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5">
+      <AccordionItem toggle="panel-3" className="text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5">
         About
       </AccordionItem>
       <AccordionPanel id="panel-3">
         <div className="mb-4 px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={"/about/overview"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/about/overview" ? "underline" : ""}`}>
+            <Link onClick={toggle} href={"/about/overview"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/about/overview" ? "underline" : ""}`}>
             - Overview
           </Link>
         </div>
         <div className="mb-4 px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={"/about/professional"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/about/professional" ? "underline" : ""}`}>
+            <Link onClick={toggle} href={"/about/professional"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/about/professional" ? "underline" : ""}`}>
             - Professional
           </Link>
         </div>
         <div className="px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={"/about/personal"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/about/personal" ? "underline" : ""}`}>
+            <Link onClick={toggle} href={"/about/personal"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/about/personal" ? "underline" : ""}`}>
             - Personal
           </Link>
         </div>
       </AccordionPanel>
     </Accordion>
-    <div className="block text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5 cursor-pointer">
+    <div className="block text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5 cursor-pointer">
           <Link onClick={toggle} href={"/projects"} className={`${pathname === "/contact" ? "underline" : ""}`}>
             Contact
         </Link>
