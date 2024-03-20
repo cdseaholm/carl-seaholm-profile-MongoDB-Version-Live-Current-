@@ -5,6 +5,7 @@ import openInNewTab from '../listeners/OpenInNewTab';
 import SidenavPage from './SideNav';
 import useMediaQuery from '../listeners/WidthSettings';
 import { usePathname } from 'next/navigation';
+import SidenavMobile from './SideNavMobile';
 
 
 const NavBar = () => {
@@ -17,9 +18,14 @@ const NavBar = () => {
     }
     return (
         <div className={`flex ${isBreakpoint ? 'justify-start' : 'justify-between'}`}>
-          
+          {!isBreakpoint &&
           <SidenavPage/>
+          }
           
+          {isBreakpoint &&
+          <SidenavMobile/>
+          }
+
             {!isBreakpoint && pathName !== '/' && 
               <div className='flex items-center justify-end ml-5 mt-5 px-6 pt-2'>
                 <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
