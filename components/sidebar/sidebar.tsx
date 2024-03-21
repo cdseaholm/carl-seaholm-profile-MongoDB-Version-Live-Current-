@@ -1,9 +1,11 @@
+'use client'
+
 import React, { useState } from 'react';
 import { DropdownPage } from '../dropdown/dropdown';
 
 const Sidebar = ({ setTrackerState }: { setTrackerState: (value: string) => void; }) => {
     const [filterNoTrack, setFilterNoTrack] = useState(false);
-    const [name, setName] = useState(filterNoTrack ? 'No Filter' : 'All');
+    const [name, setName] = useState('No Filter');
 
     const toTrack = [
         {name: 'Brazilian Jiu Jitsu', category: 'physical'},
@@ -17,11 +19,11 @@ const Sidebar = ({ setTrackerState }: { setTrackerState: (value: string) => void
     ];
 
     const toTrackCategories = [
-        {name: 'Arts'},
-        {name: 'Hobbies'},
-        {name: 'Musical'},
-        {name: 'Physical'},
-        {name: 'Technological'},
+        'Arts',
+        'Hobbies',
+        'Musical',
+        'Physical',
+        'Technological',
     ];
 
     const flipFilter = ({which}: {which: string}) => {
@@ -45,7 +47,7 @@ const Sidebar = ({ setTrackerState }: { setTrackerState: (value: string) => void
                 <h1 onClick={() => flipFilter({which: 'filter'})} className={`${!filterNoTrack ? `text-slate-600` : `text-white`} items-start text-sm cursor-pointer`}>Filters</h1>
             </div>
             <div>
-                {DropdownPage({ itemsToFilter: toTrack, setName: setName, name: name, filterNoTrack: filterNoTrack, toTrackCategories: toTrackCategories})}
+                {DropdownPage({ itemsToFilter: toTrackCategories, setName: setName, nameTitle: name})}
             </div>
         </div>
     );
