@@ -1,37 +1,38 @@
+'use client'
+
 import React from 'react';
 
-export const DropdownPage = ({itemsToFilter, setName, name, filterNoTrack, toTrackCategories}: { itemsToFilter: Array<any>; setName: (setName: string) => void; name: string; filterNoTrack: boolean; toTrackCategories: Array<any>;}) => {
-    const { show, toggle } = useToggle();
-    var passingItems = itemsToFilter.map((item) => item.name);
-    var passingCategories = toTrackCategories.map((item) => item.name);
-    const itemsToPass = filterNoTrack ? passingCategories : passingItems;
+export const DropdownPage = ({itemsToFilter, nameTitle}: { itemsToFilter: Array<any>; setName: (name: string) => void; nameTitle: string;}) => {
+  const [dropName, setDropName] = React.useState('Timeline');
+  const { show, toggle } = useToggle();
 
-   
-    return (
-      <Dropdown show={show} toggle={toggle}>
-        <span className="flex justify-between w-40 bg-green-950/70 text-white rounded px-2 pl-3 py-2">
-        <div className="pr-2 text-white text-sm w-6/8 align-">{name}</div>
-            <svg
-                className="h-5 w-1/8 justify-center"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-            >
-                <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                />
-            </svg>
-        </span>
-        <DropdownMenu>
-            <DropdownItems setName={setName}>
-                {itemsToPass}
-            </DropdownItems>
-        </DropdownMenu>
-      </Dropdown>
-    );
+  return (
+    <Dropdown toggle={toggle} show={show}>
+      <span className="absolute right-12 mr-2 z-10 flex justify-between w-40 bg-green-950/70 text-white rounded px-2 pl-3 py-2">
+          <span>{nameTitle}</span>
+          <svg
+              className="h-5 w-1/8 justify-center"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+          >
+              <path
+                  fillRule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+              />
+          </svg>
+      </span>
+      <DropdownMenu>
+        {itemsToFilter.map((item, index) => (
+          <a key={index} onClick={() => setDropName(item)} className="block px-4 py-2 text-sm text-white hover:bg-slate-800">
+            {item}
+          </a>
+        ))}
+      </DropdownMenu>
+    </Dropdown>
+  );
 };
 
 /* Logic*/
@@ -41,19 +42,21 @@ function useToggle() {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const toggle = React.useCallback(() => {
-    setShow((prevState) => !prevState);
+    setShow((prevState) => !prevState)
   }, []);
 
   // close dropdown when you click outside
   React.useEffect(() => {
-    const handleOutsideClick = (event: { target: any; }) => {
-      if (!ref.current || !ref.current.contains(event.target as HTMLDivElement)) {
-        if (!show) return;
+    const handleOutsideClick = (event: any) => {
+      if (ref.current && ref.current.contains(event.target)) {
+        return;
+      }
+      if (show) {
         toggle();
       }
     };
-    window.addEventListener('mousedown', handleOutsideClick);
-    return () => window.removeEventListener('mousedown', handleOutsideClick);
+    window.addEventListener('mouseup', handleOutsideClick);
+    return () => window.removeEventListener('mouseup', handleOutsideClick);
   }, [show, ref, toggle]);
 
   // close dropdown when you click on "ESC" key
@@ -77,56 +80,45 @@ function useToggle() {
 }
 
 const style = {
-  menu: `z-30 py-2 px-1 text-left border border-gray-300 rounded-sm mt-0 mb-0 bg-clip-padding bg-slate-800/70 text-white shadow-lg w-40 cursor-pointer`,
+  menu: `absolute right-4 z-30 py-2 px-1 text-left border border-gray-300 rounded-sm mt-9 mb-0 bg-clip-padding bg-slate-800/70 text-white shadow-lg w-40 cursor-pointer`,
 };
 
-function Dropdown({ children, show, toggle }: { children: React.ReactNode; show: boolean; toggle: () => void }) {
-    const childrenArray = React.Children.toArray(children);
-    const dropdownToggle = childrenArray[0] as React.ReactNode;
-    const dropdownMenu = React.cloneElement(childrenArray[1] as React.ReactElement, { show, toggle });
-  
-    return (
-      <>
-        <button
-          className="focus:outline-none"
-          onClick={toggle}
-          type="button"
-          id="options-menu"
-          aria-expanded="true"
-          aria-haspopup="true"
-        >
-          {dropdownToggle}
-        </button>
-        {show && <>{dropdownMenu}</>}
-      </>
-    );
-  }
+function Dropdown({ children, show, toggle }: { children: React.ReactNode; show: boolean; toggle: () => void; }) {
 
-function DropdownMenu({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="relative">
-            <div
-                className={style.menu}
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="options-menu"
-            >
-                {children}
-            </div>
-        </div>
-    );
+  const dropdownToggle = React.Children.toArray(children)[0];
+  const dropdownMenu = React.Children.toArray(children)[1];
+  
+
+  return (
+    <button
+      className="focus:outline-none z-30"
+      onClick={toggle}
+      type="button"
+      id="options-menu"
+      aria-expanded="true"
+      aria-haspopup="true"
+    >
+      {dropdownToggle}
+      {show && <>{dropdownMenu}</>}
+    </button>
+  );
 }
 
-function DropdownItems({ children, setName }: { children: React.ReactNode; setName: (child: string) => void; }) {
-    return (
-        <>
-            {React.Children.map(children, (child, index) => (
-                <div className='py-2 text-sm' key={index} onClick={() => { 
-                    setName(child as string);
-                }}>
-                    {child}
-                </div>
-            ))}
-        </>
-    );
-  }
+function DropdownToggle({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
+
+function DropdownMenu({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="relative z-30">
+      <div
+        className={style.menu}
+        role="menu"
+        aria-orientation="vertical"
+        aria-labelledby="options-menu"
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
