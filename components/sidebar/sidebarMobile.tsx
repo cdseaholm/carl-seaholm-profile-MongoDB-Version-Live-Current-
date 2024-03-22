@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { DropdownPage } from '../dropdown/dropdown';
+import { MobileDropDown } from '../dropdown/mobileDropdown';
 
 const SidebarMobile = ({ setTrackerState }: { setTrackerState: (value: string) => void; }) => {
     const [filterNoTrack, setFilterNoTrack] = useState(false);
@@ -47,7 +48,12 @@ const SidebarMobile = ({ setTrackerState }: { setTrackerState: (value: string) =
                 <h1 onClick={() => flipFilter({which: 'filter'})} className={`${!filterNoTrack ? `text-slate-600` : `text-white`} items-start text-sm cursor-pointer`}>Filters</h1>
             </div>
             <div>
-                {DropdownPage({ itemsToFilter: toTrackCategories, setName: setName, nameTitle: name})}
+                <MobileDropDown 
+                    menuStyle={`absolute right-4 z-30 py-1 px-1 text-left border border-gray-300 rounded-sm mt-9 mb-0 bg-clip-padding bg-slate-800/70 text-white shadow-lg w-30 cursor-pointer`} 
+                    dropdownStyle={`absolute right-12 mr-2 z-10 flex justify-between w-30 text-black rounded px-1 pl-3 py-1 text-sm`} 
+                    itemsToFilter={filterNoTrack ? toTrackCategories : toTrack} 
+                    setContextName={(name: string) => () => setName(name)} 
+                />
             </div>
         </div>
     );

@@ -27,14 +27,15 @@ export const SideMenuAccordian = ({
         </Link>
       </div>
       <div className="block text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5 cursor-pointer">
-          <Link onClick={toggle} href={"/blog"} className={`${pathname === "/blog" ? "underline" : ""}`}>
-          Blog
+          <Link onClick={toggle} href={'' /* "/blog" */} className={`${pathname === "/blog" ? "underline" : ""}`}>
+          Blog - Soon
         </Link>
       </div>
       <Accordion defaultPanel={defaultPanel}>
       <AccordionItem toggle="panel-1" className="text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5">
-        Projects
-      </AccordionItem>
+        Projects - Soon
+      </AccordionItem> 
+      {/* 
       <AccordionPanel id="panel-1">
       <div className="mb-4 px-2 py-1 cursor-pointer">
           <Link onClick={toggle} href={"/projects/npapps"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/projects/npapps" ? "underline" : ""}`}>
@@ -52,6 +53,7 @@ export const SideMenuAccordian = ({
         </Link>
       </div>
       </AccordionPanel>
+      */}
       <AccordionItem toggle="panel-2" className="text-slate-200 hover:text-slate-400 text-base px-10 rounded-lg px-3 py-5">
         Services - Coming Soon
       </AccordionItem>
@@ -79,8 +81,8 @@ export const SideMenuAccordian = ({
       </AccordionItem>
       <AccordionPanel id="panel-3">
         <div className="mb-4 px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={"/about/overview"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/about/overview" ? "underline" : ""}`}>
-            - Overview
+            <Link onClick={toggle} href={'' /* "/about/overview" */} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/about/overview" ? "underline" : ""}`}>
+            - Overview - Soon
           </Link>
         </div>
         <div className="mb-4 px-2 py-1 cursor-pointer">
@@ -89,8 +91,8 @@ export const SideMenuAccordian = ({
           </Link>
         </div>
         <div className="px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={"/about/personal"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/about/personal" ? "underline" : ""}`}>
-            - Personal
+            <Link onClick={toggle} href={""}  /*href={"/about/personal"}*/  className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-sm hover:text-slate-400 ${pathname === "/about/personal" ? "underline" : ""}`}>
+            - Personal - Soon
           </Link>
         </div>
       </AccordionPanel>

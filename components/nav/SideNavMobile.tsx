@@ -70,6 +70,7 @@ const SidenavMobile = () => {
         }
       </div>
       <div ref={imageRef} className={`mt-5 ml-5 ${clicked ? style.profilepicture.large : style.profilepicture.small}`}>
+      {pathname === '/about/professional' &&
         <Image
           onClick={imageClick}
           priority
@@ -81,6 +82,7 @@ const SidenavMobile = () => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         />
+      }
       </div>
     </div>
       <Sidenav open={open} toggle={toggle}>
