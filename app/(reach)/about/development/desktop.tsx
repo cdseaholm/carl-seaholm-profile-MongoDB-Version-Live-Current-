@@ -10,7 +10,7 @@ const openInNewTab = (url: string) => {
   win?.focus();
 };
 
-export default function ProfessionalDesktop() {
+export default function DevelopmentDesktop() {
   const [isHovered, setIsHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [category, setCategory] = useState('Timeline');

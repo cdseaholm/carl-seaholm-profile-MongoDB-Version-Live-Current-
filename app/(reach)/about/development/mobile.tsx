@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import professionalView from '../../../../components/professionalComponents/professionaView';
 import { MobileDropDown } from '../../../../components/dropdown/mobileDropdown';
 
-export default function ProfessionalMobile() {
+export default function DevelopmentMobile() {
   const [category, setCategory] = useState('Timeline');
   const divRef = useRef(null);
 

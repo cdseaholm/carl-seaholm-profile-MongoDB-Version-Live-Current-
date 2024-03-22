@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const DropdownPage = ({ menuStyle, dropdownStyle, itemsToFilter, setContextName}: { menuStyle: string; dropdownStyle: string; itemsToFilter: Array<any>; setContextName: (contextName: string) => () => void }) => {
+export const MobileDropDown = ({ menuStyle, dropdownStyle, itemsToFilter, setContextName}: { menuStyle: string; dropdownStyle: string; itemsToFilter: Array<any>; setContextName: (contextName: string) => void }) => {
   const [show, setShow] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
   const [dropName, setDropName] = React.useState('Timeline');
@@ -15,17 +15,15 @@ export const DropdownPage = ({ menuStyle, dropdownStyle, itemsToFilter, setConte
 
   // close dropdown when you click outside
   React.useEffect(() => {
-    const handleOutsideClick = (event: any) => {
-      if (ref.current && ref.current.contains(event.target)) {
-        return;
-      }
-      if (show) {
+    const handleOutsideClick = (event: { target: any; }) => {
+      if (!ref.current || !ref.current.contains(event.target as HTMLDivElement)) {
+        if (!show) return;
         toggle();
       }
     };
-    window.addEventListener('mouseup', handleOutsideClick);
-    return () => window.removeEventListener('mouseup', handleOutsideClick);
-  }, [show, ref, toggle]);
+    window.addEventListener('mousedown', handleOutsideClick);
+    return () => window.removeEventListener('mousedown', handleOutsideClick);
+  }, [toggle(), show, ref]);
 
   return (
     <Dropdown toggle={toggle}>
@@ -49,7 +47,7 @@ export const DropdownPage = ({ menuStyle, dropdownStyle, itemsToFilter, setConte
       <DropdownMenu id={'menupanel'} menuStyle={menuStyle}>
         {itemsToFilter.map((item, index) => (
             <div key={index}>
-                <a onClick={() => setName(item)} className="block px-4 py-2 text-sm text-white hover:bg-slate-800">
+                <a onClick={() => setName(item)} className="block px-4 py-2 text-xs text-white hover:bg-slate-800">
                     {item}
                 </a>
             </div>

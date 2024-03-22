@@ -16,6 +16,14 @@
   }
 }
 
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* body-pieces */
+
 body {
   background-image: url('../public/images/carmelbackground.jpg');
   background-size: cover;
@@ -35,6 +43,8 @@ div.childFirst {
   box-shadow: 0 0 10px 10px rgba(51, 65, 85, 0.5);
 }
 
+/* transitions */
+
 .landing-page {
   transition: transform 1s ease-in-out;
 }
@@ -43,13 +53,11 @@ div.childFirst {
   transform: translateY(-100%);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
 .scale-150 {
   transition: transform 0.3s;
   transform: scale(1.5);
 }
+
+/* images */
+
+
