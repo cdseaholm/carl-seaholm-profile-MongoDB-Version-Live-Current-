@@ -52,7 +52,8 @@ const SidebarMobile = ({ setTrackerState }: { setTrackerState: (value: string) =
                     menuStyle={`absolute right-4 z-30 py-1 px-1 text-left border border-gray-300 rounded-sm mt-9 mb-0 bg-clip-padding bg-slate-800/70 text-white shadow-lg w-30 cursor-pointer`} 
                     dropdownStyle={`absolute right-12 mr-2 z-10 flex justify-between w-30 text-black rounded px-1 pl-3 py-1 text-sm`} 
                     itemsToFilter={filterNoTrack ? toTrackCategories : toTrack} 
-                    setContextName={(name: string) => () => setName(name)} 
+                    setContextName={(name: string) => () => setName(name)}
+                    starterName={name}
                 />
             </div>
         </div>

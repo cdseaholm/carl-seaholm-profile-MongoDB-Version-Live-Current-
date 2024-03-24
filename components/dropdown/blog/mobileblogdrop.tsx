@@ -8,7 +8,7 @@ import MobilePostItemList from "@/components/posts/mobilepostitemlist";
 
 const MobileBlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<string>; posts: Record<string, post[]>}) => {
 
-    const [contextName, setContextName] = useState('All' as string);
+    const [contextName, setContextName] = useState('All');
 
     return (
         <>
@@ -25,7 +25,7 @@ const MobileBlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Arra
                     dropdownStyle={`absolute right-20 z-10 flex w-30 text-black rounded bg-slate-300 text-sm justify-between`}
                     itemsToFilter={categoriesForDrop} 
                     setContextName={(name: string) => () => setContextName(name)}
-                    starterName="All" />
+                    starterName={contextName} />
             </div>
         </div>
         <section className="md:grid md:grid-cols-2 flex flex-col gap-10">

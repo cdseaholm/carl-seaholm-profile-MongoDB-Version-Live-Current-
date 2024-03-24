@@ -2,7 +2,6 @@
 
 import { Dropdown } from "@nextui-org/react";
 import useMediaQuery from "../../listeners/WidthSettings";
-import { MobileDropDown } from "../mobileDropdown";
 import { useState } from "react";
 import PostItemList from "../../posts/postlistitem";
 import type { post } from "../../../types/post";
