@@ -29,6 +29,7 @@ return (
                       dropdownStyle={`absolute right-12 mr-2 z-10 flex justify-between w-30 text-black rounded px-1 pl-3 py-1 text-sm`} 
                       itemsToFilter={categories} 
                       setContextName={(category: string) => setCategory(category) } 
+                      starterName={category}
                     />
                   </div>
                 </div>

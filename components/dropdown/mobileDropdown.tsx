@@ -1,9 +1,9 @@
 import React from 'react';
 
-export const MobileDropDown = ({ menuStyle, dropdownStyle, itemsToFilter, setContextName}: { menuStyle: string; dropdownStyle: string; itemsToFilter: Array<any>; setContextName: (contextName: string) => void }) => {
+export const MobileDropDown = ({ menuStyle, dropdownStyle, itemsToFilter, setContextName, starterName}: { menuStyle: string; dropdownStyle: string; itemsToFilter: Array<any>; setContextName: (contextName: string) => void; starterName: string }) => {
   const [show, setShow] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
-  const [dropName, setDropName] = React.useState('Timeline');
+  const [dropName, setDropName] = React.useState(starterName);
   const setName = (name: string) => {
     setDropName(name)
     setContextName(name)
