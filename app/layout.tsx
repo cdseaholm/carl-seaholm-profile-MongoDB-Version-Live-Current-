@@ -1,13 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Cormorant_Garamond, Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import Navbar from '../components/nav/Navbar';
-import FooterNavBar from "@/components/footer/footerNavbar";
+import FooterNavBar from "@/components/nav/footer/footerNavbar";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import React from "react";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const cormorantGaramond = Cormorant_Garamond({ 
+  subsets: ["latin"],
+  variable: "--font-cormorant-garamond",
+  weight: ["400"],
+});
+
+const poppins = Poppins({ 
+  subsets: ["latin"],
+  variable: "--font-poppins",
+  weight: ["400", "600"],
+});
 
 export const metadata: Metadata = {
   title: "Home",
@@ -17,7 +29,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} ${cormorantGaramond.variable} ${poppins.variable}`}>
         <div className="first">
         <SpeedInsights/>
         <Providers>

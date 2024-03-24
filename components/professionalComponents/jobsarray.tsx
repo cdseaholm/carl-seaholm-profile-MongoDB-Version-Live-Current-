@@ -1,5 +1,4 @@
-import React from 'react';
-import JobBite from './jobBite';
+
 
 const jobOne = {
     id: 1,
@@ -152,8 +151,8 @@ const jobTwelve = {
     date: {startDate: new Date('2023-03'), endDate: new Date('2024-03')},
     descriptions: ["Have built 2 applications in 10 months for my own personal use. Planning to deploy 1 soon, then the others later.",
     "Taught myself to code building these apps with Frameworks, Libraries, and Languages such as React Native, EXPO Go, PostgreSQL, JavaScript, and Tailwind.", "All of these are still under development. I went into each application with the idea of making the free and easy to use.",
-    "NP Financr is a light-weight intuitive Financial tracking application where the user gets to set up how they want to see their money. There is tons of customizability. I am currently rewriting this to use React Native with Expo Go.",
-    "NP Taskr is a task manager for the productive individual. The issue with most Task management applications today is that they are overwhelming and are typically paid for, while not being worth the money. I hope to make it convenient, easy to use, and helpful.",
+    "NP Financr is a light-weight intuitive Financial tracking application where the user gets to set up how they want to see their money. There is tons of customizability. Initially written with Flutter/Dart, I am currently rewriting this to use React Native with Expo Go.",
+    "NP Trackr is a task manager for the productive individual. The issue with most Task management applications today is that they are overwhelming and are typically paid for, while not being worth the money. I hope to make it convenient, easy to use, and helpful.",
     "NP Gamr is a game application where a user can play many classic games for free. Taking lessons from Chess.com where a user can learn a host of games, track their scores against others and challenge themselves. (Yet to upload to Github as this app is still never early)."],
     category: ['Development'],
     location: "Remote"

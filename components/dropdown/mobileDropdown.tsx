@@ -1,13 +1,13 @@
 import React from 'react';
 
-export const MobileDropDown = ({ menuStyle, dropdownStyle, itemsToFilter, setContextName}: { menuStyle: string; dropdownStyle: string; itemsToFilter: Array<any>; setContextName: (contextName: string) => void }) => {
+export const MobileDropDown = ({ menuStyle, dropdownStyle, itemsToFilter, setContextName, starterName}: { menuStyle: string; dropdownStyle: string; itemsToFilter: Array<any>; setContextName: (contextName: string) => void; starterName: string }) => {
   const [show, setShow] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
-  const [dropName, setDropName] = React.useState('Timeline');
+  const [dropName, setDropName] = React.useState(starterName);
   const setName = (name: string) => {
     setDropName(name)
     setContextName(name)
-    toggle()()
+    toggle()
   }
   const toggle = React.useCallback(() => () => {
     setShow((prevState) => !prevState);
@@ -62,7 +62,7 @@ export const MobileDropDown = ({ menuStyle, dropdownStyle, itemsToFilter, setCon
 
 const Context = React.createContext({});
 
-function Dropdown({ children, toggle }: { children: React.ReactNode; toggle: () => () => void;}) {
+function Dropdown({ children, toggle }: { children: React.ReactNode; toggle: () => void;}) {
 
   const dropdownToggle = React.Children.toArray(children)[0];
   const dropdownMenu = React.Children.toArray(children)[1];
@@ -70,7 +70,7 @@ function Dropdown({ children, toggle }: { children: React.ReactNode; toggle: () 
   return (
     <Context.Provider value={{ toggle }}>
     <button
-      onClick={toggle()}
+      onClick={toggle}
       className="focus:outline-none z-30"
       type="button"
       id="options-menu"

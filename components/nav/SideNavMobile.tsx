@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import useMediaQuery from '../listeners/WidthSettings';
@@ -18,10 +18,10 @@ const SidenavMobile = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
 
-  const imageClick = () => {
-    setIsHovered(!isHovered);
-    setClicked(!clicked);
-  };
+  const imageClick = useCallback(() => {
+    setIsHovered(prevHovered => !prevHovered);
+    setClicked(prevClicked => !prevClicked);
+  }, []);
 
   const imageRef = React.useRef<HTMLDivElement>(null);
 
@@ -34,7 +34,7 @@ const SidenavMobile = () => {
     };
     window.addEventListener('mousedown', handleOutsideClick);
     return () => window.removeEventListener('mousedown', handleOutsideClick);
-  }, [clicked, imageRef]);
+  }, [clicked, isHovered, imageRef, imageClick]);
 
   const style = {
     profilepicture: {
