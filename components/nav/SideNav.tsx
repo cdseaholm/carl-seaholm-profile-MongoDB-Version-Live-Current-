@@ -18,7 +18,7 @@ const SidenavPage = () => {
   return (
     <>
     <div className='flex items-center ml-5 mt-5 px-6 pt-2'>
-      {pathname !== '/' &&
+      {pathname !== '/' && pathname !== '/demo_303' &&
       <button 
         type='button'
         aria-disabled={open}
@@ -29,7 +29,7 @@ const SidenavPage = () => {
         Menu
       </button>
 }
-      {pathname !== '/' &&
+      {pathname !== '/'  && pathname !== '/demo_303' &&
       <>
       <div className={`mx-5 ${open ? 'text-transparent' : 'text-black'}`}>|</div>
       <div>
@@ -78,7 +78,6 @@ const style = {
 
 function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
   const ref = React.useRef<HTMLDivElement>(null);
-  const isBreakpoint = useMediaQuery(768);
 
   React.useEffect(() => {
     const handleOutsideClick = (event: { target: any; }) => {
@@ -92,6 +91,7 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
   }, [open, ref, toggle]);
 
   return (
+    
     <aside
       ref={ref}
       className={`${style.sidenav.default} 

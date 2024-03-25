@@ -3,7 +3,7 @@ import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { getPostData } from "../../lib/posts";
 
 const PostPage = async ({ params }: { params: { slug: string } }) => {
-
+    
     const postData = await getPostData(params.slug);
 
     return (

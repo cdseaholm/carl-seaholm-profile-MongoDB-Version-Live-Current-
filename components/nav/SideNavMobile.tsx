@@ -4,10 +4,11 @@ import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import useMediaQuery from '../listeners/WidthSettings';
-import { SideMenuAccordianMobile } from './menuDrops/SideMenuAccordianMobile';
+
 import { SocialIcon } from 'react-social-icons';
 import openInNewTab from '../listeners/OpenInNewTab';
 import Image from 'next/image';
+import { SideMenuAccordianMobile } from './menuDrops/SideMenuAccordianMobile';
 
 const SidenavMobile = () => {
   const [open, setOpen] = useState(false);
@@ -47,7 +48,7 @@ const SidenavMobile = () => {
     <>
     <div className='flex flex-between items-center'>
       <div className='flex items-center ml-5 mt-5 px-6 pt-2'>
-        {pathname !== '/' &&
+        {pathname !== '/'  && pathname !== '/demo_303' &&
         <button 
           type='button'
           aria-disabled={open}
@@ -58,7 +59,7 @@ const SidenavMobile = () => {
           Menu
         </button>
   }
-        {pathname !== '/' &&
+        {pathname !== '/'  && pathname !== '/demo_303' &&
         <>
         <div className={`mx-5 my-2 ${open ? 'text-transparent' : 'text-black'}`}>|</div>
         <div>
