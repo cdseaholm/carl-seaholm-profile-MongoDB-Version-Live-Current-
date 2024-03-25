@@ -1,13 +1,14 @@
 'use client'
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import useMediaQuery from '@/components/listeners/WidthSettings';
   
 
 export default function Home() {
   const [isShowing, setIsShowing] = React.useState(false);
     const router = useRouter();
+    const pathname = usePathname();
     const isBreakpoint = useMediaQuery(768);
 
   const navigateToDashboard = () => {
@@ -43,6 +44,7 @@ export default function Home() {
           </div>
           </div>
         </div>
+      
     </main>
   );
 }

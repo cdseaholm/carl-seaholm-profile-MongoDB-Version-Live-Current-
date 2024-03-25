@@ -7,9 +7,9 @@ export const DropdownPage = ({ menuStyle, dropdownStyle, itemsToFilter, setConte
   const setName = (name: string) => {
     setDropName(name)
     setContextName(name)
-    toggle()()
+    toggle
   }
-  const toggle = React.useCallback(() => () => {
+  const toggle = React.useCallback(() => {
     setShow((prevState) => !prevState);
   }, []);
 
@@ -20,7 +20,7 @@ export const DropdownPage = ({ menuStyle, dropdownStyle, itemsToFilter, setConte
         return;
       }
       if (show) {
-        toggle();
+        toggle;
       }
     };
     window.addEventListener('mouseup', handleOutsideClick);
@@ -64,7 +64,7 @@ export const DropdownPage = ({ menuStyle, dropdownStyle, itemsToFilter, setConte
 
 const Context = React.createContext({});
 
-function Dropdown({ children, toggle }: { children: React.ReactNode; toggle: () => () => void;}) {
+function Dropdown({ children, toggle }: { children: React.ReactNode; toggle: () => void;}) {
 
   const dropdownToggle = React.Children.toArray(children)[0];
   const dropdownMenu = React.Children.toArray(children)[1];
@@ -72,7 +72,7 @@ function Dropdown({ children, toggle }: { children: React.ReactNode; toggle: () 
   return (
     <Context.Provider value={{ toggle }}>
     <button
-      onClick={toggle()}
+      onClick={toggle}
       className="focus:outline-none z-30"
       type="button"
       id="options-menu"
@@ -89,13 +89,13 @@ function Dropdown({ children, toggle }: { children: React.ReactNode; toggle: () 
 const useAccordion = () => React.useContext(Context);
 
 function DropdownMenu({ children, id, menuStyle }: { children: React.ReactNode; id: string; menuStyle: string }) {
-  const { toggle } = useAccordion() as { toggle: () => () => void };
+  const { toggle } = useAccordion() as { toggle: () => void };
 
   return (
     <div className="relative z-30">
       <div
         id={id}
-        onClick={toggle()}
+        onClick={toggle}
         className={menuStyle}
         role="menu"
         aria-orientation="vertical"

@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SocialIcon } from 'react-social-icons';
-import openInNewTab from '../listeners/OpenInNewTab';
-import useMediaQuery from '../listeners/WidthSettings';
-import { SideMenuAccordian } from './menuDrops/SideMenuAccordian';
+import openInNewTab from '../../../../components/listeners/OpenInNewTab';
+import useMediaQuery from '../../../../components/listeners/WidthSettings';
+import { DemoAccordianPage } from './accordian/accordian';
 
-const SidenavPage = () => {
+const DemoSidenavPage = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const toggle = () => {
@@ -17,23 +17,23 @@ const SidenavPage = () => {
 
   return (
     <>
-    <div className='flex items-center ml-5 mt-5 px-6 pt-2'>
-      {pathname !== '/' && pathname !== '/demo_303' &&
+    <div className='flex items-center px-6 pt-2'>
+      {pathname !== '/' &&
       <button 
         type='button'
         aria-disabled={open}
         disabled={open}
         onClick={toggle}
-        className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`}
+        className={`text-white font-medium ${open ? 'text-black' : 'text-white'}`}
       >
         Menu
       </button>
 }
-      {pathname !== '/'  && pathname !== '/demo_303' &&
+      {pathname !== '/' &&
       <>
       <div className={`mx-5 ${open ? 'text-transparent' : 'text-black'}`}>|</div>
       <div>
-        <Link className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`} href='/'>
+        <Link className={`text-white font-medium ${open ? 'text-black' : 'text-white'}`} href='/'>
           Home
         </Link>
       </div>
@@ -42,7 +42,7 @@ const SidenavPage = () => {
     </div>
       <Sidenav open={open} toggle={toggle}>
         {open ? (
-            <SideMenuAccordian toggle={toggle} />
+            <DemoAccordianPage details={[]} detailsIndex={0}  />
             ) : null}
       </Sidenav>
     </>
@@ -92,7 +92,6 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
   }, [open, ref, toggle]);
 
   return (
-    
     <aside
       ref={ref}
       className={`${style.sidenav.default} 
@@ -113,7 +112,7 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
           <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
             <SocialIcon style={style.icon} network='github'/>
           </div>
-          <p>|</p>
+          <p className=''>|</p>
           <div className='cursor-pointer' onClick={() => openInNewTab('https://www.linkedin.com/in/carlseaholm/')}>
           <SocialIcon style={open ? style.icon : style.iconClose} network='linkedin' />
           </div>
@@ -123,4 +122,4 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
   );
 }
 
-export default SidenavPage;
+export default DemoSidenavPage;
