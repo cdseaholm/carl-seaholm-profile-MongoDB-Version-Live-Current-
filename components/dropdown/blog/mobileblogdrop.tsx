@@ -1,6 +1,5 @@
 'use client'
 
-import useMediaQuery from "../../listeners/WidthSettings";
 import { MobileDropDown } from "../mobileDropdown";
 import { useState } from "react";
 import type { post } from "../../../types/post";

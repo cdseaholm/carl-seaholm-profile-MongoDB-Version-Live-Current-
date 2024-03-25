@@ -1,22 +1,112 @@
-import { accordion } from '@nextui-org/react';
 import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-export const DemoAccordianPage = ({details, detailsIndex}: {details: Array<String>; detailsIndex: number}) => {
+export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
+  const classesOpenMats = ['Free Class', 'Introduction to Jiu Jitsu (FREE)', 'Beginner Jiu Jitsu (Level 1)', 'Intermediate Jiu Jitsu (Level 2)', 'Advanced Jiu Jitsu', 'NOGI Jiu Jitsu', 'Randori', 'Open Mat', 'Little Heroes Jiu Jitsu (4-6)', 'Jids Jiu Jitsu (7/12)', 'Teens Jiu Jitsu Classes (13-17)', 'Family Class Jiu Jitsu', 'Parents Jiu Jitsu Class', 'Wrestling', 'Kickboxing']
+
+  const news = ['Belt Promotions', 'More News']
+
+  const specialOffer = ['Grand Opening Special', 'Arvada Jiu Jitsu Special', 'Boulder Jiu Jitsu Special', 'Broomfield Jiu Jitsu Special', 'Superior Jiu Jitsu Special', 'Westminster Jiu Jitsu Special', 'Denver Jiu Jitsu Special', 'Northglenn Jiu Jitsu Special', 'Thornton Jiu Jitsu Special', '13 Year Anniverary Special', 'College Student Special']
+
+  const about = ['Testminonials', 'More About Us']
+
+  const more = ['Contact Us', 'Shop', 'Forum']
 
   return (
-    <Accordion>
-        <AccordionItem toggle={`panel-${detailsIndex}`}>
-            <AccordionTitle />
+    <>
+      
+      <div className="block text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5 cursor-pointer">
+        <Link onClick={toggle} href={""}>
+          Dashboard
+        </Link>
+      </div>
+      <div className="block text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5 cursor-pointer">
+        <Link onClick={toggle} href={'' /* "/blog" */}>
+          Blog - Soon
+        </Link>
+      </div>
+      <Accordion defaultPanel={''}>
+        <AccordionItem toggle="panel-1" className="text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5">
+          Classes and Open Mats
         </AccordionItem>
-        <AccordionPanel id={`panel-${detailsIndex}`}>
-            {details.map((detail, index) => (
-                <p key={index} className='p-2'>
-                    -{detail}
-                </p>
-            ))}
+        <AccordionPanel id="panel-1">
+          {classesOpenMats.map((item, index) => (
+            <div key={index} className="mb-4 px-2 py-1 cursor-pointer">
+              <Link onClick={toggle} href={''} className={`px-10 rounded-lg px-3 py-5 text-black text-sm hover:text-slate-200`}>
+                - {item}
+              </Link>
+            </div>
+          ))}
         </AccordionPanel>
-
-    </Accordion>
+        <AccordionItem toggle="panel-2" className="text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5">
+          News
+        </AccordionItem>
+        <AccordionPanel id="panel-2">
+        {news.map((item, index) => (
+            <div key={index} className="mb-4 px-2 py-1 cursor-pointer">
+              <Link onClick={toggle} href={''} className={`px-10 rounded-lg px-3 py-5 text-black text-sm hover:text-slate-200`}>
+                - {item}
+              </Link>
+            </div>
+          ))}
+        </AccordionPanel>
+        <AccordionItem toggle="panel-3" className="text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5">
+          Special Offers
+        </AccordionItem>
+        <AccordionPanel id={`panel-3`}>
+        {specialOffer.map((item, index) => (
+            <div key={index} className="mb-4 px-2 py-1 cursor-pointer">
+              <Link onClick={toggle} href={''} className={`px-10 rounded-lg px-3 py-5 text-black text-sm hover:text-slate-200`}>
+                - {item}
+              </Link>
+            </div>
+          
+        ))}
+        </AccordionPanel>
+        <div className="block text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5 cursor-pointer">
+          <Link onClick={toggle} href={""}>
+            MBUNA
+          </Link>
+        </div>
+        <div className="block text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5 cursor-pointer">
+          <Link onClick={toggle} href={""}>
+            Blog
+          </Link>
+        </div>
+        <AccordionItem toggle="panel-4" className="text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5">
+          About
+        </AccordionItem>
+        <AccordionPanel id="panel-4">
+          {about.map((item, index) => (
+            <div key={index} className="mb-4 px-2 py-1 cursor-pointer">
+              <Link onClick={toggle} href={''} className={`px-10 rounded-lg px-3 py-5 text-black text-sm hover:text-slate-200`}>
+                - {item}
+              </Link>
+            </div>
+          ))}
+          <div className="block text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5 cursor-pointer">
+            <Link onClick={toggle} href={""}>
+              Community
+            </Link>
+          </div>
+          <div className="block text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5 cursor-pointer">
+            <Link onClick={toggle} href={""}>
+              303 Team
+            </Link>
+          </div>
+        </AccordionPanel>
+        <AccordionPanel id="panel-3">
+          {more.map((item, index) => (
+            <div key={index} className="mb-4 px-2 py-1 cursor-pointer">
+              <Link onClick={toggle} href={''} className={`px-10 rounded-lg px-3 py-5 text-black text-sm hover:text-slate-200`}>
+                - {item}
+              </Link>
+            </div>
+          ))}
+        </AccordionPanel>
+      </Accordion>
+    </>
   );
 };
 
@@ -25,7 +115,7 @@ export const DemoAccordianPage = ({details, detailsIndex}: {details: Array<Strin
 const Context = React.createContext({});
 
 function Accordion({ children, defaultPanel }: { children: React.ReactNode; defaultPanel?: string }) {
-    const [selected, setSelected] = React.useState(defaultPanel || '');
+  const [selected, setSelected] = React.useState(defaultPanel || '');
 
   const toggleItem = React.useCallback(
     (id: string) => () => {
@@ -33,6 +123,7 @@ function Accordion({ children, defaultPanel }: { children: React.ReactNode; defa
     },
     [],
   );
+  
   return (
     <Context.Provider value={{ selected, toggleItem }}>
       {children}
@@ -40,58 +131,45 @@ function Accordion({ children, defaultPanel }: { children: React.ReactNode; defa
   );
 }
 
-//custom hook to consume all accordion values
 const useAccordion = () => React.useContext(Context);
 
-function AccordionItem({ toggle, children, className }: { toggle: string; children: React.ReactNode; className?: string; }) {
-    const { selected, toggleItem } = useAccordion() as { selected: string; toggleItem: (id: string) => () => void };
-    return (
-        <>
-      <div
-        role="button"
-        onClick={toggleItem(toggle)}
-        className={`flex block focus:outline-none my-2 p-3 items-center justify-start ${selected ? 'border-b' : ''} ${className}`}
-      >
-        {children}
-        <span className="float-right">
-          {selected === toggle ? <AngleUpIcon /> : <AngleDownIcon />}
-        </span>
-      </div>
-      <div className='flex items-center justify-center'>
-        <div className={`${!selected ? 'divide-y divide-black w-4/6 divide-solid' : '' }`}>
-            <div/>
-            <div/>
-        </div>
-      </div>
-      </>
-    );
-  }
-  
-  function AccordionPanel({ children, id }: { children: React.ReactNode; id: string }) {
-    const { selected } = useAccordion() as { selected: string };
-    const ref = React.useRef<HTMLDivElement>(null);
-    const inlineStyle =
-      selected === id ? { height: ref.current?.scrollHeight } : { height: 0 };
-  
-    return (
-      <div ref={ref} id={id} className={`overflow-hidden md:overflow-x-hidden transition-height ease duration-300 text-black bg-slate-300 rounded-md`} style={inlineStyle}>
-        {children}
-      </div>
-    );
-  }
-
-const AccordionTitle = () => {
-    const { selected } = useAccordion() as { selected: string };
-    return (
-        <div className='text-sm font-semibold pr-5 pt-1'>
-            {selected === `panel-1` ? 'Hide Details' : 'Show Details'}
-        </div>
-    );
+const style = {
+  item: `block focus:outline-none`,
+  panel: `overflow-hidden md:overflow-x-hidden transition-height ease duration-300 text-gray-600`,
 };
+
+function AccordionItem({ toggle, children, className }: { toggle: string; children: React.ReactNode; className?: string }) {
+  const { selected, toggleItem } = useAccordion() as { selected: string; toggleItem: (id: string) => () => void };
+  return (
+    <div
+      role="button"
+      onClick={toggleItem(toggle)}
+      className={`${style.item} ${className}`}
+    >
+      {children}
+      <span className="float-right">
+        {selected === toggle ? <AngleUpIcon /> : <AngleDownIcon />}
+      </span>
+    </div>
+  );
+}
+
+function AccordionPanel({ children, id }: { children: React.ReactNode; id: string }) {
+  const { selected } = useAccordion() as { selected: string };
+  const ref = React.useRef<HTMLDivElement>(null);
+  const inlineStyle =
+    selected === id ? { height: ref.current?.scrollHeight } : { height: 0 };
+
+  return (
+    <div ref={ref} id={id} className={style.panel} style={inlineStyle}>
+      {children}
+    </div>
+  );
+}
 
 const AngleUpIcon = () => (
   <svg
-    fill="white"
+    fill="black"
     strokeWidth="0"
     viewBox="0 0 320 512"
     xmlns="http://www.w3.org/2000/svg"

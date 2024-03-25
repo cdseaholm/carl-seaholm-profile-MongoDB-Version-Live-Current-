@@ -4,10 +4,11 @@ import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import useMediaQuery from '../listeners/WidthSettings';
-import { SideMenuAccordianMobile } from './menuDrops/SideMenuAccordianMobile';
+
 import { SocialIcon } from 'react-social-icons';
 import openInNewTab from '../listeners/OpenInNewTab';
 import Image from 'next/image';
+import { SideMenuAccordianMobile } from './menuDrops/SideMenuAccordianMobile';
 
 const SidenavMobile = () => {
   const [open, setOpen] = useState(false);

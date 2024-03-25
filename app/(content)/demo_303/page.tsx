@@ -1,21 +1,17 @@
 'use client'
 
 import useMediaQuery from "@/components/listeners/WidthSettings";
-import Sidebar from "@/components/sidebar/sidebar";
-import SidebarMobile from "@/components/sidebar/sidebarMobile";
 import React, { useState } from "react";
 import DemoSidenavMobile from "./demonav/demomobilenav";
 import DemoSidenavPage from "./demonav/demodesknav";
-import FooterNavBar from "@/components/nav/footer/footerNavbar";
 import MobileDemoBody from "./components/mobiledemobody";
 import DemoBody from "./components/demobody";
 
-const Dashboard = () => {
+const DemoPage = () => {
     const isBreakpoint = useMediaQuery(768);
 
     return (
-        <div>
-            <div>
+            <div className="min-w-screen min-h-screen">
                 {isBreakpoint && 
                 <>
                 <DemoSidenavMobile/>
@@ -25,12 +21,11 @@ const Dashboard = () => {
                 {!isBreakpoint &&
                 <>
                 <DemoSidenavPage/>
-                <DemoBody/>
+                <DemoBody />
                 </>
                 }
             </div>
-        </div>
     );
 };
 
-export default Dashboard;
+export default DemoPage;

@@ -78,7 +78,6 @@ const style = {
 
 function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
   const ref = React.useRef<HTMLDivElement>(null);
-  const isBreakpoint = useMediaQuery(768);
 
   React.useEffect(() => {
     const handleOutsideClick = (event: { target: any; }) => {
