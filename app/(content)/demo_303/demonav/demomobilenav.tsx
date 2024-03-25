@@ -3,13 +3,14 @@
 import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import useMediaQuery from '../listeners/WidthSettings';
-import { SideMenuAccordianMobile } from './menuDrops/SideMenuAccordianMobile';
+import useMediaQuery from '../../../../components/listeners/WidthSettings';
+import { SideMenuAccordianMobile } from '../../../../components/nav/menuDrops/SideMenuAccordianMobile';
 import { SocialIcon } from 'react-social-icons';
-import openInNewTab from '../listeners/OpenInNewTab';
+import openInNewTab from '../../../../components/listeners/OpenInNewTab';
 import Image from 'next/image';
+import { DemoAccordianPage } from './accordian/mobileaccordian';
 
-const SidenavMobile = () => {
+const DemoSidenavMobile = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const toggle = () => {
@@ -46,8 +47,8 @@ const SidenavMobile = () => {
   return (
     <>
     <div className='flex flex-between items-center'>
-      <div className='flex items-center ml-5 mt-5 px-6 pt-2'>
-        {pathname !== '/'  && pathname !== '/demo_303' &&
+      <div className='flex items-center ml-5 px-6 pt-2'>
+        {pathname !== '/' &&
         <button 
           type='button'
           aria-disabled={open}
@@ -58,7 +59,7 @@ const SidenavMobile = () => {
           Menu
         </button>
   }
-        {pathname !== '/'  && pathname !== '/demo_303' &&
+        {pathname !== '/' &&
         <>
         <div className={`mx-5 my-2 ${open ? 'text-transparent' : 'text-black'}`}>|</div>
         <div>
@@ -69,25 +70,10 @@ const SidenavMobile = () => {
         </>
         }
       </div>
-      <div ref={imageRef} className={`mt-5 ml-5 ${clicked ? style.profilepicture.large : style.profilepicture.small}`}>
-      {pathname === '/about/professional' &&
-        <Image
-          onClick={imageClick}
-          priority
-          src="/images/carlseaholmimage.jpg"
-          className={`z-30 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`}
-          height={clicked ? 200 : 70}
-          width={clicked ? 200 : 70}
-          alt="Carl Seaholm Profile Photo"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        />
-      }
-      </div>
     </div>
       <Sidenav open={open} toggle={toggle}>
         {open ? (
-            <SideMenuAccordianMobile toggle={toggle} />
+            <DemoAccordianPage details={['News, Classes & Open Mats', 'Special Offers', 'MBUNA', 'Blog', 'About', 'Community', '303 Team', 'More']} detailsIndex={0} />
             ) : null}
       </Sidenav>
     </>
@@ -168,4 +154,4 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
   );
 }
 
-export default SidenavMobile;
+export default DemoSidenavMobile;

@@ -23,7 +23,9 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
             </header>
         <div className='flex justify-end pt-5 py-5'>
                   <div className='flex flex-col'>
-                <Dropdown children={categoriesForDrop}/>
+                <Dropdown>
+                    {categoriesForDrop}
+                </Dropdown>
         </div>
         </div>
         <section className="md:grid md:grid-cols-2 flex flex-col gap-10">
