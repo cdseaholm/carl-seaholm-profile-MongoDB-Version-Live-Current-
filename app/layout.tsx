@@ -43,13 +43,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
       </body>
       }
+
       {pahtname === '/demo_303' &&
         <body className='seconditer'>
-          <div className="second">
             <main className="min-h-screen">
               {children}
             </main>
-          </div>
         </body>
         }
     </html>

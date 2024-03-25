@@ -3,7 +3,7 @@
 
 import { motion } from "framer-motion";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DemoLayout({ children }: { children: React.ReactNode }) {
     
     return (
         <motion.div
