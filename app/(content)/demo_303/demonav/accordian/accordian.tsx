@@ -15,17 +15,6 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
 
   return (
     <>
-      
-      <div className="block text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5 cursor-pointer">
-        <Link onClick={toggle} href={""}>
-          Dashboard
-        </Link>
-      </div>
-      <div className="block text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5 cursor-pointer">
-        <Link onClick={toggle} href={'' /* "/blog" */}>
-          Blog - Soon
-        </Link>
-      </div>
       <Accordion defaultPanel={''}>
         <AccordionItem toggle="panel-1" className="text-black hover:text-slate-200 text-md px-10 rounded-lg px-3 py-5">
           Classes and Open Mats

@@ -25,17 +25,17 @@ const poppins = Poppins({
 });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const pahtname = usePathname();
+  const pathname = usePathname();
 
   return (
     <html lang="en">
-      {pahtname !== '/demo_303' &&
+      {pathname !== '/demo_303' &&
       <body className={`firstiter ${cormorantGaramond.variable} ${poppins.variable}`}>
         <div className="first">
         <SpeedInsights/>
         <Providers>
           <Navbar />
-          <main className="min-h-screen">
+          <main className="h-dvh">
             {children}
           </main>
           <FooterNavBar />
@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </body>
       }
 
-      {pahtname === '/demo_303' &&
+      {pathname === '/demo_303' &&
         <body className='seconditer'>
             <main className="min-h-screen">
               {children}
