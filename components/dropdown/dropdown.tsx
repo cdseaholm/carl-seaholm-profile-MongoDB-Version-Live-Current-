@@ -1,36 +1,38 @@
 import React from 'react';
 
-export const DropdownPage = ({ menuStyle, dropdownStyle, itemsToFilter, setContextName}: { menuStyle: string; dropdownStyle: string; itemsToFilter: Array<any>; setContextName: (contextName: string) => () => void }) => {
+export function DropdownPage({ menuStyle, dropdownStyle, itemsToFilter, onSelect, contextName}: { menuStyle: string; dropdownStyle: string; itemsToFilter: Array<any>; onSelect: (item: string) => void; contextName: string }) {
+  const [item, setItem] = React.useState('');
   const [show, setShow] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
-  const [dropName, setDropName] = React.useState('Timeline');
-  const setName = (name: string) => {
-    setDropName(name)
-    setContextName(name)
-    toggle
-  }
+
+  const setChoosen = (item: string) => {
+    setItem(item);
+    onSelect(item);
+    setShow(false);
+  };
+  
   const toggle = React.useCallback(() => {
     setShow((prevState) => !prevState);
   }, []);
 
   // close dropdown when you click outside
   React.useEffect(() => {
-    const handleOutsideClick = (event: any) => {
-      if (ref.current && ref.current.contains(event.target)) {
-        return;
-      }
-      if (show) {
-        toggle;
+    const handleOutsideClick = (event: {target: any}) => {
+      if (!ref.current || !ref.current.contains(event.target as HTMLDivElement)) {
+        if (!show) return;
+        toggle();
       }
     };
     window.addEventListener('mouseup', handleOutsideClick);
     return () => window.removeEventListener('mouseup', handleOutsideClick);
   }, [show, ref, toggle]);
 
+
   return (
     <Dropdown toggle={toggle}>
+      <DropdownToggle> 
       <span className={`${dropdownStyle} ${show == true ? 'bg-green-500/20' : 'bg-green-500/0'}`}>
-          <span>{dropName}</span>
+        {contextName}
           <svg
               className="h-5 w-1/8 justify-center"
               xmlns="http://www.w3.org/2000/svg"
@@ -45,14 +47,13 @@ export const DropdownPage = ({ menuStyle, dropdownStyle, itemsToFilter, setConte
               />
           </svg>
       </span>
+      </DropdownToggle>
       {show &&
-      <DropdownMenu id={'menupanel'} menuStyle={menuStyle}>
+      <DropdownMenu id={'menupanel'} menuStyle={menuStyle} toggle={toggle} ref={ref}>
         {itemsToFilter.map((item, index) => (
-            <div key={index}>
-                <a onClick={() => setName(item)} className="block px-4 py-2 text-sm text-white hover:bg-slate-800">
-                    {item}
-                </a>
-            </div>
+          <div ref={ref} key={index} onClick={() => setChoosen(item)} className='block px-4 py-2 text-sm text-white hover:bg-slate-800'>
+            {item}
+          </div>
         ))}
       </DropdownMenu>
       }
@@ -62,15 +63,9 @@ export const DropdownPage = ({ menuStyle, dropdownStyle, itemsToFilter, setConte
 
 /* Logic*/
 
-const Context = React.createContext({});
-
 function Dropdown({ children, toggle }: { children: React.ReactNode; toggle: () => void;}) {
 
-  const dropdownToggle = React.Children.toArray(children)[0];
-  const dropdownMenu = React.Children.toArray(children)[1];
-
   return (
-    <Context.Provider value={{ toggle }}>
     <button
       onClick={toggle}
       className="focus:outline-none z-30"
@@ -79,30 +74,26 @@ function Dropdown({ children, toggle }: { children: React.ReactNode; toggle: () 
       aria-expanded="true"
       aria-haspopup="true"
     >
-      {dropdownToggle}
-      <>{dropdownMenu}</>
+      {children}
     </button>
-    </Context.Provider>
   );
 }
 
-const useAccordion = () => React.useContext(Context);
+function DropdownToggle({ children }: { children: React.ReactNode;}) {
+  return <>{children}</>
+}
 
-function DropdownMenu({ children, id, menuStyle }: { children: React.ReactNode; id: string; menuStyle: string }) {
-  const { toggle } = useAccordion() as { toggle: () => void };
+function DropdownMenu({ children, menuStyle, ref }: { children: React.ReactNode; id: string; menuStyle: string; toggle: () => void; ref: React.RefObject<HTMLDivElement>;}) {
 
   return (
-    <div className="relative z-30">
-      <div
-        id={id}
-        onClick={toggle}
-        className={menuStyle}
-        role="menu"
-        aria-orientation="vertical"
-        aria-labelledby="options-menu"
-      >
-        {children}
-      </div>
-    </div>
+        <div
+          ref={ref}
+          className={menuStyle}
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="options-menu"
+        >
+          {children}
+        </div>
   );
 }

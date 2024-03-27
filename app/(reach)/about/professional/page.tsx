@@ -9,19 +9,9 @@ export default function Professional() {
 
   const isBreakpoint = useMediaQuery(768);
 
-  useEffect(() => {
-      // Disable scrolling on the body when the component is mounted
-      document.body.style.overflow = 'hidden';
-
-      // Enable scrolling on the body when the component is unmounted
-      return () => {
-          document.body.style.overflow = 'unset';
-      };
-  }, []);
-
   return (
     <main>
-      <div className="childFirstPro min-content mt-10 mx-10">
+      <div className={`childFirst ${isBreakpoint ? 'my-4 py-2 mx-8 px-2' : 'mb-4 py-2 mx-20 px-2'}`}>
         {!isBreakpoint &&
         <ProfessionalDesktop />
         }
