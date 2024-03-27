@@ -1,8 +1,7 @@
 export type Job = {
-    id: number;
     title: string;
     company: string;
-    date: {startDate: Date, endDate: Date};
+    date: {startDate: string, endDate: string};
     descriptions: string[];
     location: string;
     category: string[];

@@ -7,6 +7,22 @@ import { MobileDropDown } from '../../../../components/dropdown/mobileDropdown';
 export default function ProfessionalMobile() {
   const [category, setCategory] = useState('Timeline');
   const divRef = useRef(null);
+  const [open, setOpen] = useState(false);
+
+  const toggle = () => {
+    setOpen(!open);
+  };
+
+  React.useEffect(() => {
+    const handleOutsideClick = (event: { target: any; }) => {
+      if (!divRef.current || !(divRef.current as HTMLDivElement).contains(event.target as HTMLDivElement)) {
+        if (!open) return;
+        toggle();
+      }
+    };
+    window.addEventListener('mousedown', handleOutsideClick);
+    return () => window.removeEventListener('mousedown', handleOutsideClick);
+  }, [open, divRef, toggle]);
 
   const categories = [
     'Timeline',
@@ -24,16 +40,42 @@ return (
                   <h1 className="flex text-3xl font-bold justify-start">Carl Seaholm</h1>
                   <div>
                     <h2 className="flex text-lg font-bold justify-end">{headerTwo}</h2>
-                    <div className='flex justify-end'>
-                      <div className='flex flex-col'>
-                        <MobileDropDown 
-                          menuStyle={`absolute right-4 z-30 py-1 px-1 text-left border border-gray-300 rounded-sm mt-9 mb-0 bg-clip-padding bg-slate-800/70 text-white shadow-lg w-30 cursor-pointer`} 
-                          dropdownStyle={`absolute right-12 mr-2 z-10 flex justify-between w-30 text-black rounded px-1 pl-3 py-1 text-sm`} 
-                          itemsToFilter={categories} 
-                          setContextName={(category: string) => setCategory(category) } 
-                          contextName={category}
-                        />
+                    <div className='flex flex-row justify-end items-center pr-4'>
+                      <p className='flex pr-2'>
+                        Filter:
+                      </p>
+                      <div ref={divRef} onClick={toggle} className='cursor-pointer w-5/12'>
+                          <div className='relative flex z-30 flex text-black rounded'>
+                            {category}
+                          </div>
                       </div>
+                      <div className='flex items-end pl-6'>
+                        <svg
+                            className="h-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            aria-hidden="true"
+                        >
+                            <path
+                                fillRule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                      </div>
+                      {open && 
+                        <div ref={divRef} className='absolute flex flex-col z-30 right-22 top-52 mt-2 justify-end text-left border border-gray-300 rounded-sm bg-clip-padding bg-slate-800/70 text-white shadow-lg w-32 cursor-pointer'>
+                          {categories.map((item, index) => (
+                            <div key={index} onClick={() => {
+                              setCategory(item)
+                              toggle()
+                            }} className='block px-4 py-2 text-sm text-white hover:bg-slate-800'>
+                              {item}
+                            </div>
+                          ))}
+                        </div>
+                      }
                     </div>
                   </div>
                 </div>

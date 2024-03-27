@@ -1,8 +1,8 @@
 export type School = {
-    id: number;
     school: string;
     degree: string;
     major: string;
-    date: {startDate: Date, endDate: Date};
+    date: {startDate: string, endDate: string};
     location: string;
+    category: string;
 };
