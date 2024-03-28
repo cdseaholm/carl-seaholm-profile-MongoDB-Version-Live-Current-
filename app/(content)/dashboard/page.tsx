@@ -3,26 +3,31 @@
 import useMediaQuery from "@/components/listeners/WidthSettings";
 import Sidebar from "@/components/sidebar/sidebar";
 import SidebarMobile from "@/components/sidebar/sidebarMobile";
+import MobileTaskTracker from "@/components/trackers/mobiletaskTracker";
+import TaskTracker from "@/components/trackers/taskTrackers";
 import React, { useState } from "react";
 
 const Dashboard = () => {
     const isBreakpoint = useMediaQuery(768);
+    const divRef = React.useRef(null);
     const [trackerState, setTrackerState] = useState('' as string);
 
     return (
-        <div className="childFirst min-w-screen min-h-screen my-10 mx-10">
-            {/*
-            <div className='flex justify-start'>
-                
-                {!isBreakpoint &&
-                <Sidebar setTrackerState={setTrackerState} />
-                }
-                {isBreakpoint &&
-                <SidebarMobile setTrackerState={ setTrackerState } />
-                }
-                */}
-                <div className='flex justify-center items-center'>
-                    <div className="flex flex-col justify-center items-center">
+        <div className={`childFirst ${isBreakpoint ? 'my-4 py-2 mx-8 px-2' : 'mb-8 py-2 mx-20 px-2'}`}  style={{ minHeight: '80vh', maxHeight: '80vh'}}>
+                <div className='flex flex-col justify-between'>
+                    {/*
+                    <div className="w-1/4 px-2">
+                    {!isBreakpoint &&
+                    <Sidebar setTrackerState={setTrackerState} />
+                    }
+                    {isBreakpoint &&
+                    <SidebarMobile setTrackerState={ setTrackerState } />
+                    }
+                    </div>
+                    {/**<div className="flex flex-col justify-end">
+                        <h1 className='text-5xl font-bold'>Dashboard</h1>
+                    </div>
+                    */}
                     <h1 className='text-5xl font-bold'>Dashboard</h1>
                     <h2 className='text-lg font-bold'>Welcome to the dashboard.</h2>
                     <p className="py-10 w-5/6">
@@ -31,8 +36,16 @@ const Dashboard = () => {
                     <p className="w-5/6">
                         Feel free to look around where you can and give me feedback. I am always looking for ways to improve the website. Otherwise check back soon for more updates!
                     </p>
-                    </div>
                 </div>
+                {/**
+                <div style={{ maxHeight: '80vh', overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'rgba(100, 116, 139, 1) rgba(0, 0, 0, 0.1)',}} ref={divRef}>
+                    {isBreakpoint &&
+                        <MobileTaskTracker />
+                    }
+                    {!isBreakpoint &&
+                        <TaskTracker />
+                    }
+                </div>*/}
         </div>
     );
 };
