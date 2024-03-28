@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       {pathname !== '/demo_303' &&
       <body className={inter.className}>
         <div className="first">
-          <div className="h-dvh">
+          <div className="h-screen">
             <SpeedInsights/>
             <Providers>
               <Navbar />
