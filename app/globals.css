@@ -24,13 +24,8 @@
 
 /* body-pieces */
 
-body.firstiter {
+body {
   background-image: url('../public/images/carmelbackground.jpg');
-  background-size: cover;
-}
-
-body.seconditer {
-  background-color: rgba(0, 0, 0, .9);
   background-size: cover;
 }
 

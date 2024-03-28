@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useMediaQuery from '@/components/listeners/WidthSettings';
 import ProfessionalDesktop from './desktop';
 import ProfessionalMobile from './mobile';
@@ -11,7 +11,7 @@ export default function Professional() {
 
   return (
     <main>
-      <div className="childFirst min-w-screen min-h-screen my-10 mx-10">
+      <div className={`childFirst ${isBreakpoint ? 'my-4 py-2 mx-8 px-2' : 'mb-4 py-2 mx-20 px-2'}`}>
         {!isBreakpoint &&
         <ProfessionalDesktop />
         }

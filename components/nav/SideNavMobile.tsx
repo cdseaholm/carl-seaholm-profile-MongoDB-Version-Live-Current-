@@ -39,38 +39,35 @@ const SidenavMobile = () => {
 
   const style = {
     profilepicture: {
-      large: `absolute z-40 top-2 right-8 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`,
-      small: `absolute z-40 right-8 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`
+      large: `absolute z-40 top-0 right-10 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`,
+      small: `absolute z-40 top-0 right-10 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`
     },
   };
 
   return (
     <>
-    <div className='flex flex-between items-center'>
-      <div className='flex items-center ml-5 mt-5 px-6 pt-2'>
-        {pathname !== '/'  && pathname !== '/demo_303' &&
+      {pathname !== '/'  && pathname !== '/demo_303' &&
+      <div className='flex flex-row justify-start items-center'>
         <button 
           type='button'
           aria-disabled={open}
           disabled={open}
           onClick={toggle}
-          className={`text-black font-medium text-sm ${open ? 'text-transparent' : 'text-black'}`}
+          className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`}
         >
           Menu
         </button>
-  }
-        {pathname !== '/'  && pathname !== '/demo_303' &&
         <>
-        <div className={`mx-5 my-2 ${open ? 'text-transparent' : 'text-black'}`}>|</div>
+        <div className={`mx-5 my-1 ${open ? 'text-transparent' : 'text-black'}`}>|</div>
         <div>
-          <Link className={`text-black font-medium text-sm ${open ? 'text-transparent' : 'text-black'}`} href='/'>
+          <Link className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`} href='/'>
             Home
           </Link>
         </div>
         </>
-        }
       </div>
-      <div ref={imageRef} className={`mt-5 ml-5 ${clicked ? style.profilepicture.large : style.profilepicture.small}`}>
+      }
+      <div ref={imageRef} className={`mt-3 ml-5 ${clicked ? style.profilepicture.large : style.profilepicture.small}`}>
       {pathname === '/about/professional' &&
         <Image
           onClick={imageClick}
@@ -85,7 +82,6 @@ const SidenavMobile = () => {
         />
       }
       </div>
-    </div>
       <Sidenav open={open} toggle={toggle}>
         {open ? (
             <SideMenuAccordianMobile toggle={toggle} />

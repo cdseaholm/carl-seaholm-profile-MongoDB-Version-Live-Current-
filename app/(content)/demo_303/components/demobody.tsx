@@ -10,7 +10,7 @@ const DemoBody = () => {
 
     return (
             <div className="bg-black/80 rounded-md mt-5 mx-5">
-                <div style={{ maxHeight: '100vh', overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'rgba(100, 116, 139, 1) rgba(0, 0, 0, 0.1)',}} ref={divRef}>
+                <div style={{ maxHeight: '85vh', overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'rgba(100, 116, 139, 1) rgba(0, 0, 0, 0.1)',}} ref={divRef}>
                     <h1 className="m-10 flex justify-center text-6xl text-white font-bold">303 Training Center</h1>
                     <h2 className="m-10 flex flex-col justify-center text-lg text-white font-bold">
                     <p className="text-center">BRAZILIAN JIU JITSU</p>

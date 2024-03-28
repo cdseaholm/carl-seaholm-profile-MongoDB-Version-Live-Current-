@@ -17,29 +17,38 @@ const SidenavPage = () => {
 
   return (
     <>
-    <div className='flex items-center ml-5 mt-5 px-6 pt-2'>
       {pathname !== '/' && pathname !== '/demo_303' &&
-      <button 
-        type='button'
-        aria-disabled={open}
-        disabled={open}
-        onClick={toggle}
-        className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`}
-      >
-        Menu
-      </button>
-}
-      {pathname !== '/'  && pathname !== '/demo_303' &&
-      <>
-      <div className={`mx-5 ${open ? 'text-transparent' : 'text-black'}`}>|</div>
-      <div>
-        <Link className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`} href='/'>
-          Home
-        </Link>
-      </div>
-      </>
+        <div className='flex flex-row w-full justify-between'>
+          <div className='flex items-center'>
+            <button 
+              type='button'
+              aria-disabled={open}
+              disabled={open}
+              onClick={toggle}
+              className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`}
+            >
+              Menu
+            </button>
+            <div className={`mx-5 my-1 ${open ? 'text-transparent' : 'text-black'}`}>
+              |
+            </div>
+            <div>
+              <Link className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`} href='/'>
+                Home
+              </Link>
+            </div>
+          </div>
+          <div className='flex items-center'>
+            <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
+              <SocialIcon style={style.mainBarIconStyle} network='github'/>
+            </div>
+            <p className='mx-3'>|</p>
+            <div className='cursor-pointer' onClick={() => openInNewTab('https://www.linkedin.com/in/carlseaholm/')}>
+              <SocialIcon style={style.mainBarIconStyle} network='linkedin' />
+            </div>
+          </div>
+        </div>
       }
-    </div>
       <Sidenav open={open} toggle={toggle}>
         {open ? (
             <SideMenuAccordian toggle={toggle} />
@@ -73,6 +82,10 @@ const style = {
     borderRadius: '50%',
     overflow: 'hidden',
     color: 'transparent',
+  },
+  mainBarIconStyle: {
+    height: 30,
+    width: 30,
   }
 };
 

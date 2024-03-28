@@ -24,8 +24,8 @@ export const SideMenuAccordianMobile = ({ toggle }: { toggle: () => void; }) => 
         </Link>
       </div>
       <div className="block text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5 cursor-pointer">
-          <Link onClick={toggle} href={'' /* "/blog" */} className={`${pathname === "/blog" ? "underline" : ""}`}>
-          Blog - Soon
+          <Link onClick={toggle} href={"/blog"} className={`${pathname === "/blog" ? "underline" : ""}`}>
+          Blog
         </Link>
       </div>
       <Accordion defaultPanel={defaultPanel}>
