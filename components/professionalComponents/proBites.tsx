@@ -1,43 +1,7 @@
-import React from 'react';
-import {jobsArray, schoolsArray} from './jobsarray';
-import { School } from '../../types/education';
-import { Job } from '../../types/job';
-import { DetailsAccordianPage } from '../nav/menuDrops/DetailsAccordian';
-
-const professionalView = ({category}: {category: string}) => {
-    const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
-    const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
-
-    if (category === 'Timeline') {
-        jobsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1);
-    } else if (category === 'Education') {
-        schoolsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1);
-    } else {
-        jobsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1).filter(job => job.category.includes(category));
-    }
-
-    return (
-        <div>
-            {category !== 'Education' &&
-            
-            filteredJobs.map((job, index) => 
-                <div key={index} className='flex flex-row justify-center'>
-                    <JobBite job={job} index={index} />
-                </div>
-            )
-            }
-            {category === 'Education' &&
-            filteredSchools.map((school, index) => 
-                <div key={index} className='flex flex-row justify-center'>
-                    <SchoolBite school={school} index={index} />
-                </div>
-            )
-            }
-        </div>
-    );
-};
-
-export default professionalView;
+import React from "react";
+import { DetailsAccordianPage } from "../nav/menuDrops/DetailsAccordian";
+import { Job } from "@/types/job";
+import { School } from "@/types/education";
 
 const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -74,3 +38,5 @@ const JobBite = ({ job, index, }: { job: Job; index: number; }) => {
         </div>
     );
 };
+
+export { JobBite, SchoolBite };

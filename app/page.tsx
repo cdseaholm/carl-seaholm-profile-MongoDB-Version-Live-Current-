@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <main>
       <div className={`landing-page ${isShowing ? 'slide-up' : ''}`}>
-        <div className={`flex flex-col px-8 ${isBreakpoint ? 'pt-2 pb-8' : 'py-4'}`}>
+        <div className={`flex flex-col px-8 ${isBreakpoint ? 'pt-2 pb-8' : 'pt-16'}`}>
             <h1 className={`flex flex-start ${isBreakpoint ? 'text-6xl' : 'text-8xl'} font-semibold text-slate-600`}>Carl Seaholm</h1>
             <div className='py-5 px-3'>
               <h2 className={`flex ${isBreakpoint ? 'text-xl' : 'text-2xl'} font-semibold text-slate-600 pb-10`}>A Professional and Personal Portfolio</h2>
@@ -44,7 +44,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-      
     </main>
   );
 }

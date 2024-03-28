@@ -1,17 +1,32 @@
 'use client'
 
+import { schoolsArray, jobsArray } from '@/components/professionalComponents/jobsarray';
+import { SchoolBite, JobBite } from '@/components/professionalComponents/proBites';
 import React, { useState, useRef } from 'react';
-import professionalView from '../../../../components/professionalComponents/professionaView';
-import { MobileDropDown } from '../../../../components/dropdown/mobileDropdown';
+
 
 export default function ProfessionalMobile() {
   const [category, setCategory] = useState('Timeline');
   const divRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
+  const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
+
+  /**Variables */
 
   const toggle = () => {
     setOpen(!open);
   };
+
+  React.useEffect(() => {
+    if (category === 'Timeline') {
+      setFilteredJobs(jobsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1));
+    } else if (category === 'Education') {
+      setFilteredSchools(schoolsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1));
+    } else {
+      setFilteredJobs(jobsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1).filter(job => job.category.includes(category)));
+    }
+  }, [category]);
 
   React.useEffect(() => {
     const handleOutsideClick = (event: { target: any; }) => {
@@ -79,9 +94,25 @@ return (
                     </div>
                   </div>
                 </div>
-                <div className='flex bg-white/30 p-2 rounded-md 60 mt-7 mx-2 justify-center' style={{ maxHeight: '75vh', overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'rgba(100, 116, 139, 1) rgba(0, 0, 0, 0.1)'}} ref={divRef}>
-                  {professionalView({category: category})}
-                </div> 
+                <div className='flex flex-col bg-white/30 p-2 rounded-md mt-7 justify-center' style={{ minHeight: '65vh', maxHeight: '65vh', overflowY: 'auto',}}>
+                  <div style={{ maxHeight: '65vh', overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'rgba(100, 116, 139, 1) rgba(0, 0, 0, 0.1)',}} ref={divRef}>
+                    {filteredSchools.map((item, index) => (
+                      <div key={index} className='flex flex-row justify-center'>
+                        {category === 'Education' &&
+                          <SchoolBite school={item} index={index}/>
+                        }
+                      </div>
+                    ))}
+                    {filteredJobs.length > 0 &&
+                      filteredJobs.map((item, index) => (
+                        <div key={index} className='flex flex-row justify-center'>
+                          {category !== 'Education' &&
+                            <JobBite job={item} index={index}/>
+                          }
+                        </div>
+                    ))}
+                </div>
+      </div>
 
     </main>
 );

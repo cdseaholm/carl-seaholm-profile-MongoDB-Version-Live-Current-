@@ -2,7 +2,8 @@
 
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
-import professionalView from '../../../../components/professionalComponents/professionaView';
+import { jobsArray, schoolsArray } from '@/components/professionalComponents/jobsarray';
+import { JobBite, SchoolBite } from '@/components/professionalComponents/proBites';
 
 const openInNewTab = (url: string) => {
   const win = window.open(url, '_blank');
@@ -10,12 +11,29 @@ const openInNewTab = (url: string) => {
 };
 
 export default function ProfessionalDesktop() {
+  /**States */
   const [isHovered, setIsHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState('Timeline');
   const divRef = useRef(null);
+  const imageRef = React.useRef<HTMLDivElement>(null);
+  const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
+  const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
 
+  /**Variables */
+
+  const categories = [
+    'Timeline',
+    'Development',
+    'Management',
+    'Sales',
+    'Education'
+  ];
+
+  var headerTwo = category === 'Timeline' ? 'Full Timeline' : category + ' Timeline';
+
+  /**Functions */
   const imageClick = () => {
     setIsHovered(!isHovered);
     setClicked(!clicked);
@@ -25,6 +43,7 @@ export default function ProfessionalDesktop() {
     setOpen(!open);
   };
 
+  /**Styles */
   const style = {
     profilepicture: {
       large: `absolute z-20 top-25 left-20 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`,
@@ -32,7 +51,16 @@ export default function ProfessionalDesktop() {
     },
   };
 
-  const imageRef = React.useRef<HTMLDivElement>(null);
+  /**Effects */
+  React.useEffect(() => {
+    if (category === 'Timeline') {
+      setFilteredJobs(jobsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1));
+    } else if (category === 'Education') {
+      setFilteredSchools(schoolsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1));
+    } else {
+      setFilteredJobs(jobsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1).filter(job => job.category.includes(category)));
+    }
+  }, [category]);
 
   React.useEffect(() => {
     const handleOutsideClick = (event: { target: any; }) => {
@@ -55,16 +83,6 @@ export default function ProfessionalDesktop() {
     window.addEventListener('mousedown', handleOutsideClick);
     return () => window.removeEventListener('mousedown', handleOutsideClick);
   }, [open, divRef, toggle]);
-
-  const categories = [
-    'Timeline',
-    'Developing',
-    'Management',
-    'Sales',
-    'Education'
-  ];
-
-  var headerTwo = category === 'Timeline' ? 'Full Timeline' : category + ' Timeline';
 
   return (
     <main>
@@ -95,20 +113,20 @@ export default function ProfessionalDesktop() {
                 </div>
             </div>
             <div className='flex items-end'>
-                        <svg
-                            className="h-4"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                      </div>
+              <svg
+                className="h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                />
+              </svg>
+            </div>
             {open && 
               <div ref={divRef} className='absolute flex flex-col z-30 right-22 top-52 mt-2 justify-end text-left border border-gray-300 rounded-sm bg-clip-padding bg-slate-800/70 text-white shadow-lg w-32 cursor-pointer'>
                 {categories.map((item, index) => (
@@ -124,9 +142,25 @@ export default function ProfessionalDesktop() {
           </div>
         </div>
       </div>
-      <div className='flex bg-white/30 p-2 rounded-md 60 mt-7 justify-center' style={{ maxHeight: '65vh', overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'rgba(100, 116, 139, 1) rgba(0, 0, 0, 0.1)',}} ref={divRef}>
-        {professionalView({category: category})}
-      </div> 
+      <div className='flex flex-col bg-white/30 p-2 rounded-md mt-7 justify-center' style={{ minHeight: '65vh', maxHeight: '65vh', overflowY: 'auto',}}>
+        <div style={{ maxHeight: '65vh', overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'rgba(100, 116, 139, 1) rgba(0, 0, 0, 0.1)',}} ref={divRef}>
+          {filteredSchools.map((item, index) => (
+            <div key={index} className='flex flex-row justify-center'>
+              {category === 'Education' &&
+                <SchoolBite school={item} index={index}/>
+              }
+            </div>
+          ))}
+          {filteredJobs.length > 0 &&
+            filteredJobs.map((item, index) => (
+              <div key={index} className='flex flex-row justify-center'>
+                {category !== 'Education' &&
+                  <JobBite job={item} index={index}/>
+                }
+              </div>
+          ))}
+        </div>
+      </div>
     </main>
   );
 }

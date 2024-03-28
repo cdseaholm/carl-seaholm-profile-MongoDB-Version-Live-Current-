@@ -2,8 +2,8 @@
 
 import React, { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
-import professionalView from '../../../../components/professionalComponents/professionaView';
-import { DropdownPage } from '@/components/dropdown/dropdown';
+import { schoolsArray, jobsArray } from '@/components/professionalComponents/jobsarray';
+import { SchoolBite, JobBite } from '@/components/professionalComponents/proBites';
 
 const openInNewTab = (url: string) => {
   const win = window.open(url, '_blank');
@@ -16,11 +16,20 @@ export default function DevelopmentDesktop() {
   const [category, setCategory] = useState('Timeline');
   const [showDivider, setShowDivider] = useState(false);
   const divRef = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
+  const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
+
+  /**Variables */
 
   const imageClick = useCallback(() => {
     setIsHovered(prevHovered => !prevHovered);
     setClicked(prevClicked => !prevClicked);
   }, []);
+
+  const toggle = () => {
+    setOpen(!open);
+  };
 
   const style = {
     profilepicture: {
@@ -30,6 +39,16 @@ export default function DevelopmentDesktop() {
   };
 
   const imageRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (category === 'Timeline') {
+      setFilteredJobs(jobsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1));
+    } else if (category === 'Education') {
+      setFilteredSchools(schoolsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1));
+    } else {
+      setFilteredJobs(jobsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1).filter(job => job.category.includes(category)));
+    }
+  }, [category]);
 
   React.useEffect(() => {
     const handleOutsideClick = (event: { target: any; }) => {
@@ -80,20 +99,63 @@ export default function DevelopmentDesktop() {
         <h1 className="flex text-5xl font-bold pt-5 pr-5 justify-end">Carl Seaholm</h1>
                 <h2 className="flex text-lg font-bold pt-5 pr-5 justify-end">Professional Timeline</h2>
                 <div className={`${showDivider ? 'divide-y divide-solid divide-slate-800 width-full' : ''}`}>
-                    <div className='flex justify-end pt-5 py-5'>
-                        <div className='flex flex-col'>
-                            <DropdownPage 
-                              menuStyle={`absolute right-4 z-30 py-2 px-1 text-left border border-gray-300 rounded-sm mt-9 mb-0 bg-clip-padding bg-slate-800/70 text-white shadow-lg w-40 cursor-pointer`} 
-                              dropdownStyle={"absolute right-12 mr-2 z-10 flex justify-between w-40 text-black rounded px-2 pl-3 py-2"} 
-                              itemsToFilter={categories} 
-                              setContextName={(category: string) => () => setCategory(category)}                  />
-                            </div>
-                        </div>
-                        <div className='flex bg-white/30 p-2 rounded-md 60 mt-7 justify-center' style={{ maxHeight: '79vh', overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'rgba(100, 116, 139, 1) rgba(0, 0, 0, 0.1)',}}
-                        onScroll={handleScroll} ref={divRef}>
-                            {professionalView({category: category})}
-                    </div> 
-                </div> 
+                <div className='flex flex-row justify-end items-center pr-2'>
+            <p className='flex pr-2'>
+              Filter:
+            </p>
+            <div ref={divRef} onClick={toggle} className='cursor-pointer w-5/12'>
+                <div className='relative flex z-30 flex text-black rounded'>
+                  {category}
+                </div>
+            </div>
+            <div className='flex items-end'>
+              <svg
+                className="h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            {open && 
+              <div ref={divRef} className='absolute flex flex-col z-30 right-22 top-52 mt-2 justify-end text-left border border-gray-300 rounded-sm bg-clip-padding bg-slate-800/70 text-white shadow-lg w-32 cursor-pointer'>
+                {categories.map((item, index) => (
+                  <div key={index} onClick={() => {
+                    setCategory(item)
+                    toggle()
+                  }} className='block px-4 py-2 text-sm text-white hover:bg-slate-800'>
+                    {item}
+                  </div>
+                ))}
+              </div>
+            }
+          </div>       
+          <div className='flex flex-col bg-white/30 p-2 rounded-md mt-7 justify-center' style={{ minHeight: '65vh', maxHeight: '65vh', overflowY: 'auto',}}>
+            <div style={{ maxHeight: '65vh', overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'rgba(100, 116, 139, 1) rgba(0, 0, 0, 0.1)',}} ref={divRef}>
+              {filteredSchools.map((item, index) => (
+                <div key={index} className='flex flex-row justify-center'>
+                  {category === 'Education' &&
+                    <SchoolBite school={item} index={index}/>
+                  }
+                </div>
+              ))}
+              {filteredJobs.length > 0 &&
+                filteredJobs.map((item, index) => (
+                  <div key={index} className='flex flex-row justify-center'>
+                    {category !== 'Education' &&
+                      <JobBite job={item} index={index}/>
+                    }
+                  </div>
+              ))}
+            </div>
+          </div>
+        </div> 
     </main>
   );
 }
