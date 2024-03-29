@@ -74,8 +74,8 @@ const SidenavMobile = () => {
           priority
           src="/images/carlseaholmimage.jpg"
           className={`z-30 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`}
-          height={clicked ? 200 : 70}
-          width={clicked ? 200 : 70}
+          height={clicked ? 200 : 60}
+          width={clicked ? 200 : 60}
           alt="Carl Seaholm Profile Photo"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -94,7 +94,7 @@ const SidenavMobile = () => {
 const style = {
   closeIcon: `absolute top-1 focus:outline-none right-3 text-3xl text-white cursor-pointer`,
   sidenav: {
-    open: `w-5/12 md:w-60 bg-slate-900/90 text-white overflow-x-hidden`,
+    open: `w-5/12 md:w-60 bg-green-900 text-white overflow-x-hidden z-40`,
     close: `w-0 bg-gray-800 text-white overflow-x-hidden`,
     default: `h-screen fixed z-30 top-0 left-0 transition-all ease duration-200`,
   },
@@ -120,7 +120,6 @@ const style = {
 
 function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
   const ref = React.useRef<HTMLDivElement>(null);
-  const isBreakpoint = useMediaQuery(768);
 
   React.useEffect(() => {
     const handleOutsideClick = (event: { target: any; }) => {

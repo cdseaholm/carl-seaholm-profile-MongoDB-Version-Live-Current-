@@ -43,11 +43,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       }
 
       {pathname === '/demo_303' &&
-        <body className='seconditer'>
-            <main className="min-h-screen">
+          <body>
+            <main className="min-h-screen bg-gray-800">
               {children}
             </main>
-        </body>
+          </body>
         }
     </html>
   );

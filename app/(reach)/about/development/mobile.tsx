@@ -1,7 +1,7 @@
 'use client'
 
-import { schoolsArray, jobsArray } from '@/components/professionalComponents/jobsarray';
-import { SchoolBite, JobBite } from '@/components/professionalComponents/proBites';
+import { schoolsArray, jobsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
+import { SchoolBite, JobBite } from '@/components/pagecomponents/professionalComponents/proBites';
 import React, { useState, useRef } from 'react';
 
 export default function DevelopmentMobile() {
