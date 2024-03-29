@@ -1,14 +1,16 @@
-'use client'
-import useMediaQuery from '@/components/listeners/WidthSettings';
-import { useRef } from 'react';
+import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
+
+export const metadata = {
+    title: "Blog",
+    description: "A collection of blog posts from Carl Seaholm."
+};
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
-    const divRef = useRef(null);
-    const isBreakpoint = useMediaQuery(768);
+
     
     return (
-        <div className={`childFirst ${isBreakpoint ? 'my-4 py-2 mx-8 px-2' : 'mb-8 py-2 mx-20 px-2'}`}>
-                    {children}
-        </div>
+        <MainPageBody>
+            {children}
+        </MainPageBody>
     );
 }

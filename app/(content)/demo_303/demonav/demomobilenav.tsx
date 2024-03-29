@@ -12,16 +12,18 @@ const DemoSidenavMobile = () => {
   const [socialsOpen, setSocialsOpen] = useState(false);
   const pathname = usePathname();
   const socialsRef = React.useRef<HTMLDivElement>(null);
-  const toggle = () => {
+
+  const toggle = React.useCallback(() => {
     setOpen((prevState) => !prevState);
-  };
-  const toggleSocials = () => {
-    setSocialsOpen((prevState) => !prevState);
-  };
+  }, []);
+  
+  const toggleSocials = React.useCallback(() => {
+      setSocialsOpen((prevState) => !prevState);
+  }, []);
 
   React.useEffect(() => {
     const handleOutsideClick = (event: { target: any; }) => {
-      if (!socialsRef.current || !socialsRef.current.contains(event.target as HTMLDivElement)) {
+      if (!socialsRef.current || !socialsRef.current.contains(event.target as HTMLDivElement) && event.target.id !== 'socialButton') {
         if (!socialsOpen) return;
         toggleSocials();
       }
@@ -58,17 +60,14 @@ const DemoSidenavMobile = () => {
         </>
         }
       </div>
-      <a className='cursor-pointer text-white font-medium pr-4' onClick={toggleSocials}>
+      <button id='socialButton' type='button' className='cursor-pointer text-white font-medium pr-4' onClick={socialsOpen ? () => setSocialsOpen(false) : () => setSocialsOpen(true)}>
         Socials
-      </a>
+      </button>
       {socialsOpen && 
       <div className='absolute top-10 right-10 bg-black/90 z-20 border-white border'>
         <div className='justify-evenly flex flex-row items-center mx-3'>
-          <div className='cursor-pointer absolute pl-2 left-0 top-0 text-white' onClick={toggleSocials}>
-            X
-          </div>
-          <div ref={socialsRef} className='cursor-pointer pl-3' onClick={() => {}}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-8 h-8">
+          <div ref={socialsRef} className='cursor-pointer' onClick={() => {}}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-9 h-9">
               <path fillRule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
             </svg>
           </div>
