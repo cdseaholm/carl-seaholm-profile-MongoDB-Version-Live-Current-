@@ -1,5 +1,6 @@
 'use client'
 
+import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { motion } from "framer-motion";
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {
@@ -14,7 +15,9 @@ export default function AboutLayout({ children }: { children: React.ReactNode })
             damping: 20,
             delay: 0.2,
         }}>
-            {children}
+            <MainPageBody>
+                {children}
+            </MainPageBody>
         </motion.div>
     );
 }

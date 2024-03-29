@@ -10,7 +10,7 @@ const NavBar = () => {
     const pathName = usePathname();
     const isBreakpoint = useMediaQuery(768);
     return (
-        <div className={`flex flex-row h-24 items-center w-full px-10`}>
+        <div className={`flex flex-row h-24 items-center w-full px-10`} style={{height: '8vh'}}>
           {!isBreakpoint && pathName !== 'demo' &&
           <SidenavPage/>
           }

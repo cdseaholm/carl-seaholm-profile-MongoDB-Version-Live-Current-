@@ -61,7 +61,7 @@ const SidenavPage = () => {
 const style = {
   closeIcon: `absolute top-1 focus:outline-none right-3 text-3xl text-white cursor-pointer`,
   sidenav: {
-    open: `w-3/12 md:w-60 bg-slate-900/90 text-white overflow-x-hidden`,
+    open: `w-3/12 md:w-60 bg-green-900 text-white overflow-x-hidden z-40`,
     close: `w-0 bg-gray-800 text-white overflow-x-hidden`,
     default: `h-screen fixed z-30 top-0 left-0 transition-all ease duration-200`,
   },

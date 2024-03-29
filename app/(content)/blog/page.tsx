@@ -1,10 +1,10 @@
-import BlogDropdown from "@/components/dropdown/blog/blogdropdown";
+import BlogDropdown from "@/components/dropdown/blogdropdown";
 import { getCategorisedPosts } from "@/lib/posts";
 
 const Blog = () => {
     const posts = getCategorisedPosts();
     Object.keys(posts).forEach(category => {
-        posts[category] = posts[category].filter(post => post.category !== 'demo');
+        posts[category] = posts[category].filter(post => post.category !== 'demo').sort((a, b) => a.title < b.title ? 1 : -1);
         if (posts[category].length === 0) {
             delete posts[category];
         }
