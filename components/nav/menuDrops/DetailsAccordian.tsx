@@ -58,9 +58,7 @@ function AccordionItem({ toggle, children, className }: { toggle: string; childr
         </span>
       </div>
       <div className='flex items-center justify-center'>
-        <div className={`${!selected ? 'divide-y divide-black w-4/6 divide-solid' : '' }`}>
-            <div/>
-            <div/>
+        <div>
         </div>
       </div>
       </>

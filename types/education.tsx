@@ -5,4 +5,6 @@ export type School = {
     date: {startDate: string, endDate: string};
     location: string;
     category: string;
+    logo: string;
+    logoAlt: string;
 };

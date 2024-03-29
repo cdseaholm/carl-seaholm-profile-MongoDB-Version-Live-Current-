@@ -5,4 +5,6 @@ export type Job = {
     descriptions: string[];
     location: string;
     category: string[];
+    logo: string;
+    logoAlt: string;
 };

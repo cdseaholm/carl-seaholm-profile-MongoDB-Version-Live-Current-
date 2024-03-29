@@ -73,14 +73,16 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
                 }
             </InnerHeader>   
             <MainChild>
-                <div className={`${category === 'All' || !isBreakpoint ? `md:grid md:grid-cols-2 justify-center` : `items-center justify-start`}`}>
-                        {posts !== null && category === 'All' &&
-                            Object.keys(posts).map((category, id) => <PostItemList key={id} category={category} posts={posts[category]} />
-                            )
-                        }
-                        {posts !== null && category !== 'All' &&
-                            <PostItemList category={category} posts={posts[category]} />
-                        }
+                <div className="flex flex-col items-center justify-center">
+                    <div className={`${category === 'All' || !isBreakpoint ? `md:grid md:grid-cols-2 justify-center` : `flex flex-col items-center`}`}>
+                            {posts !== null && category === 'All' &&
+                                Object.keys(posts).map((category, id) => <PostItemList key={id} category={category} posts={posts[category]} />
+                                )
+                            }
+                            {posts !== null && category !== 'All' &&
+                                <PostItemList category={category} posts={posts[category]} />
+                            }
+                    </div>
                 </div>
             </MainChild>
             </>
