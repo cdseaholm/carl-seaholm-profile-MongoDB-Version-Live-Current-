@@ -24,6 +24,7 @@ export default function Professional() {
   const imageRef = React.useRef<HTMLDivElement>(null);
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
+  const breakBool = isBreakpoint ? true : false;
 
   /**Variables */
 
@@ -83,6 +84,9 @@ export default function Professional() {
     return () => window.removeEventListener('mousedown', handleOutsideClick);
   }, [open, divRef, setOpen]);
 
+  const maxWidth = isBreakpoint ? '40vh' : '70vh';
+  const minWidth = isBreakpoint ? '40vh' : '70vh';
+
   return (
     <div>
       <InnerHeader>
@@ -132,12 +136,12 @@ export default function Professional() {
                     </svg>
                   </div>
                   {open && 
-                    <div ref={divRef} className={`absolute flex flex-col z-30 right-22 top-48 mt-2 justify-end text-left border border-gray-300 rounded-sm bg-clip-padding bg-slate-800/70 text-white shadow-lg w-32 cursor-pointer`}>
+                    <div ref={divRef} className={`absolute flex flex-col z-30 right-22 top-40 mt-2 justify-end text-left border border-gray-300 rounded-sm bg-clip-padding bg-slate-800 text-white shadow-lg w-32 cursor-pointer`}>
                       {categories.map((item, index) => (
                         <div key={index} onClick={() => {
                             setCategory(item)
                             setOpen(false)
-                          }} className='block px-4 py-2 text-sm text-white hover:bg-slate-800'>
+                          }} className='block px-4 py-2 text-sm text-white hover:bg-slate-600'>
                           {item}
                         </div>
                       ))}
@@ -151,7 +155,9 @@ export default function Professional() {
         {filteredSchools.map((item, index) => (
             <div key={index} className='flex flex-row justify-center'>
               {category === 'Education' &&
-                <SchoolBite school={item} index={index}/>
+                <div className='border border-black shadow-lg rounded-md m-2 bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth}}>
+                  <SchoolBite breakBool={breakBool} school={item} index={index}/>
+                </div>
               }
             </div>
           ))}
@@ -159,7 +165,9 @@ export default function Professional() {
             filteredJobs.map((item, index) => (
               <div key={index} className='flex flex-row justify-center'>
                 {category !== 'Education' &&
-                  <JobBite job={item} index={index}/>
+                  <div className='border border-black shadow-lg m-2 rounded-md bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth, overflowX: 'auto', overflowY: 'auto'}}>
+                    <JobBite breakBool={breakBool} job={item} index={index}/>
+                  </div>
                 }
               </div>
           ))}
