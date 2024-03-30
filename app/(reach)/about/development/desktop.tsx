@@ -4,6 +4,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { schoolsArray, jobsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
 import { SchoolBite, JobBite } from '@/components/pagecomponents/professionalComponents/proBites';
+import useMediaQuery from '@/components/listeners/WidthSettings';
 
 const openInNewTab = (url: string) => {
   const win = window.open(url, '_blank');
@@ -11,6 +12,7 @@ const openInNewTab = (url: string) => {
 };
 
 export default function DevelopmentDesktop() {
+  const isBreakpoint = useMediaQuery(768);
   const [isHovered, setIsHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [category, setCategory] = useState('Timeline');
@@ -19,6 +21,7 @@ export default function DevelopmentDesktop() {
   const [open, setOpen] = useState(false);
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
+  const breakBool = isBreakpoint ? true : false;
 
   /**Variables */
 
@@ -141,7 +144,7 @@ export default function DevelopmentDesktop() {
               {filteredSchools.map((item, index) => (
                 <div key={index} className='flex flex-row justify-center'>
                   {category === 'Education' &&
-                    <SchoolBite school={item} index={index}/>
+                    <SchoolBite breakBool={breakBool} school={item} index={index}/>
                   }
                 </div>
               ))}
@@ -149,7 +152,7 @@ export default function DevelopmentDesktop() {
                 filteredJobs.map((item, index) => (
                   <div key={index} className='flex flex-row justify-center'>
                     {category !== 'Education' &&
-                      <JobBite job={item} index={index}/>
+                      <JobBite breakBool={breakBool} job={item} index={index}/>
                     }
                   </div>
               ))}

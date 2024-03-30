@@ -1,5 +1,6 @@
 'use client'
 
+import useMediaQuery from '@/components/listeners/WidthSettings';
 import { schoolsArray, jobsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
 import { SchoolBite, JobBite } from '@/components/pagecomponents/professionalComponents/proBites';
 import React, { useState, useRef } from 'react';
@@ -10,6 +11,8 @@ export default function DevelopmentMobile() {
   const [open, setOpen] = useState(false);
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
+  const isBreakpoint = useMediaQuery(768);
+  const breakBool = isBreakpoint ? true : false;
 
   /**Variables */
 
@@ -83,7 +86,7 @@ return (
                         {filteredSchools.map((item, index) => (
                           <div key={index} className='flex flex-row justify-center'>
                             {category === 'Education' &&
-                              <SchoolBite school={item} index={index}/>
+                              <SchoolBite breakBool={breakBool} school={item} index={index}/>
                             }
                           </div>
                         ))}
@@ -91,7 +94,7 @@ return (
                           filteredJobs.map((item, index) => (
                             <div key={index} className='flex flex-row justify-center'>
                               {category !== 'Education' &&
-                                <JobBite job={item} index={index}/>
+                                <JobBite breakBool={breakBool} job={item} index={index}/>
                               }
                             </div>
                         ))}
