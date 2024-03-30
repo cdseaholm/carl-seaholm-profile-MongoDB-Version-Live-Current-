@@ -9,7 +9,7 @@ const formatDate = (dateString: string) => {
     return date.toLocaleString('default', { month: 'long', year: 'numeric' });
 };
 
-const SchoolBite = ({ school, breakBool}: { school: School; index: number; breakBool: boolean }) => {
+const SchoolBite = ({ school, breakBool }: { school: School; index: number; breakBool: boolean }) => {
     const [startDate, setStartDate] = React.useState(formatDate(school.date.startDate));
     const [endDate, setEndDate] = React.useState(formatDate(school.date.endDate));
 
