@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function LoginPage({ user }: { user: any }) {
+export default function LoginPage() {
     const router = useRouter();
 
     useEffect(() => {
