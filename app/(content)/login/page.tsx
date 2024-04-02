@@ -1,101 +1,45 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
-import { Hobby } from '@/types/hobby';
-import { set } from 'date-fns';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import useSWR from 'swr';
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import login from "@/app/api/auth/login";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
+export default function LoginPage({ user }: { user: any }) {
+    const router = useRouter();
 
-const LoginPage = ({params} :{params:{id:number}}) => {
-  const { data: hobby, error, isLoading } = useSWR<any>(`/api/posts/`+ params.id, fetcher);
-  const [usernamestate, setUsernameState] = useState('');
-  const [passwordstate, setPasswordState] = useState('');
-  const [openCategory, setOpenCategory] = useState(false);
-  const [openHobbies, setOpenHobbies] = useState(false);
-  const [hobbiess, setHobbiess] = useState<Hobby[]>([])
-  const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            router.push("/dashboard");
+        }
+    }, []);
 
-  useEffect(() => {
-    if (hobby) {
-      setUsernameState(hobby.username);
-      setPasswordState(hobby.password);
-    }
-  }, [hobby]);
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const loggedin = await login({ formData });
 
-  const enter = (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
-    e.preventDefault();
-    if (!usernamestate && !passwordstate) {
-      var data = {
-        "username": usernamestate,
-        "password": passwordstate
-      }
-      console.log(data);
-      fetch(`/api/login/`+params.id, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.authenticated) {
-            setHobbiess(data.user.hobbies);
-          } else {
-            // Handle failed login
-          }
-        });
-  }
-  
-    setLoading(false);
-  }
+        if (loggedin === 'Logged in successfully') {
+            router.push("/dashboard");
+        } else {
+            alert(loggedin);
+            console.log(loggedin);
+        }
+    };
 
-
-  return (
-    <>
-      <>
-        {loading && <div className="loader"></div>}
-          <form className='flex flex-col justify-center items-center' onSubmit={enter}>
-            <div>
-              <input
-                type='text'
-                placeholder='Username'
-                className='border-2 border-gray-300 p-2 rounded-lg'
-                value={usernamestate}
-                onChange={(e) => setUsernameState(e.target.value)} />
-              <input
-                type='text'
-                value={passwordstate}
-                placeholder='Password'
-                className='border-2 border-gray-300 p-2 rounded-lg mt-2'
-                onChange={(e) => setPasswordState(e.target.value)} />
-            </div>
-            <div>
-              <input type='submit' value="submit" className='bg-white text-black p-2 rounded-lg mt-2'>Login</input>
-            </div>
-          </form>
-      </><style jsx>{`
-      .loader {
-        border: 16px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 16px solid #3498db;
-        width: 120px;
-        height: 120px;
-        animation: spin 2s linear infinite;
-      }
-
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-      `}</style>
-    </>
-  );
-};
-
-export default LoginPage;
-
+    return (
+        <>
+            <h1>Sign in</h1>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="email">Email</label>
+                <input name="email" id="email" />
+                <br />
+                <label htmlFor="password">Password</label>
+                <input type="password" name="password" id="password" />
+                <br />
+                <button>Continue</button>
+            </form>
+            <Link href="/signup">Create an account</Link>
+        </>
+    );
+}
