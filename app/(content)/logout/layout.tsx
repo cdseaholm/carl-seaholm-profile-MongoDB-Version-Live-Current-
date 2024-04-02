@@ -3,7 +3,7 @@
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { motion } from "framer-motion";
 
-export default function EntryLayout({ children }: { children: React.ReactNode }) {
+export default function LogoutLayout({ children }: { children: React.ReactNode }) {
     return (
         <motion.div
         initial={{ y: 300, opacity: 0 }}
