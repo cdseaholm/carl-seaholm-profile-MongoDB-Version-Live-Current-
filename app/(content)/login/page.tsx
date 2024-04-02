@@ -12,7 +12,7 @@ export default function LoginPage() {
         if (localStorage.getItem("token")) {
             router.push("/dashboard");
         }
-    }, []);
+    }, [router]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
