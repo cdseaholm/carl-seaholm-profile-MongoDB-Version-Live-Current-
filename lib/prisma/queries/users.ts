@@ -1,7 +1,7 @@
 'use server'
 
 import { ActualUser } from '@/types/user';
-import { prisma } from '../../../prisma/index';
+import { prisma } from '@/db';
 import { notFound } from 'next/navigation';
 
 export async function fetchUsers(): Promise<ActualUser[]> { 

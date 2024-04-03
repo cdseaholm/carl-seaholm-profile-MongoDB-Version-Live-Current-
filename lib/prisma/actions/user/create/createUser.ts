@@ -1,8 +1,8 @@
 'use server'
 
 import { ActualUser } from "@/types/user";
-import { lucia } from "../../../../lucia/lucia";
-import { prisma } from '../../../../../prisma/index';
+import { lucia } from "@/lib/lucia/lucia";
+import { prisma } from '@/db';
 import { generateId } from "lucia";
 import { cookies } from "next/headers";
 import { Scrypt } from "lucia";

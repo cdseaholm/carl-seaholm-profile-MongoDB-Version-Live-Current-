@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { getPostData } from "../../lib/posts/posts";
+import { getPostData } from "@/lib/posts/posts";
 
 const PostPage = async ({ params }: { params: { slug: string } }) => {
     

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SocialIcon } from 'react-social-icons';
-import { SideMenuAccordian } from './accordian/accordian';
+import { SideMenuAccordian } from '@/app/(content)/demo_303/demonav/accordian/accordian';
 
 const DemoSidenavPage = () => {
   const [open, setOpen] = useState(false);

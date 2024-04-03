@@ -8,11 +8,6 @@ import Image from 'next/image';
 import { jobsArray, schoolsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
 import { JobBite, SchoolBite } from '@/components/pagecomponents/professionalComponents/proBites';
 
-const openInNewTab = (url: string) => {
-  const win = window.open(url, '_blank');
-  win?.focus();
-};
-
 export default function Professional() {
 
   const isBreakpoint = useMediaQuery(768);

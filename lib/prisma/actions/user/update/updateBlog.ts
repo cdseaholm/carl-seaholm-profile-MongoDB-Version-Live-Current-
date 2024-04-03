@@ -3,7 +3,7 @@
 
 import { notFound } from 'next/navigation';
 import { lucia } from "@/lib/lucia/lucia";
-import { prisma } from "@/prisma/index";
+import { prisma } from '@/db';
 import { generateId } from "lucia";
 import { cookies } from "next/headers";
 import { ActualUser } from '@/types/user';
