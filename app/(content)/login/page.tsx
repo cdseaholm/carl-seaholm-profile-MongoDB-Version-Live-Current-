@@ -1,8 +1,7 @@
 'use client'
 
 import { useSession } from "@/app/SessionContext";
-import login from "@/app/api/auth/login";
-import Session from "@/app/api/auth/session";
+import login from "@/lib/auth/login/login";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import Link from "next/link";

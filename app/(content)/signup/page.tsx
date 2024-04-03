@@ -1,6 +1,6 @@
 'use client'
 
-import createUser from "@/app/api/prisma/actions/user/create";
+import createUser from "@/lib/prisma/actions/user/create/createUser";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

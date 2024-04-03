@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SocialIcon } from 'react-social-icons';
-import { SideMenuAccordian } from './accordian/accordian';
 import { SideMenuAccordianMobile } from './accordian/mobileaccordian';
 
 const DemoSidenavMobile = () => {

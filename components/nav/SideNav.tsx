@@ -8,7 +8,7 @@ import openInNewTab from '../listeners/OpenInNewTab';
 import { SideMenuAccordian } from './menuDrops/SideMenuAccordian';
 import { useSession } from '@/app/SessionContext';
 import { useRouter } from 'next/navigation';
-import logoutAuth from '@/app/api/auth/logout';
+import logoutAuth from '@/lib/auth/logout/logout';
 
 const SidenavPage = () => {
   const [open, setOpen] = useState(false);

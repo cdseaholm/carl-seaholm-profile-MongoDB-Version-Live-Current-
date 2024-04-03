@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 import { SessionProvider } from "./SessionContext";
 import type { Session as SessionType } from "lucia";
 import { ActualUser } from "@/types/user";
-import Session from "./api/auth/session";
+import Session from "../lib/auth/session/session";
 import { set } from "date-fns";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -32,7 +32,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
     useEffect(() => {
       if (sessionState !== null) {
-        console.log('Session:', sessionState);
         return;
       }
 
@@ -40,7 +39,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         console.log('Fetching session...');
           try {
               const { user, session } = await Session();
-              console.log('Session:', session, user);
               setSessionState(session);
               setUserState(user);
           } catch (error) {

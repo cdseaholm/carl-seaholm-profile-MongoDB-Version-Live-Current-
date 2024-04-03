@@ -1,6 +1,6 @@
 'use client'
 
-import fetchHobbies from '../../api/prisma/queries/hobbies';
+import fetchHobbies from '../../../lib/prisma/queries/hobbies';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -31,7 +31,7 @@ const HobbyPage = () => {
                 console.log(hobbies);
             }
         })();
-    }, []);
+    }, [user, setHobbiesList]);
 
 
     return (

@@ -1,6 +1,6 @@
 'use server'
 
-import { lucia } from "@/lib/lucia";
+import { lucia } from "@/lib/lucia/lucia";
 import { Session } from "lucia";
 import { ActionResult } from "next/dist/server/app-render/types";
 import { cookies } from "next/headers";

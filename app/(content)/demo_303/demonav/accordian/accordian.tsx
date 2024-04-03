@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
   const classesOpenMats = ['Free Class', 'Introduction to Jiu Jitsu (FREE)', 'Beginner Jiu Jitsu (Level 1)', 'Intermediate Jiu Jitsu (Level 2)', 'Advanced Jiu Jitsu', 'NOGI Jiu Jitsu', 'Randori', 'Open Mat', 'Little Heroes Jiu Jitsu (4-6)', 'Jids Jiu Jitsu (7/12)', 'Teens Jiu Jitsu Classes (13-17)', 'Family Class Jiu Jitsu', 'Parents Jiu Jitsu Class', 'Wrestling', 'Kickboxing']

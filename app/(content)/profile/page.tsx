@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import logoutAuth from '@/app/api/auth/logout';
+import logoutAuth from '@/lib/auth/logout/logout';
 import { useSession } from '@/app/SessionContext';
 import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
