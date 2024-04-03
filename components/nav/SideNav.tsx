@@ -5,8 +5,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SocialIcon } from 'react-social-icons';
 import openInNewTab from '../listeners/OpenInNewTab';
-import useMediaQuery from '../listeners/WidthSettings';
 import { SideMenuAccordian } from './menuDrops/SideMenuAccordian';
+import { useSession } from '@/app/SessionContext';
+import { useRouter } from 'next/navigation';
+import logoutAuth from '@/app/api/auth/logout';
 
 const SidenavPage = () => {
   const [open, setOpen] = useState(false);
@@ -91,6 +93,23 @@ const style = {
 
 function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
   const ref = React.useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const { user, logout, session } = useSession();
+
+  const handleLogout = async () => {
+    if (window.confirm('Are you sure you want to log out?')) {
+      if (session) {
+        const loggingOut = await logoutAuth({ session });
+        if (loggingOut === 'Logged out successfully') {
+          logout();
+          router.push('/login');
+        } else {
+          alert('Already logged out');
+          console.log(loggingOut);
+        }
+      }
+    }
+  };
 
   React.useEffect(() => {
     const handleOutsideClick = (event: { target: any; }) => {
@@ -114,21 +133,50 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
         &times;
       </button>
       <div className='mx-3 divide-y divide-solid width-4/6'>
-      <div className='px-10 rounded-lg px-3 mt-8 pt-5 pb-7 text-slate-200 text-sm'>
-        Carl Seaholm&apos;s Portfolio
-      </div>
-      <div />
+        <div className='px-10 rounded-lg px-3 mt-8 pt-5 pb-7 text-slate-200 text-sm'>
+          Carl Seaholm&apos;s Portfolio
+        </div>
+        <div />
       </div>
       <div className='divide-y divide-solid'>
-      <div className="my-5">{children}</div>
-        <div className='justify-evenly mx-3 pt-5 flex flex-row items-center'>
-          <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
-            <SocialIcon style={style.icon} network='github'/>
+        <div className="my-5">
+          {children}
+        </div>
+        <div className='flex flex-col mx-3 py-5 items-center'>
+          <div>
+            Socials
           </div>
-          <p>|</p>
-          <div className='cursor-pointer' onClick={() => openInNewTab('https://www.linkedin.com/in/carlseaholm/')}>
-          <SocialIcon style={open ? style.icon : style.iconClose} network='linkedin' />
-          </div>
+          <div className='justify-evenly mx-3 pt-2 flex flex-row items-center'>
+            <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
+              <SocialIcon style={style.icon} network='github'/>
+            </div>
+            <p>|</p>
+            <div className='cursor-pointer' onClick={() => openInNewTab('https://www.linkedin.com/in/carlseaholm/')}>
+            <SocialIcon style={open ? style.icon : style.iconClose} network='linkedin' />
+            </div>
+          </div> 
+        </div>
+        <div className='mx-3 pt-5 flex flex-row justify-evenly items-center'>
+          {!user &&
+            <>
+              <Link href='/login'>
+                Login
+              </Link>
+              <Link href='/signup'>
+                Signup
+              </Link>
+            </>
+          }
+          {user &&
+          <>
+            <Link href='/profile'>
+              Profile
+            </Link>
+            <button onClick={handleLogout}>
+              Logout
+            </button>
+          </>
+          }
         </div>
       </div>
     </aside>

@@ -7,6 +7,9 @@ import React from "react";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "../pagetemplates/mainchild/mainchild";
 import useMediaQuery from "../listeners/WidthSettings";
+import { useSession } from "@/app/SessionContext";
+import createBlogSub from "@/app/api/prisma/actions/user/createBlogSub";
+import createUser from "@/app/api/prisma/actions/user/create";
 
 const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<string>; posts: Record<string, post[]>}) => {
     const isBreakpoint = useMediaQuery(768);
@@ -14,6 +17,46 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
     const [category, setCategory] = useState('All');
     const dropdownRef = React.useRef<HTMLDivElement>(null);
     const buttonRef = React.useRef<HTMLDivElement>(null);
+    const { user } = useSession();
+    const hasShownSubscriptionPrompt = React.useRef(false);
+
+    React.useEffect(() => {
+        if (user === null && !hasShownSubscriptionPrompt.current) {
+            hasShownSubscriptionPrompt.current = true;
+            const newSub = window.confirm('Would you like to Subscribe to this blog?');
+            if (newSub === true) {
+                const email = window.prompt('Please enter your email:');
+                if (email) {
+                    const password = window.prompt('Create a password to verify your email:')
+                    if (password) {
+                        const formData = new FormData();
+                        formData.append('email', email);
+                        formData.append('password', password);
+                        createUser({ formData }).then(newUser => {
+                            if (newUser !== null) {
+                                createBlogSub({user: newUser[0]})
+                                .then((sub) => console.log(sub))
+                                .catch((e) => console.error(e));
+                            }
+                        });
+                    }
+                    console.log(`Subscribing user with email: ${email}`);
+                }
+            } else {
+                console.log('User declined to subscribe');
+            }
+        } else if (user !== null && user.blogsub === false && !hasShownSubscriptionPrompt.current) {
+            const sub = window.confirm('Would you like to subscribe to this blog?');
+            if (sub) {
+                createBlogSub({user}).then(subscriber => {
+                    if (subscriber === 'Subbed') {
+                        console.log('Subscribed user');
+                    }
+                    console.log('Subscribing user');
+                });
+            }
+        }
+    }, [user]);
 
     React.useEffect(() => {
         const handleOutsideClick = (event: { target: any; }) => {

@@ -1,18 +1,18 @@
 'use server'
 
-import { Hobby } from '@prisma/client';
+import { Hobby } from '@/types/hobby';
 import { prisma } from '../../../../prisma/index';
 import { notFound } from 'next/navigation';
-import { validateRequest } from '@/lib/auth';
+import { ActualUser } from '@/types/user';
 
-export async function fetchHobbies(): Promise<Hobby[]> { 
-    const valid = await validateRequest();
-    if (!valid.user) {
+export default async function fetchHobbies({user}: {user: ActualUser}): Promise<Hobby[]> { 
+
+    if (!user) {
         return notFound();
     }
     return await prisma.hobby.findMany({
         where: {
-            id: valid.user.id
+            id: user.id
         }
     })
 }

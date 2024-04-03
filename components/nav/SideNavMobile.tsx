@@ -2,13 +2,13 @@
 
 import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import useMediaQuery from '../listeners/WidthSettings';
-
+import { usePathname, useRouter } from 'next/navigation';
 import { SocialIcon } from 'react-social-icons';
 import openInNewTab from '../listeners/OpenInNewTab';
 import Image from 'next/image';
 import { SideMenuAccordianMobile } from './menuDrops/SideMenuAccordianMobile';
+import { useSession } from '@/app/SessionContext';
+import logoutAuth from '@/app/api/auth/logout';
 
 const SidenavMobile = () => {
   const [open, setOpen] = useState(false);
@@ -131,6 +131,23 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
     window.addEventListener('mousedown', handleOutsideClick);
     return () => window.removeEventListener('mousedown', handleOutsideClick);
   }, [open, ref, toggle]);
+  const { user, logout, session } = useSession();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    if (window.confirm('Are you sure you want to log out?')) {
+      if (session) {
+        const loggingOut = await logoutAuth({ session });
+        if (loggingOut === 'Logged out successfully') {
+          logout();
+          router.push('/login');
+        } else {
+          alert('Already logged out');
+          console.log(loggingOut);
+        }
+      }
+    }
+  };
 
   return (
     <aside
@@ -150,14 +167,41 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
         <div className='divide-y divide-solid'>
           <div className="my-5">{children}
         </div>
-        <div className='justify-evenly mx-3 pt-5 flex flex-row items-center'>
-          <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
-            <SocialIcon style={style.icon} network='github'/>
+        <div className='flex flex-col mx-3 py-5 items-center'>
+          <div className='text-sm'>
+              Socials
           </div>
-          <p>|</p>
-          <div className='cursor-pointer' onClick={() => openInNewTab('https://www.linkedin.com/in/carlseaholm/')}>
-          <SocialIcon style={open ? style.icon : style.iconClose} network='linkedin' />
+          <div className='justify-evenly mx-3 pt-5 flex flex-row items-center space-x-4 text-sm'>
+            <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
+              <SocialIcon style={style.icon} network='github'/>
+            </div>
+            <p>|</p>
+            <div className='cursor-pointer' onClick={() => openInNewTab('https://www.linkedin.com/in/carlseaholm/')}>
+            <SocialIcon style={open ? style.icon : style.iconClose} network='linkedin' />
+            </div>
           </div>
+        </div>
+        <div className='mx-3 pt-5 flex flex-row justify-evenly items-center text-sm'>
+          {!user &&
+            <>
+              <Link href='/login'>
+                Login
+              </Link>
+              <Link href='/signup'>
+                Signup
+              </Link>
+            </>
+          }
+          {user &&
+          <>
+            <Link href='/profile'>
+              Profile
+            </Link>
+            <button onClick={handleLogout}>
+              Logout
+            </button>
+          </>
+          }
         </div>
       </div>
     </aside>

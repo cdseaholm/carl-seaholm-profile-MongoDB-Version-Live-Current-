@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import useMediaQuery from "@/components/listeners/WidthSettings";
+import { useSession } from "@/app/SessionContext";
+import fetchHobbies from "@/app/api/prisma/queries/hobbies";
+import type { Hobby } from "@/types/hobby";
 
 const Dashboard = () => {
     
@@ -11,9 +14,13 @@ const Dashboard = () => {
     const [filterNoTrack, setFilterNoTrack] = useState(false);
     const [item, setItem] = useState('');
     const [open, setOpen] = useState(false);
+    const [hobbies, setHobbies] = useState([] as Hobby[]);
     const divRef = React.useRef<HTMLDivElement>(null);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
-
+    const { user } = useSession();
+    console.log(user);
+    
+    //change this to hobbies fetched
     const toTrack = [
         {name: 'All', category: 'All'},
         {name: 'Brazilian Jiu Jitsu', category: 'Physical'},
@@ -38,6 +45,19 @@ const Dashboard = () => {
       window.addEventListener('mousedown', handleOutsideClick);
       return () => window.removeEventListener('mousedown', handleOutsideClick);
   }, [setOpen, divRef, dropdownRef, open]);
+
+    React.useEffect(() => {
+      const getHobbies = async () => {
+        if (user) {
+          const gottenHobbies = await fetchHobbies({user});
+          console.log(gottenHobbies);
+          if (gottenHobbies) {
+            setHobbies(gottenHobbies);
+          }
+        }
+      };
+      getHobbies();
+    }, []);
 
     const flipFilter = ({which}: {which: string}) => {
         if (which === 'track') {
@@ -107,7 +127,21 @@ const Dashboard = () => {
                 </div>
             </InnerHeader>
             <MainChild>
-                <div></div>
+                <div className="flex flex-col justify-center">
+                  {user && user.email === 'cdseaholm@gmail.com' &&
+                  <div className="flex flex-row justify-end cursor-pointer">
+                    + Add New Tracker
+                  </div>
+                  }
+                  <div>
+                    {hobbies.map((hobby, index) => (
+                      <div key={index} className="flex flex-row justify-between">
+                        <div>{hobby.title}</div>
+                        <div>{hobby.category}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
             </MainChild>
         </div>
     );

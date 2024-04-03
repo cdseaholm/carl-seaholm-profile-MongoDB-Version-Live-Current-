@@ -1,35 +1,37 @@
 'use server'
 
-import { User } from '@prisma/client';
-import { notFound } from 'next/navigation';
-import { lucia } from "@/lib/lucia";
-import { prisma } from "@/prisma/index";
+import { ActualUser } from "@/types/user";
+import { lucia } from "../../../../../lib/lucia";
+import { prisma } from '../../../../../prisma/index';
 import { generateId } from "lucia";
 import { cookies } from "next/headers";
 import { Scrypt } from "lucia";
 
-export default async function createUser({formData}: {formData: FormData}): Promise<User[]> { 
+export default async function createUser({formData}: {formData: FormData}): Promise<ActualUser[]> { 
     var user = null;
-    const username = formData.get("username");
-	if (
-		typeof username !== "string" ||
-		username.length < 3 ||
-		username.length > 31 ||
-		!/^[a-z0-9_-]+$/.test(username)
-	) {
-		return notFound();
-	}
+        
 	const password = formData.get("password");
 	if (typeof password !== "string" || password.length < 6 || password.length > 255) {
-		return notFound();
+		throw new Error("Invalid password");
 	}
     const email = formData.get("email");
-    if (typeof email !== "string" || email.length < 6 || email.length > 255) {
-        return notFound();
+    if (typeof email !== "string" || email.length < 6 || email.length > 255 || !/^\S+@\S+\.\S+$/.test(email)) {
+        throw new Error("Invalid email");
     }
-    const userName = formData.get("username");
-    if (typeof userName !== "string" || userName.length < 3 || userName.length > 31) {
-        return notFound();
+    let username = formData.get("username");
+    if (
+        username !== null &&
+        username !== undefined &&
+        (
+            typeof username !== "string" ||
+            username.length < 3 ||
+            username.length > 31 ||
+            !/^[a-z0-9_-]+$/.test(username)
+        )
+    ) {
+        throw new Error("Invalid username");
+    } else if (username === null || username === undefined) {
+        username = null;
     }
 
 	const hashedPassword = await new Scrypt().hash(password);
@@ -40,7 +42,7 @@ export default async function createUser({formData}: {formData: FormData}): Prom
             data: {
                 email: email,
                 password: hashedPassword,
-                name: userName ? userName : null 
+                name: username ? username : null 
             }
         });
         console.log(prismaUser);
@@ -57,7 +59,7 @@ export default async function createUser({formData}: {formData: FormData}): Prom
         user = prismaUser;
     } catch (e) {
         console.error(e);
-        return notFound();
+        throw new Error("User not created");
     }
     return user ? [user] : [];
 }

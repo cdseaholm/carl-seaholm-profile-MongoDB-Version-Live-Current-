@@ -2,7 +2,7 @@ export type Hobby = {
     title: string;
     date: string[];
     descriptions: string[];
-    minutesXsession: string;
+    minutesXsession: string[];
     category: string[];
-    goal: string;
+    goal: string[];
 };
