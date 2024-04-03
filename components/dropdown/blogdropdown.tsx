@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from "react";
-import PostItemList from "../posts/postlistitem";
-import type { post } from "../../types/post";
+import PostItemList from "@/components/posts/postlistitem";
+import type { post } from "@/types/post";
 import React from "react";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "../pagetemplates/mainchild/mainchild";

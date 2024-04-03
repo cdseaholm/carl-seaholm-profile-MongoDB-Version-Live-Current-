@@ -1,9 +1,9 @@
 'use client'
 
-import SidenavPage from './SideNav';
-import useMediaQuery from '../listeners/WidthSettings';
+import SidenavPage from '@/components/nav/SideNav';
+import useMediaQuery from '@/components/listeners/WidthSettings';
 import { usePathname } from 'next/navigation';
-import SidenavMobile from './SideNavMobile';
+import SidenavMobile from '@/components/nav/SideNavMobile';
 
 
 const NavBar = () => {

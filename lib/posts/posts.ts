@@ -4,7 +4,7 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
 import moment from 'moment';
-import type { post } from '../../types/post';
+import type { post } from '@/types/post';
 
 const postsDirectory = path.join(process.cwd(), 'posts');
 

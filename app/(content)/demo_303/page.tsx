@@ -2,10 +2,10 @@
 
 import useMediaQuery from "@/components/listeners/WidthSettings";
 import React, { useEffect } from "react";
-import DemoSidenavMobile from "./demonav/demomobilenav";
-import DemoSidenavPage from "./demonav/demodesknav";
-import MobileDemoBody from "./components/mobiledemobody";
-import DemoBody from "./components/demobody";
+import DemoSidenavMobile from "@/app/(content)/demo_303/demonav/demomobilenav";
+import DemoSidenavPage from "@/app/(content)/demo_303/demonav/demodesknav";
+import MobileDemoBody from "@/app/(content)/demo_303/components/mobiledemobody";
+import DemoBody from "@/app/(content)/demo_303/components/demobody";
 
 const DemoPage = () => {
     const isBreakpoint = useMediaQuery(768);

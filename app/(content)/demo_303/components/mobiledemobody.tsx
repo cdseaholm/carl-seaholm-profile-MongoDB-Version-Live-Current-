@@ -1,7 +1,5 @@
     'use client'
 
-import { getCategorisedPosts, getPostData } from "@/lib/posts/posts";
-import Image from "next/image";
 import React, { useRef } from "react";
 
 const MobileDemoBody = () => {
