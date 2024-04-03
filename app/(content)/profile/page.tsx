@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import logoutAuth from '@/app/api/auth/logout';
 import { useSession } from '@/app/SessionContext';
@@ -10,10 +10,14 @@ import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 const LogoutPage = () => {
     const router = useRouter();
 
-    const { logout } = useSession();
+    const { logout, session } = useSession();
 
     const handleLogout = async () => {
-        const loggingOut = await logoutAuth();
+        if (!session) {
+            alert('You must be logged in to view this page.');
+            return;
+        } else {
+        const loggingOut = await logoutAuth({session});
         if (loggingOut === 'Logged out successfully') {
             logout();
             router.push('/login');
@@ -21,6 +25,7 @@ const LogoutPage = () => {
             alert('Already logged out');
             console.log(loggingOut);
         }
+    }
     };
 
     return (
