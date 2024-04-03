@@ -6,11 +6,6 @@ import { schoolsArray, jobsArray } from '@/components/pagecomponents/professiona
 import { SchoolBite, JobBite } from '@/components/pagecomponents/professionalComponents/proBites';
 import useMediaQuery from '@/components/listeners/WidthSettings';
 
-const openInNewTab = (url: string) => {
-  const win = window.open(url, '_blank');
-  win?.focus();
-};
-
 export default function DevelopmentDesktop() {
   const isBreakpoint = useMediaQuery(768);
   const [isHovered, setIsHovered] = useState(false);

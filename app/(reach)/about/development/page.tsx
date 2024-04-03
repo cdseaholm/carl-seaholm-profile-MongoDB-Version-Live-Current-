@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React from 'react';
 import useMediaQuery from '@/components/listeners/WidthSettings';
 import DevelopmentDesktop from '@/app/(reach)/about/development/desktop';
 import DevelopmentMobile from '@/app/(reach)/about/development//mobile';

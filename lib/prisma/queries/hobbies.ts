@@ -1,7 +1,7 @@
 'use server'
 
 import { Hobby } from '@/types/hobby';
-import { prisma } from '@/prisma/index';
+import { prisma } from '@/db';
 import { notFound } from 'next/navigation';
 import { ActualUser } from '@/types/user';
 
