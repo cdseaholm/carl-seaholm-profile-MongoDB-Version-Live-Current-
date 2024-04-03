@@ -1,14 +1,12 @@
 'use server'
 
-import { validateRequest } from "@/lib/auth";
 import { lucia } from "@/lib/lucia";
+import { Session } from "lucia";
 import { ActionResult } from "next/dist/server/app-render/types";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
-export default async function logout(): Promise<ActionResult> {
+export default async function logoutAuth({session}: {session: Session}): Promise<ActionResult> {
 
-    const { session } = await validateRequest();
     if (!session) {
       return {
         error: "Unauthorized"

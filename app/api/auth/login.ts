@@ -1,22 +1,33 @@
 "use server"
 
 import { lucia } from "@/lib/lucia";
-import { prisma } from "@/prisma/index";
+import { prisma } from "../../../prisma/index";
 import { cookies } from "next/headers";
-import { validateRequest } from '@/lib/auth';
 import { Scrypt, generateId } from "lucia";
-import e from "express";
 
-export default async function login({formData}: {formData: FormData}) {
-    const { email, password } = Object.fromEntries(formData);
-    const { user } = await validateRequest();
-    if (user) {
-        return 'Already logged in';
+export default async function login({formData}: {formData: FormData})
+    : Promise<{user: any, session: any} | string> {
+
+    const password = formData.get("password");
+	if (typeof password !== "string" || password.length < 6 || password.length > 255) {
+		throw new Error("Invalid password");
+	}
+    const email = formData.get("email");
+    if (typeof email !== "string" || email.length < 6 || email.length > 255 || !/^\S+@\S+\.\S+$/.test(email)) {
+        throw new Error("Invalid email");
+    }
+    const user = await prisma.user.findFirst({
+        where: {
+            email: email,
+        },
+    });
+    if (!user) {
+        return 'User not found';
     } else if (!email || !password) {
         return 'Invalid email or password';
     }
 
-    if (typeof email !== "string" || email.length < 3 || email.length > 31 || !/^[a-z0-9_-]+$/.test(email)) {
+    if (typeof email !== "string" || email.length < 3 || email.length > 255 || !/^\S+@\S+\.\S+$/.test(email)) {
         return 'Invalid email';
     }
 
@@ -26,7 +37,7 @@ export default async function login({formData}: {formData: FormData}) {
 
     const existingUser = await prisma.user.findFirst({
         where: {
-            name: email,
+            email: email,
         },
     });
 
@@ -52,5 +63,5 @@ export default async function login({formData}: {formData: FormData}) {
     cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
     //potential to not make user log in constantly ~~C
 
-    return 'Logged in successfully';
+    return {user: existingUser, session: session};
 }

@@ -2,17 +2,13 @@
 
 import { cookies } from "next/headers";
 import type { Session } from "lucia";
-import type { User } from "@prisma/client";
+import type { ActualUser } from "@/types/user";
 import {lucia} from "./lucia";
 
-let cachedResult: { user: { id: number; email: string; name: string | null; password: string; }; session: Session; } | { user: null; session: null; } | PromiseLike<{ user: { id: number; email: string; name: string | null; password: string; }; session: Session; } | { user: null; session: null; }> | null = null;
-
-export async function validateRequest(): Promise<{ user: User; session: Session } | { user: null; session: null }> {
-  if (cachedResult) {
-    return cachedResult;
-  }
-
+export async function validateRequest(): Promise<{ user: ActualUser; session: Session } | { user: null; session: null }> {
+  console.log('validateRequest function called');
   const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
+  console.log("Session ID:", sessionId);
   if (!sessionId) {
     return {
       user: null,
@@ -33,14 +29,12 @@ export async function validateRequest(): Promise<{ user: User; session: Session 
     }
   } catch {}
 
-  cachedResult = result as { user: { id: number; email: string; name: string | null; password: string; }; session: Session } | { user: null; session: null };
-
-  return cachedResult;
+  return result as { user: { id: number; email: string; name: string | null; password: string; blogsub: boolean }; session: Session } | { user: null; session: null; };
 }
 
 declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
-    DatabaseUserAttributes: Omit<User, "id">;
+    DatabaseUserAttributes: Omit<ActualUser, "id">;
   }
 }

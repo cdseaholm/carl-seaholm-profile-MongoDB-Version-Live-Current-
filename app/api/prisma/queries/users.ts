@@ -1,14 +1,14 @@
 'use server'
 
-import { User } from '@prisma/client';
+import { ActualUser } from '@/types/user';
 import { prisma } from '../../../../prisma/index';
 import { notFound } from 'next/navigation';
 
-export async function fetchUsers(): Promise<User[]> { 
+export async function fetchUsers(): Promise<ActualUser[]> { 
     return await prisma.user.findMany({})
 }
 
-export async function fetchUserByID(id: string): Promise<User | null> {
+export async function fetchUserByID(id: string): Promise<ActualUser | null> {
     const post = await prisma.user.findFirst({
         where: {
             id: parseInt(id)

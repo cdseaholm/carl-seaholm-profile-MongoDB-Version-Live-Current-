@@ -3,8 +3,9 @@
 import { fetchHobbies } from '@/app/api/prisma/queries/hobbies';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { validateRequest } from '@/lib/auth';
+
 import { Hobby } from '@/types/hobby';
+import { useSession } from '@/app/SessionContext';
 
 const HobbyPage = () => {
 
@@ -14,16 +15,21 @@ const HobbyPage = () => {
     const [hobbySelected, setHobbySelected] = useState('');
     const [hobbyName, setHobbyName] = useState('');
     const [openDrop, setOpenDrop] = useState(false);
+    const { user } = useSession();
 
 
     useEffect(() => {(async () => {
-                const hobbies = await fetchHobbies();
+                if (!user) {
+                    alert('You must be logged in to view this page.');
+                } else {
+                const hobbies = await fetchHobbies({user});
                 if (!hobbies) {
                     return 'No hobbies found.'
                 } else {
                     setHobbiesList(hobbies as unknown as Hobby[]);
                 }
                 console.log(hobbies);
+            }
         })();
     }, []);
 
