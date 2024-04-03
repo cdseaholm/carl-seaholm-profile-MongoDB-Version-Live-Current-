@@ -1,18 +1,17 @@
 'use client'
 
 import { Inter } from "next/font/google";
-import "./globals.css";
-import { Providers } from "./providers";
-import Navbar from '../components/nav/Navbar';
+import "@/app/globals.css";
+import { Providers } from "@/app/providers";
+import Navbar from '@/components/nav/Navbar';
 import FooterNavBar from "@/components/nav/footer/footerNavbar";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { SessionProvider } from "./SessionContext";
+import { SessionProvider } from "@/app/SessionContext";
 import type { Session as SessionType } from "lucia";
 import { ActualUser } from "@/types/user";
-import Session from "../lib/auth/session/session";
-import { set } from "date-fns";
+import Session from "@/lib/auth/session/session";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -68,7 +67,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {loading ? (
             <div>Loading...</div>
           ) : (
-            
+            <>
+              <SpeedInsights/>
               <Providers>
                 <Navbar />
                 <main>
@@ -76,6 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </main>
                 <FooterNavBar />
               </Providers>
+            </>
           )}
           </div>
         </div>

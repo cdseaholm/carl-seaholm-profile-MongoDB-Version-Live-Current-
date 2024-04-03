@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import useMediaQuery from '../../listeners/WidthSettings';
+import useMediaQuery from '@/components/listeners/WidthSettings';
 
 const FooterNavBar = () => {
     const pathname = usePathname();

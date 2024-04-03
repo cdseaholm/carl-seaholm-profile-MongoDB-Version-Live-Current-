@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import type { post } from '../../types/post';
-import useMediaQuery from '../listeners/WidthSettings';
+import type { post } from '@/types/post';
+import useMediaQuery from '@/components/listeners/WidthSettings';
 
 export default function PostItemList({ category, posts }: { category: string; posts: post[] }) {
     const sortedPosts = posts.sort((a, b) => a.title < b.title ? -1 : 1);

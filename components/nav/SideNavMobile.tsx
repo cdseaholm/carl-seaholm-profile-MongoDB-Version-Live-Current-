@@ -4,7 +4,7 @@ import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { SocialIcon } from 'react-social-icons';
-import openInNewTab from '../listeners/OpenInNewTab';
+import openInNewTab from '@/components/listeners/OpenInNewTab';
 import Image from 'next/image';
 import { SideMenuAccordianMobile } from './menuDrops/SideMenuAccordianMobile';
 import { useSession } from '@/app/SessionContext';

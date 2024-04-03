@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import type { Session } from "lucia";
 import type { ActualUser } from "@/types/user";
-import {lucia} from "../lucia/lucia";
+import {lucia} from "@/lib/lucia/lucia";
 
 export async function validateRequest(): Promise<{ user: ActualUser; session: Session } | { user: null; session: null }> {
   console.log('validateRequest function called');

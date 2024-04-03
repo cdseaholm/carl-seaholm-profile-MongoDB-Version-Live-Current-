@@ -2,7 +2,7 @@
 
 import { validateRequest } from "@/lib/auth/auth"; 
 import type { Session as SessionType } from "lucia";
-import type { ActualUser } from '../../../types/user'
+import type { ActualUser } from '@/types/user'
 
 export default async function Session(): Promise<{user: ActualUser | null; session: SessionType | null}> { 
     console.log('Session function called');

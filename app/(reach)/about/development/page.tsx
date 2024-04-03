@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import useMediaQuery from '@/components/listeners/WidthSettings';
-import DevelopmentDesktop from './desktop';
-import DevelopmentMobile from './mobile';
+import DevelopmentDesktop from '@/app/(reach)/about/development/desktop';
+import DevelopmentMobile from '@/app/(reach)/about/development//mobile';
 
 
 export default function Development() {
