@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import useMediaQuery from '@/components/listeners/WidthSettings';
 import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
@@ -16,7 +16,6 @@ const openInNewTab = (url: string) => {
 export default function Professional() {
 
   const isBreakpoint = useMediaQuery(768);
-  const [isHovered, setIsHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState('Timeline');
@@ -36,17 +35,11 @@ export default function Professional() {
     'Education'
   ];
 
-  /**Functions */
-  const imageClick = () => {
-    setIsHovered(!isHovered);
-    setClicked(!clicked);
-  };
-
   /**Styles */
   const style = {
     profilepicture: {
-      large: `absolute z-20 top-20 left-20 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`,
-      small: `absolute z-20 top-20 left-20 my-3 ml-3 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`
+      large: `absolute z-20 top-20 left-20 rounded-full overflow-x-hidden transition-all ease duration-200 cursor-pointer`,
+      small: `absolute z-20 top-20 left-20 my-3 ml-3 rounded-full overflow-x-hidden transition-all ease duration-200 cursor-pointer`
     },
   };
 
@@ -65,12 +58,12 @@ export default function Professional() {
     const handleOutsideClick = (event: { target: any; }) => {
       if (!imageRef.current || !imageRef.current.contains(event.target as HTMLDivElement)) {
         if (!clicked) return;
-        imageClick();
+        setClicked(false);
       }
     };
     window.addEventListener('mousedown', handleOutsideClick);
     return () => window.removeEventListener('mousedown', handleOutsideClick);
-  }, [clicked, imageRef, imageClick]);
+  }, [clicked, imageRef, setClicked]);
 
   React.useEffect(() => {
     const handleOutsideClick = (event: { target: any; }) => {
@@ -95,15 +88,13 @@ export default function Professional() {
           {!isBreakpoint &&
             <div ref={imageRef} className={`${clicked ? style.profilepicture.large : style.profilepicture.small}`}>
                 <Image
-                onClick={imageClick}
+                onClick={() => setClicked(clicked ? false : true)}
                 priority
                 src="/images/carlseaholmimage.jpg"
-                className={`z-30 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`}
+                className={`z-30 rounded-full overflow-x-hidden transition-all ease duration-200 cursor-pointer`}
                 height={clicked ? 200 : 70}
                 width={clicked ? 200 : 70}
                 alt="Carl Seaholm Profile Photo"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
                 />
             </div>
             }

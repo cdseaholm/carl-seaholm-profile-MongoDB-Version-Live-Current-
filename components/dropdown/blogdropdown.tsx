@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactHTMLElement, useState } from "react";
+import { useState } from "react";
 import PostItemList from "../posts/postlistitem";
 import type { post } from "../../types/post";
 import React from "react";
@@ -8,8 +8,8 @@ import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "../pagetemplates/mainchild/mainchild";
 import useMediaQuery from "../listeners/WidthSettings";
 import { useSession } from "@/app/SessionContext";
-import createBlogSub from "@/app/api/prisma/actions/user/createBlogSub";
-import createUser from "@/app/api/prisma/actions/user/create";
+import createBlogSub from "@/lib/prisma/actions/user/update/updateBlog";
+import createUser from "@/lib/prisma/actions/user/create/createUser";
 
 const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<string>; posts: Record<string, post[]>}) => {
     const isBreakpoint = useMediaQuery(768);

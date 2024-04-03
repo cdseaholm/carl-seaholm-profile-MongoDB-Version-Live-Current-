@@ -1,7 +1,7 @@
 'use server'
 
 import { ActualUser } from "@/types/user";
-import { lucia } from "../../../../../lib/lucia";
+import { lucia } from "../../../../lucia/lucia";
 import { prisma } from '../../../../../prisma/index';
 import { generateId } from "lucia";
 import { cookies } from "next/headers";
@@ -45,7 +45,6 @@ export default async function createUser({formData}: {formData: FormData}): Prom
                 name: username ? username : null 
             }
         });
-        console.log(prismaUser);
 
         const session = await prisma.session.create({
             data: {

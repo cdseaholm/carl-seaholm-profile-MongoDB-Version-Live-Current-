@@ -1,6 +1,6 @@
 "use server"
 
-import { lucia } from "@/lib/lucia";
+import { lucia } from "@/lib/lucia/lucia";
 import { prisma } from "../../../prisma/index";
 import { cookies } from "next/headers";
 import { Scrypt, generateId } from "lucia";

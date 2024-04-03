@@ -1,7 +1,7 @@
 'use client'
 
 import useMediaQuery from "@/components/listeners/WidthSettings";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import DemoSidenavMobile from "./demonav/demomobilenav";
 import DemoSidenavPage from "./demonav/demodesknav";
 import MobileDemoBody from "./components/mobiledemobody";

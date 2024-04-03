@@ -2,7 +2,7 @@
 
 
 import { notFound } from 'next/navigation';
-import { lucia } from "@/lib/lucia";
+import { lucia } from "@/lib/lucia/lucia";
 import { prisma } from "@/prisma/index";
 import { generateId } from "lucia";
 import { cookies } from "next/headers";
@@ -26,7 +26,6 @@ export default async function createBlogSub({user}: {user: ActualUser}): Promise
                 blogsub: true,
             }
         });
-        console.log(sub);
     
         const existingSession = await prisma.session.findUnique({
             where: {

@@ -1,4 +1,4 @@
-import { accordion } from '@nextui-org/react';
+
 import React from 'react';
 
 export const DetailsAccordianPage = ({details, detailsIndex}: {details: Array<String>; detailsIndex: number}) => {

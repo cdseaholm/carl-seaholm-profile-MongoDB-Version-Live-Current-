@@ -5,7 +5,7 @@ import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import useMediaQuery from "@/components/listeners/WidthSettings";
 import { useSession } from "@/app/SessionContext";
-import fetchHobbies from "@/app/api/prisma/queries/hobbies";
+import fetchHobbies from "@/lib/prisma/queries/hobbies";
 import type { Hobby } from "@/types/hobby";
 
 const Dashboard = () => {
@@ -57,7 +57,7 @@ const Dashboard = () => {
         }
       };
       getHobbies();
-    }, []);
+    }, [user, setHobbies]);
 
     const flipFilter = ({which}: {which: string}) => {
         if (which === 'track') {

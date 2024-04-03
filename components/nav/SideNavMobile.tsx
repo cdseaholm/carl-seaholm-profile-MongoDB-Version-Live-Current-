@@ -8,7 +8,7 @@ import openInNewTab from '../listeners/OpenInNewTab';
 import Image from 'next/image';
 import { SideMenuAccordianMobile } from './menuDrops/SideMenuAccordianMobile';
 import { useSession } from '@/app/SessionContext';
-import logoutAuth from '@/app/api/auth/logout';
+import logoutAuth from '@/lib/auth/logout/logout';
 
 const SidenavMobile = () => {
   const [open, setOpen] = useState(false);

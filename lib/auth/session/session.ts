@@ -1,6 +1,6 @@
 'use server'
 
-import { validateRequest } from "@/lib/auth"; 
+import { validateRequest } from "@/lib/auth/auth"; 
 import type { Session as SessionType } from "lucia";
 import type { ActualUser } from '../../../types/user'
 

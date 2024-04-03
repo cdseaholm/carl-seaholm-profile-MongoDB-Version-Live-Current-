@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import useMediaQuery from '@/components/listeners/WidthSettings';
   
 

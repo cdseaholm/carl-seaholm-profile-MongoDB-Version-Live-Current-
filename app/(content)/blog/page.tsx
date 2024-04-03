@@ -1,5 +1,5 @@
 import BlogDropdown from "@/components/dropdown/blogdropdown";
-import { getCategorisedPosts } from "@/lib/posts";
+import { getCategorisedPosts } from "@/lib/posts/posts";
 
 const Blog = () => {
     const posts = getCategorisedPosts();
