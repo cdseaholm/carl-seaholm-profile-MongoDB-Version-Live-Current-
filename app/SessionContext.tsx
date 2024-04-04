@@ -29,8 +29,6 @@ export const useSession = () => useContext(SessionContext);
 export const SessionProvider = ({ children, session, user, loading, logout, setSession, setUser }: React.PropsWithChildren<{ session: Session | null, user: ActualUser | null, loading: boolean; logout: () => void, setSession: React.Dispatch<React.SetStateAction<Session | null>>, setUser: React.Dispatch<React.SetStateAction<ActualUser | null>> }>) => {
     
     const value = { session, user, loading, logout, setSession, setUser };
-    
-    console.log('SessionProvider', user, session, value)
 
     return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 };

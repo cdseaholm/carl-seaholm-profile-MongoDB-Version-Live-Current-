@@ -6,9 +6,9 @@ import type { ActualUser } from "@/types/user";
 import {lucia} from "@/lib/lucia/lucia";
 
 export async function validateRequest(): Promise<{ user: ActualUser; session: Session } | { user: null; session: null }> {
-  console.log('validateRequest function called');
+
   const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
-  console.log("Session ID:", sessionId);
+
   if (!sessionId) {
     return {
       user: null,

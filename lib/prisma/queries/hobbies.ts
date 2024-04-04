@@ -20,7 +20,7 @@ export default async function fetchHobbies({user}: {user: ActualUser}): Promise<
 export async function fetchUserByName(title: string): Promise<Hobby | null> {
     const post = await prisma.hobby.findFirst({
         where: {
-            title: title
+            title: title,
         }
     })
 
