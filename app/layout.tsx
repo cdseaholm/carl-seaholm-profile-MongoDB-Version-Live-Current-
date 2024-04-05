@@ -16,7 +16,7 @@ import Session from "@/lib/auth/session/session";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  console.log('RootLayout Rendered');
+
   const pathname = usePathname();
   const [sessionState, setSessionState] = React.useState<SessionType | null>(null);
   const [loading, setLoading] = React.useState(true);

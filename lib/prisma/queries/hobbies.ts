@@ -10,11 +10,17 @@ export default async function fetchHobbies({user}: {user: ActualUser}): Promise<
     if (!user) {
         return notFound();
     }
-    return await prisma.hobby.findMany({
+    const hobbies = await prisma.hobby.findMany({
         where: {
-            id: user.id
+            userId: user.id
         }
     })
+
+    if (!hobbies) {
+        return notFound();
+    }
+
+    return hobbies;
 }
 
 export async function fetchUserByName(title: string): Promise<Hobby | null> {

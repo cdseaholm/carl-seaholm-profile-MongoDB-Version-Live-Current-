@@ -13,7 +13,7 @@ import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 const Dashboard = () => {
     
     const isBreakpoint = useMediaQuery(768);
-    const [hobbies, setHobbies] = useState([] as Hobby[]);
+    const [hobbies, setHobbies] = useState<Hobby[]>([]);
     const [categories, setCategories] = useState([] as string[]);
     const [titles, setTitles] = useState([] as string[]);
     const { user } = useSession();
@@ -24,8 +24,9 @@ const Dashboard = () => {
         if (user) {
           const gottenHobbies = await fetchHobbies({user});
           setHobbies(gottenHobbies);
+          console.log(gottenHobbies);
           if (gottenHobbies) {
-            const { cats, hobbes } = await CatsAndHobs({hobbies: hobbies});
+            const { cats, hobbes } = await CatsAndHobs({hobbies: gottenHobbies});
             setTitles(hobbes);
             setCategories(cats);
           }
@@ -33,6 +34,18 @@ const Dashboard = () => {
       }
       getHobbies();
     }, [user, setCategories, setTitles]);
+    
+    const updateHobbies = async () => {
+      if (user) {
+        const gottenHobbies = await fetchHobbies({user});
+        setHobbies(gottenHobbies);
+        if (gottenHobbies) {
+          const { cats, hobbes } = await CatsAndHobs({hobbies: gottenHobbies});
+          setTitles(hobbes);
+          setCategories(cats);
+        }
+      }
+    };
 
     return (
         <div>
@@ -42,7 +55,7 @@ const Dashboard = () => {
               </div>
             </InnerHeader>
             <MainChild>
-              <DashChild user={user} categories={categories} titles={titles} hobbies={hobbies} />
+              <DashChild user={user} categories={categories} titles={titles} hobbies={hobbies} updateHobbies={updateHobbies}/>
             </MainChild>
         </div>
     );
