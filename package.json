@@ -19,6 +19,7 @@
     "bcrypt": "^5.1.1",
     "date-fns": "^3.6.0",
     "flowbite": "^2.3.0",
+    "flowbite-react": "^0.8.0",
     "framer-motion": "^11.0.24",
     "fs": "^0.0.1-security",
     "gray-matter": "^4.0.3",
