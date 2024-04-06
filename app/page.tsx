@@ -13,14 +13,14 @@ export default function Home() {
   const navigateToDashboard = () => {
     setIsShowing(true);
     setTimeout(() => {
-        router.push('/dashboard');
+        router.replace('/dashboard');
     }, 500);
   };
 
   const navigateToProfessional = () => {
     setIsShowing(true);
     setTimeout(() => {
-        router.push('/about/professional');
+        router.replace('/about/professional');
     }, 500);
   };
   

@@ -8,7 +8,7 @@ import FooterNavBar from "@/components/nav/footer/footerNavbar";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { SessionProvider } from "@/app/SessionContext";
+import { SessionProvider } from "@/app/context/session/SessionContext";
 import type { Session as SessionType } from "lucia";
 import { ActualUser } from "@/types/user";
 import Session from "@/lib/auth/session/session";
@@ -42,7 +42,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               setUserState(user);
           } catch (error) {
               console.error("Failed to fetch session:", error);
-              // handle error appropriately
           } finally {
               setLoading(false);
           }

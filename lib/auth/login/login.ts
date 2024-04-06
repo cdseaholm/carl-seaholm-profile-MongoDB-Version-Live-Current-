@@ -8,11 +8,11 @@ import { Scrypt, generateId } from "lucia";
 export default async function login({formData}: {formData: FormData})
     : Promise<{user: any, session: any} | string> {
 
-    const password = formData.get("password");
+    const password = formData.get("loginPassword");
 	if (typeof password !== "string" || password.length < 6 || password.length > 255) {
 		throw new Error("Invalid password");
 	}
-    const email = formData.get("email");
+    const email = formData.get("loginEmail");
     if (typeof email !== "string" || email.length < 6 || email.length > 255 || !/^\S+@\S+\.\S+$/.test(email)) {
         throw new Error("Invalid email");
     }

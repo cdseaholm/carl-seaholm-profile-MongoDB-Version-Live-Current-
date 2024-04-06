@@ -1,6 +1,6 @@
 'use client'
 
-import { useSession } from "@/app/SessionContext";
+import { useSession } from "@/app/context/session/SessionContext";
 import login from "@/lib/auth/login/login";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
@@ -15,7 +15,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
-            router.push("/dashboard");
+            router.replace("/dashboard");
         }
     }, [router]);
 

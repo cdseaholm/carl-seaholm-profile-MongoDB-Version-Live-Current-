@@ -5,14 +5,16 @@ import { prisma } from '@/db';
 import { notFound } from 'next/navigation';
 import { ActualUser } from '@/types/user';
 
-export default async function fetchHobbies({user}: {user: ActualUser}): Promise<Hobby[]> { 
+export default async function fetchHobbies({user, adminID}: {user: ActualUser | null; adminID: number}): Promise<Hobby[]> { 
 
+    var idToUse = 0;
     if (!user) {
-        return notFound();
+        idToUse = adminID;
+        //return notFound();
     }
     const hobbies = await prisma.hobby.findMany({
         where: {
-            userId: user.id
+            userId: idToUse
         }
     })
 
