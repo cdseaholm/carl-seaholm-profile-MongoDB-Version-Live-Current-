@@ -33,7 +33,7 @@ const Dashboard = () => {
         
       }
       getHobbies();
-    }, [user, setCategories, setTitles]);
+    }, [user, setCategories, setTitles, adminID, setHobbies]);
     
     const updateHobbies = async () => {
         const gottenHobbies = await fetchHobbies({user, adminID});
