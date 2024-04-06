@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import logoutAuth from '@/app/api/auth/logout';
-import { useSession } from '@/app/SessionContext';
+import { logoutAuth } from '@/lib/auth/logout/logout';
+import { useSession } from '@/app/context/session/SessionContext';
 import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 
@@ -15,7 +15,7 @@ const ProfilePage = () => {
     const handleLogout = async () => {
         if (window.confirm('Are you sure you want to log out?')) {
             const loggingOut = await logoutAuth();
-            if (loggingOut === 'Logged out successfully') {
+            if (loggingOut.valueOf() === true) {
                 logout();
                 router.push('/login');
             } else {
