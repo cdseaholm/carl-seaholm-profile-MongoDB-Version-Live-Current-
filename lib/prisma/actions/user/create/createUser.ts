@@ -10,11 +10,11 @@ import { Scrypt } from "lucia";
 export default async function createUser({formData}: {formData: FormData}): Promise<ActualUser[]> { 
     var user = null;
         
-	const password = formData.get("password");
+	const password = formData.get("signupPassword");
 	if (typeof password !== "string" || password.length < 6 || password.length > 255) {
 		throw new Error("Invalid password");
 	}
-    const email = formData.get("email");
+    const email = formData.get("signupEmail");
     if (typeof email !== "string" || email.length < 6 || email.length > 255 || !/^\S+@\S+\.\S+$/.test(email)) {
         throw new Error("Invalid email");
     }
@@ -33,6 +33,10 @@ export default async function createUser({formData}: {formData: FormData}): Prom
     } else if (username === null || username === undefined) {
         username = null;
     }
+    let blogsub = formData.get('blogsub');
+    if (blogsub !== null || blogsub !== undefined || typeof blogsub !== 'boolean') {
+        throw new Error("Invalid blogsub");
+    }
 
 	const hashedPassword = await new Scrypt().hash(password);
     const sessionID = generateId(15);
@@ -42,7 +46,8 @@ export default async function createUser({formData}: {formData: FormData}): Prom
             data: {
                 email: email,
                 password: hashedPassword,
-                name: username ? username : null 
+                name: username ? username : null,
+                blogsub: blogsub ? blogsub : false,
             }
         });
 

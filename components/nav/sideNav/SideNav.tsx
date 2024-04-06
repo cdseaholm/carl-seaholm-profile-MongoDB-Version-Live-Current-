@@ -1,22 +1,40 @@
 'use client'
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SocialIcon } from 'react-social-icons';
 import openInNewTab from '@/components/listeners/OpenInNewTab';
-import { useSession } from '@/app/SessionContext';
+import { useSession } from '@/app/context/session/SessionContext';
 import useMediaQuery from '../../listeners/WidthSettings';
-import { useModalContext } from '@nextui-org/react';
+import { useModalContext } from "@/app/context/modals/modalContext";
 
-function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
+export default function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
 
   // constants
   const ref = React.useRef<HTMLDivElement>(null);
-  const { user, session, logout } = useSession();
+  const { user } = useSession();
   const router = useRouter();
   const isBreakpoint = useMediaQuery(768);
-  //const { setModalOpen } = useModalContext();
+  const { setModalOpen } = useModalContext();
+  const { handleLogout, setModalSignUpOpen } = useModalContext();
+  var screenName = '';
+  if (user !== null) {
+    screenName = user.name ? user.name : '';
+  };
+
+  const handleClickedSignIn = () => {
+    setModalOpen(true);
+  };
+
+  const handleClickedLogout = () => {
+    handleLogout();
+    toggle();
+  };
+
+  const handleClickedSignUp = () => {
+    setModalSignUpOpen(true);
+  };
 
   const style = {
     closeIcon: `absolute top-1 focus:outline-none right-3 text-3xl text-white cursor-pointer`,
@@ -63,7 +81,7 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
-            router.push("/dashboard");
+            router.replace("/dashboard");
         }
     }, [router]);
 
@@ -100,34 +118,35 @@ function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void
             </div>
           </div>
         </div>
-        {/*
-        <div className={`mx-3 pt-5 flex flex-row justify-evenly items-center ${textSize}`}>
           {!user &&
-            <>
-              <button onClick={setModalOpen}>
+            <div className={`mx-3 pt-5 flex flex-row justify-evenly items-center ${textSize}`}>
+              <button onClick={handleClickedSignIn}>
                 Login
               </button>
-              <Link href='/signup'>
-                Signup
-              </Link>
-            </>
+              <button onClick={handleClickedSignUp}>
+                Sign Up
+              </button>
+            </div>
           }
           {user &&
-          <>
-            <Link href='/profile'>
-              Profile
-            </Link>
-            <button onClick={handleLogout}>
-              Logout
-            </button>
-          </>
+          <div className='mx-3 flex flex-col'> 
+            <div className='flex flex-row py-3 justify-center'>
+              <p>
+                Hello {screenName}
+              </p>
+            </div>
+            <div className={`flex flex-row justify-evenly items-center ${textSize}`}>
+              <Link href='/profile'>
+                Profile
+              </Link>
+              <button onClick={handleClickedLogout}>
+                Logout
+              </button>
+            </div>
+          </div>
           }
         </div>
-        */}
-      </div>
     </aside>
     </>
   );
 }
-
-export default Sidenav;

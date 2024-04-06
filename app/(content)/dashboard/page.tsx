@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import useMediaQuery from "@/components/listeners/WidthSettings";
-import { useSession } from "@/app/SessionContext";
+import { useSession } from "@/app/context/session/SessionContext";
 import fetchHobbies from "@/lib/prisma/queries/hobbies";
 import type { Hobby } from "@/types/hobby";
 import CatsAndHobs from "@/components/functions/catsandhobs";
@@ -17,12 +17,12 @@ const Dashboard = () => {
     const [categories, setCategories] = useState([] as string[]);
     const [titles, setTitles] = useState([] as string[]);
     const { user } = useSession();
+    const adminID = parseInt(process.env.NEXT_PUBLIC_ADMIN_ID ? process.env.NEXT_PUBLIC_ADMIN_ID : '');
   
 
     React.useEffect(() => {
       const getHobbies = async () => {
-        if (user) {
-          const gottenHobbies = await fetchHobbies({user});
+          const gottenHobbies = await fetchHobbies({user, adminID});
           setHobbies(gottenHobbies);
           console.log(gottenHobbies);
           if (gottenHobbies) {
@@ -30,20 +30,19 @@ const Dashboard = () => {
             setTitles(hobbes);
             setCategories(cats);
           }
-        }
+        
       }
       getHobbies();
     }, [user, setCategories, setTitles]);
     
     const updateHobbies = async () => {
-      if (user) {
-        const gottenHobbies = await fetchHobbies({user});
+        const gottenHobbies = await fetchHobbies({user, adminID});
         setHobbies(gottenHobbies);
         if (gottenHobbies) {
           const { cats, hobbes } = await CatsAndHobs({hobbies: gottenHobbies});
           setTitles(hobbes);
           setCategories(cats);
-        }
+        
       }
     };
 
@@ -55,7 +54,7 @@ const Dashboard = () => {
               </div>
             </InnerHeader>
             <MainChild>
-              <DashChild user={user} categories={categories} titles={titles} hobbies={hobbies} updateHobbies={updateHobbies}/>
+              <DashChild user={user} categories={categories} titles={titles} hobbies={hobbies} updateHobbies={updateHobbies} adminID={adminID}/>
             </MainChild>
         </div>
     );

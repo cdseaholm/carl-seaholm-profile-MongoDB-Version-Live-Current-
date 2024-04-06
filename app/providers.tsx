@@ -2,23 +2,26 @@
 'use client'
 
 import {NextUIProvider} from '@nextui-org/react'
-//import { ModalProvider } from '@/app/modalContext'
+import { ModalProvider } from '@/app/context/modals/modalContext'
 import { useState } from 'react';
-import { useSession } from './SessionContext';
+import { useSession } from '@/app/context/session/SessionContext';
 import { useRouter } from 'next/navigation';
 import login from '@/lib/auth/login/login';
-import logoutAuth from '@/lib/auth/logout/logout';
-import logout from '@/lib/auth/session/session';
+import { logoutAuth } from '@/lib/auth/logout/logout';
 import ModalLogin from '@/components/modals/auth/login/loginModal';
+import { usePathname } from 'next/navigation';
+import createUser from '@/lib/prisma/actions/user/create/createUser';
+import ModalSignUp from '@/components/modals/auth/signup/signupModal';
 
 export function Providers({children}: { children: React.ReactNode }) {
-  {/**
 
-  const [show, setShow] = useState(false);
-  const { setSession, setUser, user, session } = useSession();
+  const [showModal, setShowModal] = useState(false);
+  const { setSession, setUser, user, session, logout } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+  const [modalSignUpOpen, setModalSignUpOpen] = useState(false);
 
-  const handleSubmit = () => async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     console.log('handleSubmit function called');
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -37,34 +40,66 @@ export function Providers({children}: { children: React.ReactNode }) {
     } else {
         setSession(loggedin.session);
         setUser(loggedin.user);
-        router.push("/dashboard");
+        setShowModal(false);
+        if (pathname === '/dashboard') {
+          router.refresh();
+        } else {
+          router.replace("/dashboard");
+        }
     }
   };
 
   const handleLogout = async () => {
     if (window.confirm('Are you sure you want to log out?')) {
-      if (session) {
-        const loggingOut = await logoutAuth({ session });
-        if (loggingOut === 'Logged out successfully') {
-          logout();
-          router.push('/login');
-        } else {
-          alert('Already logged out');
-          console.log(loggingOut);
-        }
+      if (true) {
+          if (session) {
+            try {
+              const loggingOut = await logoutAuth();
+              if (loggingOut.valueOf() === true) {
+                logout();
+                router.replace('/');
+              } else {
+                alert('Already logged out');
+              }
+            } catch (error) {
+              console.log('error logging out', error);
+            }
+          }
       }
+    };
+  }
+
+  //better to directly send to dashboard and auto signin or ask for login after?
+  const handleSignUpSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const createAccount = await createUser({ formData });
+    if (createAccount) {
+        console.log('Account created', createAccount);
+        setModalSignUpOpen(false);
+        setShowModal(true); //ask for login after sign up
+    } else {
+        alert("An error occurred. Please try again.");
     }
   };
-  */}
+
+  const swapAuthDesire = async () => {
+    if (modalSignUpOpen) {
+      setModalSignUpOpen(false);
+      setShowModal(true);
+    } else if (showModal) {
+      setShowModal(false);
+      setModalSignUpOpen(true);
+    }
+  };
 
   return (
-    //<ModalProvider modalOpen={show} logout={handleLogout} login={handleSubmit} setModalOpen={setShow}>
-      //{<ModalLogin show={modalOpen ? modalOpen : false} attemptLogin={login}>
-        //{children}
- // </ModalLogin>}
+    <ModalProvider modalOpen={showModal} handleLogout={handleLogout} handleSubmit={handleSubmit} setModalOpen={setShowModal} setModalSignUpOpen={setModalSignUpOpen} modalSignUpOpen={modalSignUpOpen} handleSignUpSubmit={handleSignUpSubmit} swapAuthDesire={swapAuthDesire}>
+      <ModalLogin/>
+      <ModalSignUp/>
       <NextUIProvider>
         {children}
       </NextUIProvider>
-    //</ModalProvider>
+    </ModalProvider>
   )
 }
