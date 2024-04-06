@@ -47,7 +47,7 @@ export default async function login({formData}: {formData: FormData})
 
     const validPassword = await new Scrypt().verify(existingUser.password, password);
     if (!validPassword) {
-        return 'Incorrect email or password';
+        return 'Password is incorrect';
     }
 
     const sessionID = generateId(15);

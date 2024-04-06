@@ -7,10 +7,11 @@ import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import React from "react";
+import { set } from "date-fns";
 
 export default function LoginPage() {
     const router = useRouter();
-    console.log('LoginPage rendered');
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
@@ -33,6 +34,9 @@ export default function LoginPage() {
         if (typeof loggedin === 'string') {
             alert(loggedin);
             console.log(loggedin);
+        } else if (typeof loggedin === 'string' && loggedin === 'Password is incorrect') {
+            console.log('incorrectPW', loggedin);
+            alert('Password is incorrect');
         } else {
             setSession(loggedin.session);
             setUser(loggedin.user);
@@ -49,7 +53,7 @@ export default function LoginPage() {
                 <div className="flex flex-col items-center">
                     <form onSubmit={handleSubmit} className="flex flex-col items-center justify-evenly">
                         <label className="py-2" htmlFor="email">Email</label>
-                        <input name="email" id="email" className="rounded-md px-2" />
+                        <input type="email" name="email" id="email" className="rounded-md px-2" />
                         <br />
                         <label className="py-2" htmlFor="password">Password</label>
                         <input type="password" name="password" id="password" className="rounded-md px-2" />
