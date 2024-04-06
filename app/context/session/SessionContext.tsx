@@ -30,5 +30,7 @@ export const SessionProvider = ({ children, session, user, loading, logout, setS
     
     const value = { session, user, loading, logout, setSession, setUser };
 
+    console.log('SessionProvider value:', value);
+
     return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 };

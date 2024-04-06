@@ -8,7 +8,7 @@ import CreateHobby from "@/lib/prisma/actions/hobby/createhobby";
 import MobileModalHobby from "@/components/modals/hobbyModal/mobileHobbyModal";
 import MainDashBoard from "./mainDashBoard";
 
-const DashChild = ({user, categories, titles, hobbies, updateHobbies}: {user: ActualUser | null; categories: string[]; titles: string[]; hobbies: Hobby[]; updateHobbies: any}) => {
+const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: {user: ActualUser | null; categories: string[]; titles: string[]; hobbies: Hobby[]; updateHobbies: any; adminID: number}) => {
     const [openAddModal, setOpenAddModal] = useState(false);
     const [item, setItem] = useState('');
     const [open, setOpen] = useState(false);
@@ -16,7 +16,6 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies}: {user: Ac
     const divRef = React.useRef<HTMLDivElement>(null);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
     const isBreakpoint = useMediaQuery(768);
-    const adminID = parseInt(process.env.NEXT_PUBLIC_ADMIN_ID ? process.env.NEXT_PUBLIC_ADMIN_ID : '');
     console.log(hobbies)
     
 

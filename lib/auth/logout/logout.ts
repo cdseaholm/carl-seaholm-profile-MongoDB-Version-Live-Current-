@@ -2,20 +2,21 @@
 
 import { lucia } from "@/lib/lucia/lucia";
 import { Session } from "lucia";
-import { ActionResult } from "next/dist/server/app-render/types";
 import { cookies } from "next/headers";
 
-export default async function logoutAuth({session}: {session: Session}): Promise<ActionResult> {
+export async function logoutAuth(): Promise<boolean> {
 
-    if (!session) {
-      return {
-        error: "Unauthorized"
-      };
+    const sessionID = cookies().get(lucia.sessionCookieName)?.value ?? null;
+
+    if (!sessionID) {
+      return false;
+      
     }
   
-    await lucia.invalidateSession(session.id);
+    await lucia.invalidateSession(sessionID);
   
-      const sessionCookie = lucia.createBlankSessionCookie();
-      cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-      return 'Logged out successfully';
+    const sessionCookie = lucia.createBlankSessionCookie();
+    cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+
+    return true;
   }

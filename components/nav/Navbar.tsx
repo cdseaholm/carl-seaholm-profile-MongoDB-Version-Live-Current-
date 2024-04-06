@@ -1,7 +1,6 @@
 'use client'
 
 import SideNavHeader from '@/components/nav/sideNav/header';
-import useMediaQuery from '@/components/listeners/WidthSettings';
 import { usePathname } from 'next/navigation';
 
 

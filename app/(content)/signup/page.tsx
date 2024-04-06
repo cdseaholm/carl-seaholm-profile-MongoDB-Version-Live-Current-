@@ -12,7 +12,7 @@ export default function Page() {
         const formData = new FormData(event.currentTarget);
         const createAccount = await createUser({ formData });
         if (createAccount) {
-            router.push("/login");
+            router.replace("/login");
         } else {
             alert("An error occurred. Please try again.");
         }

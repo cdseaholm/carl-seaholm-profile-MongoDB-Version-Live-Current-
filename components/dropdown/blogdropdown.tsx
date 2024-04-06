@@ -7,7 +7,7 @@ import React from "react";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "../pagetemplates/mainchild/mainchild";
 import useMediaQuery from "../listeners/WidthSettings";
-import { useSession } from "@/app/SessionContext";
+import { useSession } from "@/app/context/session/SessionContext";
 import createBlogSub from "@/lib/prisma/actions/user/update/updateBlog";
 import createUser from "@/lib/prisma/actions/user/create/createUser";
 

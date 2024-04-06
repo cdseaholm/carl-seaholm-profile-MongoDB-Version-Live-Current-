@@ -6,17 +6,17 @@ import { ActualUser } from "@/types/user";
 export default async function CreateHobby({formData, user, categoryPassed}: {formData: FormData; user: ActualUser | null; categoryPassed: string}): Promise<string> {
     
     var userID = null;
-    const title = formData.get("name");
+    const title = formData.get("hobbyName");
     if (typeof title !== "string" || title === "" || title === null || title.length === 0) {
         throw new Error("Invalid title");
     }
 
-    const description = formData.get("description");
+    const description = formData.get("hobbyDescription");
     if (typeof description !== "string") {
         throw new Error("Invalid description");
     }
 
-    const goal = formData.get("goalValue");
+    const goal = formData.get("hobbyGoalValue");
     if (typeof goal !== "string") {
         throw new Error("Invalid goal");
     }

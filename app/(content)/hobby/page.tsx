@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Hobby } from '@/types/hobby';
-import { useSession } from '@/app/SessionContext';
+import { useSession } from '@/app/context/session/SessionContext';
 
 const HobbyPage = () => {
 
