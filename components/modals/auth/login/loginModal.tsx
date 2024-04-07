@@ -1,6 +1,6 @@
 'use client'
 
-import { useModalContext } from "@/app/context/modals/modalContext";
+import { useModalContext } from "@/app/context/modal/modalContext";
 import useMediaQuery from "@/components/listeners/WidthSettings";
 import Link from "next/link";
 

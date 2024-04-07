@@ -7,7 +7,8 @@ import { SocialIcon } from 'react-social-icons';
 import openInNewTab from '@/components/listeners/OpenInNewTab';
 import { useSession } from '@/app/context/session/SessionContext';
 import useMediaQuery from '../../listeners/WidthSettings';
-import { useModalContext } from "@/app/context/modals/modalContext";
+import { useModalContext } from "@/app/context/modal/modalContext";
+import { set } from 'date-fns';
 
 export default function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
 
@@ -16,8 +17,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
   const { user } = useSession();
   const router = useRouter();
   const isBreakpoint = useMediaQuery(768);
-  const { setModalOpen } = useModalContext();
-  const { handleLogout, setModalSignUpOpen } = useModalContext();
+  const { setAlertMessage, setAlertParent, setShowAlert, setModalSignUpOpen, setModalOpen } = useModalContext();
   var screenName = '';
   if (user !== null) {
     screenName = user.name ? user.name : '';
@@ -28,7 +28,9 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
   };
 
   const handleClickedLogout = () => {
-    handleLogout();
+    setAlertParent('logout');
+    setAlertMessage('Are you sure you want to log out?');
+    setShowAlert(true);
     toggle();
   };
 

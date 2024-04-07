@@ -7,16 +7,19 @@ import { generateId } from "lucia";
 import { cookies } from "next/headers";
 import { Scrypt } from "lucia";
 
-export default async function createUser({formData}: {formData: FormData}): Promise<ActualUser[]> { 
+export default async function createUser({formData}: {formData: FormData}): Promise<ActualUser[] | string> { 
     var user = null;
         
 	const password = formData.get("signupPassword");
 	if (typeof password !== "string" || password.length < 6 || password.length > 255) {
-		throw new Error("Invalid password");
+        console.log('Invalid password');
+		return "Invalid password";
+        
 	}
     const email = formData.get("signupEmail");
     if (typeof email !== "string" || email.length < 6 || email.length > 255 || !/^\S+@\S+\.\S+$/.test(email)) {
-        throw new Error("Invalid email");
+        console.log('Invalid email');
+        return "Invalid email";
     }
     let username = formData.get("username");
     if (
@@ -29,13 +32,14 @@ export default async function createUser({formData}: {formData: FormData}): Prom
             !/^[a-z0-9_-]+$/.test(username)
         )
     ) {
-        throw new Error("Invalid username");
+        console.log('Invalid username');
+        return "Invalid username";
     } else if (username === null || username === undefined) {
         username = null;
     }
     let blogsub = formData.get('blogsub');
     if (blogsub !== null || blogsub !== undefined || typeof blogsub !== 'boolean') {
-        throw new Error("Invalid blogsub");
+        throw new Error('Invalid blogsub');
     }
 
 	const hashedPassword = await new Scrypt().hash(password);
@@ -63,7 +67,7 @@ export default async function createUser({formData}: {formData: FormData}): Prom
         user = prismaUser;
     } catch (e) {
         console.error(e);
-        throw new Error("User not created");
+        return "Error creating user";
     }
-    return user ? [user] : [];
+    return user ? [user] : 'Error creating user';
 }

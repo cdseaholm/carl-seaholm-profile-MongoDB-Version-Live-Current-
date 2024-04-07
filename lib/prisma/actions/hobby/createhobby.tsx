@@ -10,7 +10,7 @@ export default async function CreateHobby({formData, user, categoryPassed}: {for
     if (typeof title !== "string" || title === "" || title === null || title.length === 0) {
         throw new Error("Invalid title");
     }
-
+    
     const description = formData.get("hobbyDescription");
     if (typeof description !== "string") {
         throw new Error("Invalid description");

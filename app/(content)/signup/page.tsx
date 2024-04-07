@@ -1,22 +1,13 @@
 'use client'
 
-import createUser from "@/lib/prisma/actions/user/create/createUser";
+import { useModalContext } from "@/app/context/modal/modalContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
     const router = useRouter();
     
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const createAccount = await createUser({ formData });
-        if (createAccount) {
-            router.replace("/login");
-        } else {
-            alert("An error occurred. Please try again.");
-        }
-    };
+    const { handleSubmit } = useModalContext();
 
 	return (
 		<>

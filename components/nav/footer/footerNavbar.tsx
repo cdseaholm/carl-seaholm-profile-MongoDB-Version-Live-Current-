@@ -3,10 +3,17 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import useMediaQuery from '@/components/listeners/WidthSettings';
+import { useModalContext } from '@/app/context/modal/modalContext';
 
 const FooterNavBar = () => {
     const pathname = usePathname();
     const breakpoint = useMediaQuery(768);
+    const { setShowAlert, setAlertMessage } = useModalContext();
+
+    const handleShowAlert = () => {
+        setShowAlert(true);
+        setAlertMessage('Click Yes if this is shown')
+    }
 
     return (
         <>

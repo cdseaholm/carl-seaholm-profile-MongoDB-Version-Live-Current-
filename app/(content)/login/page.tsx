@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import React from "react";
 import { set } from "date-fns";
+import { useModalContext } from "@/app/context/modal/modalContext";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -19,30 +20,9 @@ export default function LoginPage() {
         }
     }, [router]);
 
-    const { setSession, setUser, user, session } = useSession();
+    const { handleSubmit } = useModalContext();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        console.log('handleSubmit function called');
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        if (user || user && session) {
-            alert('You are already logged in');
-            return;
-        }
-        const loggedin = await login({ formData });
     
-        if (typeof loggedin === 'string') {
-            alert(loggedin);
-            console.log(loggedin);
-        } else if (typeof loggedin === 'string' && loggedin === 'Password is incorrect') {
-            console.log('incorrectPW', loggedin);
-            alert('Password is incorrect');
-        } else {
-            setSession(loggedin.session);
-            setUser(loggedin.user);
-            router.push("/dashboard");
-        }
-    };
 
     return (
         <>

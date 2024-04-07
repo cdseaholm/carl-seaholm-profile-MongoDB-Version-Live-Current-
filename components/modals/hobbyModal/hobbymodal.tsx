@@ -1,14 +1,21 @@
 'use client'
 
+import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import { Hobby } from "@/types/hobby";
+import { set } from "date-fns";
 import { useState } from "react";
 
-export default function ModalHobby({ show, categories, children, createHobby }: { show: boolean; categories: string[]; hobbies: Hobby[]; children: React.ReactNode; createHobby: any;}) {
+export default function ModalHobby({ show, categories, createHobby }: { show: boolean; categories: string[]; hobbies: Hobby[]; createHobby: any;}) {
 
-    const [showCreateCategory, setShowCreateCategory] = useState(false);
+    const { openCategoryModal, setOpenCategoryModal, setOpenAddModal, categoryPassed } = useHobbyContext();
     const [goalChild, setGoalChild] = useState('Goal Value');
     const [goalType, setGoalType] = useState('text');
+    const [catCreate, setCatCreate] = useState(false);
     const [goalPlaceHolder, setGoalPlaceHolder] = useState('Pick a Goal Type First');
+
+    const handleCategoryCreate = () => {
+        setCatCreate(!catCreate);
+    };
     
     const changeGoalChild = (goalValueSelected: string) => {
         if (goalValueSelected === '0') {
@@ -47,32 +54,41 @@ export default function ModalHobby({ show, categories, children, createHobby }: 
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                             Create Something to Track
                         </h3>
-                        {children}
+                        <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal" onClick={() => setOpenAddModal(false)}>
+                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span className="sr-only">Close modal</span>
+                        </button>
                     </div>
                     <form className="p-4 md:p-5" onSubmit={createHobby}>
                         <div className="grid gap-4 mb-4 grid-cols-2">
                             <div className="col-span-2">
                                 <label htmlFor="hobbyName" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Name this Tracker</label>
                                 <input type="text" name="hobbyName" id="hobbyName" autoComplete='off' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type a name" required/>
+                                
                             <div className="col-span-2 sm:col-span-1">
-                                <div className="flex flex-row justify-between">
+                                <div className="flex flex-row justify-between items-center">
                                     <label htmlFor="hobbyCategory" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
-                                    {categories.length !== 0 &&
-                                        <button className="text-sm cursor-pointer text-blue-700 hover:text-blue-400" onClick={() => setShowCreateCategory(true)}>
-                                            {showCreateCategory ? 'Select Existing Category' : 'Create New Category'}
-                                        </button>
-                                        }
+                                        <div className="text-sm cursor-pointer text-blue-700 hover:text-blue-400" onClick={handleCategoryCreate}>
+                                            {catCreate ? 'Select Existing Category' : 'Create New Category'}
+                                        </div>
                                     </div>
-                                    {!showCreateCategory && categories.length !== 0 &&
-                                        <select id="hobbyCategory" name="hobbyCategory" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" defaultValue={'Select Category'}>
-                                            <option>Select category</option>
-                                            {categories.map((item, index) => (
+                                    {!catCreate &&
+                                    <select id="hobbyCategory" name="hobbyCategory" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500" defaultValue={categoryPassed ? categoryPassed : 'Select a category'}>
+                                        <option>Select a category</option>
+                                        {categoryPassed &&
+
+                                            <option value={categoryPassed}>{categoryPassed}</option>
+                                        }
+                                        {categories.filter(item => item !== "").map((item, index) => (
                                                 <option key={index} value={item}>{item}</option>
-                                            ))}
-                                        </select>
+                                        ))}
+                                            
+                                    </select>
                                     }
-                                    {showCreateCategory || categories.length === 0 &&
-                                       <input type="text" name="hobbyCategory" id="hobbyCategory" autoComplete="off" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type a Category Name"/>
+                                    {catCreate &&
+                                        <input type="text" name="hobbyCategory" id="hobbyCategory" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type Category name" required/>
                                     }
                             </div>
                             <div className="flex flex-row justify-evenly space-x-1">
