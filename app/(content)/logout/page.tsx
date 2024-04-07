@@ -1,29 +1,15 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
-import { logoutAuth } from '@/lib/auth/logout/logout';
 import { useSession } from '@/app/context/session/SessionContext';
 import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
+import { useModalContext } from '@/app/context/modal/modalContext';
 
 const ProfilePage = () => {
-    const router = useRouter();
 
-    const { user, logout } = useSession();
-
-    const handleLogout = async () => {
-        if (window.confirm('Are you sure you want to log out?')) {
-            const loggingOut = await logoutAuth();
-            if (loggingOut.valueOf() === true) {
-                logout();
-                router.push('/login');
-            } else {
-                alert('Already logged out');
-                console.log(loggingOut);
-            }
-        }
-    };
+    const { handleLogout } = useModalContext();
 
     return (
         <>

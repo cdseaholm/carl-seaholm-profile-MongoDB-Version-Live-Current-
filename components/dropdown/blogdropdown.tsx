@@ -33,7 +33,7 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
                         formData.append('email', email);
                         formData.append('password', password);
                         createUser({ formData }).then(newUser => {
-                            if (newUser !== null) {
+                            if (newUser !== null && typeof newUser !== 'string') {
                                 createBlogSub({user: newUser[0]})
                                 .then((sub) => console.log(sub))
                                 .catch((e) => console.error(e));

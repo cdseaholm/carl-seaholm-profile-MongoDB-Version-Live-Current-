@@ -16,7 +16,7 @@ const Dashboard = () => {
     const [hobbies, setHobbies] = useState<Hobby[]>([]);
     const [categories, setCategories] = useState([] as string[]);
     const [titles, setTitles] = useState([] as string[]);
-    const { user } = useSession();
+    const { user, session } = useSession();
     const adminID = parseInt(process.env.NEXT_PUBLIC_ADMIN_ID ? process.env.NEXT_PUBLIC_ADMIN_ID : '');
   
 
@@ -54,7 +54,7 @@ const Dashboard = () => {
               </div>
             </InnerHeader>
             <MainChild>
-              <DashChild user={user} categories={categories} titles={titles} hobbies={hobbies} updateHobbies={updateHobbies} adminID={adminID}/>
+              <DashChild user={user} categories={categories} titles={titles} hobbies={hobbies} updateHobbies={updateHobbies} adminID={adminID} session={session}/>
             </MainChild>
         </div>
     );

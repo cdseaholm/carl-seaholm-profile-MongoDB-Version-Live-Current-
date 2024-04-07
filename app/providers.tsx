@@ -2,8 +2,8 @@
 'use client'
 
 import {NextUIProvider} from '@nextui-org/react'
-import { ModalProvider } from '@/app/context/modals/modalContext'
-import { useState } from 'react';
+import {ModalProvider} from '@/app/context/modal/modalContext'
+import { SetStateAction, useState } from 'react';
 import { useSession } from '@/app/context/session/SessionContext';
 import { useRouter } from 'next/navigation';
 import login from '@/lib/auth/login/login';
@@ -12,31 +12,50 @@ import ModalLogin from '@/components/modals/auth/login/loginModal';
 import { usePathname } from 'next/navigation';
 import createUser from '@/lib/prisma/actions/user/create/createUser';
 import ModalSignUp from '@/components/modals/auth/signup/signupModal';
+import AlertModal from '@/components/modals/alertModal/alertmodal';
+import { HobbyProvider } from './context/hobby/hobbyModalContext';
+import LogSessionModal from '@/components/modals/hobbyModal/logsession';
 
 export function Providers({children}: { children: React.ReactNode }) {
 
+  //states  
   const [showModal, setShowModal] = useState(false);
+  const [modalSignUpOpen, setModalSignUpOpen] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertParent, setAlertParent] = useState('');
+  const [alertConfirm, setAlertConfirm] = useState(false);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [filterItem, setFilterItem] = useState('');
+  const [categoryPassed, setCategoryPassed] = useState('');
+  const [openCategoryModal, setOpenCategoryModal] = useState(false);
+  const [openLogSessionModal, setOpenLogSessionModal] = useState(false);
+
+
+  //variables
+
   const { setSession, setUser, user, session, logout } = useSession();
   const router = useRouter();
   const pathname = usePathname();
-  const [modalSignUpOpen, setModalSignUpOpen] = useState(false);
+
+  //functions
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     console.log('handleSubmit function called');
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     if (user || user && session) {
-        alert('You are already logged in');
+        setAlertMessage('You are already logged in');
         return;
     }
     const loggedin = await login({ formData });
 
     if (typeof loggedin === 'string') {
-        alert(loggedin);
+        setAlertMessage(loggedin);
         console.log(loggedin);
     } else if (typeof loggedin === 'string' && loggedin === 'Password is incorrect') {
         console.log('incorrectPW', loggedin);
-        alert('Password is incorrect');
+        setAlertMessage('Password is incorrect');
     } else {
         setSession(loggedin.session);
         setUser(loggedin.user);
@@ -50,23 +69,22 @@ export function Providers({children}: { children: React.ReactNode }) {
   };
 
   const handleLogout = async () => {
-    if (window.confirm('Are you sure you want to log out?')) {
-      if (true) {
-          if (session) {
-            try {
-              const loggingOut = await logoutAuth();
-              if (loggingOut.valueOf() === true) {
-                logout();
-                router.replace('/');
-              } else {
-                alert('Already logged out');
-              }
-            } catch (error) {
-              console.log('error logging out', error);
-            }
-          }
+    if (session) {
+      try {
+        const loggingOut = await logoutAuth();
+        if (loggingOut.valueOf() === true) {
+          logout();
+          router.replace('/');
+        } else {
+          setAlertMessage('Already logged out');
+          setShowAlert(true);
+        }
+      } catch (error) {
+        setAlertMessage('An error occurred. Please try again.');
+        setShowAlert(true);
+        console.log('error logging out', error);
       }
-    };
+    }
   }
 
   //better to directly send to dashboard and auto signin or ask for login after?
@@ -74,12 +92,18 @@ export function Providers({children}: { children: React.ReactNode }) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const createAccount = await createUser({ formData });
-    if (createAccount) {
+    if (typeof createAccount !== 'string' && typeof createAccount !== 'undefined') {
         console.log('Account created', createAccount);
         setModalSignUpOpen(false);
         setShowModal(true); //ask for login after sign up
+    } else if (typeof createAccount === 'string') {
+        setAlertMessage(createAccount);
+        setShowAlert(true);
+        return;
     } else {
-        alert("An error occurred. Please try again.");
+        setAlertMessage('An error occurred. Please try again.');
+        setShowAlert(true);
+        return;
     }
   };
 
@@ -94,12 +118,16 @@ export function Providers({children}: { children: React.ReactNode }) {
   };
 
   return (
-    <ModalProvider modalOpen={showModal} handleLogout={handleLogout} handleSubmit={handleSubmit} setModalOpen={setShowModal} setModalSignUpOpen={setModalSignUpOpen} modalSignUpOpen={modalSignUpOpen} handleSignUpSubmit={handleSignUpSubmit} swapAuthDesire={swapAuthDesire}>
+    <ModalProvider modalOpen={showModal} handleLogout={handleLogout} handleSubmit={handleSubmit} setModalOpen={setShowModal} setModalSignUpOpen={setModalSignUpOpen} modalSignUpOpen={modalSignUpOpen} handleSignUpSubmit={handleSignUpSubmit} swapAuthDesire={swapAuthDesire} showAlert={showAlert} setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} alertMessage={alertMessage} alertParent={alertParent} setAlertParent={setAlertParent} alertConfirm={alertConfirm} setAlertConfirm={setAlertConfirm}>
       <ModalLogin/>
       <ModalSignUp/>
-      <NextUIProvider>
-        {children}
-      </NextUIProvider>
+      <AlertModal/>
+      <HobbyProvider openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} openLogSessionModal={openLogSessionModal} setOpenLogSessionModal={setOpenLogSessionModal}>
+        <LogSessionModal show={openLogSessionModal}/>
+        <NextUIProvider>
+          {children}
+        </NextUIProvider>
+      </HobbyProvider>
     </ModalProvider>
   )
 }

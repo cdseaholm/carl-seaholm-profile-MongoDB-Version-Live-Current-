@@ -7,30 +7,31 @@ import ModalHobby from "@/components/modals/hobbyModal/hobbymodal";
 import CreateHobby from "@/lib/prisma/actions/hobby/createhobby";
 import MobileModalHobby from "@/components/modals/hobbyModal/mobileHobbyModal";
 import MainDashBoard from "./mainDashBoard";
+import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
+import { Session } from "lucia";
 
-const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: {user: ActualUser | null; categories: string[]; titles: string[]; hobbies: Hobby[]; updateHobbies: any; adminID: number}) => {
-    const [openAddModal, setOpenAddModal] = useState(false);
-    const [item, setItem] = useState('');
-    const [open, setOpen] = useState(false);
-    const [categoryPassed, setCategoryPassed] = useState('');
+const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID, session}: {user: ActualUser | null; categories: string[]; titles: string[]; hobbies: Hobby[]; updateHobbies: any; adminID: number; session: Session | null}) => {
+
+    const [filterOpen, setFilterOpen] = useState(false);
     const divRef = React.useRef<HTMLDivElement>(null);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
     const isBreakpoint = useMediaQuery(768);
-    console.log(hobbies)
+    const { categoryPassed, openAddModal, setOpenAddModal, filterItem, setFilterItem } = useHobbyContext();
+
     
 
     React.useEffect(() => {
         const handleOutsideClick = (event: { target: any; }) => {
           if ((!dropdownRef.current || !dropdownRef.current.contains(event.target as HTMLDivElement)) && 
               (!divRef.current || !divRef.current.contains(event.target as HTMLElement))) {
-              if (open) {
-                  setOpen(false);
+              if (filterOpen) {
+                  setFilterOpen(false);
               }
           }
       };
         window.addEventListener('mousedown', handleOutsideClick);
         return () => window.removeEventListener('mousedown', handleOutsideClick);
-    }, [setOpen, divRef, dropdownRef, open]);
+    }, [setFilterOpen, divRef, dropdownRef, filterOpen]);
 
     const CreateHobbyHandle= async (event: React.FormEvent<HTMLFormElement>) => {
       console.log('handleSubmit function called');
@@ -38,7 +39,7 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: 
       const formData = new FormData(event.currentTarget);
       const userToPass = user ? user : null;
 
-      const createHobby = await CreateHobby({ formData, user: userToPass, categoryPassed});
+      const createHobby = await CreateHobby({ formData, user: userToPass, categoryPassed });
   
       if (createHobby) {
           console.log('Hobby created');
@@ -58,9 +59,11 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: 
                     <div className="flex flex-row justify-center text-sm font-medium">
                         Filter: 
                     </div>
-                    <button id='dropButton' type="button" onClick={open ? () => setOpen(false) : () => setOpen(true)} className='cursor-pointer flex flex-row items-center justify-between hover:bg-gray-400 font-medium'>
+
+                    {/**Drop down filter button */}
+                    <button id='dropButton' type="button" onClick={filterOpen ? () => setFilterOpen(false) : () => setFilterOpen(true)} className='cursor-pointer flex flex-row items-center justify-between hover:bg-gray-400 font-medium'>
                       <div className='relative z-20 w-full flex text-black rounded text-sm'>
-                        {item === '' ? 'No Filter' : item}
+                        {filterItem === '' ? 'No Filter' : filterItem}
                       </div>
                       <div className='flex items-center'>
                         <svg
@@ -78,7 +81,9 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: 
                         </svg>
                       </div>
                     </button>
-                    {open && 
+
+                    {/**drop down filter menu */}
+                    {filterOpen && 
                       <div ref={dropdownRef} className='absolute flex flex-col right-22 mt-10 justify-end text-left border border-gray-300 rounded-sm bg-clip-padding bg-slate-800/70 text-white shadow-lg w-36 cursor-pointer'>
                                 <div className="divide-y divide-solid divide-white">
                                   <div>
@@ -92,8 +97,8 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: 
                                     }
                                     {hobbies.length !== 0 && categories.map((item, index) => (
                                         <div key={index} onClick={() => {
-                                            setItem(item)
-                                            setOpen(false)
+                                            setFilterItem(item)
+                                            setFilterOpen(false)
                                         }} 
                                         className='block px-4 py-2 text-sm text-white hover:bg-slate-800'>
                                             {item}
@@ -111,8 +116,8 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: 
                                     }
                                     {hobbies.length !== 0 && titles.map((item, index) => (
                                         <div key={index} onClick={() => {
-                                            setItem(item)
-                                            setOpen(false)
+                                            setFilterItem(item)
+                                            setFilterOpen(false)
                                         }} 
                                         className='block px-4 py-2 text-sm text-white hover:bg-slate-800'>
                                             {item}
@@ -124,7 +129,7 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: 
                         </div>
                     }
                   </div>
-                  {user && user.id === adminID &&
+                  {user !== null && user.id === adminID && session !== null && parseInt(session.userId) === adminID &&
                       <>
                           {isBreakpoint &&
                               <button className="block text-black font-medium rounded-lg text-sm mx-3 my-2 px-3 py-1.5 text-center hover:bg-gray-400" type="button" onClick={() => setOpenAddModal(true)}>
@@ -140,27 +145,13 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: 
                   }
                 </div>
                 {isBreakpoint &&
-                  <MobileModalHobby show={openAddModal} categories={categories} hobbies={hobbies} createHobby={CreateHobbyHandle}>
-                    <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal" onClick={() => setOpenAddModal(false)}>
-                      <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                      </svg>
-                      <span className="sr-only">Close modal</span>
-                    </button>
-                  </MobileModalHobby>
+                  <MobileModalHobby show={openAddModal} categories={categories} hobbies={hobbies} createHobby={CreateHobbyHandle}/>
                 }
                 {!isBreakpoint &&
-                  <ModalHobby show={openAddModal} categories={categories} hobbies={hobbies} createHobby={CreateHobbyHandle}>
-                    <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal" onClick={() => setOpenAddModal(false)}>
-                      <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                      </svg>
-                      <span className="sr-only">Close modal</span>
-                    </button>
-                  </ModalHobby>
+                  <ModalHobby show={openAddModal} categories={categories} hobbies={hobbies} createHobby={CreateHobbyHandle} />
                 }
                 <div>
-                  <MainDashBoard filter={item} hobbies={hobbies} user={user} adminID={adminID} />
+                  <MainDashBoard filter={filterItem} hobbies={hobbies} user={user} adminID={adminID} session={session} />
                 </div>
               </div>
         </>

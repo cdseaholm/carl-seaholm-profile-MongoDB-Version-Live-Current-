@@ -11,6 +11,8 @@ export default async function fetchHobbies({user, adminID}: {user: ActualUser | 
     if (!user) {
         idToUse = adminID;
         //return notFound();
+    } else {
+        idToUse = user.id;
     }
     const hobbies = await prisma.hobby.findMany({
         where: {
