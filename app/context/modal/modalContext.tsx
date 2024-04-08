@@ -8,7 +8,6 @@ type ContextType = {
   modalSignUpOpen: boolean | null;
   setModalSignUpOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleLogout: () => void;
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   handleSignUpSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   swapAuthDesire: () => void;
   showAlert: boolean | null;
@@ -27,7 +26,6 @@ const initialContext: ContextType = {
   setModalSignUpOpen: () => {},
   setModalOpen: () => {},
   handleLogout: () => {},
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => {},
   handleSignUpSubmit: (event: React.FormEvent<HTMLFormElement>) => {},
   swapAuthDesire: () => {},
   showAlert: false,
@@ -44,11 +42,10 @@ const ModalContext = createContext(initialContext);
 
 export const useModalContext = () => useContext(ModalContext);
 
-export const ModalProvider = ({ children, modalOpen, setModalOpen, handleLogout, handleSubmit, modalSignUpOpen, setModalSignUpOpen, handleSignUpSubmit, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm }: React.PropsWithChildren<{
+export const ModalProvider = ({ children, modalOpen, setModalOpen, handleLogout, modalSignUpOpen, setModalSignUpOpen, handleSignUpSubmit, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm }: React.PropsWithChildren<{
   modalOpen: boolean; 
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  handleLogout: () => void;
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void; 
+  handleLogout: () => void; 
   modalSignUpOpen: boolean; 
   setModalSignUpOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleSignUpSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -63,7 +60,7 @@ export const ModalProvider = ({ children, modalOpen, setModalOpen, handleLogout,
   setAlertConfirm: React.Dispatch<React.SetStateAction<boolean>>;
 }>) => {
 
-  const value = { modalOpen, setModalOpen, handleLogout, handleSubmit, modalSignUpOpen, setModalSignUpOpen, handleSignUpSubmit, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm};
+  const value = { modalOpen, setModalOpen, handleLogout, modalSignUpOpen, setModalSignUpOpen, handleSignUpSubmit, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm};
 
   return (
     <ModalContext.Provider value={value}>

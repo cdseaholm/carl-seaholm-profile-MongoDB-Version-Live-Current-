@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       }
 
       const fetchSession = async () => {
-        console.log('Fetching session...');
+        //console.log('Fetching session...');
           try {
               const { user, session } = await Session();
               setSessionState(session);

@@ -40,34 +40,6 @@ export function Providers({children}: { children: React.ReactNode }) {
 
   //functions
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    console.log('handleSubmit function called');
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    if (user || user && session) {
-        setAlertMessage('You are already logged in');
-        return;
-    }
-    const loggedin = await login({ formData });
-
-    if (typeof loggedin === 'string') {
-        setAlertMessage(loggedin);
-        console.log(loggedin);
-    } else if (typeof loggedin === 'string' && loggedin === 'Password is incorrect') {
-        console.log('incorrectPW', loggedin);
-        setAlertMessage('Password is incorrect');
-    } else {
-        setSession(loggedin.session);
-        setUser(loggedin.user);
-        setShowModal(false);
-        if (pathname === '/dashboard') {
-          router.refresh();
-        } else {
-          router.replace("/dashboard");
-        }
-    }
-  };
-
   const handleLogout = async () => {
     if (session) {
       try {
@@ -118,7 +90,7 @@ export function Providers({children}: { children: React.ReactNode }) {
   };
 
   return (
-    <ModalProvider modalOpen={showModal} handleLogout={handleLogout} handleSubmit={handleSubmit} setModalOpen={setShowModal} setModalSignUpOpen={setModalSignUpOpen} modalSignUpOpen={modalSignUpOpen} handleSignUpSubmit={handleSignUpSubmit} swapAuthDesire={swapAuthDesire} showAlert={showAlert} setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} alertMessage={alertMessage} alertParent={alertParent} setAlertParent={setAlertParent} alertConfirm={alertConfirm} setAlertConfirm={setAlertConfirm}>
+    <ModalProvider modalOpen={showModal} handleLogout={handleLogout} setModalOpen={setShowModal} setModalSignUpOpen={setModalSignUpOpen} modalSignUpOpen={modalSignUpOpen} handleSignUpSubmit={handleSignUpSubmit} swapAuthDesire={swapAuthDesire} showAlert={showAlert} setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} alertMessage={alertMessage} alertParent={alertParent} setAlertParent={setAlertParent} alertConfirm={alertConfirm} setAlertConfirm={setAlertConfirm}>
       <ModalLogin/>
       <ModalSignUp/>
       <AlertModal/>

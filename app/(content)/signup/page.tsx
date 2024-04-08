@@ -7,7 +7,9 @@ import { useRouter } from "next/navigation";
 export default function Page() {
     const router = useRouter();
     
-    const { handleSubmit } = useModalContext();
+    const handleSubmit = () => {
+		console.log('handleSubmit function called');
+	}
 
 	return (
 		<>

@@ -5,8 +5,8 @@ import login from "@/lib/auth/login/login";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { use, useEffect } from "react";
 import React from "react";
 import { set } from "date-fns";
 import { useModalContext } from "@/app/context/modal/modalContext";
@@ -20,8 +20,52 @@ export default function LoginPage() {
         }
     }, [router]);
 
-    const { handleSubmit } = useModalContext();
+    const { setModalOpen, setAlertMessage } = useModalContext();
 
+    const { user, session, setSession, setUser } = useSession();
+    const pathname = usePathname();
+
+    
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        console.log('handleSubmit function called');
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        if (user || user && session) {
+            setAlertMessage('You are already logged in');
+            return;
+        }
+    
+        const tryLogin = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Object.fromEntries(formData)),
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        }).catch(e => {
+            console.error('Fetch error:', e);
+        });
+        
+        console.log('tryLogin', tryLogin);
+    
+        if (tryLogin.error) {
+            setAlertMessage(tryLogin.error);
+            console.log(tryLogin.error);
+        } else {
+            setSession(tryLogin.session);
+            setUser(tryLogin.user);
+            setModalOpen(false);
+            if (pathname === '/dashboard') {
+                router.refresh();
+            } else {
+                router.replace("/dashboard");
+            }
+        }
+    }
     
 
     return (
