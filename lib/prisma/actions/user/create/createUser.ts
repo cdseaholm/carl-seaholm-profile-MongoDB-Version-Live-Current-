@@ -37,10 +37,7 @@ export default async function createUser({formData}: {formData: FormData}): Prom
     } else if (username === null || username === undefined) {
         username = null;
     }
-    let blogsub = formData.get('blogsub');
-    if (blogsub !== null || blogsub !== undefined || typeof blogsub !== 'boolean') {
-        throw new Error('Invalid blogsub');
-    }
+    let blogsub = formData.has('blogsub');
 
 	const hashedPassword = await new Scrypt().hash(password);
     const sessionID = generateId(15);
@@ -51,7 +48,7 @@ export default async function createUser({formData}: {formData: FormData}): Prom
                 email: email,
                 password: hashedPassword,
                 name: username ? username : null,
-                blogsub: blogsub ? blogsub : false,
+                blogsub: blogsub,
             }
         });
 
