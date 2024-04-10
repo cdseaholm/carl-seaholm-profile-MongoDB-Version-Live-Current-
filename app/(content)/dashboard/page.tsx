@@ -10,7 +10,7 @@ import CatsAndHobs from "@/components/functions/catsandhobs";
 import DashChild from "@/components/pagecomponents/dashboard/dashChild";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { ActualUser } from "@/types/user";
-import DashChildShell from "@/components/pagecomponents/dashboard/shells/shellDashChild";
+
 
 const Dashboard = () => {
     
@@ -58,10 +58,6 @@ const Dashboard = () => {
               {user &&
 
             <DashChild user={user} categories={categories} titles={titles} hobbies={hobbies} updateHobbies={updateHobbies} adminID={adminID} session={session}/>
-              }
-              {!user &&
-                <DashChildShell />
-
               }
             </MainChild>
 
