@@ -15,7 +15,7 @@ export async function validateRequest(): Promise<{ user: ActualUser; session: Se
       session: null
     };
   }
-
+  
   const result = await lucia.validateSession(sessionId);
 
   try {

@@ -12,6 +12,8 @@ import { SessionProvider } from "@/app/context/session/SessionContext";
 import type { Session as SessionType } from "lucia";
 import { ActualUser } from "@/types/user";
 import Session from "@/lib/auth/session/session";
+import { ApolloProvider } from "@apollo/client";
+import apolloClient from "@/lib/apollo";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -68,6 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           ) : (
             <>
               <SpeedInsights/>
+              <ApolloProvider client={apolloClient}>
               <Providers>
                 <Navbar />
                 <main>
@@ -75,6 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </main>
                 <FooterNavBar />
               </Providers>
+              </ApolloProvider>
             </>
           )}
           </div>

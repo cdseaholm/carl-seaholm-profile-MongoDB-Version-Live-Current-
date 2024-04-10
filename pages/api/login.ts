@@ -1,7 +1,9 @@
 'use server'
 
 import { lucia, prisma } from "@/db";
-import { Scrypt, generateId } from "lucia";
+
+
+import { Scrypt, generateId, Lucia } from "lucia";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 

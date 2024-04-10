@@ -3,7 +3,6 @@
 import { useModalContext } from "@/app/context/modal/modalContext";
 import { useSession } from "@/app/context/session/SessionContext";
 import useMediaQuery from "@/components/listeners/WidthSettings";
-import login from "@/lib/auth/login/login";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function ModalLogin() {

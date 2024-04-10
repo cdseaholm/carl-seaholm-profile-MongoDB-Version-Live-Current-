@@ -120,7 +120,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
             </div>
           </div>
         </div>
-          {!user &&
+          {!user ? (
             <div className={`mx-3 pt-5 flex flex-row justify-evenly items-center ${textSize}`}>
               <button onClick={handleClickedSignIn}>
                 Login
@@ -129,8 +129,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
                 Sign Up
               </button>
             </div>
-          }
-          {user &&
+          ) : (
           <div className='mx-3 flex flex-col'> 
             <div className='flex flex-row py-3 justify-center'>
               <p>
@@ -146,7 +145,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
               </button>
             </div>
           </div>
-          }
+          )}
         </div>
     </aside>
     </>

@@ -3,7 +3,8 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import useMediaQuery from '@/components/listeners/WidthSettings';
-  
+import { gql, useQuery } from '@apollo/client';
+import { ActualUser } from '@/types/user';
 
 export default function Home() {
   const [isShowing, setIsShowing] = React.useState(false);
