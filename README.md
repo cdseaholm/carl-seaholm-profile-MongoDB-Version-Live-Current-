@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# My Portfolio
 
-## Getting Started
+This portfolio is a showcase of my previous roles, current projects, and hobbies. It's built with a variety of modern web technologies and designed to be scalable and easy to update.
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The portfolio is divided into three main sections:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Previous Roles/Work**: A detailed look at my professional history and the roles I've held.
+2. **Current Projects**: An overview of the projects I'm currently working on, with links to live demos and source code.
+3. **Hobbies**: A personal section where I share my current hobbies.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Technology Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+This portfolio is built with the following technologies:
 
-## Learn More
+- **Frontend**: NextJS, Javascript, Typescript, TailwindCSS, React
+- **Backend**: Prisma, PostgreSQL
+- **Deployment**: Vercel
+- **Data Fetching**: Apollo, GraphQL
+- **Miscellaneous**: Lucia, Gray-matter
 
-To learn more about Next.js, take a look at the following resources:
+## Architecture
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The architecture of this portfolio is designed to be scalable and easy to update. While most of the data is currently hardcoded due to budget constraints, the structure is in place to easily transition to a server-based setup. This would allow for real-time updates and a more dynamic user experience.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Running Locally
 
-## Deploy on Vercel
+To run this portfolio on your local machine, follow these steps:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Clone the repository
+2. Install the dependencies with `npm install`
+3. Start the development server with `npm run dev`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The portfolio will be available at `http://localhost:3000`.
+It is also available at http://www.carlseaholm.com without the auth/DB functionality.
+
+## Future Plans
+
+As funds become available, I plan to transition to a server-based setup. This will allow for real-time updates and a more dynamic user experience. Stay tuned for updates!
+
+## Contact
+
+If you have any questions or comments, feel free to reach out to me. I'm always open to feedback and opportunities to collaborate.

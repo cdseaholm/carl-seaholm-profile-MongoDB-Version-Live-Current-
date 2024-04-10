@@ -9,6 +9,8 @@ import type { Hobby } from "@/types/hobby";
 import CatsAndHobs from "@/components/functions/catsandhobs";
 import DashChild from "@/components/pagecomponents/dashboard/dashChild";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
+import { ActualUser } from "@/types/user";
+import DashChildShell from "@/components/pagecomponents/dashboard/shells/shellDashChild";
 
 const Dashboard = () => {
     
@@ -24,7 +26,6 @@ const Dashboard = () => {
       const getHobbies = async () => {
           const gottenHobbies = await fetchHobbies({user, adminID});
           setHobbies(gottenHobbies);
-          console.log(gottenHobbies);
           if (gottenHobbies) {
             const { cats, hobbes } = await CatsAndHobs({hobbies: gottenHobbies});
             setTitles(hobbes);
@@ -54,8 +55,16 @@ const Dashboard = () => {
               </div>
             </InnerHeader>
             <MainChild>
-              <DashChild user={user} categories={categories} titles={titles} hobbies={hobbies} updateHobbies={updateHobbies} adminID={adminID} session={session}/>
+              {user &&
+
+            <DashChild user={user} categories={categories} titles={titles} hobbies={hobbies} updateHobbies={updateHobbies} adminID={adminID} session={session}/>
+              }
+              {!user &&
+                <DashChildShell />
+
+              }
             </MainChild>
+
         </div>
     );
 };
