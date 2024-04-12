@@ -10,7 +10,7 @@ export default function ModalLogin() {
     const isBreakpoint = useMediaQuery(768);
     const textSize = isBreakpoint ? 'text-xs' : 'text-sm';
     const { modalOpen, setModalOpen, swapAuthDesire, setAlertMessage } = useModalContext();
-    const { user, session, setSession, setUser } = useSession();
+    const { user, setUser } = useSession();
     const pathname = usePathname();
     const router = useRouter();
 
@@ -18,12 +18,12 @@ export default function ModalLogin() {
         console.log('handleSubmit function called');
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        if (user || user && session) {
+        if (user) {
             setAlertMessage('You are already logged in');
             return;
         }
     
-        const tryLogin = await fetch('/api/login', {
+        const tryLogin = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -44,8 +44,9 @@ export default function ModalLogin() {
             setAlertMessage(tryLogin.error);
             console.log(tryLogin.error);
         } else {
-            setSession(tryLogin.session);
-            setUser(tryLogin.user);
+            setUser(tryLogin.userToPass);
+            console.log('user', user);
+            console.log('userToPass', tryLogin.userToPass);
             setModalOpen(false);
             if (pathname === '/dashboard') {
                 router.refresh();

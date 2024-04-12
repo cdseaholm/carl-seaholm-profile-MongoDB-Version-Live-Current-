@@ -4,13 +4,11 @@ import { useState } from "react";
 import React from "react";
 import useMediaQuery from "@/components/listeners/WidthSettings";
 import ModalHobby from "@/components/modals/hobbyModal/hobbymodal";
-import CreateHobby from "@/lib/prisma/actions/hobby/createhobby";
 import MobileModalHobby from "@/components/modals/hobbyModal/mobileHobbyModal";
 import MainDashBoard from "./mainDashBoard";
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
-import { Session } from "lucia";
 
-const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID, session}: {user: ActualUser | null; categories: string[]; titles: string[]; hobbies: Hobby[]; updateHobbies: any; adminID: number; session: Session | null}) => {
+const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: {user: ActualUser | null; categories: string[]; titles: string[]; hobbies: Hobby[]; updateHobbies: any; adminID: boolean;}) => {
 
     const [filterOpen, setFilterOpen] = useState(false);
     const divRef = React.useRef<HTMLDivElement>(null);
@@ -39,22 +37,22 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID, s
       const formData = new FormData(event.currentTarget);
       const userToPass = user ? user : null;
 
-      const createHobby = await CreateHobby({ formData, user: userToPass, categoryPassed });
+      // createHobby = await CreateHobby({ formData, user: userToPass, categoryPassed });
   
-      if (createHobby) {
-          console.log('Hobby created');
-          setOpenAddModal(false);
-          updateHobbies();
-      } else {
-          console.log('Error creating hobby');
-      }
+      //if (createHobby) {
+      //    console.log('Hobby created');
+      //    setOpenAddModal(false);
+      //    updateHobbies();
+      //} else {
+      //    console.log('Error creating hobby');
+      //}
       
     };
 
     return (
         <>
             <div className="flex flex-col justify-center">
-                <div className={`flex flex-row sticky top-0 z-20 ${user && user.id === adminID ? 'justify-between' : 'justify-start'}`}>
+                <div className={`flex flex-row sticky top-0 z-20 ${user && adminID === true ? 'justify-between' : 'justify-start'}`}>
                   <div className='flex flex-col items-start'>
                     <div className="flex flex-row justify-center text-sm font-medium">
                         Filter: 
@@ -129,7 +127,7 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID, s
                         </div>
                     }
                   </div>
-                  {user !== null && user.id === adminID && session !== null && parseInt(session.userId) === adminID &&
+                  {user !== null && adminID === true &&
                       <>
                           {isBreakpoint &&
                               <button className="block text-black font-medium rounded-lg text-sm mx-3 my-2 px-3 py-1.5 text-center hover:bg-gray-400" type="button" onClick={() => setOpenAddModal(true)}>
@@ -151,7 +149,7 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID, s
                   <ModalHobby show={openAddModal} categories={categories} hobbies={hobbies} createHobby={CreateHobbyHandle} />
                 }
                 <div>
-                  <MainDashBoard filter={filterItem} hobbies={hobbies} user={user} adminID={adminID} session={session} />
+                  <MainDashBoard filter={filterItem} hobbies={hobbies} user={user} adminID={adminID} />
                 </div>
               </div>
         </>

@@ -3,18 +3,17 @@
 
 import {NextUIProvider} from '@nextui-org/react'
 import {ModalProvider} from '@/app/context/modal/modalContext'
-import { SetStateAction, useState } from 'react';
-import { useSession } from '@/app/context/session/SessionContext';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import login from '@/lib/auth/login/login';
-import { logoutAuth } from '@/lib/auth/logout/logout';
 import ModalLogin from '@/components/modals/auth/login/loginModal';
 import { usePathname } from 'next/navigation';
-import createUser from '@/lib/prisma/actions/user/create/createUser';
 import ModalSignUp from '@/components/modals/auth/signup/signupModal';
 import AlertModal from '@/components/modals/alertModal/alertmodal';
 import { HobbyProvider } from './context/hobby/hobbyModalContext';
 import LogSessionModal from '@/components/modals/hobbyModal/logsession';
+import { useSession } from './context/session/SessionContext';
+import { ActualUser } from '@/types/user';
+import EditUser from '@/components/modals/auth/editUser/editUser';
 
 export function Providers({children}: { children: React.ReactNode }) {
 
@@ -30,18 +29,20 @@ export function Providers({children}: { children: React.ReactNode }) {
   const [categoryPassed, setCategoryPassed] = useState('');
   const [openCategoryModal, setOpenCategoryModal] = useState(false);
   const [openLogSessionModal, setOpenLogSessionModal] = useState(false);
+  const [showEditUser, setShowEditUser] = useState(false);
+  const [userToEdit, setUserToEdit] = useState({} as ActualUser);
 
 
   //variables
 
-  const { setSession, setUser, user, session, logout } = useSession();
+  const { setUser, user, logout } = useSession();
   const router = useRouter();
   const pathname = usePathname();
 
   //functions
 
-  const handleLogout = async () => {
-    if (session) {
+  {/**const handleLogout = async () => {
+    // if (session) {}
       try {
         const loggingOut = await logoutAuth();
         if (loggingOut.valueOf() === true) {
@@ -56,7 +57,7 @@ export function Providers({children}: { children: React.ReactNode }) {
         setShowAlert(true);
         console.log('error logging out', error);
       }
-    }
+    
   }
 
   //better to directly send to dashboard and auto signin or ask for login after?
@@ -77,7 +78,7 @@ export function Providers({children}: { children: React.ReactNode }) {
         setShowAlert(true);
         return;
     }
-  };
+  };*/}
 
   const swapAuthDesire = async () => {
     if (modalSignUpOpen) {
@@ -90,10 +91,11 @@ export function Providers({children}: { children: React.ReactNode }) {
   };
 
   return (
-    <ModalProvider modalOpen={showModal} handleLogout={handleLogout} setModalOpen={setShowModal} setModalSignUpOpen={setModalSignUpOpen} modalSignUpOpen={modalSignUpOpen} handleSignUpSubmit={handleSignUpSubmit} swapAuthDesire={swapAuthDesire} showAlert={showAlert} setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} alertMessage={alertMessage} alertParent={alertParent} setAlertParent={setAlertParent} alertConfirm={alertConfirm} setAlertConfirm={setAlertConfirm}>
+    <ModalProvider modalOpen={showModal} setModalOpen={setShowModal} setModalSignUpOpen={setModalSignUpOpen} modalSignUpOpen={modalSignUpOpen} swapAuthDesire={swapAuthDesire} showAlert={showAlert} setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} alertMessage={alertMessage} alertParent={alertParent} setAlertParent={setAlertParent} alertConfirm={alertConfirm} setAlertConfirm={setAlertConfirm} setShowEditUser={setShowEditUser} showEditUser={showEditUser} userToEdit={userToEdit} setUserToEdit={setUserToEdit}>
       <ModalLogin/>
       <ModalSignUp/>
       <AlertModal/>
+      <EditUser/>
       <HobbyProvider openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} openLogSessionModal={openLogSessionModal} setOpenLogSessionModal={setOpenLogSessionModal}>
         <LogSessionModal show={openLogSessionModal}/>
         <NextUIProvider>

@@ -6,22 +6,18 @@ import { Providers } from "@/app/providers";
 import Navbar from '@/components/nav/Navbar';
 import FooterNavBar from "@/components/nav/footer/footerNavbar";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { SessionProvider } from "@/app/context/session/SessionContext";
-import type { Session as SessionType } from "lucia";
 import { ActualUser } from "@/types/user";
-import Session from "@/lib/auth/session/session";
-import { ApolloProvider } from "@apollo/client";
-import apolloClient from "@/lib/apollo";
+import { SessionProvider } from "@/app/context/session/SessionContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
+  const [isConnected, setIsConnected] = useState(false);
   const pathname = usePathname();
-  const [sessionState, setSessionState] = React.useState<SessionType | null>(null);
-  const [loading, setLoading] = React.useState(true);
+  //const [loading, setLoading] = React.useState(true);
   const [userState, setUserState] = React.useState<ActualUser | null>(null);
 
   useEffect(() => {
@@ -31,46 +27,48 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       };
   }, []);
 
-    useEffect(() => {
-      if (sessionState !== null) {
-        return;
+  //fetch session was here
+
+  const logout = () => {
+    setUserState(null);
+  };
+
+  const handleLogin = async (formData: FormData) => {
+    const tryLogin = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(Object.fromEntries(formData)),
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      return response.json();
+    }).catch(e => {
+      console.error('Fetch error:', e);
+    });
 
-      const fetchSession = async () => {
-        //console.log('Fetching session...');
-          try {
-              const { user, session } = await Session();
-              setSessionState(session);
-              setUserState(user);
-          } catch (error) {
-              console.error("Failed to fetch session:", error);
-          } finally {
-              setLoading(false);
-          }
-      };
-      fetchSession();
-    }, [setSessionState, setUserState, sessionState]);
-
-    const logout = () => {
-      setSessionState(null);
-      setUserState(null);
-    };
-
-
+    if (tryLogin.error) {
+      console.log(tryLogin.error);
+      return tryLogin.error;
+    } else {
+      setUserState(tryLogin.user);
+      return 'success';
+    }
+  }
 
   return (
     <html lang="en">
-      <SessionProvider session={sessionState} user={userState} loading={loading} logout={logout} setSession={setSessionState} setUser={setUserState}>
+      <SessionProvider logout={logout} setUser={setUserState} user={userState} connectionState={isConnected} setConnectionState={setIsConnected} getSession={function (): Promise<any> {
+        throw new Error("Function not implemented.");
+      } }>
       {pathname !== '/demo_303' &&
       <body className={inter.className}>
         <div className="first">
           <div className="h-screen">
-          {loading ? (
-            <div>Loading...</div>
-          ) : (
             <>
               <SpeedInsights/>
-              <ApolloProvider client={apolloClient}>
               <Providers>
                 <Navbar />
                 <main>
@@ -78,9 +76,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </main>
                 <FooterNavBar />
               </Providers>
-              </ApolloProvider>
             </>
-          )}
+          
           </div>
         </div>
       </body>
@@ -93,7 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </main>
           </body>
         }
-      </SessionProvider>
+        </SessionProvider>
     </html>
   );
 }

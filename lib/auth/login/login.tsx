@@ -1,4 +1,4 @@
-import { prisma } from "@/db";
+{/*import { prisma } from "@/db";
 import { Scrypt, generateId } from "lucia";
 
 export default async function login({formData}: {formData: FormData}) {
@@ -39,4 +39,4 @@ export default async function login({formData}: {formData: FormData}) {
             return {error: 'Database error'};
         }
     }
-}
+}*/}

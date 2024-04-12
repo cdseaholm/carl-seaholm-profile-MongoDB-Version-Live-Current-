@@ -1,8 +1,6 @@
 import { Hobby } from "@/types/hobby";
-import { Session } from "lucia";
-import { useState } from "react";
 
-export default function CalendarTrackerView({hobby, session}: { hobby: Hobby, session: Session | null}) {
+export default function CalendarTrackerView({hobby}: { hobby: Hobby}) {
 
     const thisMonth = new Date().getMonth();
     const daysThisMonth = thisMonth === 1 ? 28 : thisMonth % 2 === 0 ? 30 : 31;

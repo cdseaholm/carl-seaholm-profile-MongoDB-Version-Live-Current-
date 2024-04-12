@@ -1,8 +1,7 @@
 import { Hobby } from '@/types/hobby'
-import { Session } from 'lucia'
 import React from 'react'
 
-export default function StatsView({hobby, session}: { hobby: Hobby, session: Session | null}) {
+export default function StatsView({hobby}: { hobby: Hobby}) {
 
     const numberOfSessions = hobby.date.length;
     var minutesSpent = 0;

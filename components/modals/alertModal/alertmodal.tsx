@@ -1,20 +1,21 @@
 'use client'
 
 import { useModalContext } from '@/app/context/modal/modalContext';
+import { useSession } from '@/app/context/session/SessionContext';
 import useMediaQuery from '@/components/listeners/WidthSettings';
-import { set } from 'date-fns';
 import React from 'react'
 
 export default function AlertModal() {
   
     const isBreakpoint = useMediaQuery(768);
     const textSize = isBreakpoint ? 'text-xs' : 'text-sm';
-    const { showAlert, setShowAlert, handleLogout, alertParent, alertMessage, setAlertParent } = useModalContext();
+    const { showAlert, setShowAlert, alertParent, alertMessage, setAlertParent } = useModalContext();
+    const { setUser } = useSession();
     const logoutAlert = alertParent === 'logout' ? true : false;
 
     const handleAlertAccept = () => {
         if (alertParent === 'logout') {
-            handleLogout();
+            setUser(null);
             setAlertParent('');
             setShowAlert(false);
         } else {

@@ -1,4 +1,4 @@
-'use server'
+{/**'use server'
 
 import { lucia } from "@/lib/lucia/lucia";
 import { Session } from "lucia";
@@ -19,4 +19,4 @@ export async function logoutAuth(): Promise<boolean> {
     cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
     return true;
-  }
+  }*/}

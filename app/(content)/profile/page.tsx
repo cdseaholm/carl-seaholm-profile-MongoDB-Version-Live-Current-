@@ -6,7 +6,10 @@ import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import { useModalContext } from '@/app/context/modal/modalContext';
 
 const LogoutPage = () => {
-    const { handleLogout } = useModalContext();
+    const { setShowEditUser } = useModalContext();
+    const handleLogout = () => {
+        console.log('logout');
+    }
 
     return (
         <>
@@ -15,7 +18,7 @@ const LogoutPage = () => {
         </InnerHeader>
         <MainChild>
             <div className="flex flex-col justify-center space-y-4">
-                <button>
+                <button onClick={() => setShowEditUser(true)}>
                     Edit Profile
                 </button>
                 <button>

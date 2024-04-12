@@ -1,12 +1,11 @@
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import { Hobby } from "@/types/hobby";
 import { ActualUser } from "@/types/user";
-import { Session } from "lucia";
 import { useState } from "react";
 import CalendarTrackerView from "./calendarTrackerView";
 import StatsView from "./statsView";
 
-const DashTracker = ({ hobby, user, adminID, session }: { hobby: Hobby, user: ActualUser | null, adminID: number; session: Session | null }) => {
+const DashTracker = ({ hobby, user, adminID }: { hobby: Hobby, user: ActualUser | null, adminID: boolean;}) => {
     const [view, setView] = useState(true);
 
     const {setOpenLogSessionModal } = useHobbyContext();
@@ -33,16 +32,16 @@ const DashTracker = ({ hobby, user, adminID, session }: { hobby: Hobby, user: Ac
                     <h1 className="text-2xl font-bold">{hobby.title}</h1>
                     <div className="flex flex-col w-full justify-center items-center" style={{overflowX: 'auto'}}>
                         {!view &&
-                        <CalendarTrackerView hobby={hobby} session={session} /> 
+                        <CalendarTrackerView hobby={hobby}  /> 
                         }
                         {view &&
-                        <StatsView hobby={hobby} session={session} />
+                        <StatsView hobby={hobby} />
                         }
                     </div>
                 </div>
             </div>
             <div>
-            {user !== null && user.id === adminID && session !== null && parseInt(session.userId) === adminID &&
+            {user !== null && adminID === true && 
             <div className="flex flex-row justify-evenly text-sm w-full p-2">
                 <button onClick={handleDesireToEdit}>
                     Edit

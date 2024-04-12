@@ -19,8 +19,8 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
   const isBreakpoint = useMediaQuery(768);
   const { setAlertMessage, setAlertParent, setShowAlert, setModalSignUpOpen, setModalOpen } = useModalContext();
   var screenName = '';
-  if (user !== null) {
-    screenName = user.name ? user.name : '';
+  if (user !== null && user !== undefined) {
+    screenName = user.firstName ? user.firstName : '';
   };
 
   const handleClickedSignIn = () => {
@@ -36,6 +36,10 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
 
   const handleClickedSignUp = () => {
     setModalSignUpOpen(true);
+  };
+
+  const handleTest = () => {
+    router.replace('/demo_303');
   };
 
   const style = {
@@ -121,6 +125,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
           </div>
         </div>
           {!user ? (
+          <div className='flex flex-col'>
             <div className={`mx-3 pt-5 flex flex-row justify-evenly items-center ${textSize}`}>
               <button onClick={handleClickedSignIn}>
                 Login
@@ -129,6 +134,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
                 Sign Up
               </button>
             </div>
+          </div>
           ) : (
           <div className='mx-3 flex flex-col'> 
             <div className='flex flex-row py-3 justify-center'>
