@@ -1,6 +1,5 @@
 'use client'
 
-import { useModalContext } from "@/app/context/modal/modalContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

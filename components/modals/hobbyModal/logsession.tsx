@@ -1,7 +1,6 @@
 'use client'
 
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
-import UpdateHobbySession from "@/lib/prisma/actions/hobby/updateHobby";
 import { useState } from "react";
 
 export default function LogSessionModal({ show }: { show: boolean; }) {
@@ -15,13 +14,13 @@ export default function LogSessionModal({ show }: { show: boolean; }) {
         const formData = new FormData();
         formData.append('sessionDate', sessionDate);
         formData.append('sessionTime', sessionTime);
-        const updateSession = await UpdateHobbySession({ formData, userID: ADMIN_ID }); // Fix: Change 'ADMIN_ID' to 'userID'
+       {/** const updateSession = await UpdateHobbySession({ formData, userID: ADMIN_ID }); // Fix: Change 'ADMIN_ID' to 'userID'
         if (updateSession === 'Session logged successfully') {
             setOpenLogSessionModal(false);
             console.log('updateSession', updateSession);
         } else {
             console.log('updateSession', updateSession);
-        }
+        }*/}
     }
     
 

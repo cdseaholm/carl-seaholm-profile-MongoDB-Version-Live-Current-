@@ -3,10 +3,9 @@ import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
-import { getSession, login } from "@/lib/lib";
 
 export default async function Page() {
-    const session = await getSession();
+    
     
     return (
         <>
@@ -16,15 +15,7 @@ export default async function Page() {
             <MainChild>
                 <div className="flex flex-col items-center">
                     <form
-                    action={async (formData) => {
-                    "use server";
-                    const loggingIn = await login(formData);
-                    if (loggingIn === 'Success') {
-                        redirect('/dashboard');
-                    } else {
-                        console.log('Error logging in');
-                    }
-                    }}
+                    
                     className="flex flex-col items-center justify-evenly"
                     >
                         <label className="py-2" htmlFor="email">Email</label>
@@ -35,7 +26,6 @@ export default async function Page() {
                         <br />
                         <button className="my-4 p-2 bg-gray-700 text-white text-sm rounded-md" type="submit">Continue</button>
                     </form>
-                    <pre>{JSON.stringify(session, null, 2)}</pre>
                     <div className="flex flex-row justify-around my-4 p-2 text-sm space-x-1">
                         <p className="text-black">
                             Don&apos;t have an account yet? 

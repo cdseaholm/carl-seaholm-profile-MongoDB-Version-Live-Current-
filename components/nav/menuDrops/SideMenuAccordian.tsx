@@ -1,6 +1,8 @@
 import React from 'react';
-import Link from 'next/link';
+
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+
 
 export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
   const pathname  = usePathname();

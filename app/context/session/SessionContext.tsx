@@ -1,36 +1,33 @@
 'use client'
 
 import React, { createContext, useContext } from 'react';
-import { Session } from 'lucia';
 import { ActualUser } from '@/types/user';
 
 type ContextType = {
-    session: Session | null;
     user: ActualUser | null;
-    loading: boolean | null;
     logout: () => void;
-    setSession: React.Dispatch<React.SetStateAction<Session | null>>;
+    getSession: () => void; // add the getSession function
     setUser: React.Dispatch<React.SetStateAction<ActualUser | null>>;
+    connectionState?: boolean;
+    setConnectionState?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const initialContext: ContextType = {
-    session: null,
     user: null,
-    loading: true,
     logout: () => {},
-    setSession: () => {},
+    getSession: () => {},
     setUser: () => {},
+    connectionState: false,
+    setConnectionState: () => {},
 };
 
 const SessionContext = createContext<ContextType>(initialContext);
 
 export const useSession = () => useContext(SessionContext);
 
-export const SessionProvider = ({ children, session, user, loading, logout, setSession, setUser }: React.PropsWithChildren<{ session: Session | null, user: ActualUser | null, loading: boolean; logout: () => void, setSession: React.Dispatch<React.SetStateAction<Session | null>>, setUser: React.Dispatch<React.SetStateAction<ActualUser | null>> }>) => {
+export const SessionProvider = ({ children, logout, getSession, setUser, user, connectionState, setConnectionState }: React.PropsWithChildren<{ logout: () => void, getSession: () => void, setUser: React.Dispatch<React.SetStateAction<ActualUser | null>>, user: ActualUser | null, connectionState: boolean, setConnectionState: React.Dispatch<React.SetStateAction<boolean>> }>) => {
     
-    const value = { session, user, loading, logout, setSession, setUser };
-
-    //console.log('SessionProvider value:', value);
+    const value = { logout, getSession, setUser, user, connectionState, setConnectionState};
 
     return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 };

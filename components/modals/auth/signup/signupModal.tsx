@@ -2,13 +2,50 @@
 
 import { useModalContext } from "@/app/context/modal/modalContext";
 import useMediaQuery from "@/components/listeners/WidthSettings";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function ModalSignUp() {
 
     const isBreakpoint = useMediaQuery(768);
     const textSize = isBreakpoint ? 'text-xs' : 'text-sm';
-    const { modalSignUpOpen, setModalSignUpOpen, handleSignUpSubmit, swapAuthDesire } = useModalContext();
+    const { modalSignUpOpen, setModalSignUpOpen, swapAuthDesire } = useModalContext();
+    const router = useRouter();
+    const [emailError, setEmailError] = useState(false);
+
+    const handleSignUpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        console.log('formData', Object.fromEntries(formData));
+
+        const createAccount = fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Object.fromEntries(formData)),
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            } else if (response.status === 409) {
+                setEmailError(true);
+                return;
+            } else {
+                return response.json();
+            }
+        }).then(data => {
+            document.cookie = `token=${data.token}; HttpOnly`;
+            setModalSignUpOpen(false);
+            router.replace('/dashboard');
+        })
+        .catch(e => {
+            console.error('Fetch error:', e);
+        });
+
+
+        console.log('createAccount', createAccount);
+        
+    }
 
     return (
         <>
@@ -28,18 +65,24 @@ export default function ModalSignUp() {
                     </div>
                     <form className="p-4 md:p-5" onSubmit={handleSignUpSubmit}>
                         <div className="grid gap-4 mb-6 grid-cols-2">
-                            <label htmlFor="signupEmail" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Email*</label>
-                            <input type="email" name="signupEmail" id="signupEmail" autoComplete='email' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Email" required/>
+                            <label htmlFor="registerEmail" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Email*</label>
+                            <div className="flex flex-row">
+                            <p className={`${emailError ? 'font-red-400 text-xs' : ''}`}>{emailError ? 'Email in Use' : ''}</p>
+                            <input type="email" name="registerEmail" id="registerEmail" autoComplete='email' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Email" required/>
+                            </div>
 
-                            <label htmlFor="signupPassword" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Password*</label>
-                            <input type="password" name="signupPassword" id="signupPassword" autoComplete='current-password' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Password" required/>
+                            <label htmlFor="registerPassword" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Password*</label>
+                            <input type="password" name="registerPassword" id="registerPassword" autoComplete='current-password' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Password" required/>
 
-                            <label htmlFor="username" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Username</label>
-                            <input type="text" name="username" id="username" autoComplete='username' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Username/Name" required/>
+                            <label htmlFor="registerfirstName" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>First Name</label>
+                            <input type="text" name="registerfirstName" id="registerfirstName" autoComplete='given-name' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="First Name" required/>
+
+                            <label htmlFor="registerlastName" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Last Name</label>
+                            <input type="text" name="registerlastName" id="registerlastName" autoComplete='family-name' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Last Name" required/>
                             
-                            <label htmlFor="blogsub" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Subscribe to Blog?</label>
+                            <label htmlFor="registerBlogsub" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Subscribe to Blog?</label>
                             <div className="flex flex-row justify-end">
-                                <input type="checkbox" name="blogsub" id="blogsub" className={`bg-gray-50 border border-gray-300 text-gray-900 focus:ring-primary-600 focus:border-primary-600 block w-1/8 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`}/>
+                                <input type="checkbox" name="registerBlogsub" id="registerBlogsub" className={`bg-gray-50 border border-gray-300 text-gray-900 focus:ring-primary-600 focus:border-primary-600 block w-1/8 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`}/>
                             </div>
                         </div>
                         <div className="flex flex-row justify-center">

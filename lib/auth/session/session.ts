@@ -1,4 +1,4 @@
-'use server'
+{/**'use server'
 
 import { validateRequest } from "@/lib/auth/auth"; 
 import type { Session as SessionType } from "lucia";
@@ -11,4 +11,4 @@ export default async function Session(): Promise<{user: ActualUser | null; sessi
     } else {
         return { user: null, session: null }; 
     }
-}
+}*/}

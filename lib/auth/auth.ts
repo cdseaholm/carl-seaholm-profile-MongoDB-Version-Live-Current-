@@ -1,9 +1,12 @@
 'use server'
 
+
+
+
+{/**
 import { cookies } from "next/headers";
 import type { Session } from "lucia";
 import type { ActualUser } from "@/types/user";
-import {lucia} from "@/lib/lucia/lucia";
 
 export async function validateRequest(): Promise<{ user: ActualUser; session: Session } | { user: null; session: null }> {
 
@@ -37,4 +40,4 @@ declare module "lucia" {
     Lucia: typeof lucia;
     DatabaseUserAttributes: Omit<ActualUser, "id">;
   }
-}
+}*/}
