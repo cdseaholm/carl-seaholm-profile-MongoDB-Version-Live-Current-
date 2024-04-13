@@ -4,15 +4,16 @@ import React, { useState } from "react";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import useMediaQuery from "@/components/listeners/WidthSettings";
 import { useSession } from "@/app/context/session/SessionContext";
-import type { Hobby } from "@/types/hobby";
+import  Hobby  from "@/types/hobby";
 import DashChild from "@/components/pagecomponents/dashboard/dashChild";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
+import CatsAndHobs from "@/components/functions/catsandhobs";
 
 
 const Dashboard = () => {
     
     const isBreakpoint = useMediaQuery(768);
-    const [hobbies, setHobbies] = useState<Hobby[]>([]);
+    const [hobbies, setHobbies] = useState<typeof Hobby[]>([]);
     const [categories, setCategories] = useState([] as string[]);
     const [titles, setTitles] = useState([] as string[]);
     const { user } = useSession();
@@ -21,13 +22,16 @@ const Dashboard = () => {
 
     React.useEffect(() => {
       const getHobbies = async () => {
-        console.log('Getting hobbies');
-      }});
-
-      const updateHobbies = async () => {
-        console.log('Updating hobbies');
-      }
-          {/**const gottenHobbies = await fetchHobbies({user, adminID});
+    
+      const gottenHobbies = await fetch('/api/hobbies/getAll', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({user, adminID})
+        }).then(response => response.json())
+          .then(data => data)
+          .catch(error => console.log(error));
           setHobbies(gottenHobbies);
           if (gottenHobbies) {
             const { cats, hobbes } = await CatsAndHobs({hobbies: gottenHobbies});
@@ -40,15 +44,24 @@ const Dashboard = () => {
     }, [user, setCategories, setTitles, adminID, setHobbies]);
     
     const updateHobbies = async () => {
-        const gottenHobbies = await fetchHobbies({user, adminID});
-        setHobbies(gottenHobbies);
-        if (gottenHobbies) {
-          const { cats, hobbes } = await CatsAndHobs({hobbies: gottenHobbies});
-          setTitles(hobbes);
-          setCategories(cats);
+    
+      const gottenHobbies = await fetch('/api/hobbies/getAll', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({user, adminID})
+        }).then(response => response.json())
+          .then(data => data)
+          .catch(error => console.log(error));
+          setHobbies(gottenHobbies);
+          if (gottenHobbies) {
+            const { cats, hobbes } = await CatsAndHobs({hobbies: gottenHobbies});
+            setTitles(hobbes);
+            setCategories(cats);
+          }
         
       }
-    };*/}
 
     return (
         <div>
