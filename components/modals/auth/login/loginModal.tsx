@@ -4,6 +4,7 @@ import { useModalContext } from "@/app/context/modal/modalContext";
 import { useSession } from "@/app/context/session/SessionContext";
 import useMediaQuery from "@/components/listeners/WidthSettings";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function ModalLogin() {
 
@@ -44,7 +45,7 @@ export default function ModalLogin() {
             setAlertMessage(tryLogin.error);
             console.log(tryLogin.error);
         } else {
-            setUser(tryLogin.userToPass);
+            setUser(tryLogin.usersToPass);
             console.log('user', user);
             console.log('userToPass', tryLogin.userToPass);
             setModalOpen(false);

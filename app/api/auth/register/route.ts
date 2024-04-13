@@ -1,27 +1,24 @@
-import connect from '@/utils/mongodb';
-import bcrypt from 'bcryptjs';
+import { lucia } from '@/lib/auth';
+import ActualUser from '@/types/user';
+import { cookies } from 'next/headers';
+import { Argon2id } from 'oslo/password';
 
 export async function POST(request: Request) {
-    const client = await connect;
     const body = await request.json();
-    const existingUser = await client.db("csPortfolio").collection("users").findOne({
+    const existingUser = await ActualUser.findOne({
         email: body.registerEmail
     });
     if (existingUser) {
         return Response.json({status: 409, message: 'User already exists'});
     }
 
-    const makeSalty = async function(password: string) {
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = bcrypt.hashSync(password, salt);
-        return hashedPassword;
-    }
     if (!body.registerPassword) {
         return Response.json({status: 400, message: 'Password is required'});
     }
-    const hashedPassword = await makeSalty(body.registerPassword);
+    const hashedPassword = await new Argon2id().hash(body.registerPassword);
 
-    const user = await client.db("csPortfolio").collection("users").insertOne({
+    try {
+    const user = await new ActualUser({
         firstName: body.registerfirstName, 
         lastName: body.registerlastName, 
         email: body.registerEmail, 
@@ -29,15 +26,21 @@ export async function POST(request: Request) {
         password: hashedPassword
     });
 
-    console.log(user);
+    const userSave = await user.save();
 
-    const userToPass = {
-        id: user.insertedId,
-        firstName: body.registerfirstName, 
-        lastName: body.registerlastName, 
-        email: body.registerEmail, 
-        blogsub: body.registerBlogsub ? true : false
-    };
+    console.log(userSave);
 
-    return Response.json({status: 200, user: userToPass});
+    const session = await lucia.createSession(userSave._id, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    cookies().set(
+        sessionCookie.name,
+        sessionCookie.value,
+        sessionCookie.attributes
+    );
+    } catch (error) {
+        console.log(error);
+        return Response.json({status: 500, message: 'Internal server error'});
+    }
+
+    return Response.json({status: 200});
 }
