@@ -1,15 +1,5 @@
 import mongoose from 'mongoose';
-
-interface Hobby {
-    title: string;
-    dates: string[];
-    descriptions: string[];
-    minutesXsessions: string[];
-    categories: string[];
-    goals: string[];
-    user_email: string;
-    expires_at: Date;
-}
+import { Hobby } from '@/lib/types/hobby';
  
 export const HobbySchema = new mongoose.Schema<Hobby>({
     title: {
@@ -18,33 +8,33 @@ export const HobbySchema = new mongoose.Schema<Hobby>({
     },
     dates: {
         type: [String],
-        required: true,
+        required: false,
     },
     descriptions: {
         type: [String],
-        required: true,
+        required: false,
     },
     minutesXsessions: {
         type: [String],
-        required: true,
+        required: false,
     },
     categories: {
         type: [String],
-        required: true,
+        required: false,
     },
     goals: {
         type: [String],
-        required: true,
+        required: false,
     },
     user_email: {
         type: String,
         required: true,
     },
-    expires_at: {
-    type: Date,
-    required: true,
-  },
+    color: {
+        type: String,
+        required: false,
+    }
 });
  
 export default mongoose.models.Hobby ||
-  mongoose.model<Hobby>('Hobby', HobbySchema);
+  mongoose.model('Hobbies', HobbySchema);

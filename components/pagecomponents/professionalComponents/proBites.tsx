@@ -1,7 +1,7 @@
 import React from "react";
 import { DetailsAccordianPage } from "@/components/nav/menuDrops/DetailsAccordian";
-import { Job } from "@/types/job";
-import { School } from "@/types/education";
+import { Job } from "@/lib/types/job";
+import { School } from "@/lib/types/education";
 import Image from "next/image";
 
 const formatDate = (dateString: string) => {

@@ -1,8 +1,7 @@
 'use client'
 
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
-import { Hobby } from "@/types/hobby";
-import { set } from "date-fns";
+import { Hobby } from "@/lib/types/hobby";
 import { useState } from "react";
 
 export default function ModalHobby({ show, categories, createHobby }: { show: boolean; categories: string[]; hobbies: Hobby[]; createHobby: any;}) {

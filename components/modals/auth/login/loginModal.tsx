@@ -3,28 +3,31 @@
 import { useModalContext } from "@/app/context/modal/modalContext";
 import { useSession } from "@/app/context/session/SessionContext";
 import useMediaQuery from "@/components/listeners/WidthSettings";
+import { Session } from "@/lib/types/session";
+import { ActualUser } from "@/lib/types/user";
+
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function ModalLogin() {
 
     const isBreakpoint = useMediaQuery(768);
     const textSize = isBreakpoint ? 'text-xs' : 'text-sm';
     const { modalOpen, setModalOpen, swapAuthDesire, setAlertMessage } = useModalContext();
-    const { user, setUser } = useSession();
     const pathname = usePathname();
     const router = useRouter();
+    const { user, setUser } = useSession();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        
         console.log('handleSubmit function called');
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        if (user) {
-            setAlertMessage('You are already logged in');
+        console.log(user)
+        if (user !== null) {
+            alert('You are already logged in');
             return;
         }
-    
-        const tryLogin = await fetch('/api/auth/login', {
+        const tryLoginUser = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,15 +42,13 @@ export default function ModalLogin() {
             console.error('Fetch error:', e);
         });
         
-        console.log('tryLogin', tryLogin);
+        console.log('tryLogin', tryLoginUser);
     
-        if (tryLogin.error) {
-            setAlertMessage(tryLogin.error);
-            console.log(tryLogin.error);
+        if (tryLoginUser.error) {
+            setAlertMessage(tryLoginUser.error);
+            console.log(tryLoginUser.error);
         } else {
-            setUser(tryLogin.usersToPass);
-            console.log('user', user);
-            console.log('userToPass', tryLogin.userToPass);
+            setUser(tryLoginUser.user);
             setModalOpen(false);
             if (pathname === '/dashboard') {
                 router.refresh();

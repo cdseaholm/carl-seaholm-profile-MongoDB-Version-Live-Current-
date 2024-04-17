@@ -15,7 +15,6 @@ export const DetailsAccordianPage = ({details, detailsIndex}: {details: Array<St
                 </p>
             ))}
         </AccordionPanel>
-
     </Accordion>
   );
 };

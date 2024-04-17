@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import { ActualUser } from "@/types/user";
+import { ActualUser } from "@/lib/types/user";
 import { useModalContext } from "@/app/context/modal/modalContext";
 import useMediaQuery from "@/components/listeners/WidthSettings";
 import { usePathname, useRouter } from "next/navigation";

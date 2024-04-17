@@ -8,7 +8,6 @@ import React from "react";
 import useMediaQuery from "@/components/listeners/WidthSettings";
 import Image from "next/image";
 import Sidenav from "./SideNav";
-import ModalLogin from "@/components/modals/auth/login/loginModal";
 
 
 const SideNavHeader = () => {

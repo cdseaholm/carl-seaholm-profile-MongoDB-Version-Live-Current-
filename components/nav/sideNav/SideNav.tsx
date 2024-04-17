@@ -5,23 +5,25 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SocialIcon } from 'react-social-icons';
 import openInNewTab from '@/components/listeners/OpenInNewTab';
-import { useSession } from '@/app/context/session/SessionContext';
 import useMediaQuery from '../../listeners/WidthSettings';
 import { useModalContext } from "@/app/context/modal/modalContext";
-import { set } from 'date-fns';
+
+import { ActualUser } from '@/lib/types/user';
+import { useSession } from '@/app/context/session/SessionContext';
 
 export default function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
 
   // constants
   const ref = React.useRef<HTMLDivElement>(null);
-  const { user } = useSession();
   const router = useRouter();
   const isBreakpoint = useMediaQuery(768);
-  const { setAlertMessage, setAlertParent, setShowAlert, setModalSignUpOpen, setModalOpen } = useModalContext();
+  const { setAlertMessage, setAlertParent, setShowAlert, setModalSignUpOpen, setModalOpen, setModalSubscribeOpen } = useModalContext();
   var screenName = '';
-  if (user !== null && user !== undefined) {
+  const { user } = useSession();
+  if (user !== null) {
     screenName = user.firstName ? user.firstName : '';
   };
+  const loggedInMenu = user !== null ? true : false;
 
   const handleClickedSignIn = () => {
     setModalOpen(true);
@@ -34,9 +36,13 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
     toggle();
   };
 
-  const handleClickedSignUp = () => {
+  {/**const handleClickedSignUp = () => {
     setModalSignUpOpen(true);
-  };
+  };*/}
+
+  const handleClickedSignUp = () => {
+    setModalSubscribeOpen(true);
+  }
 
   const handleTest = () => {
     router.replace('/demo_303');
@@ -123,15 +129,15 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
             <SocialIcon style={open ? style.icon : style.iconClose} network='linkedin' />
             </div>
           </div>
-        </div>
-          {!user ? (
+        </div> 
+          {loggedInMenu === false ? (
           <div className='flex flex-col'>
-            <div className={`mx-3 pt-5 flex flex-row justify-evenly items-center ${textSize}`}>
-              <button onClick={handleClickedSignIn}>
-                Login
+            <div className={`mx-3 pt-5 flex flex-col justify-evenly items-center ${textSize}`}>
+              <button onClick={handleClickedSignIn} className='pb-5'>
+                Admin Login
               </button>
               <button onClick={handleClickedSignUp}>
-                Sign Up
+                Subscribe
               </button>
             </div>
           </div>

@@ -13,7 +13,7 @@ export default async function Page() {
                 <h1 className="text-lg underline">Sign in</h1>
             </InnerHeader>
             <MainChild>
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center p-4">
                     <form
                     
                     className="flex flex-col items-center justify-evenly"

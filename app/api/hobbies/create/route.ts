@@ -1,29 +1,23 @@
-import { validateRequest } from "@/lib/auth";
+
 import connectdb from "@/utils/mongodb";
+import hobby from "@/lib/models/hobby";
 
 
 export async function POST(request: Request) {
-    const { session } = await validateRequest();
-    
-    if (!session) {
-        return {
-            error: 'Unauthorized',
-        };
-    }
-    const client = await connectdb();
+
+    await connectdb();
     const data = await request.json();
-    const hobby = await client.connect("csPortfolio").collection("hobbies").insertOne({
+    const hobbyToAdd = await hobby.create({
         title: data.title,
         description: data.description,
-        user_email: session.userId,
+        user_email: data.email,
         goals: data.goals,
         minutesXsessions: data.minutesXsessions,
         dates: data.dates,
+        color: data.color,
     });
-    if (!hobby) {
-        return {
-            error: 'Hobby not created',
-        };
+    if (!hobbyToAdd) {
+        return Response.json({status: 500, message: 'Error creating hobby'});
     }
     return Response.json({status: 200});
 }

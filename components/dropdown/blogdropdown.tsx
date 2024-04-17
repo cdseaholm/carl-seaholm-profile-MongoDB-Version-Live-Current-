@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import PostItemList from "@/components/posts/postlistitem";
-import type { post } from "@/types/post";
+import type { post } from "@/lib/types/post";
 import React from "react";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "../pagetemplates/mainchild/mainchild";
 import useMediaQuery from "../listeners/WidthSettings";
 import { useSession } from "@/app/context/session/SessionContext";
+import { useModalContext } from "@/app/context/modal/modalContext";
+
 
 const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<string>; posts: Record<string, post[]>}) => {
     const isBreakpoint = useMediaQuery(768);
@@ -15,46 +17,22 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
     const [category, setCategory] = useState('All');
     const dropdownRef = React.useRef<HTMLDivElement>(null);
     const buttonRef = React.useRef<HTMLDivElement>(null);
-    const { user } = useSession();
     const hasShownSubscriptionPrompt = React.useRef(false);
+    const { user } = useSession();
+    const { setModalSubscribeOpen } = useModalContext();
 
     React.useEffect(() => {
-        if (user === null && !hasShownSubscriptionPrompt.current) {
-            hasShownSubscriptionPrompt.current = true;
-            const newSub = window.confirm('Would you like to Subscribe to this blog?');
-            if (newSub === true) {
-                const email = window.prompt('Please enter your email:');
-                if (email) {
-                    const password = window.prompt('Create a password to verify your email:')
-                    if (password) {
-                        const formData = new FormData();
-                        formData.append('email', email);
-                        formData.append('password', password);
-                        {/**createUser({ formData }).then(newUser => {
-                            if (newUser !== null && typeof newUser !== 'string') {
-                                createBlogSub({user: newUser[0]})
-                                .then((sub) => console.log(sub))
-                                .catch((e) => console.error(e));
-                            }
-                        });*/}
-                    }
-                    console.log(`Subscribing user with email: ${email}`);
+            if (user === null && !hasShownSubscriptionPrompt.current) {
+                hasShownSubscriptionPrompt.current = true;
+                const newSub = window.confirm('Would you like to Subscribe to this blog?');
+                if (newSub === true) {
+                    setModalSubscribeOpen(true);
+                } else {
+                    console.log('User declined to subscribe');
                 }
-            } else {
-                console.log('User declined to subscribe');
             }
-        } else if (user !== null && user.blogsub === false && !hasShownSubscriptionPrompt.current) {
-            const sub = window.confirm('Would you like to subscribe to this blog?');
-            {/**if (sub) {
-                createBlogSub({user}).then(subscriber => {
-                    if (subscriber === 'Subbed') {
-                        console.log('Subscribed user');
-                    }
-                    console.log('Subscribing user');
-                });
-            }*/}
-        }
-    }, [user]);
+        
+    }, [setModalSubscribeOpen, user, hasShownSubscriptionPrompt]);
 
     React.useEffect(() => {
         const handleOutsideClick = (event: { target: any; }) => {
@@ -114,7 +92,7 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
                 }
             </InnerHeader>   
             <MainChild>
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center justify-center p-4">
                     <div className={`${category === 'All' || !isBreakpoint ? `md:grid md:grid-cols-2 justify-center` : `flex flex-col items-center`}`}>
                             {posts !== null && category === 'All' &&
                                 Object.keys(posts).map((category, id) => <PostItemList key={id} category={category} posts={posts[category]} />

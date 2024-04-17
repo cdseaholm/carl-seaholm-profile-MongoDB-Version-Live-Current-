@@ -17,7 +17,7 @@ const LogoutPage = () => {
             <h1 className="text-lg underline">Profile</h1>
         </InnerHeader>
         <MainChild>
-            <div className="flex flex-col justify-center space-y-4">
+            <div className="flex flex-col justify-center space-y-4 p-4">
                 <button onClick={() => setShowEditUser(true)}>
                     Edit Profile
                 </button>

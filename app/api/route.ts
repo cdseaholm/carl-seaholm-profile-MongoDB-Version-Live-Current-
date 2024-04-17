@@ -1,16 +1,26 @@
 
+
+import hobby from '@/lib/models/hobby';
 import connectdb from '@/utils/mongodb';
 import { ObjectId } from 'mongodb';
 
 export async function GET(request: Request) {
-    const client = await connectdb();
-    const cursor = client.db("csPortfolio").collection("users").find();
-    const users = await cursor.toArray();
-    const usersToPass = users.map((user: any) => {
-        return {id: user.id.toString(), firstName: user.firstName, lastName: user.lastName, email: user.email, blogsub: user.blogsub, password: user.password}
-    })
+  await connectdb();
+  const cursor = await hobby.find();
+  const hobbiesToPass = cursor.map((hobby: any) => {
+      return {
+          id: hobby._id.toString(), 
+          title: hobby.title, 
+          dates: hobby.dates, 
+          descriptions: hobby.descriptions, 
+          minutesXsessions: hobby.minutesXsessions, 
+          categories: hobby.categories, 
+          goals: hobby.goals, 
+          user_email: hobby.user_email
+      }
+  })
 
-    return Response.json(usersToPass);
+  return Response.json(hobbiesToPass);
 }
 
 export async function POST(request: Request) {

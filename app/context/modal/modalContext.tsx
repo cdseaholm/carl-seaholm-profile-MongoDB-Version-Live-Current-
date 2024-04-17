@@ -1,6 +1,6 @@
 'use client'
 
-import { ActualUser } from '@/types/user';
+import { ActualUser } from '@/lib/types/user';
 import React, { createContext, useContext } from 'react';
 
 type ContextType = {
@@ -8,7 +8,6 @@ type ContextType = {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   modalSignUpOpen: boolean | null;
   setModalSignUpOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  //handleLogout: () => void;
   //handleSignUpSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   swapAuthDesire: () => void;
   showAlert: boolean | null;
@@ -21,8 +20,11 @@ type ContextType = {
   setAlertConfirm: React.Dispatch<React.SetStateAction<boolean>>;
   showEditUser: boolean | null;
   setShowEditUser: React.Dispatch<React.SetStateAction<boolean>>;
-  userToEdit: ActualUser | null;
+  userToEdit: ActualUser;
   setUserToEdit: React.Dispatch<React.SetStateAction<ActualUser>>;
+  setModalSubscribeOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  modalSubscribeOpen: boolean | null;
+
 };
 
 const initialContext: ContextType = {
@@ -30,7 +32,6 @@ const initialContext: ContextType = {
   modalSignUpOpen: false,
   setModalSignUpOpen: () => {},
   setModalOpen: () => {},
-  //handleLogout: () => {},
   //handleSignUpSubmit: (event: React.FormEvent<HTMLFormElement>) => {},
   swapAuthDesire: () => {},
   showAlert: false,
@@ -43,18 +44,19 @@ const initialContext: ContextType = {
   setAlertConfirm: () => {},
   showEditUser: false,
   setShowEditUser: () => {},
-  userToEdit: null,
+  userToEdit: {} as ActualUser,
   setUserToEdit: () => {},
+  setModalSubscribeOpen: () => {},
+  modalSubscribeOpen: false,
 };
 
 const ModalContext = createContext(initialContext);
 
 export const useModalContext = () => useContext(ModalContext);
 
-export const ModalProvider = ({ children, modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, userToEdit, setUserToEdit }: React.PropsWithChildren<{
+export const ModalProvider = ({ children, modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, userToEdit, setUserToEdit, setModalSubscribeOpen, modalSubscribeOpen }: React.PropsWithChildren<{
   modalOpen: boolean; 
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  //handleLogout: () => void; 
   modalSignUpOpen: boolean; 
   setModalSignUpOpen: React.Dispatch<React.SetStateAction<boolean>>;
   //handleSignUpSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -71,9 +73,11 @@ export const ModalProvider = ({ children, modalOpen, setModalOpen, modalSignUpOp
   setShowEditUser: React.Dispatch<React.SetStateAction<boolean>>;
   userToEdit: ActualUser;
   setUserToEdit: React.Dispatch<React.SetStateAction<ActualUser>>;
+  setModalSubscribeOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  modalSubscribeOpen: boolean;
 }>) => {
 
-  const value = { modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, userToEdit, setUserToEdit};
+  const value = { modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, userToEdit, setUserToEdit, setModalSubscribeOpen, modalSubscribeOpen};
 
   return (
     <ModalContext.Provider value={value}>
