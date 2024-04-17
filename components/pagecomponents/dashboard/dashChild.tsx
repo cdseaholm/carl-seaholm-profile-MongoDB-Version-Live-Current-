@@ -1,5 +1,5 @@
-import { ActualUser } from "@/types/user";
-import { Hobby } from "@/types/hobby";
+import { ActualUser } from "@/lib/types/user";
+import { Hobby } from "@/lib/types/hobby";
 import { useState } from "react";
 import React from "react";
 import useMediaQuery from "@/components/listeners/WidthSettings";
@@ -31,33 +31,50 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: 
         return () => window.removeEventListener('mousedown', handleOutsideClick);
     }, [setFilterOpen, divRef, dropdownRef, filterOpen]);
 
-    const CreateHobbyHandle= async (event: React.FormEvent<HTMLFormElement>) => {
+    const CreateHobbyHandle = async (event: React.FormEvent<HTMLFormElement>) => {
       console.log('handleSubmit function called');
       event.preventDefault();
       const formData = new FormData(event.currentTarget);
       const userToPass = user ? user : null;
 
-      // createHobby = await CreateHobby({ formData, user: userToPass, categoryPassed });
+      const attemptCreateHobby = await fetch('/api/hobbies/create', {
+          method: 'POST',
+          body: JSON.stringify({
+              title: formData.get('title'),
+              dates: formData.get('dates'),
+              descriptions: formData.get('descriptions'),
+              minutesXsessions: formData.get('minutesXsessions'),
+              categories: formData.get('categories'),
+              goals: formData.get('goals'),
+              user_email: userToPass?.email,
+              color: formData.get('color')
+          }),
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      }).then(res => res.json())
+      .then(data => {
+          console.log('data', data);
+          return data;
+      }).catch(err => console.log(err));
   
-      //if (createHobby) {
-      //    console.log('Hobby created');
-      //    setOpenAddModal(false);
-      //    updateHobbies();
-      //} else {
-      //    console.log('Error creating hobby');
-      //}
+      if (attemptCreateHobby) {
+          console.log('Hobby created');
+          setOpenAddModal(false);
+          updateHobbies();
+      } else {
+          console.log('Error creating hobby');
+      }
       
     };
 
     return (
-        <>
-            <div className="flex flex-col justify-center">
+            <div className="p-4">
                 <div className={`flex flex-row sticky top-0 z-20 ${user && adminID === true ? 'justify-between' : 'justify-start'}`}>
                   <div className='flex flex-col items-start'>
                     <div className="flex flex-row justify-center text-sm font-medium">
                         Filter: 
                     </div>
-
                     {/**Drop down filter button */}
                     <button id='dropButton' type="button" onClick={filterOpen ? () => setFilterOpen(false) : () => setFilterOpen(true)} className='cursor-pointer flex flex-row items-center justify-between hover:bg-gray-400 font-medium'>
                       <div className='relative z-20 w-full flex text-black rounded text-sm'>
@@ -148,11 +165,10 @@ const DashChild = ({user, categories, titles, hobbies, updateHobbies, adminID}: 
                 {!isBreakpoint &&
                   <ModalHobby show={openAddModal} categories={categories} hobbies={hobbies} createHobby={CreateHobbyHandle} />
                 }
-                <div>
+                <div className="flex flex-row justify-center items-center">
                   <MainDashBoard filter={filterItem} hobbies={hobbies} user={user} adminID={adminID} />
                 </div>
               </div>
-        </>
     )
 
 };

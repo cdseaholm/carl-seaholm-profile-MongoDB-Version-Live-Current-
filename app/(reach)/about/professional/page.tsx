@@ -139,7 +139,7 @@ export default function Professional() {
       </InnerHeader>
       <MainChild>
         {filteredSchools.map((item, index) => (
-            <div key={index} className='flex flex-row justify-center'>
+            <div key={index} className='flex flex-row justify-center p-4'>
               {category === 'Education' &&
                 <div className='border border-black shadow-lg rounded-md m-2 bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth}}>
                   <SchoolBite breakBool={breakBool} school={item} index={index}/>
@@ -149,7 +149,7 @@ export default function Professional() {
           ))}
           {filteredJobs.length > 0 &&
             filteredJobs.map((item, index) => (
-              <div key={index} className='flex flex-row justify-center'>
+              <div key={index} className='flex flex-row justify-center p-4'>
                 {category !== 'Education' &&
                   <div className='border border-black shadow-lg m-2 rounded-md bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth, overflowX: 'auto', overflowY: 'auto'}}>
                     <JobBite breakBool={breakBool} job={item} index={index}/>

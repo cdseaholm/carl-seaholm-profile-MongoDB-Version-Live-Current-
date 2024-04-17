@@ -1,7 +1,9 @@
 'use client'
 
 import { useModalContext } from "@/app/context/modal/modalContext";
+import { useSession } from "@/app/context/session/SessionContext";
 import useMediaQuery from "@/components/listeners/WidthSettings";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -9,16 +11,17 @@ export default function ModalSignUp() {
 
     const isBreakpoint = useMediaQuery(768);
     const textSize = isBreakpoint ? 'text-xs' : 'text-sm';
-    const { modalSignUpOpen, setModalSignUpOpen, swapAuthDesire } = useModalContext();
+    const { modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, setModalOpen } = useModalContext();
     const router = useRouter();
     const [emailError, setEmailError] = useState(false);
+    const { user } = useSession();
 
-    const handleSignUpSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSignUpSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         console.log('formData', Object.fromEntries(formData));
-
-        const createAccount = fetch('/api/auth/register', {
+    
+        const createAccount = await fetch('/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,18 +36,20 @@ export default function ModalSignUp() {
             } else {
                 return response.json();
             }
-        }).then(data => {
-            document.cookie = `token=${data.token}; HttpOnly`;
-            setModalSignUpOpen(false);
-            router.replace('/dashboard');
-        })
+        }).then(data => data)
         .catch(e => {
             console.error('Fetch error:', e);
         });
-
-
+    
+        if (createAccount.error) {
+            console.error('Error creating account:', createAccount.error);
+            return;
+        } else {
+            setModalSignUpOpen(false);
+            setModalOpen(true)
+        }
+    
         console.log('createAccount', createAccount);
-        
     }
 
     return (

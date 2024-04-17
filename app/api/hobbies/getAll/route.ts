@@ -1,14 +1,26 @@
+
+import hobby from '@/lib/models/hobby';
 import connectdb from '@/utils/mongodb';
 
 export async function GET(request: Request) {
-    const client = await connectdb();
-    const body = await request.json();
-    const hobbies = await client.db("csPortfolio").collection("hobbies").find({user_email: body.userEmail}).toArray();
-    if (hobbies.length === 0) {
-        return {
-            error: 'No hobbies found',
-        };
-    } else { 
-        return Response.json(hobbies);
-    }
+  await connectdb();
+  const cursor = await hobby.find();
+  console.log(cursor);
+  if (!cursor) {
+    return Response.json({status: 400, message: 'No hobbies found'});
+  }
+  const hobbiesToPass = cursor.map((hobby: any) => {
+      return {
+          title: hobby.title, 
+          dates: hobby.dates, 
+          descriptions: hobby.descriptions, 
+          minutesXsessions: hobby.minutesXsessions, 
+          categories: hobby.categories, 
+          goals: hobby.goals, 
+          user_email: hobby.user_email
+      }
+  })
+  
+  return new Response(JSON.stringify({hobbiesToPass}));
+  
 }

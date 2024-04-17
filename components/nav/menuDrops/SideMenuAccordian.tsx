@@ -20,16 +20,16 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
   return (
     <>
       
-      <div className="block text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5 cursor-pointer">
-          <Link onClick={toggle} href={"/dashboard"} className={`${pathname === "/dashboard" ? "underline" : ""}`}>
+      <Link onClick={toggle} href={"/dashboard"}>
+        <div className={`${pathname === "/dashboard" ? "underline" : ""} block text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5 cursor-pointer w-100`}>
           Dashboard
-        </Link>
-      </div>
-      <div className="block text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5 cursor-pointer">
-          <Link onClick={toggle} href={"/blog"} className={`${pathname === "/blog" ? "underline" : ""}`}>
+        </div>
+      </Link>
+      <Link onClick={toggle} href={"/blog"}>
+        <div className={`${pathname === "/blog" ? "underline" : ""} block text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5 cursor-pointer`}>
           Blog
-        </Link>
-      </div>
+        </div>
+      </Link>
       <Accordion defaultPanel={defaultPanel}>
         <AccordionItem toggle="panel-1" className="text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5">
           Projects - Soon

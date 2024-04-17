@@ -12,7 +12,7 @@ const ProfilePage = () => {
             <h1 className="text-lg underline">Logout</h1>
         </InnerHeader>
         <MainChild>
-            <div className="flex justify-center">
+            <div className="flex justify-center p-4">
                 <button>
                     Logout
                 </button>

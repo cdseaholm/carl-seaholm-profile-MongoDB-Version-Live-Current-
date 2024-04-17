@@ -1,14 +1,8 @@
 
 import mongoose from 'mongoose';
- 
-interface ActualUser {
-    firstName: string;
-    lastName: string;
-    email: string;
-    blogsub: boolean;
-    password: string;
-}
- 
+import { ActualUser } from '@/lib/types/user';
+import { ObjectId } from 'mongodb';
+
 const UserSchema = new mongoose.Schema<ActualUser>({
     firstName: {
         type: String,
@@ -28,8 +22,8 @@ const UserSchema = new mongoose.Schema<ActualUser>({
     },
     password: {
         type: String,
-        required: false,
-    }
+        required: true,
+    },
 });
  
 export default mongoose.models.ActualUser || mongoose.model<ActualUser>('ActualUser', UserSchema);

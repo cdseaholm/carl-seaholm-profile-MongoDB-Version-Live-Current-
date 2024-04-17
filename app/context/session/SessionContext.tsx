@@ -1,22 +1,21 @@
 'use client'
 
+import { Session } from '@/lib/types/session';
+import { ActualUser } from '@/lib/types/user';
 import React, { createContext, useContext } from 'react';
-import { ActualUser } from '@/types/user';
 
 type ContextType = {
     user: ActualUser | null;
-    logout: () => void;
-    getSession: () => void; // add the getSession function
     setUser: React.Dispatch<React.SetStateAction<ActualUser | null>>;
+    logout: () => void;
     connectionState?: boolean;
     setConnectionState?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const initialContext: ContextType = {
     user: null,
-    logout: () => {},
-    getSession: () => {},
     setUser: () => {},
+    logout: () => {},
     connectionState: false,
     setConnectionState: () => {},
 };
@@ -25,9 +24,9 @@ const SessionContext = createContext<ContextType>(initialContext);
 
 export const useSession = () => useContext(SessionContext);
 
-export const SessionProvider = ({ children, logout, getSession, setUser, user, connectionState, setConnectionState }: React.PropsWithChildren<{ logout: () => void, getSession: () => void, setUser: React.Dispatch<React.SetStateAction<ActualUser | null>>, user: ActualUser | null, connectionState: boolean, setConnectionState: React.Dispatch<React.SetStateAction<boolean>> }>) => {
+export const SessionProvider = ({ children, logout, connectionState, setConnectionState, setUser, user }: React.PropsWithChildren<{ logout: () => void, connectionState: boolean, setConnectionState: React.Dispatch<React.SetStateAction<boolean>>, setUser: React.Dispatch<React.SetStateAction<ActualUser | null>>, user: ActualUser | null}>) => {
     
-    const value = { logout, getSession, setUser, user, connectionState, setConnectionState};
+    const value = { logout, connectionState, setConnectionState, setUser, user};
 
     return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
-};
+};  

@@ -10,12 +10,12 @@ export default function AlertModal() {
     const isBreakpoint = useMediaQuery(768);
     const textSize = isBreakpoint ? 'text-xs' : 'text-sm';
     const { showAlert, setShowAlert, alertParent, alertMessage, setAlertParent } = useModalContext();
-    const { setUser } = useSession();
+    const { logout } = useSession();
     const logoutAlert = alertParent === 'logout' ? true : false;
 
     const handleAlertAccept = () => {
         if (alertParent === 'logout') {
-            setUser(null);
+            logout();
             setAlertParent('');
             setShowAlert(false);
         } else {
