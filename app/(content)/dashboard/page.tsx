@@ -15,13 +15,13 @@ export default function Dashboard() {
     const [categories, setCategories] = useState([] as string[]);
     const [titles, setTitles] = useState([] as string[]);
     const { user } = useSession();
-    let url = process.env.NODE_ENV === 'development' ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/hobbies/getall` : `${process.env.NEXT_PUBLIC_BASE_LIVEURL}/api/hobbies/getall`;
+    let url = process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_BASE_LIVEURL;
     const adminID = user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
   
     useEffect(() => {
       const getHobbies = async () => {
         try {
-          const response = await fetch(url, {
+          const response = await fetch(`${url}/api/hobbies/getall`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export default function Dashboard() {
     
     const updateHobbies = async () => {
       try {
-        const response = await fetch(url, {
+        const response = await fetch(`${url}/api/hobbies/getall`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

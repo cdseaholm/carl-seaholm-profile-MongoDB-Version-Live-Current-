@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function more(req: NextRequest) {
-    const url = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : `${process.env.NEXT_PUBLIC_BASE_LIVEURL || process.env.NEXT_PUBLIC_BASE_URL}`;
+    const url = process.env.NODE_ENV === 'development' ? `${process.env.NEXT_PUBLIC_BASE_LIVEURL}` : `${process.env.NEXT_PUBLIC_BASE_URL}`;
 
     if (req.method === 'OPTIONS') {
         return new NextResponse(null, {
