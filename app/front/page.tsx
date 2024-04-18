@@ -8,15 +8,12 @@ export default function Page() {
     const [ hobbies, setHobbies ] = useState([]);
     useEffect(() => {
         const getHobbies = async () => {
-            const gottenHobbies = await fetch('/api/hobbies/getall')
+            await fetch('/api/hobbies/getall')
             .then(res => res.json())
             .then(data => {
-                console.log('hobs', data.hobbiesToPass);
-                console.log('data', data);
-                setHobbies(data.hobbiesToPass)
+                setHobbies(data.hobbies)
             })
             .catch(err => console.log(err));
-            console.log(gottenHobbies);
         };
         getHobbies();
         

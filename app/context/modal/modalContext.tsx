@@ -1,6 +1,6 @@
 'use client'
 
-import { ActualUser } from '@/lib/types/user';
+import { ActualUser } from '@/models/types/user';
 import React, { createContext, useContext } from 'react';
 
 type ContextType = {

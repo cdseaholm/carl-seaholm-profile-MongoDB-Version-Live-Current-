@@ -1,7 +1,6 @@
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import React from "react";
 
 export default async function Page() {

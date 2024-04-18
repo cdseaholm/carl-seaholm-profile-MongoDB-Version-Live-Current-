@@ -9,8 +9,10 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { SessionProvider } from "@/app/context/session/SessionContext";
-import { ActualUser } from "@/lib/types/user";
+import { ActualUser } from "@/models/types/user";
 import { validateRequest } from "@/lib/auth/session";
+import { AnimatePresence } from "framer-motion";
+import { Spinner } from "@/components/misc/Spinner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -69,35 +71,41 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en">
-      <SessionProvider logout={logout} connectionState={isConnected} setConnectionState={setIsConnected} setUser={setUser} user={user}>
-      {pathname !== '/demo_303' &&
-      <body className={inter.className}>
-        <div className="first">
-          <div className="h-screen">
-            <>
+      <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
+        <SessionProvider logout={logout} connectionState={isConnected} setConnectionState={setIsConnected} setUser={setUser} user={user}>
+        {pathname !== '/demo_303' &&
+        <body className={inter.className}>
+          <div className="first">
+            <div className="h-screen">
+            {loading ? (
+              Spinner()
+            ) : (
+              <>
               <SpeedInsights/>
               <Providers>
                 <Navbar />
-                <main>
-                  {children}
-                </main>
-                <FooterNavBar />
+                  <main>
+                    {children}
+                  </main>
+                  <FooterNavBar />
               </Providers>
-            </>
-          
+              </>
+            )}
+            
+            </div>
           </div>
-        </div>
-      </body>
-      }
-
-      {pathname === '/demo_303' &&
-          <body>
-            <main className="min-h-screen bg-gray-800">
-              {children}
-            </main>
-          </body>
+        </body>
         }
-        </SessionProvider>
+
+        {pathname === '/demo_303' &&
+            <body>
+              <main className="min-h-screen bg-gray-800">
+                {children}
+              </main>
+            </body>
+          }
+          </SessionProvider>
+      </AnimatePresence>
     </html>
   );
 }

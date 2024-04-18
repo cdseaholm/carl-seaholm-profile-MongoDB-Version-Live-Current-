@@ -1,4 +1,4 @@
-import { Hobby } from "@/lib/types/hobby";
+import { Hobby } from "@/models/types/hobby";
 
 export default async function CatsAndHobs({hobbies}: {hobbies: Hobby[]}): Promise<{cats: string[]; hobbes: string[]}> {
         var cats: string[] = [].sort();

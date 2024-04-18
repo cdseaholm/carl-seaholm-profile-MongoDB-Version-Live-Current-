@@ -1,8 +1,9 @@
 
 
-import hobby from '@/lib/models/hobby';
-import connectdb from '@/utils/mongodb';
+import hobby from '@/models/hobby';
+import connectdb from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
+import user from '@/models/user';
 
 export async function GET(request: Request) {
   await connectdb();
@@ -26,7 +27,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const client = await connectdb();
     const body = await request.json();
-    const cursor = await client.db("csPortfolio").collection("users").insertOne({firstName: body.firstName, lastName: body.lastName, email: body.email});
+    const cursor = await user.create({firstName: body.firstName, lastName: body.lastName, email: body.email});
     return Response.json({message: 'User added successfully'});
 }
 
@@ -36,7 +37,7 @@ export async function PUT(request: Request) {
   if (!body.id) {
     return Response.json({message: 'No user id provided'})
   } else {
-    const cursor = await client.db("csPortfolio").collection("users").updateOne({_id: new ObjectId(body.id as string)}, {$set: {firstName: body.firstName, lastName: body.lastName, email: body.email}});
+    const cursor = await user.updateOne({_id: new ObjectId(body.id as string)}, {$set: {firstName: body.firstName, lastName: body.lastName, email: body.email}});
     return Response.json({message: 'User updated successfully'});
   }
 }

@@ -8,7 +8,7 @@ import openInNewTab from '@/components/listeners/OpenInNewTab';
 import useMediaQuery from '../../listeners/WidthSettings';
 import { useModalContext } from "@/app/context/modal/modalContext";
 
-import { ActualUser } from '@/lib/types/user';
+import { ActualUser } from '@/models/types/user';
 import { useSession } from '@/app/context/session/SessionContext';
 
 export default function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {

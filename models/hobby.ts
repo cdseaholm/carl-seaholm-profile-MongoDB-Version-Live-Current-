@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Hobby } from '@/lib/types/hobby';
+import { Hobby } from '@/models/types/hobby';
  
 export const HobbySchema = new mongoose.Schema<Hobby>({
     title: {
@@ -35,6 +35,7 @@ export const HobbySchema = new mongoose.Schema<Hobby>({
         required: false,
     }
 });
+
+const HobbyModel = mongoose.models.Hobby || mongoose.model('Hobby', HobbySchema);
  
-export default mongoose.models.Hobby ||
-  mongoose.model('Hobbies', HobbySchema);
+export default HobbyModel;

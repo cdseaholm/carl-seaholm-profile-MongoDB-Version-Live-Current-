@@ -1,7 +1,7 @@
 'use client'
 
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
-import {Hobby} from "@/lib/types/hobby";
+import {Hobby} from "@/models/types/hobby";
 import { useState } from "react";
 
 export default function MobileModalHobby({ show, categories, createHobby }: { show: boolean; categories: string[]; hobbies: Hobby[]; createHobby: any;}) {

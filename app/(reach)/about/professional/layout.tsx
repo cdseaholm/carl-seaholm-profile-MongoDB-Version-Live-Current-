@@ -3,9 +3,10 @@
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { motion } from "framer-motion";
 
-export default function AboutLayout({ children }: { children: React.ReactNode }) {
+export default function ProfessionalLayout({ children }: { children: React.ReactNode }) {
     return (
         <motion.div
+        key="professionalLayoutKey"
         initial={{ y: 300, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -300, opacity: 0 }}

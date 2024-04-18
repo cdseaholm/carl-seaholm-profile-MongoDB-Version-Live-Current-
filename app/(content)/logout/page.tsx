@@ -4,7 +4,7 @@ import React from 'react';
 import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 
-const ProfilePage = () => {
+const LogoutPage = () => {
 
     return (
         <>
@@ -22,4 +22,4 @@ const ProfilePage = () => {
     );
 };
 
-export default ProfilePage;
+export default LogoutPage;

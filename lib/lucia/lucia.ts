@@ -1,6 +1,6 @@
 import { Lucia, TimeSpan } from 'lucia';
 import { adapter } from '@/lib/lucia/adapter';
-import { ActualUser } from '@/lib/types/user';
+import { ActualUser } from '@/models/types/user';
 
 export const lucia = new Lucia(adapter, {
     getUserAttributes: (attributes: any) => {

@@ -7,6 +7,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     
     return (
         <motion.div
+        key="dashboardLayoutKey"
         initial={{ y: 300, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -300, opacity: 0 }}

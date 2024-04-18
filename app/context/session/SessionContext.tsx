@@ -1,7 +1,7 @@
 'use client'
 
-import { Session } from '@/lib/types/session';
-import { ActualUser } from '@/lib/types/user';
+import { Session } from '@/models/types/session';
+import { ActualUser } from '@/models/types/user';
 import React, { createContext, useContext } from 'react';
 
 type ContextType = {
