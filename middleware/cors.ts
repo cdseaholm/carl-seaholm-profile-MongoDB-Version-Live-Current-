@@ -1,12 +1,12 @@
 
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import Cors from 'cors'
 
 const corsGet = Cors({
   methods: ['GET', 'HEAD'],
 });
 
-export function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: Function) {
+export function runMiddleware(req: NextRequest, res: NextResponse, fn: Function) {
   return new Promise((resolve, reject) => {
     fn(req, res, (result: any) => {
       if (result instanceof Error) {
