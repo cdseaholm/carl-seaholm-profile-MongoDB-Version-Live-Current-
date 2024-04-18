@@ -20,19 +20,32 @@ export default function Dashboard() {
   
     useEffect(() => {
       const getHobbies = async () => {
-          await fetch('/api/hobbies/getall')
-          .then(res => res.json())
-          .then(data => {
-              if (data.hobbies) {
-                setHobbies(data.hobbies)
-                setTitles(data.hobbies.map((hobby: Hobby) => hobby.title));
-                setCategories(data.hobbies.map((hobby: Hobby) => hobby.categories).flat());
-              }
+          const gottenHobbies = await fetch('/api/hobbies/getall', {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          
           })
-          .catch(err => console.log(err));
+          .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        }).catch(err => console.log(err));
+
+        if (gottenHobbies.status === 404) {
+            console.log('No hobbies found');
+        } else if (!gottenHobbies.hobbies || gottenHobbies.hobbies.length === 0 || gottenHobbies.hobbies === undefined) {
+            console.log('No hobbies found');
+        } else {
+          setHobbies(gottenHobbies.hobbies)
+          setTitles(gottenHobbies.hobbies.map((hobby: Hobby) => hobby.title));
+          setCategories(gottenHobbies.hobbies.map((hobby: Hobby) => hobby.categories).flat());
+        }
       };
       getHobbies();
-    }, []);
+    }, [user]);
     
     const updateHobbies = async () => {
         await fetch('/api/hobbies/getall')
