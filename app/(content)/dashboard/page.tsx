@@ -20,34 +20,59 @@ export default function Dashboard() {
   
     useEffect(() => {
       const getHobbies = async () => {
-          await fetch('/api/hobbies/getall')
-          .then(res => res.json())
-          .then(data => {
-              if (data.hobbies) {
-                setHobbies(data.hobbies)
-                setTitles(data.hobbies.map((hobby: Hobby) => hobby.title));
-                setCategories(data.hobbies.map((hobby: Hobby) => hobby.categories).flat());
-              }
-          })
-          .catch(err => console.log(err));
-      };
-      getHobbies();
-    }, []);
+        const response = await fetch('/api/hobbies/getall', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        }).catch(e => {
+            console.error('Fetch error:', e);
+        });
+      
+          if (response.status === 404) {
+            console.log('No hobbies found');
+          } else if (!response.hobbies || response.hobbies.length === 0) {
+            console.log('No hobbies found');
+          } else {
+            setHobbies(response.hobbies);
+            setTitles(response.hobbies.map((hobby: Hobby) => hobby.title));
+            setCategories(response.hobbies.map((hobby: Hobby) => hobby.categories).flat());
+          }
+        };
+    
+        getHobbies();
+      }, [user]);
     
     const updateHobbies = async () => {
-        await fetch('/api/hobbies/getall')
-        .then(res => res.json())
-        .then(data => {
-            console.log('hobs', data.hobbies);
-            console.log('data', data);
-            if (data.hobbies) {
-              setHobbies(data.hobbies)
-              setTitles(data.hobbies.map((hobby: Hobby) => hobby.title));
-              setCategories(data.hobbies.map((hobby: Hobby) => hobby.categories).flat());
-            }
-        })
-        .catch(err => console.log(err));
-    };
+      const response = await fetch('/api/hobbies/getall', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      }).catch(e => {
+          console.error('Fetch error:', e);
+      });
+  
+      if (response.status === 404) {
+        console.log('No hobbies found');
+      } else if (!response.hobbies || response.hobbies.length === 0) {
+        console.log('No hobbies found');
+      } else {
+        setHobbies(response.hobbies);
+        setTitles(response.hobbies.map((hobby: Hobby) => hobby.title));
+        setCategories(response.hobbies.map((hobby: Hobby) => hobby.categories).flat());
+      }
+    }
 
     return (
         <div>
