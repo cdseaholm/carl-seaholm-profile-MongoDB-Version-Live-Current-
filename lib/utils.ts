@@ -9,10 +9,7 @@ export function stringToObjectId(id: string): mongoose.Types.ObjectId | null {
   }
 }
 
-export function createErrorResponse(
-  message: string,
-  statusCode: number
-): NextResponse {
+export function createErrorResponse( message: string, statusCode: number ): NextResponse {
   const errorResponse = {
     status: statusCode >= 500 ? "error" : "fail",
     message,

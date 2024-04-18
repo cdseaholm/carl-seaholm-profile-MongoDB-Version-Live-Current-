@@ -32,14 +32,15 @@ export default function Dashboard() {
               tags: ['hobbies'],
             },
           });
-    
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-    
+      
           const data = await response.json();
+      
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}, message: ${data.message}`);
+          }
+      
           const hobbiesPassed = data.hobs;
-    
+      
           if (!hobbiesPassed || hobbiesPassed.length === 0) {
             console.log('No hobbies found');
           } else {

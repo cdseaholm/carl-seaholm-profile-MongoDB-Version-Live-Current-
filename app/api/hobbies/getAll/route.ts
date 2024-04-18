@@ -1,8 +1,9 @@
 
 import connectdb from '@/lib/mongodb';
 import { createErrorResponse } from '@/lib/utils';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextApiRequest, NextApiResponse } from 'next';
 import HobbyModel from '@/models/hobby';
+import corsGet, { runMiddleware } from '@/middleware/cors';
 
 async function getHobbies() {
   try {
@@ -11,7 +12,7 @@ async function getHobbies() {
     const hobbies = await HobbyModel.find();
 
     if (hobbies.length === 0) {
-      return new NextResponse(JSON.stringify({status: 404, message: 'No hobbies found'}));
+      return createErrorResponse('No hobbies found', 404);
     }
 
     return hobbies;
@@ -21,7 +22,8 @@ async function getHobbies() {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextApiRequest, response: NextApiResponse) {
+  await runMiddleware(request, response, corsGet);
   const hobs = await getHobbies();
-  return NextResponse.json({ hobs });
+  return response.json({ hobs });
 }
