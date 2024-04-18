@@ -8,7 +8,6 @@ import DashChild from "@/components/pagecomponents/dashboard/dashChild";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { Hobby } from "@/models/types/hobby";
 
-
 export default function Dashboard() {
     
     const isBreakpoint = useMediaQuery(768);
@@ -16,61 +15,76 @@ export default function Dashboard() {
     const [categories, setCategories] = useState([] as string[]);
     const [titles, setTitles] = useState([] as string[]);
     const { user } = useSession();
+    let url = process.env.NODE_ENV === 'development' ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/hobbies/getall` : `${process.env.NEXT_PUBLIC_BASE_LIVEURL}/api/hobbies/getall`;
     const adminID = user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
   
     useEffect(() => {
       const getHobbies = async () => {
-        const response = await fetch('/api/hobbies/getall', {
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            cache: 'force-cache',
+            next: {
+              revalidate: 3600,
+              tags: ['hobbies'],
+            },
+          });
+    
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+    
+          const data = await response.json();
+          const hobbiesPassed = data.hobs;
+    
+          if (!hobbiesPassed || hobbiesPassed.length === 0) {
+            console.log('No hobbies found');
+          } else {
+            setHobbies(hobbiesPassed);
+            setTitles(hobbiesPassed.map((hobby: Hobby) => hobby.title));
+            setCategories(hobbiesPassed.map((hobby: Hobby) => hobby.categories).flat());
+          }
+        } catch (e) {
+          console.error('Fetch error:', e);
+        }
+      };
+    
+      getHobbies();
+    }, [user]);
+    
+    const updateHobbies = async () => {
+      try {
+        const response = await fetch(url, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
-        }).then(response => {
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        }).catch(e => {
-            console.error('Fetch error:', e);
+          cache: 'force-cache',
+          next: {
+            revalidate: 3600,
+            tags: ['hobbies'],
+          },
         });
-      
-          if (response.status === 404) {
-            console.log('No hobbies found');
-          } else if (!response.hobbies || response.hobbies.length === 0) {
-            console.log('No hobbies found');
-          } else {
-            setHobbies(response.hobbies);
-            setTitles(response.hobbies.map((hobby: Hobby) => hobby.title));
-            setCategories(response.hobbies.map((hobby: Hobby) => hobby.categories).flat());
-          }
-        };
-    
-        getHobbies();
-      }, [user]);
-    
-    const updateHobbies = async () => {
-      const response = await fetch('/api/hobbies/getall', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      }).catch(e => {
-          console.error('Fetch error:', e);
-      });
   
-      if (response.status === 404) {
-        console.log('No hobbies found');
-      } else if (!response.hobbies || response.hobbies.length === 0) {
-        console.log('No hobbies found');
-      } else {
-        setHobbies(response.hobbies);
-        setTitles(response.hobbies.map((hobby: Hobby) => hobby.title));
-        setCategories(response.hobbies.map((hobby: Hobby) => hobby.categories).flat());
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+  
+        const data = await response.json();
+        const hobbiesPassed = data.hobs;
+  
+        if (!hobbiesPassed || hobbiesPassed.length === 0) {
+          console.log('No hobbies found');
+        } else {
+          setHobbies(hobbiesPassed);
+          setTitles(hobbiesPassed.map((hobby: Hobby) => hobby.title));
+          setCategories(hobbiesPassed.map((hobby: Hobby) => hobby.categories).flat());
+        }
+      } catch (e) {
+        console.error('Fetch error:', e);
       }
     }
 
@@ -84,7 +98,6 @@ export default function Dashboard() {
             <MainChild>
               <DashChild user={user} categories={categories} titles={titles} hobbies={hobbies} updateHobbies={updateHobbies} adminID={adminID}/>
             </MainChild>
-
         </div>
     );
 };
