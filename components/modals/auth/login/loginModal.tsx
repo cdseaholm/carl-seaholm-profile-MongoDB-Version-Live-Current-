@@ -3,8 +3,8 @@
 import { useModalContext } from "@/app/context/modal/modalContext";
 import { useSession } from "@/app/context/session/SessionContext";
 import useMediaQuery from "@/components/listeners/WidthSettings";
-import { Session } from "@/lib/types/session";
-import { ActualUser } from "@/lib/types/user";
+import { Session } from "@/models/types/session";
+import { ActualUser } from "@/models/types/user";
 
 import { usePathname, useRouter } from "next/navigation";
 
@@ -12,13 +12,17 @@ export default function ModalLogin() {
 
     const isBreakpoint = useMediaQuery(768);
     const textSize = isBreakpoint ? 'text-xs' : 'text-sm';
-    const { modalOpen, setModalOpen, swapAuthDesire, setAlertMessage } = useModalContext();
+    const { modalOpen, setModalOpen, setAlertMessage, setModalSubscribeOpen, setShowAlert } = useModalContext();
     const pathname = usePathname();
     const router = useRouter();
     const { user, setUser } = useSession();
 
+    const handleOpenSub = () => {
+        setModalOpen(false);
+        setModalSubscribeOpen(true);
+    }
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        
         console.log('handleSubmit function called');
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
@@ -44,9 +48,13 @@ export default function ModalLogin() {
         
         console.log('tryLogin', tryLoginUser);
     
-        if (tryLoginUser.error) {
-            setAlertMessage(tryLoginUser.error);
+        if (tryLoginUser.status === 404) {
+            setAlertMessage('No user found');
+            setShowAlert(true);
             console.log(tryLoginUser.error);
+        } else if (tryLoginUser.status === 401 || tryLoginUser.status === 402 || tryLoginUser.status === 400) {
+            setAlertMessage('Invalid email or password');
+            setShowAlert(true);
         } else {
             setUser(tryLoginUser.user);
             setModalOpen(false);
@@ -86,11 +94,17 @@ export default function ModalLogin() {
                             Sign In
                         </button>
                         <div className="flex flex-row justify-around my-4 p-2 text-sm space-x-1">
-                            <p className="text-black">
+                            {/**<p className="text-black">
                                 Don&apos;t have an account yet? 
                             </p>
                             <div className="text-sky-700 cursor-pointer" onClick={swapAuthDesire}>
                                 Create an account here
+                            </div>*/}
+                            <p className="text-black">
+                                Looking for a way to Follow? 
+                            </p>
+                            <div className="text-sky-700 cursor-pointer" onClick={handleOpenSub}>
+                                Subscribe here
                             </div>
                         </div>
                     </form>

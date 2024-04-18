@@ -1,4 +1,4 @@
-import { Hobby } from '@/lib/types/hobby'
+import { Hobby } from '@/models/types/hobby'
 import React from 'react'
 
 export default function StatsView({hobbies, daysThisMonth}: { hobbies: Hobby[], daysThisMonth: number}) {

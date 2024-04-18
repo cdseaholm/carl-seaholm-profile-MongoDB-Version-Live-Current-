@@ -5,7 +5,7 @@ import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import { useModalContext } from '@/app/context/modal/modalContext';
 
-const LogoutPage = () => {
+const ProfilePage = () => {
     const { setShowEditUser } = useModalContext();
     const handleLogout = () => {
         console.log('logout');
@@ -33,4 +33,4 @@ const LogoutPage = () => {
     );
 };
 
-export default LogoutPage;
+export default ProfilePage;

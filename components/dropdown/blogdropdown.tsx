@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import PostItemList from "@/components/posts/postlistitem";
-import type { post } from "@/lib/types/post";
+import type { post } from "@/models/types/post";
 import React from "react";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "../pagetemplates/mainchild/mainchild";

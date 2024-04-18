@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Session } from '@/lib/types/session';
+import { Session } from '@/models/types/session';
  
 export const SessionSchema = new mongoose.Schema<Session>({
     sessionid: {
@@ -19,6 +19,7 @@ export const SessionSchema = new mongoose.Schema<Session>({
         required: true,
     },
 });
+
+const SessionModel = mongoose.models.Session || mongoose.model('Session', SessionSchema);
  
-export default mongoose.models.Session ||
-  mongoose.model<Session>('Session', SessionSchema);
+export default SessionModel;

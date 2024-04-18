@@ -1,13 +1,14 @@
 
-import connectdb from "@/utils/mongodb";
-import hobby from "@/lib/models/hobby";
+import connectdb from "@/lib/mongodb";
+import HobbyModel from "@/models/hobby";
+import { NextResponse } from "next/server";
 
 
 export async function POST(request: Request) {
 
     await connectdb();
     const data = await request.json();
-    const hobbyToAdd = await hobby.create({
+    const hobbyToAdd = await HobbyModel.create({
         title: data.title,
         description: data.description,
         user_email: data.email,
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
         color: data.color,
     });
     if (!hobbyToAdd) {
-        return Response.json({status: 500, message: 'Error creating hobby'});
+        return NextResponse.json({status: 500, message: 'Error creating hobby'});
     }
-    return Response.json({status: 200});
+    return NextResponse.json({status: 200});
 }

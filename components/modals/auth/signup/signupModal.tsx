@@ -100,7 +100,7 @@ export default function ModalSignUp() {
                             <p className="text-black">
                                 Already have an account yet? 
                             </p>
-                            <div className="text-sky-700 cursor-pointer" onClick={swapAuthDesire}>
+                            <div className="text-sky-700 cursor-pointer" onClick={() => console.log('used to be swapAuthDesire')}>
                                 Sign in here
                             </div>
                         </div>

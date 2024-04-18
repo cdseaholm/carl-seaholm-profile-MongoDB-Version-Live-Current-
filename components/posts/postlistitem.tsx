@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import type { post } from '@/lib/types/post';
+import type { post } from '@/models/types/post';
 import useMediaQuery from '@/components/listeners/WidthSettings';
 
 export default function PostItemList({ category, posts }: { category: string; posts: post[] }) {

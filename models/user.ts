@@ -1,6 +1,6 @@
 
 import mongoose from 'mongoose';
-import { ActualUser } from '@/lib/types/user';
+import { ActualUser } from '@/models/types/user';
 import { ObjectId } from 'mongodb';
 
 const UserSchema = new mongoose.Schema<ActualUser>({
@@ -25,5 +25,7 @@ const UserSchema = new mongoose.Schema<ActualUser>({
         required: true,
     },
 });
+
+const UserModel = mongoose.models.ActualUser || mongoose.model<ActualUser>('ActualUser', UserSchema);
  
-export default mongoose.models.ActualUser || mongoose.model<ActualUser>('ActualUser', UserSchema);
+export default UserModel;

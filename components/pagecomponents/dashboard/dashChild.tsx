@@ -1,5 +1,5 @@
-import { ActualUser } from "@/lib/types/user";
-import { Hobby } from "@/lib/types/hobby";
+import { ActualUser } from "@/models/types/user";
+import { Hobby } from "@/models/types/hobby";
 import { useState } from "react";
 import React from "react";
 import useMediaQuery from "@/components/listeners/WidthSettings";

@@ -6,7 +6,7 @@ import useMediaQuery from "@/components/listeners/WidthSettings";
 import { useSession } from "@/app/context/session/SessionContext";
 import DashChild from "@/components/pagecomponents/dashboard/dashChild";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
-import { Hobby } from "@/lib/types/hobby";
+import { Hobby } from "@/models/types/hobby";
 
 
 export default function Dashboard() {
@@ -20,31 +20,33 @@ export default function Dashboard() {
   
     useEffect(() => {
       const getHobbies = async () => {
-          const gottenHobbies = await fetch('/api/hobbies/getall')
+          await fetch('/api/hobbies/getall')
           .then(res => res.json())
           .then(data => {
-              console.log('hobs', data.hobbiesToPass);
-              console.log('data', data);
-              setHobbies(data.hobbiesToPass)
-              setTitles(data.hobbiesToPass.map((hobby: Hobby) => hobby.title));
-              setCategories(data.hobbiesToPass.map((hobby: Hobby) => hobby.categories).flat());
+              if (data.hobbies) {
+                setHobbies(data.hobbies)
+                setTitles(data.hobbies.map((hobby: Hobby) => hobby.title));
+                setCategories(data.hobbies.map((hobby: Hobby) => hobby.categories).flat());
+              }
           })
           .catch(err => console.log(err));
-          console.log(gottenHobbies);
       };
       getHobbies();
     }, []);
     
     const updateHobbies = async () => {
-      const gottenHobbies = await fetch('/api/hobbies/getAll')
-      .then(res => res.json())
-      .then(data => data.hobbiesToPass);
-      console.log(gottenHobbies);
-      if (gottenHobbies) {
-          setHobbies(gottenHobbies);
-          setTitles(gottenHobbies.map((hobby: any) => hobby.title));
-          setCategories(gottenHobbies.map((hobby: any) => hobby.categories).flat());
-        }
+        await fetch('/api/hobbies/getall')
+        .then(res => res.json())
+        .then(data => {
+            console.log('hobs', data.hobbies);
+            console.log('data', data);
+            if (data.hobbies) {
+              setHobbies(data.hobbies)
+              setTitles(data.hobbies.map((hobby: Hobby) => hobby.title));
+              setCategories(data.hobbies.map((hobby: Hobby) => hobby.categories).flat());
+            }
+        })
+        .catch(err => console.log(err));
     };
 
     return (

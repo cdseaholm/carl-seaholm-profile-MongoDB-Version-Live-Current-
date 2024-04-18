@@ -13,7 +13,7 @@ import { HobbyProvider } from './context/hobby/hobbyModalContext';
 import LogSessionModal from '@/components/modals/hobbyModal/logsession';
 import { useSession } from './context/session/SessionContext';
 import EditUser from '@/components/modals/auth/editUser/editUser';
-import { ActualUser } from '@/lib/types/user';
+import { ActualUser } from '@/models/types/user';
 import ModalSubscribe from '@/components/modals/subscribe/subscribeModal';
 
 export function Providers({children}: { children: React.ReactNode }) {
@@ -38,6 +38,7 @@ export function Providers({children}: { children: React.ReactNode }) {
   const [categoryPassed, setCategoryPassed] = useState('');
   const [showEditUser, setShowEditUser] = useState(false);
   const [userToEdit, setUserToEdit] = useState({} as ActualUser);
+  const [daySelected, setDaySelected] = useState('');
 
   //variables
   const { logout } = useSession();
@@ -118,13 +119,14 @@ export function Providers({children}: { children: React.ReactNode }) {
   };*/}
 
   const swapAuthDesire = async () => {
-    if (modalSignUpOpen) {
+    console.log('swapAuthDesire');
+    {/**if (modalSignUpOpen) {
       setModalSignUpOpen(false);
       setShowModal(true);
     } else if (showModal) {
       setShowModal(false);
       setModalSignUpOpen(true);
-    }
+    }*/}
   };
 
   return (
@@ -134,7 +136,7 @@ export function Providers({children}: { children: React.ReactNode }) {
       <AlertModal/>
       <EditUser/>
       <ModalSubscribe/>
-      <HobbyProvider openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} openLogSessionModal={openLogSessionModal} setOpenLogSessionModal={setOpenLogSessionModal}>
+      <HobbyProvider openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} openLogSessionModal={openLogSessionModal} setOpenLogSessionModal={setOpenLogSessionModal} setDaySelected={setDaySelected} daySelected={daySelected}>
         <LogSessionModal show={openLogSessionModal}/>
         <NextUIProvider>
           {children}

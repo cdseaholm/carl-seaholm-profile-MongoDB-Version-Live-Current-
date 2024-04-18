@@ -1,6 +1,6 @@
 
 import mongoose from 'mongoose';
-import { Subscriber } from '@/lib/types/subscribers';
+import { Subscriber } from '@/models/types/subscribers';
 
 
 const SubscriberSchema = new mongoose.Schema<Subscriber>({
@@ -21,5 +21,7 @@ const SubscriberSchema = new mongoose.Schema<Subscriber>({
         required: true,
     },
 });
+
+const SubscriberModel = mongoose.models.Subscriber || mongoose.model('Subscriber', SubscriberSchema);
  
-export default mongoose.models.Subscriber || mongoose.model<Subscriber>('Subscriber', SubscriberSchema);
+export default SubscriberModel;
