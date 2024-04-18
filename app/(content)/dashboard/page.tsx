@@ -54,7 +54,7 @@ export default function Dashboard() {
       };
     
       getHobbies();
-    }, [user]);
+    }, [user, url]);
     
     const updateHobbies = async () => {
       try {

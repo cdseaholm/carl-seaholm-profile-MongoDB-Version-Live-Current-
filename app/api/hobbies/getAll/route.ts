@@ -1,9 +1,9 @@
 
 import connectdb from '@/lib/mongodb';
 import { createErrorResponse } from '@/lib/utils';
+import { min } from '@/middleware/min';
 import HobbyModel from '@/models/hobby';
 import { NextRequest, NextResponse } from 'next/server';
-import corsGet, { runMiddleware } from '@/middleware/cors';
 
 async function getHobbies() {
   try {
@@ -23,7 +23,7 @@ async function getHobbies() {
 }
 
 export async function GET(request: NextRequest, response: NextResponse) {
-  await runMiddleware(request, response, corsGet);
+  await min(request, response);
   const hobs = await getHobbies();
   return NextResponse.json({ hobs });
 }
