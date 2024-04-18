@@ -23,7 +23,7 @@ async function getHobbies() {
 }
 
 export async function GET(request: NextRequest, response: NextResponse) {
-  await min(request, response);
+  await min(request);
   const hobs = await getHobbies();
   return NextResponse.json({ hobs });
 }
