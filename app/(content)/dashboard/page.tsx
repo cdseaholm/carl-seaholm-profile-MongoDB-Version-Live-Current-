@@ -68,6 +68,8 @@ export default function Dashboard() {
             revalidate: 3600,
             tags: ['hobbies'],
           },
+          mode: 'cors',
+          credentials: 'include',
         });
   
         if (!response.ok) {
