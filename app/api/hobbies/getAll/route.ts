@@ -1,7 +1,6 @@
 
 import connectdb from '@/lib/mongodb';
 import { createErrorResponse } from '@/lib/utils';
-import { min } from '@/middleware/min';
 import HobbyModel from '@/models/hobby';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -23,7 +22,7 @@ async function getHobbies() {
 }
 
 export async function GET(request: NextRequest, response: NextResponse) {
-  await min(request);
+  //await min(request);
   const hobs = await getHobbies();
   return NextResponse.json({ hobs });
 }
