@@ -15,7 +15,8 @@ export default function Dashboard() {
     const [categories, setCategories] = useState([] as string[]);
     const [titles, setTitles] = useState([] as string[]);
     const { user } = useSession();
-    let url = process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_BASE_LIVEURL;
+    //let url = process.env.NEXT_PUBLIC_BASE_URL 
+    let url = process.env.NEXT_PUBLIC_BASE_LIVEURL;
     const adminID = user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
   
     useEffect(() => {
