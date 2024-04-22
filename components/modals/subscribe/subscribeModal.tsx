@@ -1,26 +1,22 @@
 'use client'
 
+import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import { useModalContext } from "@/app/context/modal/modalContext";
-import { useSession } from "@/app/context/session/SessionContext";
 import useMediaQuery from "@/components/listeners/WidthSettings";
-import { set } from "mongoose";
-
-import { usePathname, useRouter } from "next/navigation";
 
 export default function ModalSubscribe() {
 
     const isBreakpoint = useMediaQuery(768);
     const textSize = isBreakpoint ? 'text-xs' : 'text-sm';
     const { modalSubscribeOpen, setModalSubscribeOpen, setAlertMessage, setShowAlert } = useModalContext();
-    const pathname = usePathname();
-    const router = useRouter();
+    const { urlToUse } = useHobbyContext();
 
     const handleSub = async (event: React.FormEvent<HTMLFormElement>) => {
         
         console.log('handleSubmit function called');
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const sub = await fetch('/api/subscribe/create', {
+        const sub = await fetch(`${urlToUse}/api/createsub`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -61,13 +57,13 @@ export default function ModalSubscribe() {
                                 <span className="sr-only">Close modal</span>
                             </button>
                     </div>
-                    <form id="subscribeForm" className="p-4 md:p-5" onSubmit={handleSub}>
+                    <form id="modalSubscribeForm" className="p-4 md:p-5" onSubmit={handleSub}>
                         <div className="grid gap-4 mb-6 grid-cols-2">
-                            <label htmlFor="subEmail" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Email*</label>
-                            <input type="email" name="subEmail" id="subEmail" autoComplete='email' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Email" required/>
+                            <label htmlFor="modalSubEmail" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Email*</label>
+                            <input type="email" name="modalSubEmail" id="modalSubEmail" autoComplete='email' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Email" required/>
 
-                            <label htmlFor="subName" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Name</label>
-                            <input type="Name" name="subName" id="subName" autoComplete='given-name' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Name"/>
+                            <label htmlFor="modalSubName" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Name</label>
+                            <input type="Name" name="modalSubName" id="modalSubName" autoComplete='given-name' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Name"/>
                         </div>
                         <button type="submit" className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg ${textSize} px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}>
                             Subscribe

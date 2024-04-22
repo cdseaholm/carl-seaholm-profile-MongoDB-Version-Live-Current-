@@ -1,5 +1,5 @@
 import React from "react";
-import { DetailsAccordianPage } from "@/components/nav/menuDrops/DetailsAccordian";
+import { DetailsAccordianPage } from "@/components/dropdowns/DetailsAccordian";
 import { Job } from "@/models/types/job";
 import { School } from "@/models/types/education";
 import Image from "next/image";

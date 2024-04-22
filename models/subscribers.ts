@@ -1,27 +1,31 @@
+export interface Subscriber {
+    email: string;
+    name: string;
+    subscribed: boolean;
+}
 
-import mongoose from 'mongoose';
-import { Subscriber } from '@/models/types/subscribers';
+import mongoose, { Schema, models } from "mongoose";
 
+const subscriberSchema = new Schema(
+    {
+        name: {
+            type: String,
+            required: true
+        },
+        email: {
+            type: String,
+            required: true
+        },
+        subscribed: {
+            type: Boolean,
+            required: true
+        },
+    },
+    {
+        timestamps: true
+    }
+);
 
-const SubscriberSchema = new mongoose.Schema<Subscriber>({
-    email: {
-        type: String,
-        required: true,
-    },
-    name: {
-        type: String,
-        required: false,
-    },
-    subscribed: {
-        type: Boolean,
-        required: true,
-    },
-    subscribedAt: {
-        type: Date,
-        required: true,
-    },
-});
+const Subscriber = models.Subscriber || mongoose.model("Subscriber", subscriberSchema);
 
-const SubscriberModel = mongoose.models.Subscriber || mongoose.model('Subscriber', SubscriberSchema);
- 
-export default SubscriberModel;
+export default Subscriber;

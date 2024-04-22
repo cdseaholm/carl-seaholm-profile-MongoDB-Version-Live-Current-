@@ -1,6 +1,5 @@
 'use client'
 
-import { ActualUser } from '@/models/types/user';
 import React, { createContext, useContext } from 'react';
 
 type ContextType = {
@@ -20,11 +19,11 @@ type ContextType = {
   setAlertConfirm: React.Dispatch<React.SetStateAction<boolean>>;
   showEditUser: boolean | null;
   setShowEditUser: React.Dispatch<React.SetStateAction<boolean>>;
-  userToEdit: ActualUser;
-  setUserToEdit: React.Dispatch<React.SetStateAction<ActualUser>>;
   setModalSubscribeOpen: React.Dispatch<React.SetStateAction<boolean>>;
   modalSubscribeOpen: boolean | null;
-
+  setColorChoice: React.Dispatch<React.SetStateAction<string>>;
+  colorChoice: string | null;
+  swapDashDesire: () => void;
 };
 
 const initialContext: ContextType = {
@@ -44,17 +43,18 @@ const initialContext: ContextType = {
   setAlertConfirm: () => {},
   showEditUser: false,
   setShowEditUser: () => {},
-  userToEdit: {} as ActualUser,
-  setUserToEdit: () => {},
   setModalSubscribeOpen: () => {},
   modalSubscribeOpen: false,
+  setColorChoice: () => {},
+  colorChoice: '',
+  swapDashDesire: () => {},
 };
 
 const ModalContext = createContext(initialContext);
 
 export const useModalContext = () => useContext(ModalContext);
 
-export const ModalProvider = ({ children, modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, userToEdit, setUserToEdit, setModalSubscribeOpen, modalSubscribeOpen }: React.PropsWithChildren<{
+export const ModalProvider = ({ children, modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, setModalSubscribeOpen, modalSubscribeOpen, setColorChoice, colorChoice, swapDashDesire }: React.PropsWithChildren<{
   modalOpen: boolean; 
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   modalSignUpOpen: boolean; 
@@ -71,13 +71,14 @@ export const ModalProvider = ({ children, modalOpen, setModalOpen, modalSignUpOp
   setAlertConfirm: React.Dispatch<React.SetStateAction<boolean>>;
   showEditUser: boolean;
   setShowEditUser: React.Dispatch<React.SetStateAction<boolean>>;
-  userToEdit: ActualUser;
-  setUserToEdit: React.Dispatch<React.SetStateAction<ActualUser>>;
   setModalSubscribeOpen: React.Dispatch<React.SetStateAction<boolean>>;
   modalSubscribeOpen: boolean;
+  setColorChoice: React.Dispatch<React.SetStateAction<string>>;
+  colorChoice: string;
+  swapDashDesire: () => void;
 }>) => {
 
-  const value = { modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, userToEdit, setUserToEdit, setModalSubscribeOpen, modalSubscribeOpen};
+  const value = { modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, setModalSubscribeOpen, modalSubscribeOpen, setColorChoice, colorChoice, swapDashDesire};
 
   return (
     <ModalContext.Provider value={value}>

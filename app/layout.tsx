@@ -7,41 +7,35 @@ import Navbar from '@/components/nav/Navbar';
 import FooterNavBar from "@/components/nav/footer/footerNavbar";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import React, { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { SessionProvider } from "@/app/context/session/SessionContext";
-import { ActualUser } from "@/models/types/user";
-import { validateRequest } from "@/lib/auth/session";
+import { usePathname } from "next/navigation";
+import { AuthProvider } from "@/app/context/session/SessionContext";
 import { AnimatePresence } from "framer-motion";
+import { useHobbyContext } from "./context/hobby/hobbyModalContext";
 import { Spinner } from "@/components/misc/Spinner";
+import { useModalContext } from "./context/modal/modalContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
-  const [isConnected, setIsConnected] = useState(false);
   const pathname = usePathname();
-  const [loading, setLoading] = React.useState(true);
-  const router = useRouter();
-  const [user, setUser] = React.useState<ActualUser | null>(null);
+  const { urlToUse, setUrlToUse } = useHobbyContext();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const thisUser = await validateRequest();
-      if (thisUser === null) {
-        setUser(null);
-        setLoading(false);
-        return;
-      } else if (thisUser === undefined) {
-        console.error('Failed to fetch user');
-        return;
+    if (urlToUse === '') {
+       //if (process.env.NEXT_PUBLIC_BASE_URL !== undefined) {
+        //setUrlToUse(process.env.NEXT_PUBLIC_BASE_URL);
+       // setIsLoading(false);
+       //}
+      if (process.env.NEXT_PUBLIC_BASE_LIVEURL !== undefined && process.env.NEXT_PUBLIC_BASE_LIVEURL !== '' && process.env.NEXT_PUBLIC_BASE_LIVEURL !== null) {
+      setUrlToUse(process.env.NEXT_PUBLIC_BASE_LIVEURL);
       }
-      
-      setLoading(false);
+    } else {
+      setIsLoading(false);
     }
-    fetchUser();
-  }, [setUser, setLoading]);
-    
-
+  }, [setUrlToUse, urlToUse]);  
+  
   useEffect(() => {
       document.body.style.overflow = 'hidden';
       return () => {
@@ -49,49 +43,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       };
   }, []);
 
-  const logout = async () => {
-      const logginOut = await fetch('/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ user: user }),
-      })
-      .then(response => {
-        return response.json();
-      })
-      .catch(error => console.error('Error:', error));
-      if (logginOut.status === 200) {
-        setUser(null);
-        router.refresh();
-      } else {
-        console.error('Failed to logout');
-      }
-  };
-
   return (
     <html lang="en">
       <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
-        <SessionProvider logout={logout} connectionState={isConnected} setConnectionState={setIsConnected} setUser={setUser} user={user}>
+        <AuthProvider>
         {pathname !== '/demo_303' &&
         <body className={inter.className}>
           <div className="first">
             <div className="h-screen">
-            {loading ? (
-              Spinner()
-            ) : (
               <>
               <SpeedInsights/>
-              <Providers>
+              <Providers> 
+              {isLoading ? (
+                <Spinner />
+                ) : (
+                  <>
                 <Navbar />
                   <main>
                     {children}
                   </main>
                   <FooterNavBar />
+                  </>
+                  )}
               </Providers>
               </>
-            )}
-            
             </div>
           </div>
         </body>
@@ -104,7 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </main>
             </body>
           }
-          </SessionProvider>
+          </AuthProvider>
       </AnimatePresence>
     </html>
   );

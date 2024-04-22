@@ -3,13 +3,10 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SocialIcon } from 'react-social-icons';
-import openInNewTab from '@/components/listeners/OpenInNewTab';
 import useMediaQuery from '../../listeners/WidthSettings';
 import { useModalContext } from "@/app/context/modal/modalContext";
-
-import { ActualUser } from '@/models/types/user';
-import { useSession } from '@/app/context/session/SessionContext';
+import { useSession } from 'next-auth/react';
+import SocialButton from '@/components/buttons/socialButton';
 
 export default function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
 
@@ -18,12 +15,10 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
   const router = useRouter();
   const isBreakpoint = useMediaQuery(768);
   const { setAlertMessage, setAlertParent, setShowAlert, setModalSignUpOpen, setModalOpen, setModalSubscribeOpen } = useModalContext();
-  var screenName = '';
-  const { user } = useSession();
-  if (user !== null) {
-    screenName = user.firstName ? user.firstName : '';
-  };
-  const loggedInMenu = user !== null ? true : false;
+  const { data: session } = useSession();
+  const user = session?.user;
+
+  const loggedInMenu = user !== null && user !== undefined ? true : false;
 
   const handleClickedSignIn = () => {
     setModalOpen(true);
@@ -44,35 +39,13 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
     setModalSubscribeOpen(true);
   }
 
-  const handleTest = () => {
-    router.replace('/demo_303');
-  };
-
   const style = {
     closeIcon: `absolute top-1 focus:outline-none right-3 text-3xl text-white cursor-pointer`,
     sidenav: {
       open: `${isBreakpoint ? "w-5/12" : 'w-3/12'} md:w-60 bg-green-900 text-white overflow-x-hidden z-40`,
       close: `w-0 bg-gray-800 text-white overflow-x-hidden`,
       default: `h-screen fixed z-30 top-0 left-0 transition-all ease duration-200`,
-    },
-    icon: {
-      height: 35,
-      width: 35,
-      margin: 5,
-      border: '1px solid white',
-      borderRadius: '50%',
-      alignContent: 'center',
-      justifyContent: 'center',
-      overflow: 'hidden',
-    },
-    iconClose: {
-      height: 2,
-      width: 2,
-      margin: 0,
-      borderRadius: '50%',
-      overflow: 'hidden',
-      color: 'transparent',
-    },
+    }
   };
 
   //variables
@@ -121,13 +94,9 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
               Socials
           </div>
           <div className={`justify-evenly mx-3 ${isBreakpoint ? 'pt-5' : 'pt-2'} ${textSize} flex flex-row items-center space-x-4 text-sm`}>
-            <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
-              <SocialIcon style={style.icon} network='github'/>
-            </div>
+            <SocialButton networkName='github' parent={false} />
             <p>|</p>
-            <div className='cursor-pointer' onClick={() => openInNewTab('https://www.linkedin.com/in/carlseaholm/')}>
-            <SocialIcon style={open ? style.icon : style.iconClose} network='linkedin' />
-            </div>
+            <SocialButton networkName='linkedin' parent={false} />
           </div>
         </div> 
           {loggedInMenu === false ? (
@@ -145,7 +114,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
           <div className='mx-3 flex flex-col'> 
             <div className='flex flex-row py-3 justify-center'>
               <p>
-                Hello {screenName}
+                Hello {session?.user?.name}
               </p>
             </div>
             <div className={`flex flex-row justify-evenly items-center ${textSize}`}>
