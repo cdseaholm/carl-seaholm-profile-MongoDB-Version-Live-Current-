@@ -1,13 +1,13 @@
-import openInNewTab from "@/components/listeners/OpenInNewTab";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useCallback } from "react";
-import { SocialIcon } from "react-social-icons";
-import { SideMenuAccordianMobile } from "../menuDrops/SideMenuAccordianMobile";
 import React from "react";
 import useMediaQuery from "@/components/listeners/WidthSettings";
 import Image from "next/image";
 import Sidenav from "./SideNav";
+import { SideMenuAccordian } from "../../dropdowns/SideMenuAccordian";
+import SocialButton from "@/components/buttons/socialButton";
 
 
 const SideNavHeader = () => {
@@ -109,26 +109,20 @@ const SideNavHeader = () => {
               </>
             </div>
             <div className='flex items-center'>
-              <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
-                <SocialIcon style={{height: 30, width: 30}} network='github'/>
-              </div>
+              <SocialButton networkName='github' parent={true} />
               <p className='mx-3'>|</p>
-              <div className='cursor-pointer' onClick={() => openInNewTab('https://www.linkedin.com/in/carlseaholm/')}>
-                <SocialIcon style={{height: 30, width: 30}} network='linkedin' />
-              </div>
+              <SocialButton networkName='linkedin' parent={true} />
             </div>
           </div>
           }
 
-        <Sidenav open={open} toggle={toggle}>
-          {open ? (
-              <SideMenuAccordianMobile toggle={toggle} />
-              ) : null}
-        </Sidenav>
-        
+          <Sidenav open={open} toggle={toggle}>
+            {open ? (
+                <SideMenuAccordian toggle={toggle} />
+                ) : null}
+          </Sidenav>
         </>
         }
-
       </>
     );
   };

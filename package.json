@@ -36,6 +36,7 @@
     "next": "^14.2.1",
     "next-auth": "^4.24.7",
     "nextjs-cors": "^2.2.0",
+    "ntcjs": "^1.1.3",
     "oslo": "^1.2.0",
     "react": "^18",
     "react-dom": "^18",
@@ -48,8 +49,10 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
+    "@types/mongoose": "^5.11.97",
     "@types/node": "^20.12.7",
     "@types/react": "^18",
+    "@types/react-color": "^3.0.12",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.19",
     "eslint": "^8",

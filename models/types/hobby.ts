@@ -1,4 +1,4 @@
-export interface Hobby {
+export interface IHobby {
     title: string;
     dates: string[];
     descriptions: string[];
@@ -7,4 +7,7 @@ export interface Hobby {
     goals: string[];
     user_email: string;
     color: string;
-}
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+  }

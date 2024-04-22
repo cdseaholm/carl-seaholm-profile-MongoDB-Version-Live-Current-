@@ -6,15 +6,14 @@ import {ModalProvider} from '@/app/context/modal/modalContext'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ModalLogin from '@/components/modals/auth/login/loginModal';
-import { usePathname } from 'next/navigation';
 import ModalSignUp from '@/components/modals/auth/signup/signupModal';
 import AlertModal from '@/components/modals/alertModal/alertmodal';
 import { HobbyProvider } from './context/hobby/hobbyModalContext';
 import LogSessionModal from '@/components/modals/hobbyModal/logsession';
-import { useSession } from './context/session/SessionContext';
 import EditUser from '@/components/modals/auth/editUser/editUser';
-import { ActualUser } from '@/models/types/user';
+//import { User } from '@/models/user';
 import ModalSubscribe from '@/components/modals/subscribe/subscribeModal';
+import { IHobby } from '@/models/types/hobby';
 
 export function Providers({children}: { children: React.ReactNode }) {
 
@@ -37,33 +36,14 @@ export function Providers({children}: { children: React.ReactNode }) {
   const [filterItem, setFilterItem] = useState('');
   const [categoryPassed, setCategoryPassed] = useState('');
   const [showEditUser, setShowEditUser] = useState(false);
-  const [userToEdit, setUserToEdit] = useState({} as ActualUser);
   const [daySelected, setDaySelected] = useState('');
+  const [colorChoice, setColorChoice] = useState('#000000');
+  const [hobbies, setHobbies] = useState([] as IHobby[]);
+  const [urlToUse, setUrlToUse] = useState('');
+  const [refreshKey, setRefreshKey] = useState(0);
 
   //variables
-  const { logout } = useSession();
   const router = useRouter();
-  const pathname = usePathname();
-
-  //functions
-
-  {/**const handleLogout = async () => {
-    // if (session) {}
-      try {
-        const loggingOut = await logoutAuth();
-        if (loggingOut.valueOf() === true) {
-          logout();
-          router.replace('/');
-        } else {
-          setAlertMessage('Already logged out');
-          setShowAlert(true);
-        }
-      } catch (error) {
-        setAlertMessage('An error occurred. Please try again.');
-        setShowAlert(true);
-        console.log('error logging out', error);
-      }
-  }*/}
 
   const handleLoginForm = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -98,26 +78,6 @@ export function Providers({children}: { children: React.ReactNode }) {
       }
     }
 
- {/** better to directly send to dashboard and auto signin or ask for login after?
-  const handleSignUpSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const createAccount = await createUser({ formData });
-    if (typeof createAccount !== 'string' && typeof createAccount !== 'undefined') {
-        console.log('Account created', createAccount);
-        setModalSignUpOpen(false);
-        setShowModal(true); //ask for login after sign up
-    } else if (typeof createAccount === 'string') {
-        setAlertMessage(createAccount);
-        setShowAlert(true);
-        return;
-    } else {
-        setAlertMessage('An error occurred. Please try again.');
-        setShowAlert(true);
-        return;
-    }
-  };*/}
-
   const swapAuthDesire = async () => {
     console.log('swapAuthDesire');
     {/**if (modalSignUpOpen) {
@@ -129,15 +89,25 @@ export function Providers({children}: { children: React.ReactNode }) {
     }*/}
   };
 
+  const swapDashDesire = async () => {
+    if (openAddModal) {
+      setOpenAddModal(false);
+      setOpenLogSessionModal(true);
+    } else if (setOpenLogSessionModal) {
+      setOpenLogSessionModal(false);
+      setOpenAddModal(true);
+    }
+  }
+
   return (
-    <ModalProvider modalOpen={showModal} setModalOpen={setShowModal} setModalSignUpOpen={setModalSignUpOpen} modalSignUpOpen={modalSignUpOpen} swapAuthDesire={swapAuthDesire} showAlert={showAlert} setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} alertMessage={alertMessage} alertParent={alertParent} setAlertParent={setAlertParent} alertConfirm={alertConfirm} setAlertConfirm={setAlertConfirm} setShowEditUser={setShowEditUser} showEditUser={showEditUser} userToEdit={userToEdit} setUserToEdit={setUserToEdit} modalSubscribeOpen={modalSubscribeOpen} setModalSubscribeOpen={setModalSubscribeOpen}>
+    <ModalProvider modalOpen={showModal} setModalOpen={setShowModal} setModalSignUpOpen={setModalSignUpOpen} modalSignUpOpen={modalSignUpOpen} swapAuthDesire={swapAuthDesire} showAlert={showAlert} setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} alertMessage={alertMessage} alertParent={alertParent} setAlertParent={setAlertParent} alertConfirm={alertConfirm} setAlertConfirm={setAlertConfirm} setShowEditUser={setShowEditUser} showEditUser={showEditUser} modalSubscribeOpen={modalSubscribeOpen} setModalSubscribeOpen={setModalSubscribeOpen} setColorChoice={setColorChoice} colorChoice={colorChoice} swapDashDesire={swapDashDesire}>
       <ModalLogin/>
       <ModalSignUp/>
       <AlertModal/>
       <EditUser/>
       <ModalSubscribe/>
-      <HobbyProvider openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} openLogSessionModal={openLogSessionModal} setOpenLogSessionModal={setOpenLogSessionModal} setDaySelected={setDaySelected} daySelected={daySelected}>
-        <LogSessionModal show={openLogSessionModal}/>
+      <HobbyProvider openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} openLogSessionModal={openLogSessionModal} setOpenLogSessionModal={setOpenLogSessionModal} setDaySelected={setDaySelected} daySelected={daySelected} setHobbies={setHobbies} hobbies={hobbies} urlToUse={urlToUse} setUrlToUse={setUrlToUse} setRefreshKey={setRefreshKey} refreshKey={refreshKey}>
+        <LogSessionModal show={openLogSessionModal} />
         <NextUIProvider>
           {children}
         </NextUIProvider>
