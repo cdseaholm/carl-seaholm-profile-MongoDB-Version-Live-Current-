@@ -1,8 +1,8 @@
 'use client'
 
 import { useModalContext } from '@/app/context/modal/modalContext';
-import { useSession } from '@/app/context/session/SessionContext';
 import useMediaQuery from '@/components/listeners/WidthSettings';
+import { signOut } from 'next-auth/react';
 import React from 'react'
 
 export default function AlertModal() {
@@ -10,12 +10,11 @@ export default function AlertModal() {
     const isBreakpoint = useMediaQuery(768);
     const textSize = isBreakpoint ? 'text-xs' : 'text-sm';
     const { showAlert, setShowAlert, alertParent, alertMessage, setAlertParent } = useModalContext();
-    const { logout } = useSession();
     const logoutAlert = alertParent === 'logout' ? true : false;
 
     const handleAlertAccept = () => {
         if (alertParent === 'logout') {
-            logout();
+            signOut();
             setAlertParent('');
             setShowAlert(false);
         } else {

@@ -1,13 +1,33 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import useMediaQuery from '@/components/listeners/WidthSettings';
+import { useSession } from 'next-auth/react';
+import { Spinner } from '@/components/misc/Spinner';
 
 export default function Home() {
   const [isShowing, setIsShowing] = React.useState(false);
   const router = useRouter();
   const isBreakpoint = useMediaQuery(768);
+  const [loading, setLoading] = React.useState(true);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const thisUser = session?.user;
+      if (thisUser === null || thisUser === undefined || thisUser) {
+        setLoading(false);
+        return;
+      } else if (thisUser === undefined) {
+        console.error('Failed to fetch user');
+        return;
+      }
+      
+      setLoading(false);
+    }
+    fetchUser();
+  }, [setLoading, session, router, session?.user]);
 
   const navigateToDashboard = () => {
     setIsShowing(true);
@@ -26,6 +46,9 @@ export default function Home() {
 
         return (
           <main>
+            {loading ? (
+              Spinner()
+            ) : (
           <div className={`landing-page ${isShowing ? 'slide-up' : ''}`}>
             <div className={`flex flex-col px-8 ${isBreakpoint ? 'pt-2 pb-8' : 'pt-16'}`}>
                 <h1 className={`flex flex-start ${isBreakpoint ? 'text-6xl' : 'text-8xl'} font-semibold text-slate-600`}>Carl Seaholm</h1>
@@ -42,6 +65,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            )}
         </main>
         );
 }

@@ -1,11 +1,19 @@
-import { Hobby } from '@/models/types/hobby'
+
+import { IHobby } from '@/models/types/hobby';
 import React from 'react'
 
-export default function StatsView({hobbies, daysThisMonth}: { hobbies: Hobby[], daysThisMonth: number}) {
+export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] | null, daysThisMonth: number}) {
     
     const days = Array.from({length: daysThisMonth}, (_, i) => i + 1);
 
     var minutesSpent = 0;
+    if (hobbies === null) {
+        return (
+            <div>
+                Loading...
+            </div>
+        )
+    }
     for (let x = 0; x < hobbies.length; x++) {
         for (let i = 0; i < hobbies[x].minutesXsessions.length; i++) {
             minutesSpent += parseInt(hobbies[x].minutesXsessions[i]);
