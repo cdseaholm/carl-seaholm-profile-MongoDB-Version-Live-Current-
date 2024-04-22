@@ -91,7 +91,7 @@ const DashChild = ({categories, titles, hobbies, adminID}: { categories: string[
                 </div>
                 <ModalHobby show={openAddModal} categories={categories} hobbies={hobbies} />
                 <div className="flex flex-row justify-center items-center" >
-                  <MainDashBoard filter={filterItem} hobbies={hobbies} adminID={adminID} />
+                  <MainDashBoard filter={filterItem} hobbies={hobbies} />
                 </div>
               </div>
     )

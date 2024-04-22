@@ -10,7 +10,7 @@ import { IHobby } from "@/models/types/hobby";
 import { useSession } from "next-auth/react";
 import HobbyIndex from "@/components/buttons/hobbyindex";
 
-const MainDashBoard = ({filter, hobbies, adminID}: {filter: string; hobbies: IHobby[] | null; adminID: boolean;}) => {
+const MainDashBoard = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | null;}) => {
     const isBreakpoint = useMediaQuery(768);
 
     const [cal, setCal] = useState(true);

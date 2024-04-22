@@ -24,13 +24,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     if (urlToUse === '') {
-       if (process.env.NEXT_PUBLIC_BASE_URL !== undefined) {
-        setUrlToUse(process.env.NEXT_PUBLIC_BASE_URL);
-        setIsLoading(false);
-       }
-      // if (process.env.NEXT_PUBLIC_BASE_LIVEURL !== undefined) {
-      // setUrlToUse(process.env.NEXT_PUBLIC_BASE_LIVEURL);
-      // }
+       //if (process.env.NEXT_PUBLIC_BASE_URL !== undefined) {
+        //setUrlToUse(process.env.NEXT_PUBLIC_BASE_URL);
+       // setIsLoading(false);
+       //}
+      if (process.env.NEXT_PUBLIC_BASE_LIVEURL !== undefined && process.env.NEXT_PUBLIC_BASE_LIVEURL !== '' && process.env.NEXT_PUBLIC_BASE_LIVEURL !== null) {
+      setUrlToUse(process.env.NEXT_PUBLIC_BASE_LIVEURL);
+      }
     } else {
       setIsLoading(false);
     }

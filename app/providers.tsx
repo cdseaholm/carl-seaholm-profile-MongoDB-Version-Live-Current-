@@ -45,7 +45,7 @@ export function Providers({children}: { children: React.ReactNode }) {
   //variables
   const router = useRouter();
 
-  const handleLoginForm = async (event: React.FormEvent<HTMLFormElement>) => {
+  {/**const handleLoginForm = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const formData = new FormData(event.currentTarget);
       const login = await fetch('/api/auth/login', {
@@ -76,7 +76,7 @@ export function Providers({children}: { children: React.ReactNode }) {
         setShowAlert(true);
         return;
       }
-    }
+    }*/}
 
   const swapAuthDesire = async () => {
     console.log('swapAuthDesire');
