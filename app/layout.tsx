@@ -24,13 +24,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     if (urlToUse === '') {
-       if (process.env.NEXT_PUBLIC_BASE_URL !== undefined) {
+       if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_BASE_URL !== undefined && process.env.NEXT_PUBLIC_BASE_URL !== '' && process.env.NEXT_PUBLIC_BASE_URL !== null) {
         setUrlToUse(process.env.NEXT_PUBLIC_BASE_URL);
         setIsLoading(false);
-       }
-      //if (process.env.NEXT_PUBLIC_BASE_LIVEURL !== undefined && process.env.      //NEXT_PUBLIC_BASE_LIVEURL !== '' && process.env.NEXT_PUBLIC_BASE_LIVEURL !== null) {
-      //  setUrlToUse(process.env.NEXT_PUBLIC_BASE_LIVEURL);
-      //}
+       } else if (process.env.NODE_ENV === 'production' && process.env. NEXT_PUBLIC_BASE_LIVEURL !== null && process.env.NEXT_PUBLIC_BASE_LIVEURL !== '' && process.env.NEXT_PUBLIC_BASE_LIVEURL !== undefined) {
+        setUrlToUse(process.env.NEXT_PUBLIC_BASE_LIVEURL);
+        setIsLoading(false);
+      }
     } else {
       setIsLoading(false);
     }
@@ -54,11 +54,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <>
               <SpeedInsights/>
               <Providers> 
+                {isLoading && <Spinner />}
+                {!isLoading &&
+                <>
                 <Navbar />
                   <main>
                     {children}
                   </main>
                   <FooterNavBar />
+                </>
+                }
               </Providers>
               </>
             </div>
