@@ -6,13 +6,12 @@ import type { post } from "@/models/types/post";
 import React from "react";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "../pagetemplates/mainchild/mainchild";
-import useMediaQuery from "../listeners/WidthSettings";
 import { useSession } from "next-auth/react";
 import { useModalContext } from "@/app/context/modal/modalContext";
 
 
 const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<string>; posts: Record<string, post[]>}) => {
-    const isBreakpoint = useMediaQuery(768);
+
     const [open, setOpen] = useState(false);
     const [category, setCategory] = useState('All');
     const dropdownRef = React.useRef<HTMLDivElement>(null);
@@ -94,7 +93,7 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
             </InnerHeader>   
             <MainChild>
                 <div className="flex flex-col items-center justify-center p-4">
-                    <div className={`${category === 'All' || !isBreakpoint ? `md:grid md:grid-cols-2 justify-center` : `flex flex-col items-center`}`}>
+                    <div className={`${category === 'All' ? `md:grid md:grid-cols-2 justify-center` : `md:flex md:flex-col md:items-center`}`}>
                             {posts !== null && category === 'All' &&
                                 Object.keys(posts).map((category, id) => <PostItemList key={id} category={category} posts={posts[category]} />
                                 )

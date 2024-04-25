@@ -1,3 +1,4 @@
+import MotionWrap from "@/components/listeners/motionwrap";
 
 
 export const metadata = {
@@ -7,8 +8,10 @@ export const metadata = {
 
 export default function WritingLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="childFirst min-w-screen min-h-screen my-10 mx-10">
-        {children}
-        </div>
+        <MotionWrap key="writingLayout">
+            <div className="childFirst min-w-screen min-h-screen my-10 mx-10">
+            {children}
+            </div>
+        </MotionWrap>
     );
 }

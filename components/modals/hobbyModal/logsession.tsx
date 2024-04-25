@@ -2,17 +2,16 @@
 
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import { useModalContext } from "@/app/context/modal/modalContext";
-import e from "cors";
-import { set } from "mongoose";
+import { useStateContext } from "@/app/context/state/StateContext";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function LogSessionModal({ show }: { show: boolean; }) {
 
-    const [loading, setLoading] = useState(false);
     const [seshHobby, setSeshHobby] = useState('');
-    const { setOpenLogSessionModal, urlToUse, hobbies, setRefreshKey } = useHobbyContext();
+    const { setOpenLogSessionModal, hobbies, setRefreshKey } = useHobbyContext();
+    const { urlToUse, loading, setLoading } = useStateContext();
     const { data: session } = useSession();
     const { swapDashDesire } = useModalContext();
     const router = useRouter();

@@ -14,10 +14,16 @@ import EditUser from '@/components/modals/auth/editUser/editUser';
 //import { User } from '@/models/user';
 import ModalSubscribe from '@/components/modals/subscribe/subscribeModal';
 import { IHobby } from '@/models/types/hobby';
+import { StateProvider } from './context/state/StateContext';
+import DashboardMobileDropdown from '@/components/modals/dashboardmobiledrop/dashboardmobiledropdown';
 
 export function Providers({children}: { children: React.ReactNode }) {
 
-  //states
+  //appStates
+  const [loading, setLoading] = useState(false);
+  const [urlToUse, setUrlToUse] = useState('');
+
+
   //modalStates
   const [showModal, setShowModal] = useState(false);
   const [modalSignUpOpen, setModalSignUpOpen] = useState(false);
@@ -25,6 +31,7 @@ export function Providers({children}: { children: React.ReactNode }) {
   const [openCategoryModal, setOpenCategoryModal] = useState(false);
   const [openLogSessionModal, setOpenLogSessionModal] = useState(false);
   const [modalSubscribeOpen, setModalSubscribeOpen] = useState(false);
+  const [openDashboardMobileDropdown, setOpenDashboardMobileDropdown] = useState(false);
 
   //alertStates
   const [showAlert, setShowAlert] = useState(false);
@@ -32,51 +39,19 @@ export function Providers({children}: { children: React.ReactNode }) {
   const [alertParent, setAlertParent] = useState('');
   const [alertConfirm, setAlertConfirm] = useState(false);
 
-  //objectStates
+  //hobbyStates
   const [filterItem, setFilterItem] = useState('');
   const [categoryPassed, setCategoryPassed] = useState('');
   const [showEditUser, setShowEditUser] = useState(false);
   const [daySelected, setDaySelected] = useState('');
   const [colorChoice, setColorChoice] = useState('#000000');
   const [hobbies, setHobbies] = useState([] as IHobby[]);
-  const [urlToUse, setUrlToUse] = useState('');
   const [refreshKey, setRefreshKey] = useState(0);
+  const [calDash, setCalDash] = useState(true);
 
   //variables
   const router = useRouter();
 
-  {/**const handleLoginForm = async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      const formData = new FormData(event.currentTarget);
-      const login = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(Object.fromEntries(formData)),
-      }).then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      }).catch(e => {
-        console.error('Fetch error:', e);
-      });
-  
-      if (typeof login !== 'string' && typeof login !== 'undefined') {
-        setShowEditUser(false);
-        console.log('Login successful', login);
-        router.replace('/dashboard');
-      } else if (typeof login === 'string') {
-        setAlertMessage(login);
-        setShowAlert(true);
-        return;
-      } else {
-        setAlertMessage('An error occurred. Please try again.');
-        setShowAlert(true);
-        return;
-      }
-    }*/}
 
   const swapAuthDesire = async () => {
     console.log('swapAuthDesire');
@@ -99,19 +74,30 @@ export function Providers({children}: { children: React.ReactNode }) {
     }
   }
 
+  const handleModalNewTrack = async () => {
+    setOpenAddModal(true);
+  }
+
+  const handleModalLogSesh = async () => {
+    setOpenLogSessionModal(true);
+  }
+
   return (
-    <ModalProvider modalOpen={showModal} setModalOpen={setShowModal} setModalSignUpOpen={setModalSignUpOpen} modalSignUpOpen={modalSignUpOpen} swapAuthDesire={swapAuthDesire} showAlert={showAlert} setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} alertMessage={alertMessage} alertParent={alertParent} setAlertParent={setAlertParent} alertConfirm={alertConfirm} setAlertConfirm={setAlertConfirm} setShowEditUser={setShowEditUser} showEditUser={showEditUser} modalSubscribeOpen={modalSubscribeOpen} setModalSubscribeOpen={setModalSubscribeOpen} setColorChoice={setColorChoice} colorChoice={colorChoice} swapDashDesire={swapDashDesire}>
-      <ModalLogin/>
-      <ModalSignUp/>
-      <AlertModal/>
-      <EditUser/>
-      <ModalSubscribe/>
-      <HobbyProvider openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} openLogSessionModal={openLogSessionModal} setOpenLogSessionModal={setOpenLogSessionModal} setDaySelected={setDaySelected} daySelected={daySelected} setHobbies={setHobbies} hobbies={hobbies} urlToUse={urlToUse} setUrlToUse={setUrlToUse} setRefreshKey={setRefreshKey} refreshKey={refreshKey}>
-        <LogSessionModal show={openLogSessionModal} />
-        <NextUIProvider>
-          {children}
-        </NextUIProvider>
-      </HobbyProvider>
-    </ModalProvider>
+    <StateProvider loading={loading} setLoading={setLoading} urlToUse={urlToUse} setUrlToUse={setUrlToUse}>
+      <ModalProvider modalOpen={showModal} setModalOpen={setShowModal} setModalSignUpOpen={setModalSignUpOpen} modalSignUpOpen={modalSignUpOpen} swapAuthDesire={swapAuthDesire} showAlert={showAlert} setShowAlert={setShowAlert} setAlertMessage={setAlertMessage} alertMessage={alertMessage} alertParent={alertParent} setAlertParent={setAlertParent} alertConfirm={alertConfirm} setAlertConfirm={setAlertConfirm} setShowEditUser={setShowEditUser} showEditUser={showEditUser} modalSubscribeOpen={modalSubscribeOpen} setModalSubscribeOpen={setModalSubscribeOpen} setColorChoice={setColorChoice} colorChoice={colorChoice} swapDashDesire={swapDashDesire} openDashboardMobileDropdown={openDashboardMobileDropdown} setOpenDashboardMobileDropdown={setOpenDashboardMobileDropdown} calDash={calDash} setCalDash={setCalDash} handleModalNewTrack={handleModalNewTrack} handleModalLogSesh={handleModalLogSesh}>
+        <ModalLogin/>
+        <ModalSignUp/>
+        <AlertModal/>
+        <EditUser/>
+        <ModalSubscribe/>
+        <DashboardMobileDropdown/>
+        <HobbyProvider openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} openLogSessionModal={openLogSessionModal} setOpenLogSessionModal={setOpenLogSessionModal} setDaySelected={setDaySelected} daySelected={daySelected} setHobbies={setHobbies} hobbies={hobbies} setRefreshKey={setRefreshKey} refreshKey={refreshKey}>
+          <LogSessionModal show={openLogSessionModal} />
+          <NextUIProvider>
+            {children}
+          </NextUIProvider>
+        </HobbyProvider>
+      </ModalProvider>
+    </StateProvider>
   )
 }

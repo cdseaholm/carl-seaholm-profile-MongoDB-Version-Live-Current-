@@ -1,24 +1,17 @@
-'use client'
-
+import MotionWrap from "@/components/listeners/motionwrap";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
-import { motion } from "framer-motion";
+
+export const metadata = {
+    title: "Static Signup Page",
+    description: "A Landing Page for Sign Up Service"
+};
 
 export default function SignupLayout({ children }: { children: React.ReactNode }) {
     return (
-        <motion.div
-        key="signupLayoutKey"
-        initial={{ y: 300, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: -300, opacity: 0 }}
-        transition={{
-            type: "spring",
-            stiffness: 100,
-            damping: 20,
-            delay: 0.2,
-        }}>
+        <MotionWrap key="signupLayout">
             <MainPageBody>
                 {children}
             </MainPageBody>
-        </motion.div>
+        </MotionWrap>
     );
 }

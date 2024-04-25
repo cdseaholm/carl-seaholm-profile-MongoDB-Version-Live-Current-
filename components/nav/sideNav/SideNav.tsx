@@ -42,14 +42,11 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
   const style = {
     closeIcon: `absolute top-1 focus:outline-none right-3 text-3xl text-white cursor-pointer`,
     sidenav: {
-      open: `${isBreakpoint ? "w-5/12" : 'w-3/12'} md:w-60 bg-green-900 text-white overflow-x-hidden z-40`,
+      open: `w-5/12 md:w-3/12 md:w-60 bg-green-900 text-white overflow-x-hidden z-40`,
       close: `w-0 bg-gray-800 text-white overflow-x-hidden`,
       default: `h-screen fixed z-30 top-0 left-0 transition-all ease duration-200`,
     }
   };
-
-  //variables
-  const textSize = isBreakpoint ? 'text-sm' : '';
 
   //effects
 
@@ -90,10 +87,10 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
           <div className="my-5">{children}
         </div>
         <div className='flex flex-col mx-3 py-5 items-center'>
-          <div className={`${textSize}`}>
+          <div className={`max-md:text-sm`}>
               Socials
           </div>
-          <div className={`justify-evenly mx-3 ${isBreakpoint ? 'pt-5' : 'pt-2'} ${textSize} flex flex-row items-center space-x-4 text-sm`}>
+          <div className={`justify-evenly mx-3 ${isBreakpoint ? 'pt-5' : 'pt-2'} max-md:text-sm flex flex-row items-center space-x-4 text-sm`}>
             <SocialButton networkName='github' parent={false} />
             <p>|</p>
             <SocialButton networkName='linkedin' parent={false} />
@@ -101,7 +98,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
         </div> 
           {loggedInMenu === false ? (
           <div className='flex flex-col'>
-            <div className={`mx-3 pt-5 flex flex-col justify-evenly items-center ${textSize}`}>
+            <div className={`mx-3 pt-5 flex flex-col justify-evenly items-center max-md:text-sm`}>
               <button onClick={handleClickedSignIn} className='pb-5'>
                 Admin Login
               </button>
@@ -117,7 +114,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
                 Hello {session?.user?.name}
               </p>
             </div>
-            <div className={`flex flex-row justify-evenly items-center ${textSize}`}>
+            <div className={`flex flex-row justify-evenly items-center max-md:text-sm`}>
               <Link href='/profile'>
                 Profile
               </Link>

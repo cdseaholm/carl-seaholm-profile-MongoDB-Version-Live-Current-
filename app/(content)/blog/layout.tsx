@@ -1,3 +1,4 @@
+import MotionWrap from '@/components/listeners/motionwrap';
 import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
 
 export const metadata = {
@@ -9,8 +10,10 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
 
     
     return (
-        <MainPageBody>
-            {children}
-        </MainPageBody>
+        <MotionWrap key={'blogLayout'}>
+            <MainPageBody>
+                {children}
+            </MainPageBody>
+        </MotionWrap>
     );
 }

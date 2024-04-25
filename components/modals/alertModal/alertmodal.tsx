@@ -1,14 +1,12 @@
 'use client'
 
 import { useModalContext } from '@/app/context/modal/modalContext';
-import useMediaQuery from '@/components/listeners/WidthSettings';
 import { signOut } from 'next-auth/react';
 import React from 'react'
 
 export default function AlertModal() {
   
-    const isBreakpoint = useMediaQuery(768);
-    const textSize = isBreakpoint ? 'text-xs' : 'text-sm';
+
     const { showAlert, setShowAlert, alertParent, alertMessage, setAlertParent } = useModalContext();
     const logoutAlert = alertParent === 'logout' ? true : false;
 
@@ -39,10 +37,10 @@ export default function AlertModal() {
                         {alertMessage}
                     </div>
                         <div className="flex flex-row justify-between px-5 py-5">
-                            <button className={`text-black inline-flex items-center ring-gray-700 hover:ring-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg ${textSize} px-3 py-1.5 text-center dark:ring-gray-600 dark:hover:ring-gray-700 dark:focus:ring-gray-700`} onClick={() => setShowAlert(false)}>
+                            <button className={`text-black inline-flex items-center ring-gray-700 hover:ring-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:ring-gray-600 dark:hover:ring-gray-700 dark:focus:ring-gray-700`} onClick={() => setShowAlert(false)}>
                                 Cancel
                             </button>
-                            <button type="button" className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg ${textSize} px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`} onClick={handleAlertAccept}>
+                            <button type="button" className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`} onClick={handleAlertAccept}>
                                 {logoutAlert ? 'Continue' : 'Okay'}
                             </button>
                         </div>

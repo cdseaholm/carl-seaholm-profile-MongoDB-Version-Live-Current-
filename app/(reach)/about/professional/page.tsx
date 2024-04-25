@@ -18,7 +18,6 @@ export default function Professional() {
   const imageRef = React.useRef<HTMLDivElement>(null);
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
-  const breakBool = isBreakpoint ? true : false;
 
   /**Variables */
 
@@ -79,7 +78,7 @@ export default function Professional() {
     <div>
       <InnerHeader>
         <div />
-        <div className={`flex flex-row ${isBreakpoint ? 'justify-between px-1' : 'justify-end'}`}>
+        <div className={`flex flex-row justify-between px-1 md:justify-end`}>
           {!isBreakpoint &&
             <div ref={imageRef} className={`${clicked ? style.profilepicture.large : style.profilepicture.small}`}>
                 <Image
@@ -94,15 +93,15 @@ export default function Professional() {
             </div>
             }
             <div className='flex flex-col w-100'>
-              <h1 className={`flex ${isBreakpoint ? 'text-xl' : 'text-5xl'} font-bold justify-end`}>
+              <h1 className={`flex text-xl md:text-5xl font-bold justify-end`}>
                 Carl Seaholm
               </h1>
               <div className='flex flex-row justify-evenly items-center'>
-                <p className={`${isBreakpoint ? 'text-md' : 'text-base'}`}>
+                <p className={`text-md md:text-base`}>
                   Filter:
                 </p>
                 <div ref={divRef} onClick={open ? () => setOpen(false) : () => setOpen(true)} className='cursor-pointer w-5/12'>
-                  <div className={`relative ${isBreakpoint ? 'text-md' : 'text-base'} text-black rounded`}>
+                  <div className={`relative text-md md:text-base text-black rounded`}>
                     {category}
                   </div>
                 </div>
@@ -142,7 +141,7 @@ export default function Professional() {
             <div key={index} className='flex flex-row justify-center p-4'>
               {category === 'Education' &&
                 <div className='border border-black shadow-lg rounded-md m-2 bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth}}>
-                  <SchoolBite breakBool={breakBool} school={item} index={index}/>
+                  <SchoolBite school={item} index={index}/>
                 </div>
               }
             </div>
@@ -152,7 +151,7 @@ export default function Professional() {
               <div key={index} className='flex flex-row justify-center p-4'>
                 {category !== 'Education' &&
                   <div className='border border-black shadow-lg m-2 rounded-md bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth, overflowX: 'auto', overflowY: 'auto'}}>
-                    <JobBite breakBool={breakBool} job={item} index={index}/>
+                    <JobBite job={item} index={index}/>
                   </div>
                 }
               </div>

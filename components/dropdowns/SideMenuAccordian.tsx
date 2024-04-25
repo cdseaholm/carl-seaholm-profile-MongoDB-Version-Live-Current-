@@ -3,6 +3,7 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import useMediaQuery from '@/components/listeners/WidthSettings';
+import openInNewTab from '../listeners/OpenInNewTab';
 
 
 export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
@@ -73,8 +74,15 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
         </AccordionPanel>
         */}
         <AccordionItem toggle="panel-2" className="text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5">
-          Services - Soon
+          Services
         </AccordionItem>
+        <AccordionPanel id="panel-2">
+          <div className="flex flex-row mb-4 px-2 py-1 cursor-pointer justify-center">
+            <Link onClick={() => openInNewTab('https://www.newprogressco.com/services')} href={''} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400`}>
+              Click here to take you to the New Progress Co. website
+            </Link>
+          </div>
+        </AccordionPanel>
         {/*
         <AccordionPanel id="panel-2">
         <div className="mb-4 px-2 py-1 cursor-pointer">

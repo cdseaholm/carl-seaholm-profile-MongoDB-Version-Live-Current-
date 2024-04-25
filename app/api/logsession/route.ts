@@ -26,8 +26,8 @@ export async function PUT(req: Request) {
 
         const logSession = await Hobby.findByIdAndUpdate(body.id, {
             $push: {
-                dates: [...oldHobbyFormat.dates, body.date],
-                minutesXsessions: [...oldHobbyFormat.minutesXsessions, body.time],
+                dates: body.date,
+                minutesXsessions: body.time,
             }
         });
         console.log('logSession', logSession);

@@ -1,26 +1,19 @@
-'use client'
-
+import MotionWrap from "@/components/listeners/motionwrap";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
-import { motion } from "framer-motion";
+
+export const metadata = {
+    title: "Dashboard",
+    description: "Dashboard for all hobbies to be tracked and viewed"
+};
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     
     return (
-        <motion.div
-        key="dashboardLayoutKey"
-        initial={{ y: 300, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: -300, opacity: 0 }}
-        transition={{
-            type: "spring",
-            stiffness: 100,
-            damping: 20,
-            delay: 0.2,
-        }}>
+        <MotionWrap key="dashboardlayout">
             <MainPageBody>
                 {children}
             </MainPageBody>
-        </motion.div>
+        </MotionWrap>
     );
 }
 
