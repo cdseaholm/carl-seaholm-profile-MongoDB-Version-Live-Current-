@@ -2,15 +2,12 @@
 
 import { useModalContext } from "@/app/context/modal/modalContext";
 import { useSession } from "next-auth/react";
-import useMediaQuery from "@/components/listeners/WidthSettings";
 import { signIn } from "next-auth/react";
 
 import { usePathname, useRouter } from "next/navigation";
 
 export default function ModalLogin() {
 
-    const isBreakpoint = useMediaQuery(768);
-    const textSize = isBreakpoint ? 'text-xs' : 'text-sm';
     const { modalOpen, setModalOpen, setAlertMessage, setModalSubscribeOpen, setShowAlert } = useModalContext();
     const pathname = usePathname();
     const router = useRouter();
@@ -64,7 +61,7 @@ export default function ModalLogin() {
             <div className="relative p-4 w-full max-w-md max-h-full">
                 <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 className={`${isBreakpoint ? '' : 'text-lg'} font-semibold text-gray-900 dark:text-white`}>
+                        <h3 className={`text-lg font-semibold text-gray-900 dark:text-white`}>
                             Sign in
                         </h3>
                             <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal" onClick={() => setModalOpen(false)}>
@@ -76,13 +73,13 @@ export default function ModalLogin() {
                     </div>
                     <form id="loginForm" className="p-4 md:p-5" onSubmit={handleSubmit}>
                         <div className="grid gap-4 mb-6 grid-cols-2">
-                            <label htmlFor="modalLoginEmail" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Email</label>
-                            <input type="email" name="modalLoginEmail" id="modalLoginEmail" autoComplete='email' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Email" required/>
+                            <label htmlFor="modalLoginEmail" className={`block my-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white`}>Email</label>
+                            <input type="email" name="modalLoginEmail" id="modalLoginEmail" autoComplete='email' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 text-xs md:text-sm`} placeholder="Email" required/>
 
-                            <label htmlFor="modalLoginPassword" className={`block my-2 ${textSize} font-medium text-gray-900 dark:text-white`}>Password</label>
-                            <input type="password" name="modalLoginPassword" id="modalLoginPassword" autoComplete='current-password' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 ${textSize}`} placeholder="Password" required/>
+                            <label htmlFor="modalLoginPassword" className={`block my-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white`}>Password</label>
+                            <input type="password" name="modalLoginPassword" id="modalLoginPassword" autoComplete='current-password' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 text-xs md:text-sm`} placeholder="Password" required/>
                         </div>
-                        <button type="submit" className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg ${textSize} px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}>
+                        <button type="submit" className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}>
                             Sign In
                         </button>
                         <div className="flex flex-row justify-around my-4 p-2 text-sm space-x-1">

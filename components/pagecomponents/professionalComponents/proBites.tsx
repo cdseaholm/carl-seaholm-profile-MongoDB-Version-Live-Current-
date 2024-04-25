@@ -9,17 +9,17 @@ const formatDate = (dateString: string) => {
     return date.toLocaleString('default', { month: 'long', year: 'numeric' });
 };
 
-const SchoolBite = ({ school, breakBool }: { school: School; index: number; breakBool: boolean }) => {
+const SchoolBite = ({ school }: { school: School; index: number; }) => {
     const [startDate, setStartDate] = React.useState(formatDate(school.date.startDate));
     const [endDate, setEndDate] = React.useState(formatDate(school.date.endDate));
 
     return (
         <div className="flex flex-row relative p-5 justify-between items-center">
             <div className="flex flex-col w-2/3">
-                <div className={`${breakBool === true ? 'text-md' : 'text-lg'} font-bold`}>{school.school}</div>
-                <div className={`${breakBool === true ? 'text-sm' : 'text-md'} font-bold font-semibold`}>{school.major}</div>
-                <div className={`${breakBool === true ? 'text-sm' : 'text-md'} font-bold`}>{school.location}</div>
-                <div className={`${breakBool === true ? 'text-xs' : 'text-sm'} font-bold text-slate-400`}>{startDate} - {endDate}</div>
+                <div className={`text-md md:text-lg font-bold`}>{school.school}</div>
+                <div className={`text-sm md:text-md font-bold font-semibold`}>{school.major}</div>
+                <div className={`text-sm md:text-md font-bold`}>{school.location}</div>
+                <div className={`text-xs md:text-sm font-bold text-slate-400`}>{startDate} - {endDate}</div>
             </div>
             <div>
                 <Image src={school.logo} width={100} height={100} alt={school.logoAlt}/>
@@ -28,7 +28,7 @@ const SchoolBite = ({ school, breakBool }: { school: School; index: number; brea
     );
 };
 
-const JobBite = ({ job, index, breakBool }: { job: Job; index: number; breakBool: boolean }) => {
+const JobBite = ({ job, index }: { job: Job; index: number; }) => {
     const [startDate, setStartDate] = React.useState(formatDate(job.date.startDate));
     const [endDate, setEndDate] = React.useState(formatDate(job.date.endDate));
 
@@ -36,10 +36,10 @@ const JobBite = ({ job, index, breakBool }: { job: Job; index: number; breakBool
         <div className="flex flex-col">
             <div className="flex flex-row relative p-5 justify-between items-center">
                 <div className="flex flex-col w-2/3">
-                    <div className={`${breakBool === true ? 'text-md' : 'text-lg'} font-bold`}>{job.title}</div>
-                    <div className={`${breakBool === true ? 'text-sm' : 'text-md'} font-bold font-semibold`}>{job.company}</div>
-                    <div className={`${breakBool === true ? 'text-sm' : 'text-md'} font-bold`}>{job.location}</div>
-                    <div className={`${breakBool === true ? 'text-xs' : 'text-sm'} font-bold text-slate-400`}>{startDate} - {endDate}</div>
+                    <div className={`text-md md:text-lg font-bold`}>{job.title}</div>
+                    <div className={`text-sm md:text-md font-bold font-semibold`}>{job.company}</div>
+                    <div className={`text-sm md:text-md font-bold`}>{job.location}</div>
+                    <div className={`text-xs md:text-sm font-bold text-slate-400`}>{startDate} - {endDate}</div>
                 </div>
                 <div>
                     <Image src={job.logo} width={100} height={100} alt={job.logoAlt}/>

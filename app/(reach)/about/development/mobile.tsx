@@ -12,7 +12,6 @@ export default function DevelopmentMobile() {
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
   const isBreakpoint = useMediaQuery(768);
-  const breakBool = isBreakpoint ? true : false;
 
   /**Variables */
 
@@ -86,7 +85,7 @@ return (
                         {filteredSchools.map((item, index) => (
                           <div key={index} className='flex flex-row justify-center'>
                             {category === 'Education' &&
-                              <SchoolBite breakBool={breakBool} school={item} index={index}/>
+                              <SchoolBite school={item} index={index}/>
                             }
                           </div>
                         ))}
@@ -94,7 +93,7 @@ return (
                           filteredJobs.map((item, index) => (
                             <div key={index} className='flex flex-row justify-center'>
                               {category !== 'Education' &&
-                                <JobBite breakBool={breakBool} job={item} index={index}/>
+                                <JobBite job={item} index={index}/>
                               }
                             </div>
                         ))}

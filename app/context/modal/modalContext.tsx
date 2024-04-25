@@ -24,6 +24,12 @@ type ContextType = {
   setColorChoice: React.Dispatch<React.SetStateAction<string>>;
   colorChoice: string | null;
   swapDashDesire: () => void;
+  openDashboardMobileDropdown: boolean;
+  setOpenDashboardMobileDropdown: React.Dispatch<React.SetStateAction<boolean>>;
+  calDash: boolean;
+  setCalDash: React.Dispatch<React.SetStateAction<boolean>>;
+  handleModalNewTrack: () => void;
+  handleModalLogSesh: () => void;
 };
 
 const initialContext: ContextType = {
@@ -48,13 +54,19 @@ const initialContext: ContextType = {
   setColorChoice: () => {},
   colorChoice: '',
   swapDashDesire: () => {},
+  openDashboardMobileDropdown: false,
+  setOpenDashboardMobileDropdown: () => {},
+  calDash: true,
+  setCalDash: () => {},
+  handleModalNewTrack: () => {},
+  handleModalLogSesh: () => {},
 };
 
 const ModalContext = createContext(initialContext);
 
 export const useModalContext = () => useContext(ModalContext);
 
-export const ModalProvider = ({ children, modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, setModalSubscribeOpen, modalSubscribeOpen, setColorChoice, colorChoice, swapDashDesire }: React.PropsWithChildren<{
+export const ModalProvider = ({ children, modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, setModalSubscribeOpen, modalSubscribeOpen, setColorChoice, colorChoice, swapDashDesire, openDashboardMobileDropdown, setOpenDashboardMobileDropdown, calDash, setCalDash, handleModalLogSesh, handleModalNewTrack }: React.PropsWithChildren<{
   modalOpen: boolean; 
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   modalSignUpOpen: boolean; 
@@ -76,9 +88,14 @@ export const ModalProvider = ({ children, modalOpen, setModalOpen, modalSignUpOp
   setColorChoice: React.Dispatch<React.SetStateAction<string>>;
   colorChoice: string;
   swapDashDesire: () => void;
+  openDashboardMobileDropdown: boolean;
+  setOpenDashboardMobileDropdown: React.Dispatch<React.SetStateAction<boolean>>;
+  calDash: boolean, setCalDash: React.Dispatch<React.SetStateAction<boolean>>;
+  handleModalNewTrack: () => void;
+  handleModalLogSesh: () => void;
 }>) => {
 
-  const value = { modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, setModalSubscribeOpen, modalSubscribeOpen, setColorChoice, colorChoice, swapDashDesire};
+  const value = { modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, setModalSubscribeOpen, modalSubscribeOpen, setColorChoice, colorChoice, swapDashDesire, openDashboardMobileDropdown, setOpenDashboardMobileDropdown, calDash, setCalDash, handleModalLogSesh, handleModalNewTrack};
 
   return (
     <ModalContext.Provider value={value}>

@@ -1,10 +1,8 @@
 import Link from 'next/link';
 import type { post } from '@/models/types/post';
-import useMediaQuery from '@/components/listeners/WidthSettings';
 
 export default function PostItemList({ category, posts }: { category: string; posts: post[] }) {
     const sortedPosts = posts.sort((a, b) => a.title < b.title ? -1 : 1);
-    const isBreakpoint = useMediaQuery(768);
 
     return (
         <div className='flex border border-black shadow-lg m-2 px-2 rounded-md bg-slate-800/50'>

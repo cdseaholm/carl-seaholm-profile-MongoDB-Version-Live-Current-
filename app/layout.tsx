@@ -10,31 +10,29 @@ import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AuthProvider } from "@/app/context/session/SessionContext";
 import { AnimatePresence } from "framer-motion";
-import { useHobbyContext } from "./context/hobby/hobbyModalContext";
 import { Spinner } from "@/components/misc/Spinner";
-import { useModalContext } from "./context/modal/modalContext";
+import { useStateContext } from "./context/state/StateContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
   const pathname = usePathname();
-  const { urlToUse, setUrlToUse } = useHobbyContext();
-  const [isLoading, setIsLoading] = useState(true);
+  const { urlToUse, setUrlToUse, loading, setLoading } = useStateContext();
 
   useEffect(() => {
     if (urlToUse === '') {
-       //if (process.env.NEXT_PUBLIC_BASE_URL !== undefined) {
-        //setUrlToUse(process.env.NEXT_PUBLIC_BASE_URL);
-       // setIsLoading(false);
-       //}
-      if (process.env.NEXT_PUBLIC_BASE_LIVEURL !== undefined && process.env.NEXT_PUBLIC_BASE_LIVEURL !== '' && process.env.NEXT_PUBLIC_BASE_LIVEURL !== null) {
-      setUrlToUse(process.env.NEXT_PUBLIC_BASE_LIVEURL);
+       if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_BASE_URL !== undefined && process.env.NEXT_PUBLIC_BASE_URL !== '' && process.env.NEXT_PUBLIC_BASE_URL !== null) {
+        setUrlToUse(process.env.NEXT_PUBLIC_BASE_URL);
+        setLoading(false);
+       } else if (process.env.NODE_ENV === 'production' && process.env. NEXT_PUBLIC_BASE_LIVEURL !== null && process.env.NEXT_PUBLIC_BASE_LIVEURL !== '' && process.env.NEXT_PUBLIC_BASE_LIVEURL !== undefined) {
+        setUrlToUse(process.env.NEXT_PUBLIC_BASE_LIVEURL);
+        setLoading(false);
       }
     } else {
-      setIsLoading(false);
+      setLoading(false);
     }
-  }, [setUrlToUse, urlToUse]);  
+  }, [urlToUse]);  
   
   useEffect(() => {
       document.body.style.overflow = 'hidden';
@@ -50,21 +48,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {pathname !== '/demo_303' &&
         <body className={inter.className}>
           <div className="first">
-            <div className="h-screen">
+            <div className="h-svh">
               <>
               <SpeedInsights/>
               <Providers> 
-              {isLoading ? (
-                <Spinner />
-                ) : (
-                  <>
+                {loading && <Spinner />}
+                {!loading &&
+                <>
                 <Navbar />
                   <main>
                     {children}
                   </main>
                   <FooterNavBar />
-                  </>
-                  )}
+                </>
+                }
               </Providers>
               </>
             </div>

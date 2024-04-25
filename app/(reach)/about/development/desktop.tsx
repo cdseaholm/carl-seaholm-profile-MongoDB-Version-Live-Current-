@@ -16,7 +16,6 @@ export default function DevelopmentDesktop() {
   const [open, setOpen] = useState(false);
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
-  const breakBool = isBreakpoint ? true : false;
 
   /**Variables */
 
@@ -139,7 +138,7 @@ export default function DevelopmentDesktop() {
               {filteredSchools.map((item, index) => (
                 <div key={index} className='flex flex-row justify-center'>
                   {category === 'Education' &&
-                    <SchoolBite breakBool={breakBool} school={item} index={index}/>
+                    <SchoolBite school={item} index={index}/>
                   }
                 </div>
               ))}
@@ -147,7 +146,7 @@ export default function DevelopmentDesktop() {
                 filteredJobs.map((item, index) => (
                   <div key={index} className='flex flex-row justify-center'>
                     {category !== 'Education' &&
-                      <JobBite breakBool={breakBool} job={item} index={index}/>
+                      <JobBite job={item} index={index}/>
                     }
                   </div>
               ))}

@@ -1,3 +1,5 @@
+import MotionWrap from "@/components/listeners/motionwrap";
+
 export const metadata = {
     title: "Development Layout",
     description: "A Landing Page for my Professional Development History"
@@ -5,8 +7,10 @@ export const metadata = {
 
 export default function DevelopmentLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div>
-        {children}
-        </div>
+        <MotionWrap key="developmentLayout">
+            <div>
+                {children}
+            </div>
+        </MotionWrap>
     );
 }
