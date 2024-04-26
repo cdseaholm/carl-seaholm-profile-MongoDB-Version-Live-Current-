@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     } else {
       setLoading(false);
     }
-  }, [urlToUse]);  
+  }, [urlToUse, setLoading, setUrlToUse]);  
   
   useEffect(() => {
       document.body.style.overflow = 'hidden';
