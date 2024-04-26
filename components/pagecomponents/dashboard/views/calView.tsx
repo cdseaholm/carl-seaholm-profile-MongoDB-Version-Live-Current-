@@ -116,7 +116,7 @@ const MainDashBoard = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | n
                                 </div>
                             
                                 {hobbyToShow?.map((hobby, index) => (
-                                    <div className="flex flex-row justify-center items-center" style={{overflowX: 'auto'}}>
+                                    <div className="flex flex-row justify-center items-center" style={{overflowX: 'auto'}} key={index}>
                                         <div className="flex flex-col w-min justify-center items-start">
                                             <div className="flex flex-row justify-center">
                                                 <h1 className="text-lg font-bold">

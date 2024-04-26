@@ -66,7 +66,7 @@ export default function Dashboard() {
       }
       
       getHobbies();
-    }, [refreshKey]);
+    }, [refreshKey, setHobbies, setLoading, urlToUse, userID]);
 
     useEffect(() => {
       setLoading(true);
@@ -79,7 +79,7 @@ export default function Dashboard() {
       setLoading(false);
       console.log('categories', categories);
           
-    }, [hobbies]);
+    }, [hobbies, categories, setLoading]);
     
 
     return (

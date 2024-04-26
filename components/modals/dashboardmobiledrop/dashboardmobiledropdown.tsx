@@ -17,8 +17,12 @@ export default function DashboardMobileDropdown() {
   const { openDashboardMobileDropdown, setOpenDashboardMobileDropdown } = useModalContext();
   const { data: session } = useSession();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const { setCalDash, calDash } = useModalContext();
+  const { setLoading } = useStateContext();
+  const { calDash } = useModalContext();
+  const { hobbies } = useHobbyContext();
   const [localCalDash, setLocalCalDash] = useState(true);
+  const [titles, setTitles] = useState([] as string[]);
+  const [categories, setCategories] = useState([] as string[]);
 
 
   const handleOptionSelect = (option: string) => {
@@ -30,12 +34,25 @@ export default function DashboardMobileDropdown() {
   };
 
   useEffect(() => {
+    setLoading(true);
+    if (hobbies.length === 0) {
+      setLoading(false);
+      return;
+    }
+    setTitles(hobbies.map((hobby: IHobby) => hobby.title));
+    setCategories(hobbies.map((hobby: IHobby) => hobby.categories).flat())
+    setLoading(false);
+    console.log('categories', categories);
+        
+  }, [hobbies, categories, setLoading]);
+
+  useEffect(() => {
     if (calDash !== localCalDash) {
       setLocalCalDash(calDash);
       handleBack();
       setOpenDashboardMobileDropdown(false);
     }
-  }, [calDash]);
+  }, [calDash, localCalDash, setOpenDashboardMobileDropdown]);
 
   return (
     <div id="crud-modal" tabIndex={-1} aria-hidden="true" className={`${openDashboardMobileDropdown ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}>
@@ -57,7 +74,7 @@ export default function DashboardMobileDropdown() {
             </button>
           </div>
           {selectedOption === null && <DashDropOptions session={session} onOptionSelect={handleOptionSelect} />}
-          {selectedOption === 'Filter' && <DashDropFilterButton />}
+          {selectedOption === 'Filter' && <DashDropFilterButton titles={titles} categories={categories} />}
           {selectedOption === 'Change View' && <DashDropChangeViewButton />}
           {selectedOption === 'Color Index' && <DashDropIndexButton />}
           {selectedOption === 'Actions' && session !== null && session !== undefined && session.user !== null && session.user !== undefined && session.user.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME && session.user.email !== null && session.user.email !== undefined &&
