@@ -48,14 +48,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
         {pathname !== '/demo_303' &&
         <body className={inter.className}>
-          <div className="first">
+          <div className="first h-dvh">
               <>
               <SpeedInsights/>
               <Providers> 
                 {loading && <Spinner />}
                 {!loading &&
                 <div className="px-5"> 
-                  <main className="flex flex-col h-screen">
+                  <main className="flex flex-col h-dvh">
                     <Navbar />
                       {pathname !== '/' ? ( 
                         <MainPageBody>

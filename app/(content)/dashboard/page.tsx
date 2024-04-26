@@ -77,7 +77,6 @@ export default function Dashboard() {
       setTitles(hobbies.map((hobby: IHobby) => hobby.title));
       setCategories(hobbies.map((hobby: IHobby) => hobby.categories).flat())
       setLoading(false);
-      console.log('categories', categories);
           
     }, [hobbies, categories, setLoading]);
     
