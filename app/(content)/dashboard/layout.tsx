@@ -1,5 +1,4 @@
 import MotionWrap from "@/components/listeners/motionwrap";
-import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 
 export const metadata = {
     title: "Dashboard",
@@ -10,9 +9,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     
     return (
         <MotionWrap key="dashboardlayout">
-            <MainPageBody>
-                {children}
-            </MainPageBody>
+            {children}
         </MotionWrap>
     );
 }

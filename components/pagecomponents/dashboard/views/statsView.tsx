@@ -27,7 +27,7 @@ export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] 
 
     return (
         <div className={`flex flex-col justify-between items-center my-2 bg-gray-500 rounded-md w-full md:w-4/5`} style={{overflow: 'auto'}}>
-            <div className={`flex flex-row justify-between items-center my-2 bg-gray-500 rounded-md`}>
+            <div className={`flex flex-row justify-between items-center my-2 rounded-md`}>
                 {!isBreakpoint &&
                     <div className="flex max-sm:flex-col sm:flex-row justify-start justify-around items-center px-5 pb-5">
                         <div className="flex flex-col">
