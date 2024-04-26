@@ -68,64 +68,64 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
     }, [router]);
 
   return (
-    <>
     <aside
       ref={ref}
-      className={`${style.sidenav.default} 
-        ${open ? style.sidenav.open : style.sidenav.close}`}
+      className={`${style.sidenav.default} ${open ? 'w-screen h-screen bg-transparent' : 'h-0 w-0 hidden'}`}
     >
-      <button aria-label="Close" className={style.closeIcon} onClick={toggle}>
-        &times;
-      </button>
-      <div className='mx-3 divide-y divide-solid width-4/6'>
-        <div className={`px-10 rounded-lg px-3 mt-8 pt-5 pb-7 text-slate-200 ${isBreakpoint ? 'text-xs' : 'text-sm'}`}>
-          Carl Seaholm&apos;s Portfolio
-        </div>
-        <div />
-        </div>
-        <div className='divide-y divide-solid'>
-          <div className="my-5">{children}
-        </div>
-        <div className='flex flex-col mx-3 py-5 items-center'>
-          <div className={`max-md:text-sm`}>
-              Socials
+      <div className={`${style.sidenav.default} 
+        ${open ? style.sidenav.open : style.sidenav.close}`}>
+        <button aria-label="Close" className={style.closeIcon} onClick={toggle}>
+          &times;
+        </button>
+        <div className='mx-3 divide-y divide-solid width-4/6'>
+          <div className={`px-10 rounded-lg px-3 mt-8 pt-5 pb-7 text-slate-200 ${isBreakpoint ? 'text-xs' : 'text-sm'}`}>
+            Carl Seaholm&apos;s Portfolio
           </div>
-          <div className={`justify-evenly mx-3 ${isBreakpoint ? 'pt-5' : 'pt-2'} max-md:text-sm flex flex-row items-center space-x-4 text-sm`}>
-            <SocialButton networkName='github' parent={false} />
-            <p>|</p>
-            <SocialButton networkName='linkedin' parent={false} />
+          <div />
           </div>
-        </div> 
-          {loggedInMenu === false ? (
-          <div className='flex flex-col'>
-            <div className={`mx-3 pt-5 flex flex-col justify-evenly items-center max-md:text-sm`}>
-              <button onClick={handleClickedSignIn} className='pb-5'>
-                Admin Login
-              </button>
-              <button onClick={handleClickedSignUp}>
-                Subscribe
-              </button>
+          <div className='divide-y divide-solid'>
+            <div className="my-5">{children}
+          </div>
+          <div className='flex flex-col mx-3 py-5 items-center'>
+            <div className={`max-md:text-sm`}>
+                Socials
             </div>
-          </div>
-          ) : (
-          <div className='mx-3 flex flex-col'> 
-            <div className='flex flex-row py-3 justify-center'>
-              <p>
-                Hello {session?.user?.name}
-              </p>
+            <div className={`justify-evenly mx-3 ${isBreakpoint ? 'pt-5' : 'pt-2'} max-md:text-sm flex flex-row items-center space-x-4 text-sm`}>
+              <SocialButton networkName='github' parent={false} />
+              <p>|</p>
+              <SocialButton networkName='linkedin' parent={false} />
             </div>
-            <div className={`flex flex-row justify-evenly items-center max-md:text-sm`}>
-              <Link href='/profile'>
-                Profile
-              </Link>
-              <button onClick={handleClickedLogout}>
-                Logout
-              </button>
+          </div> 
+            {loggedInMenu === false ? (
+            <div className='flex flex-col'>
+              <div className={`mx-3 pt-5 flex flex-col justify-evenly items-center max-md:text-sm`}>
+                <button onClick={handleClickedSignIn} className='pb-5'>
+                  Admin Login
+                </button>
+                <button onClick={handleClickedSignUp}>
+                  Subscribe
+                </button>
+              </div>
             </div>
+            ) : (
+            <div className='mx-3 flex flex-col'> 
+              <div className='flex flex-row py-3 justify-center'>
+                <p>
+                  Hello {session?.user?.name}
+                </p>
+              </div>
+              <div className={`flex flex-row justify-evenly items-center max-md:text-sm`}>
+                <Link href='/profile'>
+                  Profile
+                </Link>
+                <button onClick={handleClickedLogout}>
+                  Logout
+                </button>
+              </div>
+            </div>
+            )}
           </div>
-          )}
         </div>
     </aside>
-    </>
   );
 }

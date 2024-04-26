@@ -3,24 +3,9 @@ import { useStateContext } from "@/app/context/state/StateContext";
 import { IHobby } from "@/models/types/hobby";
 import { useState, useEffect } from "react";
 
-export default function DashDropFilterButton() {
-    const { setLoading } = useStateContext();
-    const { hobbies, setFilterItem } = useHobbyContext();
-    const [titles, setTitles] = useState<string[]>([]);
-    const [categories, setCategories] = useState<string[]>([]);
+export default function DashFilterButton({titles, categories}: { titles: string[], categories: string[]}) {
 
-    useEffect(() => {
-        setLoading(true);
-        if (hobbies.length === 0) {
-          setLoading(false);
-          return;
-        }
-        setTitles(hobbies.map((hobby: IHobby) => hobby.title));
-        setCategories(hobbies.map((hobby: IHobby) => hobby.categories).flat())
-        setLoading(false);
-        console.log('categories', categories);
-            
-      }, [hobbies]);
+    const { setFilterItem } = useHobbyContext();
       
     return (
         <div className="flex flex-col justify-center items-center">

@@ -12,6 +12,7 @@ import { AuthProvider } from "@/app/context/session/SessionContext";
 import { AnimatePresence } from "framer-motion";
 import { Spinner } from "@/components/misc/Spinner";
 import { useStateContext } from "./context/state/StateContext";
+import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,24 +49,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {pathname !== '/demo_303' &&
         <body className={inter.className}>
           <div className="first">
-            <div className="h-svh">
               <>
               <SpeedInsights/>
               <Providers> 
                 {loading && <Spinner />}
                 {!loading &&
-                <>
-                <Navbar />
-                  <main>
-                    {children}
+                <div className="px-5"> 
+                  <main className="flex flex-col h-screen">
+                    <Navbar />
+                      {pathname !== '/' ? ( 
+                        <MainPageBody>
+                          {children}
+                        </MainPageBody>
+                      ): (
+                        <>{children}</>
+                      )}
+                    <FooterNavBar />
                   </main>
-                  <FooterNavBar />
-                </>
+                </div>
                 }
               </Providers>
               </>
             </div>
-          </div>
         </body>
         }
 

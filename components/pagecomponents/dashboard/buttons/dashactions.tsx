@@ -1,7 +1,7 @@
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import { useModalContext } from "@/app/context/modal/modalContext"; 
 
-export default function DashDropActionsButton() {
+export default function DashActionsButton() {
 
     const { setOpenDashboardMobileDropdown, handleModalLogSesh, handleModalNewTrack } = useModalContext();
 
