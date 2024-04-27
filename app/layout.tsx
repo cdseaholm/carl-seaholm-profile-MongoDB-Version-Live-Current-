@@ -57,13 +57,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
         <AuthProvider>
           <body className={inter.className}>
-            <div className={`${isDemo ? '': 'first'}`}>
+            <div className={`${isDemo ? '': 'first h-dvh'}`}>
                 <SpeedInsights/>
                 <Providers> 
                   {loading && <Spinner />}
                   {!loading &&
                     <MotionWrap motionKey={pathname}>
-                      <div className="flex flex-col h-screen">
+                      <div className='flex flex-col h-dvh'>
                         {!isDemo && <Navbar />}
                         <main className={`${isDemo ? 'min-h-screen bg-gray-800': 'flex-grow px-5'}`}>
                           {pathname !== '/' ? ( 
