@@ -20,6 +20,8 @@ type ContextType = {
     hobbies: IHobby[];
     refreshKey: number;
     setRefreshKey: React.Dispatch<React.SetStateAction<number>>;
+    hobbyToShow: IHobby[] | null;
+    setHobbyToShow: React.Dispatch<React.SetStateAction<IHobby[] | null>>;
 };
 
 //wrap these into one function maybe
@@ -41,15 +43,17 @@ const initialContext: ContextType = {
     hobbies: [] as IHobby[],
     refreshKey: 0,
     setRefreshKey: () => {},
+    hobbyToShow: null,
+    setHobbyToShow: () => {}
 };
 
 const HobbyContext = createContext<ContextType>(initialContext);
 
 export const useHobbyContext = () => useContext(HobbyContext);
 
-export const HobbyProvider = ({ children, openAddModal, setOpenAddModal, filterItem, setFilterItem, categoryPassed, setCategoryPassed, openCategoryModal, setOpenCategoryModal, openLogSessionModal, setOpenLogSessionModal, setDaySelected, daySelected, setHobbies, hobbies, refreshKey, setRefreshKey }: React.PropsWithChildren<{ openAddModal: boolean, setOpenAddModal: React.Dispatch<React.SetStateAction<boolean>>, filterItem: string; setFilterItem: React.Dispatch<React.SetStateAction<string>>, categoryPassed: string, setCategoryPassed: React.Dispatch<React.SetStateAction<string>>, openCategoryModal: boolean, setOpenCategoryModal: React.Dispatch<React.SetStateAction<boolean>>, openLogSessionModal: boolean, setOpenLogSessionModal: React.Dispatch<React.SetStateAction<boolean>>, setDaySelected: React.Dispatch<React.SetStateAction<string>>, daySelected: string, setHobbies: React.Dispatch<React.SetStateAction<IHobby[]>>, hobbies: IHobby[], setRefreshKey: React.Dispatch<React.SetStateAction<number>>, refreshKey: number }>) => {
+export const HobbyProvider = ({ children, openAddModal, setOpenAddModal, filterItem, setFilterItem, categoryPassed, setCategoryPassed, openCategoryModal, setOpenCategoryModal, openLogSessionModal, setOpenLogSessionModal, setDaySelected, daySelected, setHobbies, hobbies, refreshKey, setRefreshKey, setHobbyToShow, hobbyToShow }: React.PropsWithChildren<{ openAddModal: boolean, setOpenAddModal: React.Dispatch<React.SetStateAction<boolean>>, filterItem: string; setFilterItem: React.Dispatch<React.SetStateAction<string>>, categoryPassed: string, setCategoryPassed: React.Dispatch<React.SetStateAction<string>>, openCategoryModal: boolean, setOpenCategoryModal: React.Dispatch<React.SetStateAction<boolean>>, openLogSessionModal: boolean, setOpenLogSessionModal: React.Dispatch<React.SetStateAction<boolean>>, setDaySelected: React.Dispatch<React.SetStateAction<string>>, daySelected: string, setHobbies: React.Dispatch<React.SetStateAction<IHobby[]>>, hobbies: IHobby[], setRefreshKey: React.Dispatch<React.SetStateAction<number>>, refreshKey: number, hobbyToShow: IHobby[] | null, setHobbyToShow: React.Dispatch<React.SetStateAction<IHobby[] | null>> }>) => {
     
-    const value = { openAddModal, setOpenAddModal, filterItem, setFilterItem, categoryPassed, setCategoryPassed, openCategoryModal, setOpenCategoryModal, openLogSessionModal, setOpenLogSessionModal, setDaySelected, daySelected, setHobbies, hobbies, refreshKey, setRefreshKey };
+    const value = { openAddModal, setOpenAddModal, filterItem, setFilterItem, categoryPassed, setCategoryPassed, openCategoryModal, setOpenCategoryModal, openLogSessionModal, setOpenLogSessionModal, setDaySelected, daySelected, setHobbies, hobbies, refreshKey, setRefreshKey, setHobbyToShow, hobbyToShow };
 
     return <HobbyContext.Provider value={value}>{children}</HobbyContext.Provider>;
 };

@@ -1,6 +1,6 @@
 const MainPageBody = ({children}: {children: React.ReactNode}) => {
     return (
-        <div className={`flex flex-col h-full w-full childFirst`} style={{overflow: 'auto'}}>
+        <div className={`h-full w-full pb-8 childFirst`}>
             {children}
         </div>
     );

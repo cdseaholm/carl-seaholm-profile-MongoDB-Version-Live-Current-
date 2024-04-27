@@ -3,7 +3,7 @@
 
 import {NextUIProvider} from '@nextui-org/react'
 import {ModalProvider} from '@/app/context/modal/modalContext'
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ModalLogin from '@/components/modals/auth/login/loginModal';
 import ModalSignUp from '@/components/modals/auth/signup/signupModal';
@@ -32,6 +32,7 @@ export function Providers({children}: { children: React.ReactNode }) {
   const [openLogSessionModal, setOpenLogSessionModal] = useState(false);
   const [modalSubscribeOpen, setModalSubscribeOpen] = useState(false);
   const [openDashboardMobileDropdown, setOpenDashboardMobileDropdown] = useState(false);
+  const [hobbyToShow, setHobbyToShow] = useState<IHobby[] | null>(null);
 
   //alertStates
   const [showAlert, setShowAlert] = useState(false);
@@ -91,7 +92,7 @@ export function Providers({children}: { children: React.ReactNode }) {
         <EditUser/>
         <ModalSubscribe/>
         <DashboardMobileDropdown/>
-        <HobbyProvider openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} openLogSessionModal={openLogSessionModal} setOpenLogSessionModal={setOpenLogSessionModal} setDaySelected={setDaySelected} daySelected={daySelected} setHobbies={setHobbies} hobbies={hobbies} setRefreshKey={setRefreshKey} refreshKey={refreshKey}>
+        <HobbyProvider openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} openLogSessionModal={openLogSessionModal} setOpenLogSessionModal={setOpenLogSessionModal} setDaySelected={setDaySelected} daySelected={daySelected} setHobbies={setHobbies} hobbies={hobbies} setRefreshKey={setRefreshKey} refreshKey={refreshKey} hobbyToShow={hobbyToShow} setHobbyToShow={setHobbyToShow} >
           <LogSessionModal show={openLogSessionModal} />
           <NextUIProvider>
             {children}
