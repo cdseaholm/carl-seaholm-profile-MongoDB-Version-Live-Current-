@@ -7,9 +7,9 @@ import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { IHobby } from "@/models/types/hobby";
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import { useStateContext } from "@/app/context/state/StateContext";
-import DashActionsButton from "@/components/pagecomponents/dashboard/buttons/dashactions";
+import DashActionsButton from "@/components/pagecomponents/dashboard/buttons/calViewButtons/dashactions";
 import ModalHobby from "@/components/modals/hobbyModal/hobbymodal";
-import DashFilterButton from "@/components/pagecomponents/dashboard/buttons/dashFilter";
+import DashFilterButton from "@/components/pagecomponents/dashboard/buttons/calViewButtons/dashFilter";
 import CalView from "@/components/pagecomponents/dashboard/views/calView";
 import StatsView from "@/components/pagecomponents/dashboard/views/statsView";
 import { useModalContext } from "@/app/context/modal/modalContext";
@@ -39,7 +39,7 @@ export default function Dashboard() {
               revalidate: 3600
             }
           });
-  
+    
           if (!response.ok) {
             console.log('No hobbies found');
             setLoading(false);
@@ -66,8 +66,9 @@ export default function Dashboard() {
       }
       
       getHobbies();
-    }, [refreshKey, setHobbies, setLoading, urlToUse, userID]);
-
+    }, [refreshKey, urlToUse, userID]);
+    
+    // Second useEffect
     useEffect(() => {
       setLoading(true);
       if (hobbies.length === 0) {
@@ -78,7 +79,7 @@ export default function Dashboard() {
       setCategories(hobbies.map((hobby: IHobby) => hobby.categories).flat())
       setLoading(false);
           
-    }, [hobbies, categories, setLoading]);
+    }, [hobbies]);
     
 
     return (
@@ -92,28 +93,28 @@ export default function Dashboard() {
                     <h1>Loading...</h1>
                   </div>
                 ) : (
-                  <div className="p-2 h-full">
+                  <div className="p-2 h-full w-full">
                     {!isBreakpoint &&
                       <div className={`flex flex-col md:flex-row top-0 z-20 items-start md:items-center justify-between`}>
                         <DashFilterButton titles={titles} categories={categories} />
 
                         {session?.user !== null && adminID === true &&
-                            <DashActionsButton />
+                          <DashActionsButton />
                         } 
                       </div>
                     }
                     {isBreakpoint &&
-                        <FiMenu className="flex flex-row justify-start m-2" onClick={() => setOpenDashboardMobileDropdown(true)} />
+                      <FiMenu className="flex flex-row justify-start m-2" onClick={() => setOpenDashboardMobileDropdown(true)} />
                     }
-                    <ModalHobby show={openAddModal} categories={categories} hobbies={hobbies} />
-                    {calDash &&
-                      <div className="flex flex-row justify-center items-center" >
-                        <CalView filter={filterItem} hobbies={hobbies} />
-                      </div>
-                    }
-                    {!calDash &&
-                      <StatsView hobbies={hobbies} daysThisMonth={30} />
-                    }
+                    <div className="w-full h-full">
+                      <ModalHobby show={openAddModal} categories={categories} hobbies={hobbies} />
+                      {calDash &&
+                          <CalView filter={filterItem} hobbies={hobbies} />
+                      }
+                      {!calDash &&
+                        <StatsView hobbies={hobbies} daysThisMonth={30} />
+                      }
+                    </div>
                   </div>
                 )
               }

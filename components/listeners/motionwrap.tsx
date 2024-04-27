@@ -2,10 +2,11 @@
 
 import { motion } from 'framer-motion';
 
-const MotionWrap = ({children, key}: {children: React.ReactNode; key: string}) => {
+const MotionWrap = ({children, motionKey}: {children: React.ReactNode; motionKey: string}) => {
+
     return (
         <motion.div
-        key={key}
+        key={motionKey}
         initial={{ y: 300, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -300, opacity: 0 }}

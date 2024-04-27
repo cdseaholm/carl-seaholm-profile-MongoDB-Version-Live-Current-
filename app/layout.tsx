@@ -13,6 +13,7 @@ import { AnimatePresence } from "framer-motion";
 import { Spinner } from "@/components/misc/Spinner";
 import { useStateContext } from "./context/state/StateContext";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
+import MotionWrap from "@/components/listeners/motionwrap";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   const pathname = usePathname();
   const { urlToUse, setUrlToUse, loading, setLoading } = useStateContext();
+  const [isDemo, setIsDemo] = useState(false);
+
+  useEffect(() => {
+    if (pathname === '/demo_303') {
+      setIsDemo(true);
+    } else {
+      setIsDemo(false);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (urlToUse === '') {
@@ -46,42 +56,32 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
         <AuthProvider>
-        {pathname !== '/demo_303' &&
-        <body className={inter.className}>
-          <div className="first h-dvh">
-              <>
-              <SpeedInsights/>
-              <Providers> 
-                {loading && <Spinner />}
-                {!loading &&
-                <div className="px-5"> 
-                  <main className="flex flex-col h-dvh">
-                    <Navbar />
-                      {pathname !== '/' ? ( 
-                        <MainPageBody>
-                          {children}
-                        </MainPageBody>
-                      ): (
-                        <>{children}</>
-                      )}
-                    <FooterNavBar />
-                  </main>
-                </div>
-                }
-              </Providers>
-              </>
-            </div>
-        </body>
-        }
-
-        {pathname === '/demo_303' &&
-            <body>
-              <main className="min-h-screen bg-gray-800">
-                {children}
-              </main>
-            </body>
-          }
-          </AuthProvider>
+          <body className={inter.className}>
+            <div className={`${isDemo ? '': 'first'}`}>
+                <SpeedInsights/>
+                <Providers> 
+                  {loading && <Spinner />}
+                  {!loading &&
+                    <MotionWrap motionKey={pathname}>
+                      <div className="flex flex-col h-screen">
+                        {!isDemo && <Navbar />}
+                        <main className={`${isDemo ? 'min-h-screen bg-gray-800': 'flex-grow px-5'}`}>
+                          {pathname !== '/' ? ( 
+                            <MainPageBody>
+                              {children}
+                            </MainPageBody>
+                          ): (
+                            <>{children}</>
+                          )}
+                        </main>
+                        {!isDemo && <FooterNavBar />}
+                      </div>
+                    </MotionWrap>
+                  }
+                </Providers>
+              </div>
+          </body>
+        </AuthProvider>
       </AnimatePresence>
     </html>
   );

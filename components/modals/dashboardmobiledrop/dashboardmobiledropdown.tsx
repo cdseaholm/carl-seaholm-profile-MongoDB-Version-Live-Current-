@@ -8,9 +8,9 @@ import { useHobbyContext } from '@/app/context/hobby/hobbyModalContext';
 import { useStateContext } from '@/app/context/state/StateContext';
 import { IHobby } from '@/models/types/hobby';
 import { useRouter } from 'next/navigation';
-import DashDropActionsButton from '../../pagecomponents/dashboard/buttons/dashactions';
+import DashDropActionsButton from '../../pagecomponents/dashboard/buttons/calViewButtons/dashactions';
 import DashDropChangeViewButton from './helpers/dashdropchangeViewButton';
-import DashDropFilterButton from '../../pagecomponents/dashboard/buttons/dashFilter';
+import DashDropFilterButton from '../../pagecomponents/dashboard/buttons/calViewButtons/dashFilter';
 import DashDropIndexButton from './helpers/dashdropindexbutton';
 
 export default function DashboardMobileDropdown() {
