@@ -3,99 +3,38 @@
 import React, { createContext, useContext } from 'react';
 
 type ContextType = {
-  modalOpen: boolean | null;
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  modalSignUpOpen: boolean | null;
-  setModalSignUpOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  //handleSignUpSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  swapAuthDesire: () => void;
-  showAlert: boolean | null;
-  setShowAlert: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlertMessage: React.Dispatch<React.SetStateAction<string>>;
-  alertMessage: string | null;
-  alertParent: string | null;
-  setAlertParent: React.Dispatch<React.SetStateAction<string>>;
-  alertConfirm: boolean | null;
-  setAlertConfirm: React.Dispatch<React.SetStateAction<boolean>>;
-  showEditUser: boolean | null;
-  setShowEditUser: React.Dispatch<React.SetStateAction<boolean>>;
-  setModalSubscribeOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  modalSubscribeOpen: boolean | null;
+  modalOpen: string;
+  setModalOpen: React.Dispatch<React.SetStateAction<string>>;
   setColorChoice: React.Dispatch<React.SetStateAction<string>>;
   colorChoice: string | null;
-  swapDashDesire: () => void;
-  openDashboardMobileDropdown: boolean;
-  setOpenDashboardMobileDropdown: React.Dispatch<React.SetStateAction<boolean>>;
   calDash: boolean;
   setCalDash: React.Dispatch<React.SetStateAction<boolean>>;
-  handleModalNewTrack: () => void;
-  handleModalLogSesh: () => void;
 };
 
 const initialContext: ContextType = {
-  modalOpen: false,
-  modalSignUpOpen: false,
-  setModalSignUpOpen: () => {},
+  modalOpen: '',
   setModalOpen: () => {},
   //handleSignUpSubmit: (event: React.FormEvent<HTMLFormElement>) => {},
-  swapAuthDesire: () => {},
-  showAlert: false,
-  setShowAlert: () => {},
-  setAlertMessage: () => {},
-  alertMessage: '',
-  alertParent: '',
-  setAlertParent: () => {},
-  alertConfirm: false,
-  setAlertConfirm: () => {},
-  showEditUser: false,
-  setShowEditUser: () => {},
-  setModalSubscribeOpen: () => {},
-  modalSubscribeOpen: false,
   setColorChoice: () => {},
   colorChoice: '',
-  swapDashDesire: () => {},
-  openDashboardMobileDropdown: false,
-  setOpenDashboardMobileDropdown: () => {},
-  calDash: true,
+  calDash: false,
   setCalDash: () => {},
-  handleModalNewTrack: () => {},
-  handleModalLogSesh: () => {},
 };
 
 const ModalContext = createContext(initialContext);
 
 export const useModalContext = () => useContext(ModalContext);
 
-export const ModalProvider = ({ children, modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, setModalSubscribeOpen, modalSubscribeOpen, setColorChoice, colorChoice, swapDashDesire, openDashboardMobileDropdown, setOpenDashboardMobileDropdown, calDash, setCalDash, handleModalLogSesh, handleModalNewTrack }: React.PropsWithChildren<{
-  modalOpen: boolean; 
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  modalSignUpOpen: boolean; 
-  setModalSignUpOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  //handleSignUpSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  swapAuthDesire: () => void;
-  showAlert: boolean;
-  setShowAlert: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlertMessage: React.Dispatch<React.SetStateAction<string>>;
-  alertMessage: string;
-  alertParent: string;
-  setAlertParent: React.Dispatch<React.SetStateAction<string>>
-  alertConfirm: boolean;
-  setAlertConfirm: React.Dispatch<React.SetStateAction<boolean>>;
-  showEditUser: boolean;
-  setShowEditUser: React.Dispatch<React.SetStateAction<boolean>>;
-  setModalSubscribeOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  modalSubscribeOpen: boolean;
+export const ModalProvider = ({ children, modalOpen, setModalOpen, setColorChoice, colorChoice, calDash, setCalDash }: React.PropsWithChildren<{
+  modalOpen: string;
+  setModalOpen: React.Dispatch<React.SetStateAction<string>>;
   setColorChoice: React.Dispatch<React.SetStateAction<string>>;
   colorChoice: string;
-  swapDashDesire: () => void;
-  openDashboardMobileDropdown: boolean;
-  setOpenDashboardMobileDropdown: React.Dispatch<React.SetStateAction<boolean>>;
   calDash: boolean, setCalDash: React.Dispatch<React.SetStateAction<boolean>>;
-  handleModalNewTrack: () => void;
-  handleModalLogSesh: () => void;
+
 }>) => {
 
-  const value = { modalOpen, setModalOpen, modalSignUpOpen, setModalSignUpOpen, swapAuthDesire, showAlert, setShowAlert, setAlertMessage, alertMessage, alertParent, setAlertParent, alertConfirm, setAlertConfirm, showEditUser, setShowEditUser, setModalSubscribeOpen, modalSubscribeOpen, setColorChoice, colorChoice, swapDashDesire, openDashboardMobileDropdown, setOpenDashboardMobileDropdown, calDash, setCalDash, handleModalLogSesh, handleModalNewTrack};
+  const value = { modalOpen, setModalOpen, setColorChoice, colorChoice, calDash, setCalDash };
 
   return (
     <ModalContext.Provider value={value}>

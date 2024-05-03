@@ -1,14 +1,10 @@
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
-import { useStateContext } from "@/app/context/state/StateContext";
-import { IHobby } from "@/models/types/hobby";
-import { useState, useEffect } from "react";
 
 export default function DashFilterButton({titles, categories}: { titles: string[], categories: string[]}) {
 
     const { setFilterItem } = useHobbyContext();
       
     return (
-        <div className="flex flex-col justify-center items-center">
             <select id='filterDropdown' name="filterDropdown" className={`block text-black font-medium rounded-lg w-2/5 md:w-1/4 text-xs text-left bg-transparent border-transparent hover:bg-gray-400 cursor-pointer`}  
                       defaultValue='No Filter'  
                       onChange={(e) => {
@@ -36,6 +32,5 @@ export default function DashFilterButton({titles, categories}: { titles: string[
                         ))}
                       </optgroup>
                     </select>
-        </div>
     );
 }

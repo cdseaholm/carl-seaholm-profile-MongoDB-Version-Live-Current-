@@ -1,5 +1,6 @@
 'use client'
 
+import { useAlertContext } from '@/app/context/alert/alertcontext';
 import { useModalContext } from '@/app/context/modal/modalContext';
 import { signOut } from 'next-auth/react';
 import React from 'react'
@@ -7,7 +8,7 @@ import React from 'react'
 export default function AlertModal() {
   
 
-    const { showAlert, setShowAlert, alertParent, alertMessage, setAlertParent } = useModalContext();
+    const { showAlert, setShowAlert, alertParent, alertMessage, setAlertParent } = useAlertContext();
     const logoutAlert = alertParent === 'logout' ? true : false;
 
     const handleAlertAccept = () => {

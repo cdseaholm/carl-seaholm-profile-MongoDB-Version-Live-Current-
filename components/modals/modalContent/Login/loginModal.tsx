@@ -1,6 +1,8 @@
 'use client'
 
+import { useAlertContext } from "@/app/context/alert/alertcontext";
 import { useModalContext } from "@/app/context/modal/modalContext";
+import { set } from "mongoose";
 import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
 
@@ -8,14 +10,14 @@ import { usePathname, useRouter } from "next/navigation";
 
 export default function ModalLogin() {
 
-    const { modalOpen, setModalOpen, setAlertMessage, setModalSubscribeOpen, setShowAlert } = useModalContext();
+    const { setModalOpen } = useModalContext();
+    const { setShowAlert, showAlert, setAlertMessage } = useAlertContext();
     const pathname = usePathname();
     const router = useRouter();
     const { data: session } = useSession();
 
     const handleOpenSub = () => {
-        setModalOpen(false);
-        setModalSubscribeOpen(true);
+        setModalOpen('subscribe');
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -36,12 +38,12 @@ export default function ModalLogin() {
             
             if (res && res.error) {
                 console.log('Error logging in:', res.error);
-                setAlertMessage('Invalid email or password');
                 setShowAlert(true);
+                setAlertMessage('Invalid email or password');
                 return;
             }
             
-            setModalOpen(false);
+            setModalOpen('');
             if (pathname === '/dashboard') {
                 router.refresh();
             } else {
@@ -49,28 +51,13 @@ export default function ModalLogin() {
             }
             
         } catch (error) {
-            setAlertMessage('An error occurred. Please try again.');
             setShowAlert(true);
+            setAlertMessage('An error occurred. Please try again.');
             console.log('Error logging in', error);
         }
     }
 
     return (
-        <>
-        <div id="crud-modal" tabIndex={-1} aria-hidden="true" className={`${modalOpen ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}>
-            <div className="relative p-4 w-full max-w-md max-h-full">
-                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 className={`text-lg font-semibold text-gray-900 dark:text-white`}>
-                            Sign in
-                        </h3>
-                            <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal" onClick={() => setModalOpen(false)}>
-                                <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                </svg>
-                                <span className="sr-only">Close modal</span>
-                            </button>
-                    </div>
                     <form id="loginForm" className="p-4 md:p-5" onSubmit={handleSubmit}>
                         <div className="grid gap-4 mb-6 grid-cols-2">
                             <label htmlFor="modalLoginEmail" className={`block my-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white`}>Email</label>
@@ -97,9 +84,5 @@ export default function ModalLogin() {
                             </div>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div> 
-        </>
     )
 }

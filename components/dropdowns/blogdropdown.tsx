@@ -19,20 +19,20 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
     const hasShownSubscriptionPrompt = React.useRef(false);
     const { data: session } = useSession();
     const user = session?.user;
-    const { setModalSubscribeOpen } = useModalContext();
+    const { setModalOpen } = useModalContext();
 
     React.useEffect(() => {
             if (user === null && !hasShownSubscriptionPrompt.current) {
                 hasShownSubscriptionPrompt.current = true;
                 const newSub = window.confirm('Would you like to Subscribe to this blog?');
                 if (newSub === true) {
-                    setModalSubscribeOpen(true);
+                    setModalOpen('subscribe');
                 } else {
                     console.log('User declined to subscribe');
                 }
             }
         
-    }, [setModalSubscribeOpen, user, hasShownSubscriptionPrompt]);
+    }, [setModalOpen, user, hasShownSubscriptionPrompt]);
 
     React.useEffect(() => {
         const handleOutsideClick = (event: { target: any; }) => {

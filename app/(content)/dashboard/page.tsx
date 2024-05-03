@@ -7,28 +7,23 @@ import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { IHobby } from "@/models/types/hobby";
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import { useStateContext } from "@/app/context/state/StateContext";
-import DashActionsButton from "@/components/pagecomponents/dashboard/buttons/calViewButtons/dashactions";
-import ModalHobby from "@/components/modals/hobbyModal/hobbymodal";
-import DashFilterButton from "@/components/pagecomponents/dashboard/buttons/calViewButtons/dashFilter";
-import CalView from "@/components/pagecomponents/dashboard/views/calView";
+import CalView from "@/components/pagecomponents/dashboard/views/calendarView";
 import StatsView from "@/components/pagecomponents/dashboard/views/statsView";
 import { useModalContext } from "@/app/context/modal/modalContext";
-import useMediaQuery from "@/components/listeners/WidthSettings";
-import { FiMenu } from "react-icons/fi";
+import CalendarView from "@/components/pagecomponents/dashboard/views/calendarView";
+import { useRouter } from "next/navigation";
 
 
 export default function Dashboard() {
     
-    const [categories, setCategories] = useState([] as string[]);
-    const [titles, setTitles] = useState([] as string[]);
     const { loading, setLoading } = useStateContext();
     const { data: session } = useSession();
-    const { hobbies, setHobbies, openAddModal, filterItem, refreshKey } = useHobbyContext();
+    const { hobbies, setHobbies, filterItem, refreshKey, categories, setCategories, setTitles, titles } = useHobbyContext();
     const { urlToUse } = useStateContext();
     const adminID = session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
-    const isBreakpoint = useMediaQuery(768);
-    const { setOpenDashboardMobileDropdown, calDash } = useModalContext();
+    const {calDash, setCalDash, setModalOpen } = useModalContext();
+    const router = useRouter();
 
     useEffect(() => {
       const getHobbies =  async () => {
@@ -75,8 +70,6 @@ export default function Dashboard() {
         setLoading(false);
         return;
       }
-      setTitles(hobbies.map((hobby: IHobby) => hobby.title));
-      setCategories(hobbies.map((hobby: IHobby) => hobby.categories).flat())
       setLoading(false);
           
     }, [hobbies]);
@@ -93,23 +86,20 @@ export default function Dashboard() {
                     <h1>Loading...</h1>
                   </div>
                 ) : (
-                  <div className="p-2 h-full w-full">
-                    {!isBreakpoint &&
-                      <div className={`flex flex-col md:flex-row top-0 z-20 items-start md:items-center justify-between`}>
-                        <DashFilterButton titles={titles} categories={categories} />
-
-                        {session?.user !== null && adminID === true &&
-                          <DashActionsButton />
-                        } 
-                      </div>
-                    }
-                    {isBreakpoint &&
-                      <FiMenu className="flex flex-row justify-start m-2" onClick={() => setOpenDashboardMobileDropdown(true)} />
-                    }
-                    <div className="w-full h-full">
-                      <ModalHobby show={openAddModal} categories={categories} hobbies={hobbies} />
+                  <div className="px-2 pb-5 h-full w-full">
+                    <div className="flex flex-row justify-between items-center px-5 py-2">
+                      <button className="text-base" onClick={() => setCalDash(!calDash)}>
+                            {calDash ? 'See stats' : 'See Timeline'}
+                      </button>
+                      {adminID ? (<div className="flex flex-col justify-center items-center cursor-pointer" onClick={() => setModalOpen('actions')}>
+                        <button className="text-xl">
+                          +
+                        </button>
+                      </div>) : <div />}
+                    </div>
+                    <div className={`flex flex-col justify-start items-center bg-gray-500/70 rounded-md h-full w-full object-fill`}>
                       {calDash &&
-                          <CalView filter={filterItem} hobbies={hobbies} />
+                        <CalendarView filter={filterItem} hobbies={hobbies} />
                       }
                       {!calDash &&
                         <StatsView hobbies={hobbies} daysThisMonth={30} />
