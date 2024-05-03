@@ -6,7 +6,7 @@ import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import { useModalContext } from '@/app/context/modal/modalContext';
 
 const ProfilePage = () => {
-    const { setShowEditUser } = useModalContext();
+    const { setModalOpen } = useModalContext();
     const handleLogout = () => {
         console.log('logout');
     }
@@ -18,7 +18,7 @@ const ProfilePage = () => {
         </InnerHeader>
         <MainChild>
             <div className="flex flex-col justify-center space-y-4 p-4">
-                <button onClick={() => setShowEditUser(true)}>
+                <button onClick={() => setModalOpen('edituser')}>
                     Edit Profile
                 </button>
                 <button>

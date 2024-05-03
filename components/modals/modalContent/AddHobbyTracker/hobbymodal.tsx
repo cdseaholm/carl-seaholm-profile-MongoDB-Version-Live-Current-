@@ -9,24 +9,63 @@ import ntc from 'ntcjs';
 import { useRouter } from "next/navigation";
 import { useStateContext } from "@/app/context/state/StateContext";
 
-export default function ModalHobby({ categories }: { show: boolean; categories: string[] | null; hobbies: IHobby[] | null; }) {
+export default function ModalHobby() {
 
-    const { openAddModal, setOpenAddModal, categoryPassed, setRefreshKey } = useHobbyContext();
-    const { urlToUse } = useStateContext();
+    const { categoryPassed, setRefreshKey, categories, refreshKey } = useHobbyContext();
     const [madeCats, setMadeCats] = useState('');
     const [goalChild, setGoalChild] = useState('Goal Value');
     const [goalType, setGoalType] = useState('text');
     const [catCreate, setCatCreate] = useState(false);
     const [goalPlaceHolder, setGoalPlaceHolder] = useState('Pick a Goal Type First');
     const [colorName, setColorName] = useState('');
-    const { colorChoice, setColorChoice, swapDashDesire } = useModalContext();
+    const { colorChoice, setColorChoice, setModalOpen } = useModalContext();
     const { data: session } = useSession();
-    const router = useRouter();
+    const [localCategories, setLocalCategories] = useState<string[]>([]);
+    const { urlToUse, setLoading } = useStateContext();
+    const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
 
     const handleColorUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
         setColorChoice(e.target.value);
         setColorName(ntc.name(e.target.value)[1]);
     };
+
+    useEffect(() => {
+        const getHobbies =  async () => {
+          try {
+            setLoading(true);
+            const response = await fetch(`${urlToUse}/api/${userID}/gethobbies`, {
+              next: {
+                revalidate: 3600
+              }
+            });
+      
+            if (!response.ok) {
+              console.log('No hobbies found');
+              setLoading(false);
+              return;
+            }
+            if (response.ok) {
+              const res = await response.json();
+              const hobs = res.hobbies;
+              if (hobs.length === 0) {
+                console.log('No hobbies found');
+                setLoading(false);
+                return;
+              }
+              setLocalCategories(hobs.map((hobby: IHobby) => hobby.categories).flat())
+            }
+          } catch (error) {
+            console.error('Error fetching hobbies', error);
+            return;
+          } finally {
+            console.log('refreshed Key', refreshKey);
+            setLoading(false);
+            return;
+          }
+        }
+        
+        getHobbies();
+      }, [refreshKey, urlToUse, userID]);
 
     useEffect(() => {
         if (colorName === '') {
@@ -74,7 +113,7 @@ export default function ModalHobby({ categories }: { show: boolean; categories: 
             if (res.ok) {
                 console.log('Hobby created');
                 setRefreshKey(prevKey => prevKey + 1);
-                setOpenAddModal(false);
+                setModalOpen('');
             } else {
                 console.log('Error creating hobby');
             }
@@ -85,7 +124,7 @@ export default function ModalHobby({ categories }: { show: boolean; categories: 
     };
 
     const handleCategoryCreate = () => {
-        setCatCreate(true);
+        setCatCreate(!catCreate);
     };
     
     const changeGoalChild = (goalValueSelected: string) => {
@@ -117,21 +156,7 @@ export default function ModalHobby({ categories }: { show: boolean; categories: 
     };
 
     return (
-        <>
-        <div id="crud-modal" tabIndex={-1} aria-hidden="true" className={`${openAddModal ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}>
-            <div className="relative p-4 w-full max-w-md max-h-full">
-                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 className={`text-base md:text-lg font-semibold text-gray-900 dark:text-white`}>
-                            Create Something to Track
-                        </h3>
-                        <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal" onClick={() => setOpenAddModal(false)}>
-                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                            </svg>
-                            <span className="sr-only">Close modal</span>
-                        </button>
-                    </div>
+
                     <form className="p-4 md:p-5" onSubmit={HandleCreateHobby}>
                         <div className="grid gap-4 mb-4 grid-cols-1">
                             <div className="flex flex-row justify-between space-x-1">
@@ -159,7 +184,6 @@ export default function ModalHobby({ categories }: { show: boolean; categories: 
                                     <select id="modalHobbyCategory" name="modalHobbyCategory" className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500`} defaultValue={categoryPassed ? categoryPassed : 'Select a category'}>
                                         <option>Select a category</option>
                                         {categoryPassed &&
-
                                             <option value={categoryPassed}>{categoryPassed}</option>
                                         }
                                         {categories?.filter(item => item !== "").map((item, index) => (
@@ -199,13 +223,9 @@ export default function ModalHobby({ categories }: { show: boolean; categories: 
                                         <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
                                         Add new Tracker
                                     </button>
-                                    <button type="button" className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-xs md:text-sm ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white pr-5`} data-modal-toggle="crud-modal" onClick={swapDashDesire}>Log a session</button>
+                                    <button type="button" className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-xs md:text-sm ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white pr-5`} data-modal-toggle="crud-modal" onClick={() => setModalOpen('logsession')}>Log a session</button>
                                 </div>
                             </div>
                     </form>
-                </div>
-            </div>
-        </div> 
-        </>
     )
 }

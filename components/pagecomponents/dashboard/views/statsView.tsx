@@ -26,20 +26,7 @@ export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] 
 
 
     return (
-        <div className={`flex flex-col justify-between items-center my-2 bg-gray-500 rounded-md w-full md:w-4/5`} style={{overflow: 'auto'}}>
             <div className={`flex flex-row justify-between items-center my-2 rounded-md`}>
-                {!isBreakpoint &&
-                    <div className="flex max-sm:flex-col sm:flex-row justify-start justify-around items-center px-5 pb-5">
-                        <div className="flex flex-col">
-                            <button className={`font-bold hover:bg-gray-400 rounded-lg p-1 ${calDash ? 'border border-gray-700' : ''} cursor-pointer text-xs`} onClick={() => {setCalDash(true)}}>
-                                Calendar
-                            </button>
-                            <button className={`font-bold hover:bg-gray-400 rounded-lg p-2 ${!calDash ? 'border border-gray-700' : ''} cursor-pointer text-xs`} onClick={() => {setCalDash(false)}}>
-                                Stats
-                            </button>
-                        </div>
-                    </div>
-                }
                 <div className='grid gap-4 mb-4 grid-cols-2 w-full'>
                     <div className='flex flex-col border border-black items-center w-40 h-40 text-sm md:text-base'>
                         <div>
@@ -75,6 +62,5 @@ export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] 
                     </div>
                 </div>
             </div>
-        </div>
   )
 }

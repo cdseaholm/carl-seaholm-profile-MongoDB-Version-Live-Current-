@@ -7,6 +7,7 @@ import useMediaQuery from '../../listeners/WidthSettings';
 import { useModalContext } from "@/app/context/modal/modalContext";
 import { useSession } from 'next-auth/react';
 import SocialButton from '@/components/buttons/socialButton';
+import { useAlertContext } from '@/app/context/alert/alertcontext';
 
 export default function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
 
@@ -14,14 +15,15 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
   const ref = React.useRef<HTMLDivElement>(null);
   const router = useRouter();
   const isBreakpoint = useMediaQuery(768);
-  const { setAlertMessage, setAlertParent, setShowAlert, setModalSignUpOpen, setModalOpen, setModalSubscribeOpen } = useModalContext();
+  const { setModalOpen } = useModalContext();
+  const { setAlertMessage, setAlertParent, setShowAlert } = useAlertContext();
   const { data: session } = useSession();
   const user = session?.user;
 
   const loggedInMenu = user !== null && user !== undefined ? true : false;
 
   const handleClickedSignIn = () => {
-    setModalOpen(true);
+    setModalOpen('login');
   };
 
   const handleClickedLogout = () => {
@@ -35,14 +37,14 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
     setModalSignUpOpen(true);
   };*/}
 
-  const handleClickedSignUp = () => {
-    setModalSubscribeOpen(true);
+  const handleClickedSub = () => {
+    setModalOpen('subscribe');
   }
 
   const style = {
     closeIcon: `absolute top-1 focus:outline-none right-3 text-3xl text-white cursor-pointer`,
     sidenav: {
-      open: `w-5/12 md:w-3/12 md:w-60 bg-green-900 text-white overflow-x-hidden z-40`,
+      open: `w-5/12 md:w-4/12 md:w-60 bg-green-900 text-white overflow-x-hidden z-40`,
       close: `w-0 bg-gray-800 text-white overflow-x-hidden`,
       default: `h-screen fixed z-30 top-0 left-0 transition-all ease duration-200`,
     }
@@ -102,7 +104,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
                 <button onClick={handleClickedSignIn} className='pb-5'>
                   Admin Login
                 </button>
-                <button onClick={handleClickedSignUp}>
+                <button onClick={handleClickedSub}>
                   Subscribe
                 </button>
               </div>

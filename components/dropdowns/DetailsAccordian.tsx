@@ -1,6 +1,6 @@
 
 import useMediaQuery from '@/components/listeners/WidthSettings';
-import React, { use } from 'react';
+import React from 'react';
 
 export const DetailsAccordianPage = ({details, detailsIndex}: {details: Array<String>; detailsIndex: number}) => {
 

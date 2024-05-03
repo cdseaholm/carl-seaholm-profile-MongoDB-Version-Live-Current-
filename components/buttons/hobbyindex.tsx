@@ -4,22 +4,32 @@ import { useState } from "react";
 export default function HobbyIndex() {
     const { hobbies } = useHobbyContext();
     const [show, setShow] = useState(false);
+    const title = show ? 'Close' : 'Color Index';
 
     return (
-        <>
+        <div className="flex flex-col items-end">
             <button className={`text-xs md:text-sm font-bold cursor-pointer`} onClick={() => setShow(!show)}>
-                Color Index
+                {title}
             </button>
             {show === true &&
-                <legend className="flex flex-col absolute mt-10 text-xs z-20 bg-slate-200/40 border border-slate-600 justify-center w-24">
+                <div className="flex flex-col absolute mt-5 text-xs z-20 bg-slate-200/90 border border-slate-600 justify-center font-bold w-1/5">
+                    <div>
+                        <p className="text-center underline py-2">Color Index</p>
+                    </div>
+                    <legend>
                     {hobbies?.map(hobby => (
-                        <div key={hobby._id} className="flex flex-row justify-between items-center px-4">
-                                <div className={`w-2 h-2 rounded-full`} style={{backgroundColor: hobby.color}}/>
-                                <p>{hobby.title}</p>
+                        <div key={hobby._id} className="flex flex-row justify-start items-start">
+                            <div className="flex flex-row justify-start items-center px-4 space-x-1">
+                                <div className="w-2 h-2 flex flex-col shrink">
+                                    <div className="w-2 h-2 rounded-full" style={{backgroundColor: hobby.color}}/>
+                                </div>
+                                <p className="flex-grow">{hobby.title}</p>
+                            </div>
                         </div>
                     ))}
-                </legend>
+                    </legend>
+                </div>
             }
-        </>
+        </div>
     );
 }
