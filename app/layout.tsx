@@ -65,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <MotionWrap motionKey={pathname}>
                       <div className='flex flex-col h-dvh'>
                         {!isDemo && <Navbar />}
-                        <main className={`${isDemo ? 'min-h-screen object-fill bg-gray-800': 'flex-grow px-5'}`}>
+                        <main className={`${isDemo ? 'min-h-screen object-fill bg-gray-800': 'px-5'}`}>
                           {pathname !== '/' ? ( 
                             <MainPageBody>
                               {children}
