@@ -57,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
         <AuthProvider>
           <body className={inter.className}>
-            <div className={`${isDemo ? '': 'first h-dvh'}`}>
+            <div className={`${isDemo ? '': 'first min-h-screen'}`}>
                 <SpeedInsights/>
                 <Providers> 
                   {loading && <Spinner />}
