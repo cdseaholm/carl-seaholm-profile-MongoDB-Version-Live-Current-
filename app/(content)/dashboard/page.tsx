@@ -63,7 +63,7 @@ export default function Dashboard() {
       }
       
       getHobbies();
-    }, [refreshKey, urlToUse, userID]);
+    }, [refreshKey, urlToUse, userID, setLoading, setHobbies]);
     
     // Second useEffect
     useEffect(() => {

@@ -1,3 +1,5 @@
+'use client'
+
 import useMediaQuery from "@/components/listeners/WidthSettings";
 
 const MainChild = ({children}: {children: React.ReactNode}) => {
