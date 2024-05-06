@@ -78,7 +78,7 @@ export default function Dashboard() {
     
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col flex-grow justify-between h-full w-full">
             <InnerHeader>
                 <h1 className={`text-lg md:text-xl font-bold`}>Dashboard</h1>
             </InnerHeader>
@@ -99,7 +99,7 @@ export default function Dashboard() {
                         </button>
                       </div>) : <div />}
                     </div>
-                    <div className={`justify-start items-center bg-gray-500/70 rounded-md`} style={{maxHeight: maxmin, minHeight: maxmin, overflow: 'hidden'}}>
+                    <div className={`justify-start items-center bg-gray-500/70 rounded-md overflow-hidden flex-grow h-full w-full`}>
                       {calDash &&
                         <CalendarView filter={filterItem} hobbies={hobbies} />
                       }

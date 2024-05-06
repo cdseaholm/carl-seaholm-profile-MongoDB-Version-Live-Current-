@@ -15,7 +15,7 @@ const MotionWrap = ({children, motionKey}: {children: React.ReactNode; motionKey
             stiffness: 100,
             damping: 20,
             delay: 0.2,
-        }}>
+        }} style={{height: '100%', width: '100%'}}>
             {children}
         </motion.div>
     );

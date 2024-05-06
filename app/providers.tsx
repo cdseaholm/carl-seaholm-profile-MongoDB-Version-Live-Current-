@@ -52,7 +52,7 @@ export function Providers({children}: { children: React.ReactNode }) {
         <ModalProvider modalOpen={showModal} setModalOpen={setShowModal} setColorChoice={setColorChoice} colorChoice={colorChoice} calDash={calDash} setCalDash={setCalDash}>
           <MainModal />
           <HobbyProvider filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} setDaySelected={setDaySelected} daySelected={daySelected} setHobbies={setHobbies} hobbies={hobbies} setRefreshKey={setRefreshKey} refreshKey={refreshKey} hobbyToShow={hobbyToShow} setHobbyToShow={setHobbyToShow} categories={categories} setCategories={setCategories} titles={titles} setTitles={setTitles}>
-            <NextUIProvider>
+            <NextUIProvider style={{height: '100%', width: '100%'}}>
               {children}
             </NextUIProvider>
           </HobbyProvider>

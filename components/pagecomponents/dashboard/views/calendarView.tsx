@@ -1,13 +1,10 @@
 import { IHobby } from "@/models/types/hobby";
-import ScrollChild from "@/components/pagetemplates/scrollableChild/scrollChild";
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import listPlugin from '@fullcalendar/list';
 import FullCalendar from "@fullcalendar/react";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import dayGridPlugin from '@fullcalendar/daygrid';
-import useMediaQuery from "@/components/listeners/WidthSettings";
-import { set } from "mongoose";
 
 const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | null}) => {
 
@@ -16,10 +13,7 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
     const [hobbyEvents, setHobbyEvents] = useState<any[]>([]);
     const [initialView, setInitialView] = useState<string>('dayGridMonth');
     const [monthView, setMonthView] = useState<boolean>(false);
-    const isBreakpoint = useMediaQuery(768);
-    const maxmin = isBreakpoint ? '26vh' : '21vh';
-    const calHeight = '49vh';
-    const detailHeight = isBreakpoint ? '18vh' : '13vh';
+
 
     useEffect(() => {
         if (hobbies === null) {
@@ -49,21 +43,8 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
     }, [hobbies, session]);
 
     return (
-        <div className="flex flex-col justify-between p-2 items-center space-y-1">
-            <style jsx>{`
-                .fc-daygrid-day-frame {
-                    position: relative;
-                    width: 100%;
-                    padding-bottom: 100%; /* This makes the aspect ratio 1:1 */
-                }
-
-                .fc-daygrid-day-top {
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                }
-            `}</style>
-            <div className="text-xs" style={{maxHeight: calHeight, minHeight: calHeight, overflow: 'auto'}}>
+        <div className="flex flex-col justify-evenly p-2 items-center flex-grow overflow-hidden h-full w-full flex-grow">
+            <div className="text-xs overflow-auto w-full h-4/6">
                 <FullCalendar 
                     plugins={[listPlugin, dayGridPlugin]} 
                     initialView={initialView} 
@@ -85,7 +66,7 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
                                 setMonthView(true);
                                 console.log('view', view);
                             },
-                            height: '100%',
+                            height: 'auto',
                             expandRows: false,
                         }
                     }}
@@ -131,36 +112,36 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
                 />
             </div>
             {!monthView &&
-            <div className="flex-1 border border-black w-full" style={{maxHeight: maxmin, minHeight: maxmin, overflow: 'hidden'}}>
-                <div className="flex flex-row justify-between items-center border-b border-black p-2">
-                    <div>
-                        <p>Day Details</p>
-                        <p>{daySelected ? daySelected : 'No Day Selected'}</p>
-                    </div>
-                    {daySelected !== '' ? <div className="cursor-pointer" onClick={() => setDaySelected('')}>Clear</div> : <div/>}
-                </div>
-                <div style={{maxHeight: detailHeight, minHeight: detailHeight, overflow: 'auto'}}>
-                {daySelected !== '' && 
-                    <div>
-                        {hobbies?.filter(hobby => hobby.dates?.includes(daySelected)).map(hobby => {
-                            return (
-                                <div key={hobby._id} className="justify-between px-2">
-                                    <div className="pt-2">
-                                        <p>{hobby.title}</p>
-                                        <p>{hobby.categories.join(', ')}</p>
-                                    </div>
-                                    <div>
-                                        <p>{hobby.dates.join(', ')}</p>
-                                        <p>{hobby.goals}</p>
-                                        <p>{hobby.descriptions}</p>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                }
-                </div>
+        <div className="border border-black w-full h-1/3 overflow-hidden">
+            <div className="flex flex-row justify-between items-center border-b border-black p-2">
+              <div>
+                <p>Day Details</p>
+                <p>{daySelected ? daySelected : 'No Day Selected'}</p>
+              </div>
+              {daySelected !== '' ? <div className="cursor-pointer" onClick={() => setDaySelected('')}>Clear</div> : <div/>}
             </div>
+            <div className="overflow-auto" style={{height: '72%'}}>
+              {daySelected !== '' && 
+                <div className="h-full w-full">
+                  {hobbies?.filter(hobby => hobby.dates?.includes(daySelected)).map(hobby => {
+                    return (
+                      <div key={hobby._id} className="justify-between px-2">
+                        <div className="pt-2">
+                          <p>{hobby.title}</p>
+                          <p>{hobby.categories.join(', ')}</p>
+                        </div>
+                        <div>
+                          <p>{hobby.dates.join(', ')}</p>
+                          <p>{hobby.goals}</p>
+                          <p>{hobby.descriptions}</p>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              }
+            </div>
+          </div>
         }
     </div>
 )};

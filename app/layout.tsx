@@ -14,6 +14,7 @@ import { Spinner } from "@/components/misc/Spinner";
 import { useStateContext } from "./context/state/StateContext";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import MotionWrap from "@/components/listeners/motionwrap";
+import useMediaQuery from "@/components/listeners/WidthSettings";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -51,33 +52,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           document.body.style.overflow = 'unset';
       };
   }, []);
-
-  useEffect(() => {
-    const setVh = () => {
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
-
-    window.addEventListener('resize', setVh);
-    setVh();
-
-    return () => window.removeEventListener('resize', setVh);
-  }, []);
+  const isBreakpoint = useMediaQuery(768);
+  const height = isBreakpoint ? '85%' : '80%';
 
   return (
     <html lang="en">
       <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
         <AuthProvider>
-          <body className={inter.className}>
-            
+          <body className={`${inter.className}`}>
+            <div className="bg-white/50 h-dvh">
                 <SpeedInsights/>
                 <Providers> 
                   {loading && <Spinner />}
                   {!loading &&
-                    <div className="flex flex-col h-[calc(100*var(--vh))] min-w-screen first overflow-hidden">
                     <MotionWrap motionKey={pathname}>
+                      <main className={`${isDemo ? 'min-h-screen object-fill bg-gray-800': 'flex flex-col px-5 h-dvh justify-between'}`}>
                         {!isDemo && <Navbar />}
-                        <main className={`${isDemo ? 'min-h-screen object-fill bg-gray-800': 'px-5'}`}>
                           {pathname !== '/' ? ( 
                             <MainPageBody>
                               {children}
@@ -85,12 +75,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                           ): (
                             <>{children}</>
                           )}
-                        </main>
                         {!isDemo && <FooterNavBar />}
+                        </main>
                     </MotionWrap>
-                    </div>
                   }
                 </Providers>
+            </div>
           </body>
         </AuthProvider>
       </AnimatePresence>
