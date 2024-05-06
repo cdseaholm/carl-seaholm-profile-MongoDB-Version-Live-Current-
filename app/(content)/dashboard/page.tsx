@@ -12,6 +12,7 @@ import StatsView from "@/components/pagecomponents/dashboard/views/statsView";
 import { useModalContext } from "@/app/context/modal/modalContext";
 import CalendarView from "@/components/pagecomponents/dashboard/views/calendarView";
 import { useRouter } from "next/navigation";
+import useMediaQuery from "@/components/listeners/WidthSettings";
 
 
 export default function Dashboard() {
@@ -23,7 +24,8 @@ export default function Dashboard() {
     const adminID = session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
     const {calDash, setCalDash, setModalOpen } = useModalContext();
-    const router = useRouter();
+    const isBreakpoint = useMediaQuery(768);
+    const maxmin = isBreakpoint ? '77vh' : '72vh';
 
     useEffect(() => {
       const getHobbies =  async () => {
@@ -76,28 +78,28 @@ export default function Dashboard() {
     
 
     return (
-        <div className="h-full w-full">
+        <div className="flex flex-col">
             <InnerHeader>
                 <h1 className={`text-lg md:text-xl font-bold`}>Dashboard</h1>
             </InnerHeader>
             <MainChild>
               {loading ? (
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="justify-center items-center">
                     <h1>Loading...</h1>
                   </div>
                 ) : (
-                  <div className="px-2 pb-5 h-full w-full">
+                  <div className="px-2 pb-5 w-full h-full">
                     <div className="flex flex-row justify-between items-center px-5 py-2">
                       <button className="text-base" onClick={() => setCalDash(!calDash)}>
                             {calDash ? 'See stats' : 'See Timeline'}
                       </button>
-                      {adminID ? (<div className="flex flex-col justify-center items-center cursor-pointer" onClick={() => setModalOpen('actions')}>
+                      {adminID ? (<div className="justify-center items-center cursor-pointer" onClick={() => setModalOpen('actions')}>
                         <button className="text-xl">
                           +
                         </button>
                       </div>) : <div />}
                     </div>
-                    <div className={`flex flex-col justify-start items-center bg-gray-500/70 rounded-md h-full w-full object-fill`}>
+                    <div className={`justify-start items-center bg-gray-500/70 rounded-md`} style={{maxHeight: maxmin, minHeight: maxmin, overflow: 'hidden'}}>
                       {calDash &&
                         <CalendarView filter={filterItem} hobbies={hobbies} />
                       }
