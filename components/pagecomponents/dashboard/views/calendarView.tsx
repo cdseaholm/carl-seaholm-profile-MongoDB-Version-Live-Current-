@@ -5,6 +5,7 @@ import FullCalendar from "@fullcalendar/react";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import dayGridPlugin from '@fullcalendar/daygrid';
+import useMediaQuery from "@/components/listeners/WidthSettings";
 
 const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | null}) => {
 
@@ -13,6 +14,10 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
     const [hobbyEvents, setHobbyEvents] = useState<any[]>([]);
     const [initialView, setInitialView] = useState<string>('dayGridMonth');
     const [monthView, setMonthView] = useState<boolean>(false);
+    const isBreakpoint = useMediaQuery(768);
+    const calHeight = isBreakpoint ? '58%' : '66%';
+    const detHeight = isBreakpoint ? '42%' : '34%';
+    const width = isBreakpoint ? '100%' : '90%';
 
 
     useEffect(() => {
@@ -43,8 +48,8 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
     }, [hobbies, session]);
 
     return (
-        <div className="flex flex-col justify-evenly p-2 items-center flex-grow overflow-hidden h-full w-full flex-grow">
-            <div className="text-xs overflow-auto w-full h-4/6">
+        <div className="flex flex-col justify-between p-2 items-center flex-grow overflow-hidden h-full w-full flex-grow">
+            <div className="text-xs overflow-auto w-full" style={{height: calHeight, width: width}}>
                 <FullCalendar 
                     plugins={[listPlugin, dayGridPlugin]} 
                     initialView={initialView} 
@@ -112,7 +117,7 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
                 />
             </div>
             {!monthView &&
-        <div className="border border-black w-full h-1/3 overflow-hidden">
+        <div className="border border-black w-full overflow-hidden" style={{height: detHeight, width: width}}>
             <div className="flex flex-row justify-between items-center border-b border-black p-2">
               <div>
                 <p>Day Details</p>
