@@ -49,7 +49,20 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
     }, [hobbies, session]);
 
     return (
-        <div className="flex flex-col justify-between p-2 items-center space-y-1 w-full">
+        <div className="flex flex-col justify-between p-2 items-center space-y-1">
+            <style jsx>{`
+                .fc-daygrid-day-frame {
+                    position: relative;
+                    width: 100%;
+                    padding-bottom: 100%; /* This makes the aspect ratio 1:1 */
+                }
+
+                .fc-daygrid-day-top {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                }
+            `}</style>
             <div className="text-xs" style={{maxHeight: calHeight, minHeight: calHeight, overflow: 'auto'}}>
                 <FullCalendar 
                     plugins={[listPlugin, dayGridPlugin]} 

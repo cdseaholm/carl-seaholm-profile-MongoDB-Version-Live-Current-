@@ -52,6 +52,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       };
   }, []);
 
+  useEffect(() => {
+    const setVh = () => {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
+    window.addEventListener('resize', setVh);
+    setVh();
+
+    return () => window.removeEventListener('resize', setVh);
+  }, []);
+
   return (
     <html lang="en">
       <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
@@ -62,7 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Providers> 
                   {loading && <Spinner />}
                   {!loading &&
-                    <div className="flex flex-col h-[calc(100dvh)] min-w-screen first overflow-hidden">
+                    <div className="flex flex-col h-[calc(100*var(--vh))] min-w-screen first overflow-hidden">
                     <MotionWrap motionKey={pathname}>
                         {!isDemo && <Navbar />}
                         <main className={`${isDemo ? 'min-h-screen object-fill bg-gray-800': 'px-5'}`}>
