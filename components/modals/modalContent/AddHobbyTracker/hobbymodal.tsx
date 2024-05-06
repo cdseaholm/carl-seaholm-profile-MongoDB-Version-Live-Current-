@@ -65,7 +65,7 @@ export default function ModalHobby() {
         }
         
         getHobbies();
-      }, [refreshKey, urlToUse, userID]);
+      }, [refreshKey, urlToUse, userID, setLoading, setLocalCategories]);
 
     useEffect(() => {
         if (colorName === '') {

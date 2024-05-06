@@ -46,7 +46,7 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
                 });
                 setInitialView(currentWeekTasks.length > 0 ? 'listWeek' : 'dayGridMonth');
             }}
-    }, [hobbies]);
+    }, [hobbies, session]);
 
     return (
         <div className="flex flex-col justify-between p-2 items-center space-y-1 w-full">
