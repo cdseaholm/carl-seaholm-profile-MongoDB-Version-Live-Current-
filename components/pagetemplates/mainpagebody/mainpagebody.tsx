@@ -1,8 +1,13 @@
+import useMediaQuery from "@/components/listeners/WidthSettings";
+
 const MainPageBody = ({children}: {children: React.ReactNode}) => {
+    const isBreakpoint = useMediaQuery(768);
+    const maxmin = isBreakpoint ? '87vh' : '82vh';
+
     return (
-        <div className={`object-contain h-full w-full pb-8 childFirst`}>
-            {children}
-        </div>
+      <div className={`flex flex-col pb-8 childFirst`} style={{maxHeight: maxmin, minHeight: maxmin, overflow: 'hidden'}}>
+        {children}
+      </div>
     );
   };
   
