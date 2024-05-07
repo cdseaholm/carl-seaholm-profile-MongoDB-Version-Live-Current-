@@ -8,7 +8,6 @@ import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "../pagetemplates/mainchild/mainchild";
 import { useSession } from "next-auth/react";
 import { useModalContext } from "@/app/context/modal/modalContext";
-import { Main } from "next/document";
 
 
 const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<string>; posts: Record<string, post[]>}) => {
