@@ -8,6 +8,7 @@ import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "../pagetemplates/mainchild/mainchild";
 import { useSession } from "next-auth/react";
 import { useModalContext } from "@/app/context/modal/modalContext";
+import { Main } from "next/document";
 
 
 const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<string>; posts: Record<string, post[]>}) => {
@@ -48,7 +49,7 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
     }, [dropdownRef, open, setOpen, buttonRef]);
 
     return (
-        <>
+        <MainChild>
             <InnerHeader>
                 <header className="underline text-4xl">
                     Blog
@@ -90,10 +91,8 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
                         ))}
                     </div>
                 }
-            </InnerHeader>   
-            <MainChild>
-                <div className="flex flex-col items-center justify-center p-4">
-                    <div className={`${category === 'All' ? `md:grid md:grid-cols-2 justify-center` : `md:flex md:flex-col md:items-center`}`}>
+            </InnerHeader>
+                    <div className={`${category === 'All' ? `md:grid md:grid-cols-2 w-full h-full justify-center` : `flex flex-col items-center`} scrollbar-thin scrollbar-webkit`} style={{overflow: 'auto'}}>
                             {posts !== null && category === 'All' &&
                                 Object.keys(posts).map((category, id) => <PostItemList key={id} category={category} posts={posts[category]} />
                                 )
@@ -102,9 +101,7 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
                                 <PostItemList category={category} posts={posts[category]} />
                             }
                     </div>
-                </div>
             </MainChild>
-            </>
     );
     }
 

@@ -9,6 +9,8 @@ import { IHobby } from '@/models/types/hobby';
 import { StateProvider } from './context/state/StateContext';
 import MainModal from '@/components/modals/mainmodal/mainmodal';
 import { AlertProvider } from './context/alert/alertcontext';
+import { RecipeProvider } from './context/recipes/recipecontext';
+import { IRecipe } from '@/models/types/recipe';
 
 export function Providers({children}: { children: React.ReactNode }) {
 
@@ -39,6 +41,10 @@ export function Providers({children}: { children: React.ReactNode }) {
   const [categories, setCategories] = useState([] as string[]);
   const [titles, setTitles] = useState([] as string[]);
 
+  //recipeStates
+  const [recipeFilter, setRecipeFilter] = useState('');
+  const [recipes, setRecipes] = useState([] as IRecipe[]);
+
   const resetAlert = async () => {
     setAlertMessage('');
     setAlertParent('');
@@ -52,9 +58,11 @@ export function Providers({children}: { children: React.ReactNode }) {
         <ModalProvider modalOpen={showModal} setModalOpen={setShowModal} setColorChoice={setColorChoice} colorChoice={colorChoice} calDash={calDash} setCalDash={setCalDash}>
           <MainModal />
           <HobbyProvider filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} setDaySelected={setDaySelected} daySelected={daySelected} setHobbies={setHobbies} hobbies={hobbies} setRefreshKey={setRefreshKey} refreshKey={refreshKey} hobbyToShow={hobbyToShow} setHobbyToShow={setHobbyToShow} categories={categories} setCategories={setCategories} titles={titles} setTitles={setTitles}>
-            <NextUIProvider style={{height: '100%', width: '100%'}}>
-              {children}
-            </NextUIProvider>
+            <RecipeProvider filterItem={recipeFilter} setFilterItem={setRecipeFilter} recipes={recipes} setRecipes={setRecipes}>
+              <NextUIProvider style={{height: '100%', width: '100%'}}>
+                {children}
+              </NextUIProvider>
+            </RecipeProvider>
           </HobbyProvider>
         </ModalProvider>
       </AlertProvider>

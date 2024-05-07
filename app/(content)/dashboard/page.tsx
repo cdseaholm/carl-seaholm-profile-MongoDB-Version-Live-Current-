@@ -1,18 +1,15 @@
 'use client'
 
-import { useEffect, useState } from "react";
-import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
-import { IHobby } from "@/models/types/hobby";
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import { useStateContext } from "@/app/context/state/StateContext";
-import CalView from "@/components/pagecomponents/dashboard/views/calendarView";
 import StatsView from "@/components/pagecomponents/dashboard/views/statsView";
 import { useModalContext } from "@/app/context/modal/modalContext";
 import CalendarView from "@/components/pagecomponents/dashboard/views/calendarView";
-import { useRouter } from "next/navigation";
 import useMediaQuery from "@/components/listeners/WidthSettings";
+import ActionButton from "@/components/buttons/actionbutton";
 
 
 export default function Dashboard() {
@@ -74,15 +71,12 @@ export default function Dashboard() {
       }
       setLoading(false);
           
-    }, [hobbies]);
+    }, [hobbies, setLoading]);
     
 
     return (
-        <div className="flex flex-col flex-grow justify-between h-full w-full">
-            <InnerHeader>
-                <h1 className={`text-lg md:text-xl font-bold`}>Dashboard</h1>
-            </InnerHeader>
             <MainChild>
+              <h1 className={`text-lg md:text-xl font-bold text-center`}>Dashboard</h1>
               {loading ? (
                   <div className="justify-center items-center">
                     <h1>Loading...</h1>
@@ -93,13 +87,11 @@ export default function Dashboard() {
                       <button className="text-base" onClick={() => setCalDash(!calDash)}>
                             {calDash ? 'See stats' : 'See Timeline'}
                       </button>
-                      {adminID ? (<div className="justify-center items-center cursor-pointer" onClick={() => setModalOpen('actions')}>
-                        <button className="text-xl">
-                          +
-                        </button>
-                      </div>) : <div />}
+                      {adminID ? (
+                        <ActionButton whichModal="actions"/>
+                      ) : <div />}
                     </div>
-                    <div className={`justify-start items-center bg-gray-500/70 rounded-md overflow-hidden flex-grow h-full w-full`}>
+                    <div className={`justify-start items-center bg-gray-500/70 rounded-md overflow-hidden flex-grow `} style={{height: "96%", width: '100%'}}>
                       {calDash &&
                         <CalendarView filter={filterItem} hobbies={hobbies} />
                       }
@@ -111,6 +103,5 @@ export default function Dashboard() {
                 )
               }
             </MainChild>
-        </div>
     );
 };
