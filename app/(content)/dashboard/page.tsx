@@ -9,6 +9,7 @@ import StatsView from "@/components/pagecomponents/dashboard/views/statsView";
 import { useModalContext } from "@/app/context/modal/modalContext";
 import CalendarView from "@/components/pagecomponents/dashboard/views/calendarView";
 import useMediaQuery from "@/components/listeners/WidthSettings";
+import ActionButton from "@/components/buttons/actionbutton";
 
 
 export default function Dashboard() {
@@ -86,13 +87,11 @@ export default function Dashboard() {
                       <button className="text-base" onClick={() => setCalDash(!calDash)}>
                             {calDash ? 'See stats' : 'See Timeline'}
                       </button>
-                      {adminID ? (<div className="justify-center items-center cursor-pointer" onClick={() => setModalOpen('actions')}>
-                        <button className="text-xl">
-                          +
-                        </button>
-                      </div>) : <div />}
+                      {adminID ? (
+                        <ActionButton whichModal="actions"/>
+                      ) : <div />}
                     </div>
-                    <div className={`justify-start items-center bg-gray-500/70 rounded-md overflow-hidden flex-grow h-full w-full`}>
+                    <div className={`justify-start items-center bg-gray-500/70 rounded-md overflow-hidden flex-grow `} style={{height: "96%", width: '100%'}}>
                       {calDash &&
                         <CalendarView filter={filterItem} hobbies={hobbies} />
                       }
