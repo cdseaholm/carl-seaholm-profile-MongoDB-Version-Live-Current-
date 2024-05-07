@@ -15,9 +15,9 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
     const [initialView, setInitialView] = useState<string>('dayGridMonth');
     const [monthView, setMonthView] = useState<boolean>(false);
     const isBreakpoint = useMediaQuery(768);
-    const calHeight = isBreakpoint ? '58%' : '66%';
-    const detHeight = isBreakpoint ? '42%' : '34%';
-    const width = isBreakpoint ? '100%' : '90%';
+    const calHeight = isBreakpoint ? '66%' : '67%';
+    const detHeight = isBreakpoint ? '40%' : '34%';
+    const width = isBreakpoint ? '95%' : '90%';
 
 
     useEffect(() => {
@@ -48,8 +48,8 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
     }, [hobbies, session]);
 
     return (
-        <div className="flex flex-col justify-between p-2 items-center flex-grow overflow-hidden h-full w-full flex-grow">
-            <div className="text-xs overflow-auto w-full" style={{height: calHeight, width: width}}>
+        <div className="flex flex-col justify-between p-2 items-center overflow-hidden h-full w-full flex-grow">
+            <div className="overflow-auto w-full" style={{height: calHeight, width: width, fontSize: '8px'}}>
                 <FullCalendar 
                     plugins={[listPlugin, dayGridPlugin]} 
                     initialView={initialView} 
@@ -117,7 +117,7 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
                 />
             </div>
             {!monthView &&
-        <div className="border border-black w-full overflow-hidden" style={{height: detHeight, width: width}}>
+        <div className="border border-black w-full overflow-hidden" style={{height: detHeight}}>
             <div className="flex flex-row justify-between items-center border-b border-black p-2">
               <div>
                 <p>Day Details</p>
@@ -125,7 +125,7 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
               </div>
               {daySelected !== '' ? <div className="cursor-pointer" onClick={() => setDaySelected('')}>Clear</div> : <div/>}
             </div>
-            <div className="overflow-auto" style={{height: '72%'}}>
+            <div className="overflow-auto flex-grow">
               {daySelected !== '' && 
                 <div className="h-full w-full">
                   {hobbies?.filter(hobby => hobby.dates?.includes(daySelected)).map(hobby => {

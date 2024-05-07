@@ -1,17 +1,13 @@
 'use client'
 
-import { useEffect, useState } from "react";
-import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
-import { IHobby } from "@/models/types/hobby";
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import { useStateContext } from "@/app/context/state/StateContext";
-import CalView from "@/components/pagecomponents/dashboard/views/calendarView";
 import StatsView from "@/components/pagecomponents/dashboard/views/statsView";
 import { useModalContext } from "@/app/context/modal/modalContext";
 import CalendarView from "@/components/pagecomponents/dashboard/views/calendarView";
-import { useRouter } from "next/navigation";
 import useMediaQuery from "@/components/listeners/WidthSettings";
 
 
@@ -74,15 +70,12 @@ export default function Dashboard() {
       }
       setLoading(false);
           
-    }, [hobbies]);
+    }, [hobbies, setLoading]);
     
 
     return (
-        <div className="flex flex-col flex-grow justify-between h-full w-full">
-            <InnerHeader>
-                <h1 className={`text-lg md:text-xl font-bold`}>Dashboard</h1>
-            </InnerHeader>
             <MainChild>
+              <h1 className={`text-lg md:text-xl font-bold text-center`}>Dashboard</h1>
               {loading ? (
                   <div className="justify-center items-center">
                     <h1>Loading...</h1>
@@ -111,6 +104,5 @@ export default function Dashboard() {
                 )
               }
             </MainChild>
-        </div>
     );
 };

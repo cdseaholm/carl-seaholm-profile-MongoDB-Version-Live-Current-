@@ -13,6 +13,7 @@ import EditUser from "../modalContent/EditUser/editUser";
 import DashDropChangeViewButton from "../modalContent/Helpers/dashdropchangeViewButton";
 import DashDropIndexButton from "../modalContent/Helpers/dashdropindexbutton";
 import CalendarModal from "../modalContent/Calendar/calendarmodal";
+import AddRecipes from "../modalContent/Recipes/Add";
 
 
 export default function MainModal() {
@@ -33,6 +34,7 @@ export default function MainModal() {
         modalOpen === 'dashdropdown' ? 'Menu' : 
         modalOpen === 'edituser' ? 'Edit User' :
         modalOpen === 'calendar' ? 'Calendar' :
+        modalOpen === 'addrecipe' ? 'Add Recipe' :
         '';
 
     const handleOptionSelect = (option: string) => {
@@ -84,6 +86,7 @@ export default function MainModal() {
                         {modalOpen === 'dashdropchangeview' && <DashDropChangeViewButton />}
                         {modalOpen === 'dashdropindex' && <DashDropIndexButton />}
                         {modalOpen === 'calendar' && <CalendarModal />}
+                        {modalOpen === 'addrecipe' && <AddRecipes />}
                         </>
                         }
                         </>
