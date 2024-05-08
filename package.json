@@ -48,6 +48,7 @@
     "react-hook-form": "^7.51.4",
     "react-router-dom": "^6.23.0",
     "react-social-icons": "^6.16.0",
+    "recharts": "^2.12.6",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "u": "^0.1.0"
