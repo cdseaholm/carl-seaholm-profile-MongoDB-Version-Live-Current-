@@ -5,15 +5,21 @@ import { useModalContext } from "@/app/context/modal/modalContext";
 import { useStateContext } from "@/app/context/state/StateContext";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { UploadButton } from "@/utils/uploadthing";
+import useHeightMediaQuery from "@/components/listeners/HeightSettings";
 
 export default function AddRecipes() {
-
     const {data: session} = useSession();
-    const { setLoading, urlToUse } = useStateContext();
+    const { urlToUse } = useStateContext();
     const { setModalOpen } = useModalContext();
     const { setRefreshKey, refreshKey } = useHobbyContext();
+
+    const [loading, setLoading] = useState(false);
+    const [uploaded, setUploaded] = useState(false);
+    const [photo, setPhoto] = useState<string | null>(null);
     const router = useRouter();
+    const tooSmall = useHeightMediaQuery(560);
 
 
     const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -98,6 +104,34 @@ return (
             <div>
                 <label htmlFor="createRecipeNotes" className={`block my-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white`}>Description</label>
                 <textarea id="createRecipeNotes" name="createRecipeNotes" autoComplete="off" rows={4} className={`block p-2.5 w-full text-xs md:text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} placeholder="Write Notes here"></textarea>                
+            </div>
+            <div>
+                <label htmlFor="createRecipeImage" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Upload Image</label>
+                <div className="flex flex-row justify-start text-xs">
+                    {tooSmall &&
+                        <input type="file" accept="image/*" capture name="createRecipeImage" id="createRecipeImage" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                    }
+                    {!tooSmall &&
+                    <>
+                    {uploaded ? 
+                        <p className="text-lime-600 font-bold">Image Uploaded</p> :
+                        <UploadButton
+                            endpoint="imageUploader"
+                            onClientUploadComplete={(res: any) => {
+                                console.log('image res', res);
+                                const photo = res[0].key;
+                                console.log('photo', photo);
+                                setPhoto(photo);
+                                setUploaded(true);
+                            }}
+                            onUploadError={(error: Error) => {
+                            alert(`ERROR! ${error.message}`);
+                            }}
+                        />
+                    }
+                    </>
+                    }
+                </div>
             </div>
             <div className="flex flex-row justify-end space-x-1 items-center">
                 <div>

@@ -13,12 +13,11 @@ import { set } from "mongoose";
 
 const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | null}) => {
 
-    const { daySelected, setDaySelected } = useHobbyContext();
     const { data: session } = useSession();
+    const { daySelected, setDaySelected } = useHobbyContext();
     const [hobbyEvents, setHobbyEvents] = useState<any[]>([]);
     const [initialView, setInitialView] = useState<string>('dayGridMonth');
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    const [monthView, setMonthView] = useState<boolean>(false);
+    const [monthView, setMonthView] = useState<boolean>(true);
     const isBreakpoint = useMediaQuery(768);
     const isHeightBreakpoint = useHeightMediaQuery(768);
     const tooSmall = useHeightMediaQuery(560);
@@ -28,14 +27,16 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
     const heightTwo = isHeightBreakpoint ? '80%' : calHeight;
     const finalHeight = tooSmall ? '100%' : heightTwo;
     const finalWidth = isHeightBreakpoint ? '100%' : width;
-    const detExpanded = isExpanded ? '77%': detHeight;
-    const detWidth = isExpanded ? '86%' : width;
+    const detExpanded = daySelected !== '' ? '77%': detHeight;
+    const detWidth = daySelected !== '' ? '86%' : width;
     const finalDetHeight = isHeightBreakpoint ? '12%' : detExpanded;
-    const detHeightExpanded = isExpanded && isHeightBreakpoint ? '50%' : finalDetHeight;
+    const detHeightExpanded = daySelected !== '' && isHeightBreakpoint ? '50%' : finalDetHeight;
 
 
     useEffect(() => {
-        if (hobbies === null) {
+        if (session === null) {
+            return;
+        } else if (hobbies === null) {
             return;
         } else {
             const hobbiesToSet = hobbies.map((hobby: IHobby) => {
@@ -63,7 +64,6 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
 
     const handleClearDay = () => {
             setDaySelected('');
-            setIsExpanded(false);
     }
 
     return (
@@ -99,7 +99,6 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
                             setDaySelected(info.event.startStr);
                         } else {
                             setDaySelected(info.event.startStr);
-                            setIsExpanded(true);
                         }
                     }}
                     select={(info) => {
@@ -107,7 +106,6 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
                             setDaySelected(info.startStr);
                         } else {
                             setDaySelected(info.startStr);
-                            setIsExpanded(true);
                         }
                     }}
                     fixedWeekCount={false}
@@ -144,40 +142,35 @@ const CalendarView = ({filter, hobbies}: {filter: string; hobbies: IHobby[] | nu
                     
                 />
             </div>
-            {!monthView &&
-                <div className={`${isExpanded ? 'absolute z-20 border border-black overflow-hidden bg-neutral-200 transition-all duration-200 ease-in-out' : 'border border-black overflow-hidden transition-all duration-200 ease-in-out'} ${tooSmall && !isExpanded ? 'hidden' : ''}`} style={{height: detHeightExpanded, width: detWidth}}>
+            {monthView &&
+                <div className={`${daySelected !== '' ? 'absolute z-20 border border-black overflow-hidden bg-neutral-200 transition-all duration-200 ease-in-out' : 'border border-black overflow-hidden transition-all duration-200 ease-in-out'} ${daySelected === '' ? 'hidden' : ''}`} style={{height: detHeightExpanded, width: detWidth}}>
                     <div className="flex flex-row justify-between items-center border-b border-black px-2">
-                    <div className="py-2">
-                        <p>Day Details</p>
-                        <p>{daySelected ? daySelected : 'No Day Selected'}</p>
-                    </div>
-                        {daySelected !== '' ? 
-                            <div className="flex flex-col space-y-1 justify-between items-end py-1">
-                                {isExpanded ? 
-                                <FiChevronsDown className="cursor-pointer hover:bg-stone-500" onClick={() => setIsExpanded(false)}/> :
-                                <FiChevronsUp className="cursor-pointer hover:bg-stone-500" onClick={() => setIsExpanded(true)} />
-                                }
-                                <div className="cursor-pointer hover:bg-stone-500" onClick={handleClearDay}>
-                                    Clear
-                                </div>
-                            </div>: 
-                            <div/>
-                        }
+                        <div className="py-2">
+                            <p>Day Details</p>
+                            <p>{daySelected ? daySelected : 'No Day Selected'}</p>
+                        </div>
+                            {daySelected !== '' ? 
+                                <div className="flex flex-col space-y-1 justify-between items-end py-1">
+                                    <div className="cursor-pointer hover:bg-stone-500" onClick={handleClearDay}>
+                                        Clear
+                                    </div>
+                                </div>: 
+                                <div/>
+                            }
                     </div>
                     <div className="overflow-auto flex-grow scrollbar-thin scrollbar-webkit">
                     {daySelected !== '' && 
                         <div className="h-full w-full">
                             {hobbies?.filter(hobby => hobby.dates?.includes(daySelected)).map(hobby => {
                                 return (
-                                <div key={hobby._id} className="justify-between px-2">
+                                <div key={hobby._id} className="justify-between p-2">
                                     <div className="pt-2">
                                     <p>{hobby.title}</p>
-                                    <p>{hobby.categories.join(', ')}</p>
+                                    <p>{hobby.categories.length > 0 ? hobby.categories.join(', ') : 'No categories'}</p>
                                     </div>
                                     <div>
-                                    <p>{hobby.dates.join(', ')}</p>
-                                    <p>{hobby.goals}</p>
-                                    <p>{hobby.descriptions}</p>
+                                    <p>{hobby.goals.length > 0 ? hobby.goals : 'No goals yet'}</p>
+                                    <p>{hobby.descriptions.length > 0 && hobby.descriptions[0] !== ''? hobby.descriptions : 'No descriptions'}</p>
                                     </div>
                                 </div>
                                 )

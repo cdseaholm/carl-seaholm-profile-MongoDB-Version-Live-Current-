@@ -20,6 +20,12 @@ const recipeSchema = new Schema(
         user: {
             type: String,
             required: true
+        },
+        image: {
+            type: String
+        },
+        link: {
+            type: String
         }
     },
     {

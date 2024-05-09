@@ -5,4 +5,6 @@ export type IRecipe = {
     rating: number;
     notes: string;
     user: string;
+    image: string;
+    link: string;
 };

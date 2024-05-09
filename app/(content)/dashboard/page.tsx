@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
@@ -8,21 +8,19 @@ import { useStateContext } from "@/app/context/state/StateContext";
 import StatsView from "@/components/pagecomponents/dashboard/views/statsView";
 import { useModalContext } from "@/app/context/modal/modalContext";
 import CalendarView from "@/components/pagecomponents/dashboard/views/calendarView";
-import useMediaQuery from "@/components/listeners/WidthSettings";
 import ActionButton from "@/components/buttons/actionbutton";
 
 
 export default function Dashboard() {
     
-    const { loading, setLoading } = useStateContext();
     const { data: session } = useSession();
-    const { hobbies, setHobbies, filterItem, refreshKey, categories, setCategories, setTitles, titles } = useHobbyContext();
-    const { urlToUse } = useStateContext();
     const adminID = session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
-    const {calDash, setCalDash, setModalOpen } = useModalContext();
-    const isBreakpoint = useMediaQuery(768);
-    const maxmin = isBreakpoint ? '77vh' : '72vh';
+
+    const { hobbies, setHobbies, filterItem, refreshKey } = useHobbyContext();
+    const { urlToUse } = useStateContext();
+    const {calDash, setCalDash } = useModalContext();
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
       const getHobbies =  async () => {
@@ -62,7 +60,6 @@ export default function Dashboard() {
       getHobbies();
     }, [refreshKey, urlToUse, userID, setLoading, setHobbies]);
     
-    // Second useEffect
     useEffect(() => {
       setLoading(true);
       if (hobbies.length === 0) {
