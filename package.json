@@ -20,6 +20,7 @@
     "@nextui-org/react": "^2.3.6",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
+    "@uploadthing/react": "^6.5.2",
     "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.10",
     "bcrypt": "^5.1.1",
@@ -51,7 +52,8 @@
     "recharts": "^2.12.6",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
-    "u": "^0.1.0"
+    "u": "^0.1.0",
+    "uploadthing": "^6.10.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
