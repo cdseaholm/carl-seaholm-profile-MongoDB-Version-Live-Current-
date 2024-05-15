@@ -49,34 +49,6 @@ export default function Recipes() {
                         return;
                     }
                     setLocalRecipes(recs);
-                    if (recipeFilter === 'newDatesFirst') {
-                        const sorted = localRecipes.sort((a, b) => {
-                            return new Date(b.date).getTime() - new Date(a.date).getTime();
-                        });
-                        setRecipesSorted(sorted);
-                    } else if (recipeFilter === 'oldDatesFirst') {
-                        const sorted = localRecipes.sort((a, b) => {
-                            return new Date(a.date).getTime() - new Date(b.date).getTime();
-                        });
-                        setRecipesSorted(sorted);
-                    } else if (recipeFilter === 'highRatingFirst') {
-                        const sorted = localRecipes.sort((a, b) => {
-                            return a.rating - b.rating;
-                        });
-                        setRecipesSorted(sorted);
-                    } else if (recipeFilter === 'lowRatingFirst') {
-                        const sorted = localRecipes.sort((a, b) => {
-                            return b.rating - a.rating;
-                        });
-                        setRecipesSorted(sorted);
-                    } else if (recipeFilter === 'No Filter' || recipeFilter === '') {
-                        const sorted = localRecipes.sort((a, b) => {
-                            return new Date(b.date).getTime() - new Date(a.date).getTime();
-                        });
-                        setRecipesSorted(sorted);
-                    } else {
-                        setRecipesSorted(localRecipes);
-                    }
                 }
             } catch (error) {
                 console.error('Error fetching recipes', error);
@@ -89,7 +61,38 @@ export default function Recipes() {
             }
         }
         getRecipes();
-    }, [refreshKey, urlToUse, setLoading, setLocalRecipes, recipeFilter, localRecipes, setRecipesSorted, userID]);
+    }, [refreshKey, urlToUse, userID]);
+
+    useEffect(() => {
+        if (recipeFilter === 'newDatesFirst') {
+            const sorted = localRecipes.sort((a, b) => {
+                return new Date(b.date).getTime() - new Date(a.date).getTime();
+            });
+            setRecipesSorted(sorted);
+        } else if (recipeFilter === 'oldDatesFirst') {
+            const sorted = localRecipes.sort((a, b) => {
+                return new Date(a.date).getTime() - new Date(b.date).getTime();
+            });
+            setRecipesSorted(sorted);
+        } else if (recipeFilter === 'highRatingFirst') {
+            const sorted = localRecipes.sort((a, b) => {
+                return a.rating - b.rating;
+            });
+            setRecipesSorted(sorted);
+        } else if (recipeFilter === 'lowRatingFirst') {
+            const sorted = localRecipes.sort((a, b) => {
+                return b.rating - a.rating;
+            });
+            setRecipesSorted(sorted);
+        } else if (recipeFilter === 'No Filter' || recipeFilter === '') {
+            const sorted = localRecipes.sort((a, b) => {
+                return new Date(b.date).getTime() - new Date(a.date).getTime();
+            });
+            setRecipesSorted(sorted);
+        } else {
+            setRecipesSorted(localRecipes);
+        }
+    }, [localRecipes, recipeFilter]);
 
     return (
         <MainChild>
