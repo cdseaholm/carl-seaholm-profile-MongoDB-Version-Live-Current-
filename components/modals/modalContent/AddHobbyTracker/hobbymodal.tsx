@@ -11,17 +11,18 @@ import { useStateContext } from "@/app/context/state/StateContext";
 
 export default function ModalHobby() {
 
+    const { data: session } = useSession();
+    const { urlToUse } = useStateContext();
+    const { colorChoice, setColorChoice, setModalOpen } = useModalContext();
     const { categoryPassed, setRefreshKey, categories, refreshKey } = useHobbyContext();
+    const [loading, setLoading] = useState(false);
     const [madeCats, setMadeCats] = useState('');
     const [goalChild, setGoalChild] = useState('Goal Value');
     const [goalType, setGoalType] = useState('text');
     const [catCreate, setCatCreate] = useState(false);
     const [goalPlaceHolder, setGoalPlaceHolder] = useState('Pick a Goal Type First');
     const [colorName, setColorName] = useState('');
-    const { colorChoice, setColorChoice, setModalOpen } = useModalContext();
-    const { data: session } = useSession();
     const [localCategories, setLocalCategories] = useState<string[]>([]);
-    const { urlToUse, setLoading } = useStateContext();
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
 
     const handleColorUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -9,12 +9,13 @@ import { useEffect, useState } from "react";
 
 export default function LogSessionModal() {
 
+    const { data: session } = useSession();
+    const { urlToUse } = useStateContext();
     const [seshHobby, setSeshHobby] = useState('');
+    const { setModalOpen } = useModalContext();
     const { setRefreshKey, refreshKey } = useHobbyContext();
     const [localHobbies, setLocalHobbies] = useState<IHobby[]>([]);
-    const { urlToUse, setLoading } = useStateContext();
-    const { data: session } = useSession();
-    const { setModalOpen } = useModalContext();
+    const [loading, setLoading] = useState(false);
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
 
     const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {

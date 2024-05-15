@@ -2,18 +2,31 @@
 import useMediaQuery from '@/components/listeners/WidthSettings';
 import React from 'react';
 
-export const DetailsAccordianPage = ({details, detailsIndex}: {details: Array<String>; detailsIndex: number}) => {
-
+export const DayDetailsAccordian = ({title, categories, goals, descriptions, detailsIndex}: {title: string, categories: string[], goals: string[], descriptions: string[], detailsIndex: number}) => {
 
   return (
     <Accordion>
         <AccordionItem toggle={`panel-${detailsIndex}`}>
-            <AccordionTitle />
+            <div className={`flex flex-row justify-between items-center font-semibold w-full text-sm`}>
+                {title}
+                <AccordionTitle />
+            </div>
         </AccordionItem>
         <AccordionPanel id={`panel-${detailsIndex}`}>
-            {details.map((detail, index) => (
+            {categories.map((category, index) => (
                 <p key={index} className='p-2'>
-                    -{detail}
+                    -{category}
+                </p>
+            ))}
+            {goals.map((goal, index) => (
+                <p key={index} className='p-2'>
+                    -{goal}
+                </p>
+            ))}
+            <p>Descriptions:</p>
+            {descriptions.map((description, index) => (
+                <p key={index} className='p-2'>
+                    -{description}
                 </p>
             ))}
         </AccordionPanel>
@@ -88,32 +101,31 @@ function AccordionItem({ toggle, children, className }: { toggle: string; childr
 const AccordionTitle = () => {
     const { selected } = useAccordion() as { selected: string };
     return (
-        <div className='text-sm font-semibold pr-5 pt-1'>
+        <div className='text-sm font-semibold pr-5'>
             {selected === `panel-1` ? 'Hide Details' : 'Show Details'}
         </div>
     );
 };
 
 const AngleUpIcon = () => (
-  <svg
-    fill="white"
-    strokeWidth="0"
-    viewBox="0 0 320 512"
-    xmlns="http://www.w3.org/2000/svg"
-    className="mt-1 h-4"
-  >
-    <path d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z" />
-  </svg>
-);
+    <svg
+      fill="black"
+      strokeWidth="0"
+      viewBox="0 0 320 512"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-4"
+    >
+      <path d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z" />
+    </svg>
+  );
 
 const AngleDownIcon = () => (
   <svg
-    stroke="currentColor"
     fill="black"
     strokeWidth="0"
     viewBox="0 0 320 512"
     xmlns="http://www.w3.org/2000/svg"
-    className="mt-1 h-4"
+    className="h-4"
   >
     <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z" />
   </svg>

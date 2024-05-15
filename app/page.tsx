@@ -4,13 +4,12 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Spinner } from '@/components/misc/Spinner';
-import { useStateContext } from './context/state/StateContext';
 
 export default function Home() {
-  const [isShowing, setIsShowing] = React.useState(false);
-  const router = useRouter();
-  const { loading, setLoading } = useStateContext();
   const { data: session } = useSession();
+  const [isShowing, setIsShowing] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,14 +27,14 @@ export default function Home() {
     fetchUser();
   }, [setLoading, session, router, session?.user]);
 
-  const navigateToDashboard = () => {
+  const navigateToDashboard = async () => {
     setIsShowing(true);
     setTimeout(() => {
         router.replace('/dashboard');
     }, 500);
   };
 
-  const navigateToProfessional = () => {
+  const navigateToProfessional = async () => {
     setIsShowing(true);
     setTimeout(() => {
         router.replace('/about/professional');

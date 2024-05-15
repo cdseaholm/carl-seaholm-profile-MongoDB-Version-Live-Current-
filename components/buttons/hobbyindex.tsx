@@ -1,8 +1,9 @@
-import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
+
+import { useModalContext } from "@/app/context/modal/modalContext";
 import { useState } from "react";
 
 export default function HobbyIndex() {
-    const { hobbies } = useHobbyContext();
+    const { hobbies } = useModalContext();
     const [show, setShow] = useState(false);
     const title = show ? 'Close' : 'Color Index';
 

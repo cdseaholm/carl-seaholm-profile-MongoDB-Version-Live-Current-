@@ -14,14 +14,14 @@ import { Spinner } from "@/components/misc/Spinner";
 import { useStateContext } from "./context/state/StateContext";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import MotionWrap from "@/components/listeners/motionwrap";
-import useMediaQuery from "@/components/listeners/WidthSettings";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
   const pathname = usePathname();
-  const { urlToUse, setUrlToUse, loading, setLoading } = useStateContext();
+  const { urlToUse, setUrlToUse } = useStateContext();
+  const [loading, setLoading] = useState(true);
   const [isDemo, setIsDemo] = useState(false);
 
   useEffect(() => {
@@ -52,8 +52,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           document.body.style.overflow = 'unset';
       };
   }, []);
-  const isBreakpoint = useMediaQuery(768);
-  const height = isBreakpoint ? '85%' : '80%';
 
   return (
     <html lang="en">
