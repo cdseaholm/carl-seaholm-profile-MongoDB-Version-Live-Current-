@@ -21,53 +21,52 @@ const ToDoList = () => {
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
     const adminID = session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
 
-    const getTasks = async () => {
-        try {
-            const response = await fetch(`${urlToUse}/api/${userID}/gettasks`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (!response.ok) {
-                console.log('No tasks found');
-                return;
-            }
-            if (response.ok) {
-                const res = await response.json();
-                const tasksToUse = res.tasks.map((task: ITask) => {
-                    console.log('Task date:', task.date); // Log the task date format
-                    return {
-                        title: task.title,
-                        time: task.time,
-                        description: task.description,
-                        date: task.date,
-                        user_email: task.user_email,
-                        _id: task._id,
-                        createdAt: task.createdAt,
-                        updatedAt: task.updatedAt,
-                        completed: task.completed
-                    }
-                });
-                setLocalTasks(tasksToUse);
-                console.log(res);
-
-                const tasksFiltered = tasksToUse.filter((task: ITask) => {
-                    console.log('Comparing dates:', task.date, dateToUse);
-                    return task.date === dateToUse;
-                });
-                setFilteredTasks(tasksFiltered);
-            }
-        } catch (error) {
-            console.error('Error fetching tasks', error);
-            return;
-        }
-    }
 
     useEffect(() => {
-        console.log('Date to use:', dateToUse); // Log the dateToUse format
+        const getTasks = async () => {
+            try {
+                const response = await fetch(`${urlToUse}/api/${userID}/gettasks`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    console.log('No tasks found');
+                    return;
+                }
+                if (response.ok) {
+                    const res = await response.json();
+                    const tasksToUse = res.tasks.map((task: ITask) => {
+                        console.log('Task date:', task.date); // Log the task date format
+                        return {
+                            title: task.title,
+                            time: task.time,
+                            description: task.description,
+                            date: task.date,
+                            user_email: task.user_email,
+                            _id: task._id,
+                            createdAt: task.createdAt,
+                            updatedAt: task.updatedAt,
+                            completed: task.completed
+                        }
+                    });
+                    setLocalTasks(tasksToUse);
+                    console.log(res);
+    
+                    const tasksFiltered = tasksToUse.filter((task: ITask) => {
+                        console.log('Comparing dates:', task.date, dateToUse);
+                        return task.date === dateToUse;
+                    });
+                    setFilteredTasks(tasksFiltered);
+                }
+            } catch (error) {
+                console.error('Error fetching tasks', error);
+                return;
+            }
+        }
         getTasks();
-    }, [dateToUse, urlToUse, userID, getTasks]);
+    }, [dateToUse, urlToUse, userID]);
 
     const handleDateIncrease = () => { 
         const date = new Date(dateToUse);

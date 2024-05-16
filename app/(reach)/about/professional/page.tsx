@@ -57,7 +57,7 @@ export default function Professional() {
     };
     window.addEventListener('mousedown', handleOutsideClick);
     return () => window.removeEventListener('mousedown', handleOutsideClick);
-  }, [clicked, imageRef, setClicked]);
+  }, [clicked, imageRef]);
 
   React.useEffect(() => {
     const handleOutsideClick = (event: { target: any; }) => {
@@ -69,7 +69,7 @@ export default function Professional() {
     };
     window.addEventListener('mousedown', handleOutsideClick);
     return () => window.removeEventListener('mousedown', handleOutsideClick);
-  }, [open, divRef, setOpen]);
+  }, [open, divRef]);
 
   const maxWidth = isBreakpoint ? '40vh' : '70vh';
   const minWidth = isBreakpoint ? '40vh' : '70vh';

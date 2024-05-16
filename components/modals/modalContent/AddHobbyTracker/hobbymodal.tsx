@@ -66,13 +66,13 @@ export default function ModalHobby() {
         }
         
         getHobbies();
-      }, [refreshKey, urlToUse, userID, setLoading, setLocalCategories]);
+      }, [refreshKey, urlToUse, userID]);
 
     useEffect(() => {
         if (colorName === '') {
             setColorName(colorChoice !== null ? ntc.name(colorChoice)[1] : '');
         }
-    }, [colorChoice, colorName, setColorName]);
+    }, [colorChoice, colorName]);
 
 
     const HandleCreateHobby = async (event: React.FormEvent<HTMLFormElement>) => {

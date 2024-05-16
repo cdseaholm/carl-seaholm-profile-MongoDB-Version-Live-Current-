@@ -61,7 +61,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
     };
     window.addEventListener('mousedown', handleOutsideClick);
     return () => window.removeEventListener('mousedown', handleOutsideClick);
-  }, [open, ref, toggle]);
+  }, [open, ref]);
 
     useEffect(() => {
         if (localStorage.getItem("token")) {

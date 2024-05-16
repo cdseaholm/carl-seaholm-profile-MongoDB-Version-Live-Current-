@@ -1,3 +1,5 @@
+'use client'
+
 import { IHobby } from "@/models/types/hobby";
 import listPlugin from '@fullcalendar/list';
 import FullCalendar from "@fullcalendar/react";
@@ -18,7 +20,7 @@ const CalendarView = ({filter}: {filter: string;}) => {
             console.log('check', forceUpdate);
             setModalOpen('daydetails');
         }
-      }, [daySelected, forceUpdate, setModalOpen]);
+      }, [daySelected, forceUpdate]);
 
 
     useEffect(() => {
@@ -26,7 +28,6 @@ const CalendarView = ({filter}: {filter: string;}) => {
             console.log('No hobbies');
             return;
         } else {
-            console.log(hobbies);
             const hobbiesToSet = hobbies.map((hobby: IHobby) => {
                 return {
                     title: hobby.title,
@@ -38,15 +39,12 @@ const CalendarView = ({filter}: {filter: string;}) => {
                 }
             });
             if (hobbiesToSet.length === 0) {
+                console.log('No hobbies');
                 return;
             } else {
                 setHobbyEvents(hobbiesToSet);
-                const currentWeekTasks = hobbiesToSet.filter(hobby => {
-                    const hobbyDate = new Date(hobby.start);
-                    const now = new Date();
-                    return hobbyDate > new Date(now.setDate(now.getDate() - now.getDay())) && hobbyDate < new Date(now.setDate(now.getDate() - now.getDay() + 6));
-                });
-            }}
+            }
+        }
     }, [hobbies, session]);
 
     return (

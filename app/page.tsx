@@ -25,7 +25,7 @@ export default function Home() {
       setLoading(false);
     }
     fetchUser();
-  }, [setLoading, session, router, session?.user]);
+  }, [session, router, session?.user]);
 
   const navigateToDashboard = async () => {
     setIsShowing(true);

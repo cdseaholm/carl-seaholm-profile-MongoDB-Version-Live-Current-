@@ -1,57 +1,45 @@
-
+'use client'
 
 import { IHobby } from '@/models/types/hobby';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 import PieChartView from '../helpers/piechart';
+import { set } from 'mongoose';
 
 export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] | null, daysThisMonth: number}) {
 
 
     const { data: session } = useSession();
-    const [statHobbies, setStatHobbies] = useState<IHobby[] | null>(null);
+    const [statHobbies, setStatHobbies] = useState<IHobby[]>([]);
     const [totalTime, setTotalTime] = useState<number>(0);
-
+    const [loading, setLoading] = useState<boolean>(false);
+    
     useEffect(() => {
-        if (hobbies === null) {
+        if (hobbies === null || hobbies === undefined) {
+            setLoading(false);
             return;
-        } else {
-            const hobbiesToSet = hobbies.map((hobby: IHobby) => {
-                return {
-                    title: hobby.title,
-                    category: hobby.categories,
-                    dates: hobby.dates,
-                    descriptions: hobby.descriptions,
-                    minutesXsessions: hobby.minutesXsessions,
-                    color: hobby.color,
-                    id: hobby._id,
-                    user: hobby.user_email,
-                    goals: hobby.goals,
-                    createdAt: hobby.createdAt,
-                    updatedAt: hobby.updatedAt,
-
-            }});
-            if (hobbiesToSet.length === 0) {
-                return;
-            } else {
-                const validHobbies: IHobby[] = hobbiesToSet.map((hobby: any) => {
-                    return {
-                        title: hobby.title,
-                        categories: hobby.category,
-                        dates: hobby.dates,
-                        descriptions: hobby.descriptions,
-                        minutesXsessions: hobby.minutesXsessions,
-                        color: hobby.color,
-                        _id: hobby.id,
-                        user_email: hobby.user,
-                        goals: hobby.goals,
-                        createdAt: hobby.createdAt,
-                        updatedAt: hobby.updatedAt,
-                    };
-                });
-                setStatHobbies(validHobbies);
-            }
         }
+        const hobbiesToSet = hobbies.map((hobby: IHobby) => {
+            return {
+                title: hobby.title,
+                categories: hobby.categories,
+                dates: hobby.dates,
+                descriptions: hobby.descriptions,
+                minutesXsessions: hobby.minutesXsessions,
+                color: hobby.color,
+                _id: hobby._id,
+                user_email: hobby.user_email,
+                goals: hobby.goals,
+                createdAt: hobby.createdAt,
+                updatedAt: hobby.updatedAt,
+            }
+        });
+        if (hobbiesToSet === null || hobbiesToSet === undefined) {
+            setLoading(false);
+            return;
+        }
+        setStatHobbies(hobbiesToSet);
+        setLoading(false);
     }, [hobbies, session]);
 
     var minutesSpent = 0;

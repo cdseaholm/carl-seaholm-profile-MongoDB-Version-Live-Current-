@@ -36,7 +36,7 @@ const SideNavHeader = () => {
       };
       window.addEventListener('mousedown', handleOutsideClick);
       return () => window.removeEventListener('mousedown', handleOutsideClick);
-    }, [clicked, isHovered, imageRef, imageClick]);
+    }, [clicked, isHovered, imageRef]);
   
     const style = {
       profilepicture: {

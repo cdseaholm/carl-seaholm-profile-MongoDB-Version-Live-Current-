@@ -56,7 +56,7 @@ export default function DevelopmentDesktop() {
     };
     window.addEventListener('mousedown', handleOutsideClick);
     return () => window.removeEventListener('mousedown', handleOutsideClick);
-  }, [clicked, imageClick, imageRef]);
+  }, [clicked, imageRef]);
 
   const categories = [
     'Timeline',

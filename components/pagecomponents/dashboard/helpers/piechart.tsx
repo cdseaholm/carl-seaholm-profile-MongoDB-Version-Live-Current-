@@ -21,7 +21,7 @@ export default function PieChartView({hobbies}: { hobbies: IHobby[] | null}) {
             }
         }
         setColorMap();
-    }, [hobbies, setColors]);
+    }, [hobbies]);
 
     useEffect(() => {
         if (hobbies) {
