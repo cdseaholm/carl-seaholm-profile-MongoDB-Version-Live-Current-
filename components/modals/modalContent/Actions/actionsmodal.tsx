@@ -1,9 +1,7 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
-import { useModalContext } from '@/app/context/modal/modalContext';
+import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { IHobby } from '@/models/types/hobby';
 import ModalHobby from '../AddHobbyTracker/hobbymodal';
 import LogSessionModal from '../LogSession/logsession';
 

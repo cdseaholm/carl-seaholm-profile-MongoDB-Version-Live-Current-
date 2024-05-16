@@ -63,7 +63,7 @@ export default function Dashboard() {
     
     useEffect(() => {
       getHobbies();
-    }, [refreshKey, urlToUse, userID, setLoading, setHobbies, getHobbies]);
+    }, [refreshKey, urlToUse, userID]);
   
     useEffect(() => {
       const verifyHobbiesLoaded = async () => {
@@ -73,7 +73,7 @@ export default function Dashboard() {
         }
       }
       verifyHobbiesLoaded();
-      }, [getHobbies, initialLoad, setInitialLoad]);
+      }, [initialLoad]);
     
     useEffect(() => {
       setLoading(true);
@@ -83,7 +83,7 @@ export default function Dashboard() {
       }
       setLoading(false);
           
-    }, [hobbies, setLoading]);
+    }, [hobbies]);
     
 
     return (

@@ -111,7 +111,7 @@ export default function LogSessionModal() {
         }
         
         getHobbies();
-      }, [refreshKey, urlToUse, userID, setLoading, setLocalHobbies]);
+      }, [refreshKey, urlToUse, userID]);
 
     return (
     <form className="p-4 md:p-5" onSubmit={handleCreate}>

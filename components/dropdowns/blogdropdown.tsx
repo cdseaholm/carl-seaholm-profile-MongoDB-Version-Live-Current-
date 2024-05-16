@@ -32,7 +32,7 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
                 }
             }
         
-    }, [setModalOpen, user, hasShownSubscriptionPrompt]);
+    }, [user, hasShownSubscriptionPrompt]);
 
     React.useEffect(() => {
         const handleOutsideClick = (event: { target: any; }) => {
@@ -45,7 +45,7 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
         };
         window.addEventListener('mousedown', handleOutsideClick);
         return () => window.removeEventListener('mousedown', handleOutsideClick);
-    }, [dropdownRef, open, setOpen, buttonRef]);
+    }, [dropdownRef, open, buttonRef]);
 
     return (
         <MainChild>

@@ -48,7 +48,7 @@ const CalendarView = () => {
         } else {
           hydrateHobbies();
           setLoading(false);
-      }}, [hobbies, session, hydrateHobbies]);
+      }}, [hobbies, session]);
     
     if (loading) {
         return (
