@@ -20,7 +20,7 @@ const CalendarView = ({filter}: {filter: string;}) => {
             console.log('check', forceUpdate);
             setModalOpen('daydetails');
         }
-      }, [daySelected, forceUpdate]);
+      }, [daySelected, forceUpdate, setModalOpen]);
 
 
     useEffect(() => {

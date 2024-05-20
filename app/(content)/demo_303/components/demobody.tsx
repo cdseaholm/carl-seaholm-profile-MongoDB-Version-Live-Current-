@@ -1,9 +1,12 @@
 'use client'
 
 import React, { useRef } from "react";
+import Image from 'next/image';
 
 const DemoBody = () => {
     const divRef = useRef(null);
+
+    const screenWidth = window.innerWidth;
     
 
     return (
@@ -16,8 +19,8 @@ const DemoBody = () => {
                         <p className="text-center">WRESTLING</p>
                         
                     </h2>
-                    <div className="flex justify-center">
-                        <img src="/images/303door.png" alt="303 Training Center" className="rounded-md max-w-none"/>
+                    <div className="flex flex-row justify-center">
+                        <Image src="/images/303door.png" alt="303 Training Center" width={screenWidth*.8} height={'100'} className="flex justify-center rounded-md" style={{width: 'auto', height: 'auto'}} priority/>
                     </div>
                     <h3 className="m-10 flex flex-col justify-center text-xl text-white font-bold">
                         <p className="text-center">PROUDLY SERVING  WESTMINSTER, ARVADA, BROOMFIELD, THORNTON, NORTHGLENN, SUPERIOR, BOULDER & DENVER</p>

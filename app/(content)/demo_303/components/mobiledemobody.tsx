@@ -1,11 +1,13 @@
     'use client'
 
 import React, { useRef } from "react";
+import Image from 'next/image';
 
 const MobileDemoBody = () => {
     const divRef = useRef(null);
+    const screenWidth = window.innerWidth;
 return (
-<div className="bg-black/80 rounded-md mt-5 mx-5">
+            <div className="bg-black/80 rounded-md mt-5 mx-5">
                 <div style={{ maxHeight: '90vh', overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'rgba(100, 116, 139, 1) rgba(0, 0, 0, 0.1)',}} ref={divRef}>
                     <h1 className="m-10 flex justify-center text-4xl text-white font-bold">303 Training Center</h1>
                     <h2 className="m-10 flex flex-col justify-center text-md text-white font-bold">
@@ -14,8 +16,8 @@ return (
                         <p className="text-center">WRESTLING</p>
                         
                     </h2>
-                    <div className="flex justify-center">
-                        <img src="/images/303door.png" alt="303 Training Center" className="rounded-md w-4/5" />
+                    <div className="flex flex-row justify-center px-2">
+                        <Image src="/images/303door.png" alt="303 Training Center" width={screenWidth*.8} height={'100'} className="flex justify-center rounded-md" style={{width: 'auto', height: 'auto'}} priority/>
                     </div>
                     <h3 className="m-10 flex flex-col justify-center text-lg text-white font-bold">
                         <p className="text-center">PROUDLY SERVING  WESTMINSTER, ARVADA, BROOMFIELD, THORNTON, NORTHGLENN, SUPERIOR, BOULDER & DENVER</p>
