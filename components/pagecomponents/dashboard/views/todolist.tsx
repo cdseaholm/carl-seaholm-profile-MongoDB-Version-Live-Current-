@@ -14,7 +14,7 @@ const ToDoList = () => {
     
     const {data: session} = useSession();
     const { urlToUse } = useStateContext();
-    const { setModalOpen } = useModalContext();
+    const { setModalOpen, modalOpen } = useModalContext();
     const [dateToUse, setDateToUse] = useState(new Date().toLocaleDateString());
     const [localTasks, setLocalTasks] = useState<ITask[]>([]);
     const [filteredTasks, setFilteredTasks] = useState<ITask[]>([]);
@@ -38,7 +38,7 @@ const ToDoList = () => {
                 if (response.ok) {
                     const res = await response.json();
                     const tasksToUse = res.tasks.map((task: ITask) => {
-                        console.log('Task date:', task.date); // Log the task date format
+                        console.log('Task date:', task.date);
                         return {
                             title: task.title,
                             time: task.time,
@@ -66,7 +66,7 @@ const ToDoList = () => {
             }
         }
         getTasks();
-    }, [dateToUse, urlToUse, userID]);
+    }, [modalOpen, dateToUse, urlToUse, userID]);
 
     const handleDateIncrease = () => { 
         const date = new Date(dateToUse);
@@ -80,7 +80,30 @@ const ToDoList = () => {
         setDateToUse(date.toLocaleDateString());
     }
 
-    const handleCheckboxClick = (id: string) => {
+    const handleCheckboxClick = async (id: string, currentCompleted: boolean) => {
+        if (!adminID) return;
+        try {
+            const updatedTasks = await fetch(`${urlToUse}/api/${userID}/edittask/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    completed: !currentCompleted
+                })
+            });
+            if (!updatedTasks.ok) {
+                console.log('Failed to update task');
+                return;
+            }
+            if (updatedTasks.ok) {
+                const res = await updatedTasks.json();
+                console.log('Task updated', res);
+            }
+        } catch (error) {
+            console.error('Error updating task', error);
+            return;
+        }
         setFilteredTasks(prevTasks =>
             prevTasks.map(task =>
                 task._id === id ? { ...task, completed: !task.completed } : task
@@ -123,11 +146,11 @@ const ToDoList = () => {
                                 <h1 className={`text-xs md:text-sm font-semibold underline`}>Time</h1>
                                 <h1 className={`text-xs md:text-sm font-semibold underline`}>Description</h1>
                                 {filteredTasks.map((task: ITask, index: number) => (
-                                    <React.Fragment key={task._id}>
-                                        <Checkbox onClick={() => handleCheckboxClick(task._id)} />
+                                    <React.Fragment key={index}>
+                                        <Checkbox onClick={() => handleCheckboxClick(task._id, task.completed)} isSelected={task.completed ? true : false} className={`${adminID ? 'cursor-pointer' : 'cursor-default'}`}/>
                                         <h1 className={`text-xs md:text-sm font-semibold ${task.completed ? 'line-through' : ''}`}>{task.title}</h1>
                                         <h1 className={`text-xs md:text-sm font-semibold ${task.completed ? 'line-through' : ''}`}>{task.time}</h1>
-                                        <h1 className={`text-xs md:text-sm font-semibold ${task.completed ? 'line-through' : ''}`}>{task.description}</h1>
+                                        <h1 className={`text-xs md:text-sm font-semibold`}>{task.description}</h1>
                                     </React.Fragment>
                                 ))}
                             </div>

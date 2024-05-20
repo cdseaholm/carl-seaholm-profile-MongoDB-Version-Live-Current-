@@ -25,12 +25,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     } else {
       const recipes = recs.map((hobby: IRecipe) => {
+        const newDate = new Date(hobby.date).toLocaleDateString();
         return {
             name: hobby.name,
-            date: hobby.date,
+            date: newDate,
             rating: hobby.rating,
             notes: hobby.notes,
             user: hobby.user,
+            image: hobby.image,
+            link: hobby.link
         }
       });
 

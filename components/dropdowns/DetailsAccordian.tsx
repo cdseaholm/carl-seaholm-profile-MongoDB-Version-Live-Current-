@@ -2,21 +2,22 @@
 import useMediaQuery from '@/components/listeners/WidthSettings';
 import React from 'react';
 
-export const DetailsAccordianPage = ({details, detailsIndex}: {details: Array<String>; detailsIndex: number}) => {
+export const DetailsAccordianPage = ({details, detailsIndex}: {details: Array<string>; detailsIndex: number}) => {
 
 
   return (
     <Accordion>
-        <AccordionItem toggle={`panel-${detailsIndex}`}>
-            <AccordionTitle />
-        </AccordionItem>
-        <AccordionPanel id={`panel-${detailsIndex}`}>
-            {details.map((detail, index) => (
-                <p key={index} className='p-2'>
-                    -{detail}
-                </p>
-            ))}
-        </AccordionPanel>
+      <AccordionItem toggle={`panel-${detailsIndex}`}>
+        <AccordionTitle />
+      </AccordionItem>
+      <AccordionPanel id={`panel-${detailsIndex}`}>
+        {details.map((detail, index) => (
+          detail.length === 0 ? <div /> :
+          <p key={index} className='p-2'>
+            -{detail}
+          </p>
+        ))}
+      </AccordionPanel>
     </Accordion>
   );
 };

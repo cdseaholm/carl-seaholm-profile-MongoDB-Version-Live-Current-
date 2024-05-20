@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import Hobby from "@/models/hobby";
 import { createErrorResponse } from "@/lib/utils";
 import Recipe from "@/models/recipes";
+import { link } from "fs";
 
 
 export async function POST(request: Request) {
@@ -24,6 +25,8 @@ export async function POST(request: Request) {
             rating: data.rating,
             notes: data.notes,
             user: data.user,
+            image: data.image,
+            link: data.link
         });
         recipeToAdd.save();
         if (!recipeToAdd) {

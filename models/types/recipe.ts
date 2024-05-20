@@ -1,4 +1,6 @@
 export type IRecipe = {
+    logo: any;
+    logoAlt: any;
     id: string;
     name: string;
     date: string;

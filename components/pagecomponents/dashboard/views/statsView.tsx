@@ -5,6 +5,9 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 import PieChartView from '../helpers/piechart';
 import { set } from 'mongoose';
+import { BarChart } from 'recharts';
+import BarChartView from '../helpers/barchart';
+import useMediaQuery from '@/components/listeners/WidthSettings';
 
 export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] | null, daysThisMonth: number}) {
 
@@ -13,6 +16,7 @@ export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] 
     const [statHobbies, setStatHobbies] = useState<IHobby[]>([]);
     const [totalTime, setTotalTime] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
+    const isBreakpoint = useMediaQuery(768);
     
     useEffect(() => {
         if (hobbies === null || hobbies === undefined) {
@@ -58,18 +62,16 @@ export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] 
 
 
     return (
-                <div className='grid gap-1 grid-cols-2 grid-rows-2 w-full h-full'>
+                <div className={`grid gap-1 ${!isBreakpoint ? 'grid-cols-2 grid-rows-2' : 'grid-cols-1 grid-rows-4 space-y-10'} w-full h-full p-2`} style={{overflow: 'auto'}}>
                     <div className='flex flex-col items-center w-full h-full text-xs md:text-sm'>
                         <h2>% of Total Time on Each Hobby</h2>
                         <PieChartView hobbies={statHobbies} />
                     </div>
-                    <div className='flex flex-col items-center w-full h-full text-sm md:text-base'>
-                        <div>
+                    <div className='flex flex-col items-center text-sm md:text-base' style={{height: '30dvh', width: '40dvh'}}>
+                        <h2>
                             Minutes Spent:
-                        </div>
-                        <div>
-                            {minutesSpent}
-                        </div>
+                        </h2>
+                        <BarChartView hobbies={statHobbies}/>
                     </div>
                     <div className='flex flex-col items-center w-full h-full text-sm md:text-base'>
                         <div>
