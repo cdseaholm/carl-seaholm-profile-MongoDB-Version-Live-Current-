@@ -125,7 +125,14 @@ return (
                     {!tooSmall &&
                     <>
                     {uploaded ? 
-                        <p className="text-lime-600 font-bold">Image Uploaded</p> :
+                        <div className="flex flex-row">
+                            <p className="text-lime-600 font-bold">
+                                Image Uploaded
+                            </p>
+                            <button type="button" className="text-red-600 font-bold" onClick={() => setUploaded(false)}>
+                                Crop Image
+                            </button>
+                        </div> :
                         <UploadButton
                             endpoint="imageUploader"
                             onClientUploadComplete={(res: any) => {

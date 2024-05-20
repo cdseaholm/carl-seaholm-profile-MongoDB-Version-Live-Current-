@@ -13,7 +13,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     await connectDB();
 
     const recs = await Recipe.find({user: adminID});
-    console.log(recs);
     
     if (recs === null || recs === undefined) {
 
