@@ -17,7 +17,8 @@ export default function AddRecipes() {
 
     const [loading, setLoading] = useState(false);
     const [uploaded, setUploaded] = useState(false);
-    const [photo, setPhoto] = useState<string | null>(null);
+    const [photo, setPhoto] = useState('');
+    const [link, setLink] = useState('');
     const router = useRouter();
     const tooSmall = useHeightMediaQuery(560);
 
@@ -50,6 +51,8 @@ export default function AddRecipes() {
             }
             const notes = formData.get('createRecipeNotes');
 
+            const image = photo;
+
             setLoading(true);
 
             const res = await fetch(`${urlToUse}/api/createrecipe`,{
@@ -63,6 +66,8 @@ export default function AddRecipes() {
                     rating: rating,
                     notes: notes,
                     user: session.user.email,
+                    image: image,
+                    link: link
                 }),
             
             });
@@ -93,9 +98,15 @@ return (
                 <label htmlFor="createRecipeName" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Recipe Name</label>
                         <input type="name" name="createRecipeName" id="createRecipeName" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Name" required />
             </div>
-            <div>
-                <label htmlFor="createRecipeDate" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Date Made</label>
-                <input type="date" name="createRecipeDate" id="createRecipeDate" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="mm/dd/yyyy" required />
+            <div className={`flex flex-row justify-between items-center`}>
+                <div className="flex flex-col items-start justify-center">
+                        <label htmlFor="createRecipeLink" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Link</label>
+                        <input type="text" name="createRecipeLink" id="createRecipeLink" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Link" />
+                </div>
+                <div className="flex flex-col items-start justify-center">
+                    <label htmlFor="createRecipeDate" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Date Made</label>
+                    <input type="date" name="createRecipeDate" id="createRecipeDate" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="mm/dd/yyyy" required />
+                </div>
             </div>
             <div>
                 <label htmlFor="createRecipeRating" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Rating</label>
@@ -119,9 +130,9 @@ return (
                             endpoint="imageUploader"
                             onClientUploadComplete={(res: any) => {
                                 console.log('image res', res);
-                                const photo = res[0].key;
-                                console.log('photo', photo);
-                                setPhoto(photo);
+                                const photoKey = res[0].url;
+                                console.log('photo', photoKey);
+                                setPhoto(photoKey);
                                 setUploaded(true);
                             }}
                             onUploadError={(error: Error) => {
@@ -135,7 +146,7 @@ return (
             </div>
             <div className="flex flex-row justify-end space-x-1 items-center">
                 <div>
-                    <button type="submit" className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <button type="submit" className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                         <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
                             Log New Recipe
                     </button>

@@ -18,6 +18,7 @@ export default function Professional() {
   const imageRef = React.useRef<HTMLDivElement>(null);
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
+  const [loading, setLoading] = React.useState(false);
 
   /**Variables */
 
@@ -75,88 +76,94 @@ export default function Professional() {
   const minWidth = isBreakpoint ? '40vh' : '70vh';
 
   return (
-    <div>
-      <InnerHeader>
+    <MainChild>
         <div />
-        <div className={`flex flex-row justify-between px-1 md:justify-end`}>
-          {!isBreakpoint &&
-            <div ref={imageRef} className={`${clicked ? style.profilepicture.large : style.profilepicture.small}`}>
-                <Image
-                onClick={() => setClicked(clicked ? false : true)}
-                priority
-                src="/images/carlseaholmimage.jpg"
-                className={`z-30 rounded-full overflow-x-hidden transition-all ease duration-200 cursor-pointer`}
-                height={clicked ? 200 : 70}
-                width={clicked ? 200 : 70}
-                alt="Carl Seaholm Profile Photo"
-                />
-            </div>
-            }
-            <div className='flex flex-col w-100'>
-              <h1 className={`flex text-xl md:text-5xl font-bold justify-end`}>
-                Carl Seaholm
-              </h1>
-              <div className='flex flex-row justify-evenly items-center'>
-                <p className={`text-md md:text-base`}>
-                  Filter:
-                </p>
-                <div ref={divRef} onClick={open ? () => setOpen(false) : () => setOpen(true)} className='cursor-pointer w-5/12'>
-                  <div className={`relative text-md md:text-base text-black rounded`}>
-                    {category}
+        {loading ? (
+          <div className="justify-center items-center">
+            <h1>Loading...</h1>
+          </div>
+        ) : (
+          <div className="flex flex-col h-full px-2 pb-2">
+            <div className={`flex flex-row justify-between px-1 pb-5 md:justify-end`}>
+              {!isBreakpoint &&
+                <div ref={imageRef} className={`${clicked ? style.profilepicture.large : style.profilepicture.small}`}>
+                    <Image
+                    onClick={() => setClicked(clicked ? false : true)}
+                    priority
+                    src="/images/carlseaholmimage.jpg"
+                    className={`z-30 rounded-full overflow-x-hidden transition-all ease duration-200 cursor-pointer`}
+                    height={clicked ? 200 : 70}
+                    width={clicked ? 200 : 70}
+                    alt="Carl Seaholm Profile Photo"
+                    />
+                </div>
+                }
+                <div className='flex flex-col w-100'>
+                  <h1 className={`flex text-xl md:text-5xl font-bold justify-end`}>
+                    Carl Seaholm
+                  </h1>
+                  <div className='flex flex-row justify-evenly items-center'>
+                    <p className={`text-md md:text-base`}>
+                      Filter:
+                    </p>
+                    <div ref={divRef} onClick={open ? () => setOpen(false) : () => setOpen(true)} className='cursor-pointer w-5/12'>
+                      <div className={`relative text-md md:text-base text-black rounded`}>
+                        {category}
+                      </div>
+                    </div>
+                    <div className='flex items-end'>
+                      <svg
+                          className="h-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                              fillRule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      {open && 
+                        <div ref={divRef} className={`absolute flex flex-col z-30 right-22 top-40 mt-2 justify-end text-left border border-gray-300 rounded-sm bg-clip-padding bg-slate-800 text-white shadow-lg w-32 cursor-pointer`}>
+                          {categories.map((item, index) => (
+                            <div key={index} onClick={() => {
+                                setCategory(item)
+                                setOpen(false)
+                              }} className='block px-4 py-2 text-sm text-white hover:bg-slate-600'>
+                              {item}
+                            </div>
+                          ))}
+                        </div>
+                      }
                   </div>
                 </div>
-                <div className='flex items-end'>
-                  <svg
-                      className="h-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                          fillRule="evenodd"
-                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  {open && 
-                    <div ref={divRef} className={`absolute flex flex-col z-30 right-22 top-40 mt-2 justify-end text-left border border-gray-300 rounded-sm bg-clip-padding bg-slate-800 text-white shadow-lg w-32 cursor-pointer`}>
-                      {categories.map((item, index) => (
-                        <div key={index} onClick={() => {
-                            setCategory(item)
-                            setOpen(false)
-                          }} className='block px-4 py-2 text-sm text-white hover:bg-slate-600'>
-                          {item}
-                        </div>
-                      ))}
+            </div>
+            <div style={{flexGrow: 1, fontSize: '8px', overflow: 'auto'}}>
+            {filteredSchools.map((item, index) => (
+                <div key={index} className='flex flex-row justify-center p-4'>
+                  {category === 'Education' &&
+                    <div className='border border-black shadow-lg rounded-md m-2 bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth}}>
+                      <SchoolBite school={item} index={index}/>
                     </div>
                   }
-              </div>
-            </div>
-        </div>
-      </InnerHeader>
-      <MainChild>
-        {filteredSchools.map((item, index) => (
-            <div key={index} className='flex flex-row justify-center p-4'>
-              {category === 'Education' &&
-                <div className='border border-black shadow-lg rounded-md m-2 bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth}}>
-                  <SchoolBite school={item} index={index}/>
                 </div>
-              }
-            </div>
-          ))}
-          {filteredJobs.length > 0 &&
-            filteredJobs.map((item, index) => (
-              <div key={index} className='flex flex-row justify-center p-4'>
-                {category !== 'Education' &&
-                  <div className='border border-black shadow-lg m-2 rounded-md bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth, overflowX: 'auto', overflowY: 'auto'}}>
-                    <JobBite job={item} index={index}/>
+              ))}
+              {filteredJobs.length > 0 &&
+                filteredJobs.map((item, index) => (
+                  <div key={index} className='flex flex-row justify-center p-4'>
+                    {category !== 'Education' &&
+                      <div className='border border-black shadow-lg m-2 rounded-md bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth, overflowX: 'auto', overflowY: 'auto'}}>
+                        <JobBite job={item} index={index}/>
+                      </div>
+                    }
                   </div>
-                }
-              </div>
-          ))}
+              ))}
+          </div>
+        </div>
+        )}
       </MainChild>
-    </div>
   );
 }

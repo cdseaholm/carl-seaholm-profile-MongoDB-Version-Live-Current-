@@ -9,6 +9,9 @@ import { Spinner } from "@/components/misc/Spinner";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { IRecipe } from "@/models/types/recipe";
 import { useEffect, useState } from "react";
+import { FiStar } from "react-icons/fi";
+import Image from 'next/image';
+import openInNewTab from "@/components/listeners/OpenInNewTab";
 
 export default function Recipes() {
 
@@ -29,8 +32,8 @@ export default function Recipes() {
     const [recipesSorted, setRecipesSorted] = useState<IRecipe[]>([]);
 
     useEffect(() => {
+        setLoading(true);
         const getRecipes = async () => {
-            setLoading(true);
             try {
                 const recipesFetched = await fetch(`${urlToUse}/api/${userID}/getrecipes`, {
                     next: {
@@ -42,7 +45,6 @@ export default function Recipes() {
                 }
                 if (recipesFetched.ok) {
                     const res = await recipesFetched.json();
-                    console.log('res', res);
                     const recs = res.recipes;
                     if (recs.length === 0) {
                         console.log('No recipes found');
@@ -52,48 +54,49 @@ export default function Recipes() {
                 }
             } catch (error) {
                 console.error('Error fetching recipes', error);
-                setLoading(false);
                 return;
             } finally {
-                setLoading(false);
                 console.log('refreshed Key', refreshKey);
                 return;
             }
         }
         getRecipes();
+        setLoading(false);
     }, [refreshKey, urlToUse, userID]);
 
     useEffect(() => {
-        if (recipeFilter === 'newDatesFirst') {
-            const sorted = localRecipes.sort((a, b) => {
-                return new Date(b.date).getTime() - new Date(a.date).getTime();
-            });
-            setRecipesSorted(sorted);
-        } else if (recipeFilter === 'oldDatesFirst') {
-            const sorted = localRecipes.sort((a, b) => {
-                return new Date(a.date).getTime() - new Date(b.date).getTime();
-            });
-            setRecipesSorted(sorted);
-        } else if (recipeFilter === 'highRatingFirst') {
-            const sorted = localRecipes.sort((a, b) => {
-                return a.rating - b.rating;
-            });
-            setRecipesSorted(sorted);
-        } else if (recipeFilter === 'lowRatingFirst') {
-            const sorted = localRecipes.sort((a, b) => {
-                return b.rating - a.rating;
-            });
-            setRecipesSorted(sorted);
-        } else if (recipeFilter === 'No Filter' || recipeFilter === '') {
-            const sorted = localRecipes.sort((a, b) => {
-                return new Date(b.date).getTime() - new Date(a.date).getTime();
-            });
-            setRecipesSorted(sorted);
-        } else {
-            setRecipesSorted(localRecipes);
+        let sorted;
+        switch (recipeFilter) {
+            case 'newDatesFirst':
+                sorted = localRecipes.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                break;
+            case 'oldDatesFirst':
+                sorted = localRecipes.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+                break;
+            case 'highRatingFirst':
+                sorted = localRecipes.sort((a, b) => b.rating - a.rating);
+                break;
+            case 'lowRatingFirst':
+                sorted = localRecipes.sort((a, b) => a.rating - b.rating);
+                break;
+            case 'No Filter':
+            case '':
+                sorted = localRecipes.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                break;
+            default:
+                sorted = localRecipes;
+                break;
         }
+        setRecipesSorted(sorted);
     }, [localRecipes, recipeFilter]);
 
+    if (loading === true) {
+        return (
+            <MainChild>
+                {Spinner()}
+            </MainChild>
+        )
+    } else {
     return (
         <MainChild>
                 <h1 className="text-center">Recipes</h1>
@@ -124,23 +127,37 @@ export default function Recipes() {
                 ) : (
                     <div className="flex flex-col h-full w-full">
                         {recipesSorted.map((recipe, index) => (
-                            <div key={index} className='flex flex-row justify-center p-4'>
+                            <div key={index} className='flex flex-row justify-center p-3'>
                                 <div className='border border-black shadow-lg rounded-md bg-slate-800/50 w-full'>
                                     <div className="flex flex-col">
-                                        <div className="flex flex-row relative p-5 justify-between items-start">
-                                            <div className={`text-md md:text-lg font-bold w-1/2 truncate`} style={{whiteSpace: 'normal', overflowX: 'inherit'}}>{recipe.name}</div>
-                                            <div className={`text-sm md:text-md font-bold font-semibold`}>{recipe.rating}/10</div>
-                                            <div className={`text-xs md:text-sm font-bold text-black`}>{recipe.date}
+                                        <div className="flex flex-row relative p-3 justify-between items-start w-full">
+                                            <div className={`flex flex-col items-start justify-evenly`}>
+                                                <div className={`flex flex-row items-center justify-center space-x-5`}>
+                                                    <div className={`text-md md:text-lg font-bold truncate`} style={{whiteSpace: 'normal', overflowX: 'inherit'}}>
+                                                        {recipe.name}
+                                                    </div>
+                                                    <div className={`flex flex-row`}>
+                                                        <FiStar />
+                                                        <div className={`text-sm md:text-md font-bold font-semibold`}>
+                                                            {recipe.rating}/10
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className={`text-xs md:text-sm font-bold text-black`}>
+                                                    {recipe.date}
+                                                </div>
+                                            </div>
+                                            {recipe.image === '' ? <div /> :
+                                            <div style={{maxWidth: '20%'}}>
+                                                <Image src={`https://utfs.io/f/${recipe.image}`} alt={`${recipe.name} photo`} width={100} height={100} layout="responsive" onClick={() => openInNewTab(`https://utfs.io/f/${recipe.image}`)} className="cursor-pointer"/>
+                                            </div>
+                                            }
                                         </div>
-                                        {/**<div>
-                                                <Image src={recipe.logo} width={100} height={100} alt={recipe.logoAlt}/>
-                                        </div>*/}
+                                        <DetailsAccordianPage
+                                            details={[recipe.notes, recipe.link]} 
+                                            detailsIndex={index} 
+                                        />
                                     </div>
-                                    <DetailsAccordianPage 
-                                        details={[recipe.notes]} 
-                                        detailsIndex={index} 
-                                    />
-                                </div>
                                 </div>
                             </div>
                         ))}
@@ -149,4 +166,4 @@ export default function Recipes() {
                 </div>
         </MainChild>
     )
-}
+}}

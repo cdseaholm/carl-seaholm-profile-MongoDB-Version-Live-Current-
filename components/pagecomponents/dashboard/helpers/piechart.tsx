@@ -52,8 +52,8 @@ export default function PieChartView({hobbies}: { hobbies: IHobby[] | null}) {
     }
 
     return (
-        <ResponsiveContainer width="100%" height="100%">
-            <PieChart width={400} height={400}>
+        <ResponsiveContainer width="90%" height="90%">
+            <PieChart>
                 <Pie
                     dataKey="value"
                     isAnimationActive={true}
