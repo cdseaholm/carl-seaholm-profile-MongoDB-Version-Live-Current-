@@ -2,7 +2,6 @@
 
 import React, { useRef, useState } from 'react';
 import useMediaQuery from '@/components/listeners/WidthSettings';
-import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import Image from 'next/image';
 import { jobsArray, schoolsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
@@ -72,9 +71,6 @@ export default function Professional() {
     return () => window.removeEventListener('mousedown', handleOutsideClick);
   }, [open, divRef]);
 
-  const maxWidth = isBreakpoint ? '40vh' : '70vh';
-  const minWidth = isBreakpoint ? '40vh' : '70vh';
-
   return (
     <MainChild>
         <div />
@@ -98,68 +94,43 @@ export default function Professional() {
                     />
                 </div>
                 }
-                <div className='flex flex-col w-100'>
-                  <h1 className={`flex text-xl md:text-5xl font-bold justify-end`}>
-                    Carl Seaholm
-                  </h1>
-                  <div className='flex flex-row justify-evenly items-center'>
-                    <p className={`text-md md:text-base`}>
-                      Filter:
-                    </p>
-                    <div ref={divRef} onClick={open ? () => setOpen(false) : () => setOpen(true)} className='cursor-pointer w-5/12'>
-                      <div className={`relative text-md md:text-base text-black rounded`}>
-                        {category}
-                      </div>
+                <div className={`flex flex-row w-ful ${isBreakpoint ? 'items-start' : 'items-end'}`}>
+                  <div className={`flex flex-col ${isBreakpoint ? 'items-start' : 'items-end'}`}>
+                    <h1 className={`flex text-xl md:text-5xl font-bold justify-end`}>
+                      Carl Seaholm
+                    </h1>
+                    <div className='flex flex-row justify-evenly items-center'>
+                      <select className='text-xs md:text-sm bg-zinc-200 rounded-lg' defaultValue={'Timeline'} onChange={(e) => {
+                        setCategory(e.target.value);
+                      }}>
+                        {categories.map((item, index) => (
+                          <option 
+                            key={index} 
+                            value={item}
+                            className='block px-2 py-1 text-sm text-black hover:bg-slate-600'>
+                            {item}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                    <div className='flex items-end'>
-                      <svg
-                          className="h-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                              fillRule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                      {open && 
-                        <div ref={divRef} className={`absolute flex flex-col z-30 right-22 top-40 mt-2 justify-end text-left border border-gray-300 rounded-sm bg-clip-padding bg-slate-800 text-white shadow-lg w-32 cursor-pointer`}>
-                          {categories.map((item, index) => (
-                            <div key={index} onClick={() => {
-                                setCategory(item)
-                                setOpen(false)
-                              }} className='block px-4 py-2 text-sm text-white hover:bg-slate-600'>
-                              {item}
-                            </div>
-                          ))}
-                        </div>
-                      }
                   </div>
                 </div>
-            </div>
-            <div style={{flexGrow: 1, fontSize: '8px', overflow: 'auto'}}>
-            {filteredSchools.map((item, index) => (
-                <div key={index} className='flex flex-row justify-center p-4'>
-                  {category === 'Education' &&
-                    <div className='border border-black shadow-lg rounded-md m-2 bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth}}>
-                      <SchoolBite school={item} index={index}/>
-                    </div>
-                  }
+              </div>
+            <div style={{flexGrow: 1, fontSize: '8px', overflow: 'auto'}} className='scrollbar-thin scrollbar-webkit'>
+            {category === 'Education' && filteredSchools.map((item, index) => (
+              <div key={index} className='justify-center p-4'>
+                <div className='border border-black shadow-lg rounded-md m-2 bg-slate-800/50'>
+                  <SchoolBite school={item} index={index}/>
                 </div>
-              ))}
-              {filteredJobs.length > 0 &&
-                filteredJobs.map((item, index) => (
-                  <div key={index} className='flex flex-row justify-center p-4'>
-                    {category !== 'Education' &&
-                      <div className='border border-black shadow-lg m-2 rounded-md bg-slate-800/50' style={{maxWidth: maxWidth, minWidth: minWidth, overflowX: 'auto', overflowY: 'auto'}}>
-                        <JobBite job={item} index={index}/>
-                      </div>
-                    }
+              </div>
+            ))}
+            {category !== 'Education' && filteredJobs.length > 0 &&
+              filteredJobs.map((item, index) => (
+                <div key={index} className='justify-center p-4'>
+                  <div className='border border-black shadow-lg m-2 rounded-md bg-slate-800/50'>
+                    <JobBite job={item} index={index}/>
                   </div>
+                </div>
               ))}
           </div>
         </div>
