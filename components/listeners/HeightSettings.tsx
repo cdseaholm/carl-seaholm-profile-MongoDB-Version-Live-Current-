@@ -26,7 +26,7 @@ const useHeightMediaQuery = (height: number) => {
           } else {
             return () => media.removeEventListener("change", updateTarget);
           }
-        }, [height]);
+        }, [height, updateTarget]);
 
     return targetReached;
 

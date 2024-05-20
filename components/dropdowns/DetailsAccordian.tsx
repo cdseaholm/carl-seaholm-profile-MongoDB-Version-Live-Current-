@@ -12,7 +12,7 @@ export const DetailsAccordianPage = ({details, detailsIndex}: {details: Array<st
       </AccordionItem>
       <AccordionPanel id={`panel-${detailsIndex}`}>
         {details.map((detail, index) => (
-          detail.length === 0 ? <div /> :
+          detail.length === 0 ? <div key={index} /> :
           <p key={index} className='p-2'>
             -{detail}
           </p>

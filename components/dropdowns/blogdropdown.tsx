@@ -32,7 +32,7 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
                 }
             }
         
-    }, [user, hasShownSubscriptionPrompt]);
+    }, [user, hasShownSubscriptionPrompt, setModalOpen]);
 
     React.useEffect(() => {
         const handleOutsideClick = (event: { target: any; }) => {

@@ -4,11 +4,12 @@ import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { DateClickArg } from '@fullcalendar/interaction';
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { IHobby } from "@/models/types/hobby";
 import { useModalContext } from "@/app/context/modal/modalContext";
 import { set } from "mongoose";
+import { h } from "@fullcalendar/core/preact.js";
 
 const CalendarView = () => {
 
@@ -22,7 +23,7 @@ const CalendarView = () => {
         setDaySelected(arg.dateStr);
     };
 
-    const hydrateHobbies = async () => {
+    const hydrateHobbies = useCallback(async () => {
         const hobbiesToSet = hobbies.map((hobby: IHobby) => {
             return {
                 title: hobby.title,
@@ -39,8 +40,8 @@ const CalendarView = () => {
         } else {
             setHobbyEvents(hobbiesToSet);
         }
-    };
-
+    }, [hobbies, session]);
+    
     useEffect(() => {
         setLoading(true);
         if (hobbies === null || hobbies === undefined) {
@@ -48,7 +49,7 @@ const CalendarView = () => {
         } else {
           hydrateHobbies();
           setLoading(false);
-      }}, [hobbies, session]);
+      }}, [hobbies, session, hydrateHobbies]);
     
     if (loading) {
         return (

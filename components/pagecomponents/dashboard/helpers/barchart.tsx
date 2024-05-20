@@ -36,7 +36,7 @@ export default function BarChartView({hobbies}: { hobbies: IHobby[] | null}) {
             console.log('totalTimePerMonth', totalTimePerMonth);
             setTotalTime(totalTimePerMonth);
         }
-    }, [hobbies, months]);
+    }, [hobbies, months, thisMonth]);
 
     useEffect(() => {
         if (hobbies && totalTime.some(time => time > 0)) {

@@ -26,54 +26,43 @@ export default function Dashboard() {
     const [toShow, setToShow] = useState('stats');
     const [loading, setLoading] = useState(false);
     const [initialLoad, setInitialLoad] = useState(false);
-
-    const getHobbies =  async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`${urlToUse}/api/${userID}/gethobbies`, {
-          next: {
-            revalidate: 3600
-          }
-        });
     
-        if (!response.ok) {
-          console.log('No hobbies found');
-          setLoading(false);
-          return;
-        }
-        if (response.ok) {
-          const res = await response.json();
-          const hobs = res.hobbies;
-          if (hobs.length === 0) {
+    useEffect(() => {
+      const getHobbies =  async () => {
+        try {
+          setLoading(true);
+          const response = await fetch(`${urlToUse}/api/${userID}/gethobbies`, {
+            next: {
+              revalidate: 3600
+            }
+          });
+      
+          if (!response.ok) {
             console.log('No hobbies found');
             setLoading(false);
             return;
           }
-          setHobbies(hobs);
+          if (response.ok) {
+            const res = await response.json();
+            const hobs = res.hobbies;
+            if (hobs.length === 0) {
+              console.log('No hobbies found');
+              setLoading(false);
+              return;
+            }
+            setHobbies(hobs);
+          }
+        } catch (error) {
+          console.error('Error fetching hobbies', error);
+          return;
+        } finally {
+          console.log('refreshed Key', refreshKey);
+          setLoading(false);
+          return;
         }
-      } catch (error) {
-        console.error('Error fetching hobbies', error);
-        return;
-      } finally {
-        console.log('refreshed Key', refreshKey);
-        setLoading(false);
-        return;
       }
-    }
-    
-    useEffect(() => {
       getHobbies();
-    }, [refreshKey, urlToUse, userID]);
-  
-    useEffect(() => {
-      const verifyHobbiesLoaded = async () => {
-        if (!initialLoad) {
-          await getHobbies();
-          setInitialLoad(true);
-        }
-      }
-      verifyHobbiesLoaded();
-      }, [initialLoad]);
+    }, [refreshKey, urlToUse, userID, setHobbies]);
     
     useEffect(() => {
       setLoading(true);
