@@ -183,20 +183,20 @@ const schoolsArray = [
 
     school: "University of Colorado Boulder",
     degree: "Bachelor of Science",
-    major: "Marketing",
-    date: {startDate: '2013-08' , endDate: '2016-12' },
+    major: "Computer Science/Engineering",
+    date: {startDate: '2024-01' , endDate: '2025-12' },
     location: "Boulder, CO",
     category: 'Education',
     logo: '/images/Colorado_Buffaloes_logo.svg.png',
     logoAlt: 'University of Colorado Boulder Logo'
  },
 
-{
+ {
 
     school: "University of Colorado Boulder",
     degree: "Bachelor of Science",
-    major: "Computer Science/Engineering",
-    date: {startDate: '2024-01' , endDate: '2025-12' },
+    major: "Marketing",
+    date: {startDate: '2013-08' , endDate: '2016-12' },
     location: "Boulder, CO",
     category: 'Education',
     logo: '/images/Colorado_Buffaloes_logo.svg.png',

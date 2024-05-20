@@ -7,7 +7,7 @@ import useMediaQuery from "@/components/listeners/WidthSettings";
 import Sidenav from "../sideNav/SideNav";
 import { SideMenuAccordian } from "../../dropdowns/SideMenuAccordian";
 import SocialButton from "@/components/buttons/socialButton";
-import ProfilePicture from "./profilepicture";
+import Image from 'next/image'
 
 
 const SideNavHeader = () => {
@@ -19,6 +19,7 @@ const SideNavHeader = () => {
     };
     const [isHovered, setIsHovered] = useState(false);
     const [clicked, setClicked] = useState(false);
+    
   
     const imageClick = useCallback(() => {
       setIsHovered(prevHovered => !prevHovered);
@@ -26,6 +27,13 @@ const SideNavHeader = () => {
     }, []);
   
     const imageRef = React.useRef<HTMLDivElement>(null);
+
+    const style = {
+      profilepicture: {
+        large: `absolute z-40 top-0 right-10 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`,
+        small: `absolute z-40 top-0 right-10 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`
+      },
+    };
   
     React.useEffect(() => {
       const handleOutsideClick = (event: { target: any; }) => {
@@ -37,13 +45,6 @@ const SideNavHeader = () => {
       window.addEventListener('mousedown', handleOutsideClick);
       return () => window.removeEventListener('mousedown', handleOutsideClick);
     }, [clicked, isHovered, imageRef, imageClick]);
-  
-    const style = {
-      profilepicture: {
-        large: `absolute z-40 top-0 right-10 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`,
-        small: `absolute z-40 top-0 right-10 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`
-      },
-    };
   
     return (
       <>
@@ -69,7 +70,19 @@ const SideNavHeader = () => {
               </Link>
             </div>
           {pathname === '/about/professional' &&
-            <ProfilePicture style={style.profilepicture} imageClick={imageClick} imageRef={imageRef} isHovered={false} setIsHovered={undefined} clicked={false} />
+            <div ref={imageRef} className={`mt-3 ml-5 ${clicked ? style.profilepicture.large : style.profilepicture.small}`}>
+              <Image
+                onClick={imageClick}
+                priority
+                src="/images/carlseaholmimage.jpg"
+                className={`z-30 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`}
+                height={clicked ? 200 : 60}
+                width={clicked ? 200 : 60}
+                alt="Carl Seaholm Profile Photo"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              />
+            </div>
           }
         </>
         }
