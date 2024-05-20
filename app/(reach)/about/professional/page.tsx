@@ -94,13 +94,13 @@ export default function Professional() {
                     />
                 </div>
                 }
-                <div className={`flex flex-row w-ful ${isBreakpoint ? 'items-start' : 'items-end'}`}>
+                <div className={`flex flex-row w-ful ${isBreakpoint ? 'items-start' : 'items-end'} px-4 pt-4`}>
                   <div className={`flex flex-col ${isBreakpoint ? 'items-start' : 'items-end'}`}>
                     <h1 className={`flex text-xl md:text-5xl font-bold justify-end`}>
                       Carl Seaholm
                     </h1>
                     <div className='flex flex-row justify-evenly items-center'>
-                      <select className='text-xs md:text-sm bg-zinc-200 rounded-lg' defaultValue={'Timeline'} onChange={(e) => {
+                      <select id='professionalFilter' name='professionalFilter' className='text-xs md:text-sm bg-zinc-200 rounded-lg' defaultValue={'Timeline'} onChange={(e) => {
                         setCategory(e.target.value);
                       }}>
                         {categories.map((item, index) => (
@@ -118,7 +118,7 @@ export default function Professional() {
               </div>
             <div style={{flexGrow: 1, fontSize: '8px', overflow: 'auto'}} className='scrollbar-thin scrollbar-webkit'>
             {category === 'Education' && filteredSchools.map((item, index) => (
-              <div key={index} className='justify-center p-4'>
+              <div key={index} className='justify-center px-4 py-1'>
                 <div className='border border-black shadow-lg rounded-md m-2 bg-slate-800/50'>
                   <SchoolBite school={item} index={index}/>
                 </div>
@@ -126,7 +126,7 @@ export default function Professional() {
             ))}
             {category !== 'Education' && filteredJobs.length > 0 &&
               filteredJobs.map((item, index) => (
-                <div key={index} className='justify-center p-4'>
+                <div key={index} className='justify-center px-4 py-1'>
                   <div className='border border-black shadow-lg m-2 rounded-md bg-slate-800/50'>
                     <JobBite job={item} index={index}/>
                   </div>
