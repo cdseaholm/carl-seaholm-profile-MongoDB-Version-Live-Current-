@@ -13,6 +13,9 @@ import { useRouter } from "next/navigation";
 import ActionsModal from "@/components/modals/modalContent/Actions/actionsmodal";
 import ToDoList from "@/components/pagecomponents/dashboard/views/todolist";
 import { get } from "http";
+import { TotalMinutesCalc } from "@/components/pagecomponents/dashboard/helpers/totalminutescalc";
+import { Spinner } from "@/components/misc/Spinner";
+import { set } from "mongoose";
 
 
 export default function Dashboard() {
@@ -24,13 +27,11 @@ export default function Dashboard() {
     const {hobbies, setHobbies, modalOpen, setModalOpen } = useModalContext();
     const { filterItem, refreshKey } = useHobbyContext();
     const [toShow, setToShow] = useState('stats');
-    const [loading, setLoading] = useState(false);
-    const [initialLoad, setInitialLoad] = useState(false);
+    const [loading, setLoading] = useState(true);
     
     useEffect(() => {
       const getHobbies =  async () => {
         try {
-          setLoading(true);
           const response = await fetch(`${urlToUse}/api/${userID}/gethobbies`, {
             next: {
               revalidate: 3600
@@ -54,6 +55,7 @@ export default function Dashboard() {
           }
         } catch (error) {
           console.error('Error fetching hobbies', error);
+          setLoading(false);
           return;
         } finally {
           console.log('refreshed Key', refreshKey);
@@ -64,26 +66,16 @@ export default function Dashboard() {
       getHobbies();
     }, [refreshKey, urlToUse, userID, setHobbies]);
     
-    useEffect(() => {
-      setLoading(true);
-      if (hobbies.length === 0) {
-        setLoading(false);
-        return;
-      }
-      setLoading(false);
-          
-    }, [hobbies]);
-    
 
     return (
             <MainChild>
               <h1 className={`text-lg md:text-xl font-bold text-center`}>Dashboard</h1>
               {loading ? (
                   <div className="justify-center items-center">
-                    <h1>Loading...</h1>
+                    <Spinner />
                   </div>
                 ) : (
-                  <div className="flex flex-col h-full px-2 pb-2">
+                  <div className="flex flex-col px-2 pb-2" style={{height: '96.5%'}}>
                     <div className="flex flex-row justify-between items-center px-5 py-2">
                       <div className="flex flex-row justify-between items-center space-x-5">
                         <button className="text-base hover:bg-gray-400" onClick={() => {
@@ -111,6 +103,7 @@ export default function Dashboard() {
                         <CalendarView filter={filterItem} />
                       }
                       {toShow === 'stats' &&
+                        //enter a month changer here to hold the month value since I'm elevating the state here
                         <StatsView hobbies={hobbies} daysThisMonth={30} />
                       }
                       {toShow === 'todo' &&

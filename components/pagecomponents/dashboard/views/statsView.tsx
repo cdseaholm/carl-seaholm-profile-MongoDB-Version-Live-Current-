@@ -3,27 +3,27 @@
 import { IHobby } from '@/models/types/hobby';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
-import PieChartView from '../helpers/piechart';
-import { set } from 'mongoose';
-import { BarChart } from 'recharts';
-import BarChartView from '../helpers/barchart';
 import useMediaQuery from '@/components/listeners/WidthSettings';
+import { TrackerUsage } from '../../../charts/trackerChart';
+import { TotalMinutesCalc } from '../helpers/totalminutescalc';
+import { Spinner } from '@/components/misc/Spinner';
+import { BarChartView } from '@/components/charts/barchart';
+import { PieChartView } from '@/components/charts/piechart';
 
 export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] | null, daysThisMonth: number}) {
 
 
     const { data: session } = useSession();
-    const [statHobbies, setStatHobbies] = useState<IHobby[]>([]);
-    const [totalTime, setTotalTime] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     const isBreakpoint = useMediaQuery(768);
-    
-    useEffect(() => {
-        if (hobbies === null || hobbies === undefined) {
-            setLoading(false);
-            return;
-        }
-        const hobbiesToSet = hobbies.map((hobby: IHobby) => {
+    const thisMonth = new Date().getMonth();
+    const [totalTime, setTotalTime] = useState<number[]>([]);
+    const [totalCounter, setTotalCounter] = useState<number[]>([]);
+    let hobbiesSet = [] as IHobby[];
+    if (!hobbies) {
+        hobbiesSet = [];
+    } else {
+        hobbiesSet = hobbies.map((hobby: IHobby) => {
             return {
                 title: hobby.title,
                 categories: hobby.categories,
@@ -38,57 +38,53 @@ export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] 
                 updatedAt: hobby.updatedAt,
             }
         });
-        if (hobbiesToSet === null || hobbiesToSet === undefined) {
-            setLoading(false);
-            return;
-        }
-        setStatHobbies(hobbiesToSet);
-        setLoading(false);
-    }, [hobbies, session]);
+    }
 
-    var minutesSpent = 0;
-    if (hobbies === null) {
+    useEffect(() => {
+        const setStats = async () => {
+          if (hobbies && hobbies.length > 0) {
+            const {totalTimePerMonth, counterPerMonth} = await TotalMinutesCalc({hobbies, thisMonth: thisMonth});
+            setTotalTime(totalTimePerMonth);
+            setTotalCounter(counterPerMonth);
+          }
+          setLoading(false);
+        }
+        setStats();
+      }, [hobbies]);
+
+    if (loading) {
+
         return (
-            <div>
-                Loading...
-            </div>
+            <Spinner />
+        )
+    } else {
+
+
+        return (
+                    <div className={`${!isBreakpoint ? 'grid gap-1 grid-cols-2 grid-rows-2' : 'items-center'} w-full h-full p-2 scrollbar-thin scrollbar-webkit`} style={{overflow: 'auto'}}>
+                        <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
+                            <h2 className={`font-bold underline`} style={{fontSize: 14}}>% of Total Time on Each Hobby</h2>
+                            <PieChartView hobbies={hobbiesSet} />
+                        </div>
+                        <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
+                            <h2 className={`font-bold underline`} style={{fontSize: 14}}>
+                                Total Minutes Spent on Hobbies per Month
+                            </h2>
+                            <BarChartView hobbies={hobbiesSet} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='total'/>
+                        </div>
+                        <div className='flex flex-col w-full text-sm' style={{height: '30dvh'}}>
+                            <h2 className={`font-bold underline`} style={{fontSize: 14}}>
+                                Number of Days this Month with a session
+                            </h2>
+                            <TrackerUsage hobbies={hobbiesSet} />
+                        </div>
+                        <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
+                            <h2 className={`font-bold underline`} style={{fontSize: 14}}>
+                                Average Minutes a Session:
+                            </h2>
+                            <BarChartView hobbies={hobbiesSet} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='avg'/>
+                        </div>
+                    </div>
         )
     }
-    for (let x = 0; x < hobbies.length; x++) {
-        for (let i = 0; i < hobbies[x].minutesXsessions.length; i++) {
-            minutesSpent += parseInt(hobbies[x].minutesXsessions[i]);
-        }
-    }
-
-
-    return (
-                <div className={`grid gap-1 ${!isBreakpoint ? 'grid-cols-2 grid-rows-2' : 'grid-cols-1 grid-rows-4 space-y-10'} w-full h-full p-2`} style={{overflow: 'auto'}}>
-                    <div className='flex flex-col items-center w-full h-full text-xs md:text-sm'>
-                        <h2>% of Total Time on Each Hobby</h2>
-                        <PieChartView hobbies={statHobbies} />
-                    </div>
-                    <div className='flex flex-col items-center text-sm md:text-base' style={{height: '30dvh', width: '40dvh'}}>
-                        <h2>
-                            Minutes Spent:
-                        </h2>
-                        <BarChartView hobbies={statHobbies}/>
-                    </div>
-                    <div className='flex flex-col items-center w-full h-full text-sm md:text-base'>
-                        <div>
-                            Number of Days with a session
-                        </div>
-                        <div>
-                            {hobbies.map(hobby => hobby.dates.length).reduce((a, b) => a + b, 0)}
-                        </div>
-                    </div>
-                    <div className='flex flex-col items-center w-full h-full text-sm md:text-base'>
-                        <div>
-                            Average Minutes:
-                        </div>
-                        <div>
-                            {minutesSpent / daysThisMonth}
-                        </div>
-                    </div>
-                </div>
-      )
 }

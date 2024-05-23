@@ -11,6 +11,7 @@ export default withUt({
     "./node_modules/flowbite/**/*.js",
     "./node_modules/flowbite-react/lib/**/*.js",
     "./public/**/*.html",
+    "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {
