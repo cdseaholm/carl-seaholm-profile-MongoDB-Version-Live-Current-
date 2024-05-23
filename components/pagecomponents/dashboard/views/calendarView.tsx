@@ -16,8 +16,6 @@ const CalendarView = ({filter}: {filter: string;}) => {
 
       useEffect(() => {
         if (daySelected !== '') {
-            console.log('check', daySelected);
-            console.log('check', forceUpdate);
             setModalOpen('daydetails');
         }
       }, [daySelected, forceUpdate, setModalOpen]);
@@ -25,7 +23,6 @@ const CalendarView = ({filter}: {filter: string;}) => {
 
     useEffect(() => {
         if (hobbies === null || hobbies === undefined) {
-            console.log('No hobbies');
             return;
         } else {
             const hobbiesToSet = hobbies.map((hobby: IHobby) => {
@@ -39,7 +36,6 @@ const CalendarView = ({filter}: {filter: string;}) => {
                 }
             });
             if (hobbiesToSet.length === 0) {
-                console.log('No hobbies');
                 return;
             } else {
                 setHobbyEvents(hobbiesToSet);
@@ -70,18 +66,10 @@ const CalendarView = ({filter}: {filter: string;}) => {
                     eventClick={(arg) => {
                             setDaySelected(arg.event.startStr);
                             setForceUpdate(!forceUpdate);
-                            console.log('select', arg);
-                            console.log('select', daySelected);
-                            console.log('select', arg.event.startStr);
-                            console.log('select', arg.event.allDay);
                     }}
                     select={(arg) => {
                             setDaySelected(arg.startStr);
                             setForceUpdate(!forceUpdate);
-                            console.log('select', arg);
-                            console.log('select', daySelected);
-                            console.log('select', arg.startStr);
-                            console.log('select', arg.allDay);
                     }}
                     height={'auto'}
                     eventContent={(arg) => {
