@@ -61,7 +61,7 @@ export function BarChartView({hobbies, thisMonth, totalTime, totalCount, parent}
             setLoading(false);
         }
         getDataset();
-    }, [hobbies, thisMonth, totalTime, totalCount, parent, months, years]);
+    }, [hobbies, thisMonth, totalTime, totalCount, parent]);
 
     const barData = [{
             x: [...monthsToChart],
