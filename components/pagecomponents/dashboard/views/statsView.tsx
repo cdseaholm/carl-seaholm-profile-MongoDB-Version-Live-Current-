@@ -16,9 +16,9 @@ export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] 
     const { data: session } = useSession();
     const [loading, setLoading] = useState<boolean>(false);
     const isBreakpoint = useMediaQuery(768);
-    const thisMonth = new Date().getMonth();
     const [totalTime, setTotalTime] = useState<number[]>([]);
     const [totalCounter, setTotalCounter] = useState<number[]>([]);
+    const [thisMonth, setThisMonth] = useState<number>(new Date().getMonth());
     let hobbiesSet = [] as IHobby[];
     if (!hobbies) {
         hobbiesSet = [];
@@ -42,6 +42,8 @@ export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] 
 
     useEffect(() => {
         const setStats = async () => {
+            const thisMonth = new Date().getMonth();
+            setThisMonth(thisMonth);
           if (hobbies && hobbies.length > 0) {
             const {totalTimePerMonth, counterPerMonth} = await TotalMinutesCalc({hobbies, thisMonth: thisMonth});
             setTotalTime(totalTimePerMonth);
@@ -50,7 +52,7 @@ export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] 
           setLoading(false);
         }
         setStats();
-      }, [hobbies]);
+      }, [hobbies, thisMonth]);
 
     if (loading) {
 
@@ -76,7 +78,7 @@ export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] 
                             <h2 className={`font-bold underline`} style={{fontSize: 14}}>
                                 Number of Days this Month with a session
                             </h2>
-                            <TrackerUsage hobbies={hobbiesSet} />
+                            <TrackerUsage hobbies={hobbiesSet} thisMonth={thisMonth} />
                         </div>
                         <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
                             <h2 className={`font-bold underline`} style={{fontSize: 14}}>

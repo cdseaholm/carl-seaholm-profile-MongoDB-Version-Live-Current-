@@ -1,5 +1,6 @@
 import { IHobby } from '@/models/types/hobby';
 import { Card, Tracker, type Color } from '@tremor/react';
+import { set } from 'mongoose';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 
@@ -10,25 +11,23 @@ interface Tracker {
     tooltip: string;
 }
 
-export function TrackerUsage({hobbies}: { hobbies: IHobby[] | null}) {
+export function TrackerUsage({hobbies, thisMonth}: { hobbies: IHobby[] | null, thisMonth: number}) {
     
     const [loading, setLoading] = useState<boolean>(true);
     const [trackerData, setTrackerData] = useState<Tracker[]>([]);
-    const thisMonth = new Date().getMonth();
-    const monthLength = new Date(new Date().getFullYear(), thisMonth + 1, 0).getDate();
-    const monthHobbies = hobbies?.filter(hobby => new Date(hobby.dates[0]).getMonth() === thisMonth);
-    const daysWithHobbies = monthHobbies?.map(hobby => new Date(hobby.dates[0]).getDate());
+    const [daysWithHobbies, setDaysWithHobbies] = useState<number[] | undefined>([]);
+    const [monthLength, setMonthLength] = useState<number>(0);
 
-    if (hobbies === null) {
-        return (
-            <div>
-                No hobbies completed yet this month
-            </div>
-        )
-    }
-    
     useEffect(() => {
+        if (hobbies === null) {
+            return;
+        }
         const fillTracker = async () => {
+            const monthLength = new Date(new Date().getFullYear(), thisMonth + 1, 0).getDate();
+            setMonthLength(monthLength);
+            const monthHobbies = hobbies?.filter(hobby => new Date(hobby.dates[0]).getMonth() === thisMonth);
+            const daysWithHobbies = monthHobbies?.map(hobby => new Date(hobby.dates[0]).getDate());
+            setDaysWithHobbies(daysWithHobbies);
             const newTrackerData = [] as Tracker[];
             for (let i = 1; i <= monthLength; i++) {
                 if (daysWithHobbies?.includes(i)) {
@@ -40,9 +39,9 @@ export function TrackerUsage({hobbies}: { hobbies: IHobby[] | null}) {
             setTrackerData(newTrackerData);
         } 
         fillTracker();
-    }, [hobbies]);
+    }, [hobbies, thisMonth]);
 
-    if (daysWithHobbies === undefined || daysWithHobbies.length === 0) {
+    if (hobbies === null || daysWithHobbies === undefined || daysWithHobbies.length === 0) {
         return (
             <div>
                 No hobbies completed yet this month
