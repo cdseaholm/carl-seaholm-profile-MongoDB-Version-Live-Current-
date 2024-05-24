@@ -15,30 +15,32 @@ export function PieChartView({hobbies}: { hobbies: IHobby[]}) {
 
     useEffect(() => {
         const beginPercentage = async () => {
+            let totalTimeLocal = 0;
+            let colorsLocal = [] as string[];
             const setColorMap = async () => {
                 if (hobbies && hobbies.length > 0) {
                     let newColors = [];
                     for (let i = 0; i < hobbies.length; i++) {
                         newColors.push(ntc.name(hobbies[i].color)[1]);
                     }
-                    setColors(newColors);
+                    colorsLocal = newColors;
                 }
             }
             if (hobbies) {
                 try {
                     const timeH = hobbies.map(hobby => hobby.minutesXsessions).flat();
                     const time = timeH.reduce((a, b) => a + parseInt(b), 0);
-                    setTotalTime(time);
+                    totalTimeLocal = time;
                 } catch (e) {
                     console.error(e);
                 } finally {
-                    if (hobbies && totalTime > 0) {
+                    if (hobbies && totalTimeLocal > 0) {
                         await setColorMap();
                         const newData = hobbies.map((hobby, index) => {
                             return {
                                 name: hobby.title,
-                                value: hobby.minutesXsessions.reduce((a, b) => a + parseInt(b), 0) / totalTime * 100,
-                                color: colors[index]
+                                value: hobby.minutesXsessions.reduce((a, b) => a + parseInt(b), 0) / totalTimeLocal * 100,
+                                color: colorsLocal[index]
                             }
                         });
                         setData(newData);
@@ -48,7 +50,7 @@ export function PieChartView({hobbies}: { hobbies: IHobby[]}) {
             setLoading(false);
         }
         beginPercentage();
-    }, [hobbies, totalTime, colors]);
+    }, [hobbies]);
 
     const dataPlot = [{
         values: data.map((d: any) => d.value),
