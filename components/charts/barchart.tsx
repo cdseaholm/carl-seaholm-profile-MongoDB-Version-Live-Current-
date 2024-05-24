@@ -11,12 +11,13 @@ export function BarChartView({hobbies, thisMonth, totalTime, totalCount, parent}
     const [data, setData] = useState<any[]>([]);
     const [monthsToChart, setMonthsToChart] = useState<string[]>([]);
     const [colorsToChart, setColorsToChart] = useState<string[]>([]);
+    const [months, setMonths] = useState<number[]>([]);
     const [loading, setLoading] = useState(true);
-    const months = [thisMonth - 4, thisMonth - 3, thisMonth - 2, thisMonth - 1, thisMonth];
     const years = new Date().getFullYear();
     
     useEffect(() => {
         const getDataset = async () => {
+            setMonths([thisMonth - 4, thisMonth - 3, thisMonth - 2, thisMonth - 1, thisMonth])
             if (hobbies) {
                 if (totalTime !== undefined) {
                     const { monthNames, monthColors } = await MonthProv(months, years) as unknown as { monthNames: string[], monthColors: string[] };
