@@ -19,14 +19,6 @@ export function TrackerUsage({hobbies}: { hobbies: IHobby[] | null}) {
     const monthHobbies = hobbies?.filter(hobby => new Date(hobby.dates[0]).getMonth() === thisMonth);
     const daysWithHobbies = monthHobbies?.map(hobby => new Date(hobby.dates[0]).getDate());
 
-    for (let i = 1; i <= monthLength; i++) {
-        if (daysWithHobbies?.includes(i)) {
-            setTrackerData([...trackerData, {color: 'green', tooltip: 'Hobby completed'}]);
-        } else {
-            setTrackerData([...trackerData, {color: 'red', tooltip: 'No hobby completed'}]);
-        }
-    }
-    
     if (hobbies === null) {
         return (
             <div>
@@ -34,6 +26,21 @@ export function TrackerUsage({hobbies}: { hobbies: IHobby[] | null}) {
             </div>
         )
     }
+    
+    useEffect(() => {
+        const fillTracker = async () => {
+            const newTrackerData = [] as Tracker[];
+            for (let i = 1; i <= monthLength; i++) {
+                if (daysWithHobbies?.includes(i)) {
+                    newTrackerData.push({color: 'green', tooltip: 'Hobby completed'});
+                } else {
+                    newTrackerData.push({color: 'red', tooltip: 'No hobby completed'});
+                }
+            }
+            setTrackerData(newTrackerData);
+        } 
+        fillTracker();
+    }, [hobbies]);
 
     if (daysWithHobbies === undefined || daysWithHobbies.length === 0) {
         return (
