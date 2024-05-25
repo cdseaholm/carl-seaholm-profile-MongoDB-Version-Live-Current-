@@ -1,11 +1,11 @@
 export interface ITask {
-    title: string;
+    title: string[];
     date: string;
-    time: string;
-    description: string;
+    time: string[];
+    description: string[];
     user_email: string;
     _id: string;
     createdAt: string;
     updatedAt: string;
-    completed: boolean;
+    completed: boolean[];
 }

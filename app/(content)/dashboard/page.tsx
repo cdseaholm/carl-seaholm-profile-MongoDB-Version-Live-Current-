@@ -16,6 +16,7 @@ import { get } from "http";
 import { TotalMinutesCalc } from "@/components/pagecomponents/dashboard/helpers/totalminutescalc";
 import { Spinner } from "@/components/misc/Spinner";
 import { set } from "mongoose";
+import { ITask } from "@/models/types/task";
 
 
 export default function Dashboard() {
@@ -26,8 +27,9 @@ export default function Dashboard() {
     const { urlToUse } = useStateContext();
     const {hobbies, setHobbies, modalOpen, setModalOpen } = useModalContext();
     const { filterItem, refreshKey } = useHobbyContext();
-    const [toShow, setToShow] = useState('stats');
+    const [toShow, setToShow] = useState(adminID ? 'todo' : 'stats');
     const [loading, setLoading] = useState(true);
+    const [localTasks, setLocalTasks] = useState<ITask[]>([]);
     
     useEffect(() => {
       const getHobbies =  async () => {
@@ -65,6 +67,48 @@ export default function Dashboard() {
       }
       getHobbies();
     }, [refreshKey, urlToUse, userID, setHobbies]);
+
+    useEffect(() => {
+      const getTasks = async () => {
+          try {
+              const response = await fetch(`${urlToUse}/api/${userID}/gettasks`, {
+                  method: 'GET',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  }
+              });
+              if (!response.ok) {
+                  console.log('No tasks found');
+                  return;
+              }
+              if (response.ok) {
+                  const res = await response.json();
+                  if (res.status === 404) {
+                      return;
+                  }
+                  const tasksToUse = res.tasks.map((task: ITask) => {
+                      return {
+                          title: task.title,
+                          time: task.time,
+                          description: task.description,
+                          date: task.date,
+                          user_email: task.user_email,
+                          _id: task._id,
+                          createdAt: task.createdAt,
+                          updatedAt: task.updatedAt,
+                          completed: task.completed
+                      }
+                  });
+                  setLocalTasks(tasksToUse);
+              }
+          } catch (error) {
+              console.error('Error fetching tasks', error);
+              return;
+          }
+      }
+      getTasks();
+  }, [modalOpen, urlToUse, userID]);
+
     
 
     return (
@@ -107,7 +151,7 @@ export default function Dashboard() {
                         <StatsView hobbies={hobbies} daysThisMonth={30} />
                       }
                       {toShow === 'todo' &&
-                        <ToDoList />
+                        <ToDoList tasks={localTasks} />
                       }
                     </div>
                   </div>

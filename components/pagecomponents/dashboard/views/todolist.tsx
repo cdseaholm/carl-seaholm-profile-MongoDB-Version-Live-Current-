@@ -10,13 +10,12 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import { useEffect, useState } from "react";
 
-const ToDoList = () => {
+const ToDoList = ({tasks}: {tasks: ITask[]}) => {
     
     const {data: session} = useSession();
     const { urlToUse } = useStateContext();
     const { setModalOpen, modalOpen } = useModalContext();
     const [dateToUse, setDateToUse] = useState(new Date().toLocaleDateString());
-    const [localTasks, setLocalTasks] = useState<ITask[]>([]);
     const [filteredTasks, setFilteredTasks] = useState<ITask[]>([]);
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
     const adminID = session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
@@ -24,42 +23,14 @@ const ToDoList = () => {
 
     useEffect(() => {
         const getTasks = async () => {
+            if (tasks === undefined || tasks === null) {
+                return;
+            }
             try {
-                const response = await fetch(`${urlToUse}/api/${userID}/gettasks`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                const tasksFiltered = tasks.filter((task: ITask) => {
+                    return task.date === dateToUse;
                 });
-                if (!response.ok) {
-                    console.log('No tasks found');
-                    return;
-                }
-                if (response.ok) {
-                    const res = await response.json();
-                    const tasksToUse = res.tasks.map((task: ITask) => {
-                        console.log('Task date:', task.date);
-                        return {
-                            title: task.title,
-                            time: task.time,
-                            description: task.description,
-                            date: task.date,
-                            user_email: task.user_email,
-                            _id: task._id,
-                            createdAt: task.createdAt,
-                            updatedAt: task.updatedAt,
-                            completed: task.completed
-                        }
-                    });
-                    setLocalTasks(tasksToUse);
-                    console.log(res);
-    
-                    const tasksFiltered = tasksToUse.filter((task: ITask) => {
-                        console.log('Comparing dates:', task.date, dateToUse);
-                        return task.date === dateToUse;
-                    });
-                    setFilteredTasks(tasksFiltered);
-                }
+                setFilteredTasks(tasksFiltered);
             } catch (error) {
                 console.error('Error fetching tasks', error);
                 return;
@@ -67,6 +38,26 @@ const ToDoList = () => {
         }
         getTasks();
     }, [modalOpen, dateToUse, urlToUse, userID]);
+
+    useEffect(() => {
+        const firstTask = async () => {
+            const tasksDoneToday = tasks.filter((task: ITask) => {
+                if (task.date === new Date().toLocaleDateString()) {
+                  return true;
+                } else {
+                  return false;
+                } 
+            });
+            if (adminID && !tasksDoneToday) {
+                if (window.confirm('No tasks found for today yet. Would you like to add a task?')) {
+                    setModalOpen('addtask');
+                } else {
+                    return;
+                }
+            }
+        }
+        firstTask();
+    }, [tasks]);
 
     const handleDateIncrease = () => { 
         const date = new Date(dateToUse);
@@ -80,16 +71,22 @@ const ToDoList = () => {
         setDateToUse(date.toLocaleDateString());
     }
 
-    const handleCheckboxClick = async (id: string, currentCompleted: boolean) => {
+    const handleCheckboxClick = async (id: string, index: number) => {
         if (!adminID) return;
         try {
+            const taskToUpdate = filteredTasks.find(task => task._id === id);
+            if (!taskToUpdate) return;
+    
+            const updatedCompleted = [...taskToUpdate.completed];
+            updatedCompleted[index] = !updatedCompleted[index];
+    
             const updatedTasks = await fetch(`${urlToUse}/api/${userID}/edittask/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    completed: !currentCompleted
+                    completed: updatedCompleted
                 })
             });
             if (!updatedTasks.ok) {
@@ -106,7 +103,7 @@ const ToDoList = () => {
         }
         setFilteredTasks(prevTasks =>
             prevTasks.map(task =>
-                task._id === id ? { ...task, completed: !task.completed } : task
+                task._id === id ? { ...task, completed: task.completed.map((comp, i) => i === index ? !comp : comp) } : task
             )
         );
     };
@@ -137,24 +134,26 @@ const ToDoList = () => {
                             <p className="hover:bg-gray-400">{'>'}</p>
                         </button>
                     </div>
-                        {filteredTasks.length === 0 ? (
-                            <h1 className={`text-sm md:text-base font-semibold text-center w-full`}>No tasks found</h1>
-                        ) : (
-                            <div className={`grid grid-cols-4 gap-4 px-16`}>
-                                <h1 className={`text-xs md:text-sm font-semibold underline`}>Completed</h1>
-                                <h1 className={`text-xs md:text-sm font-semibold underline`}>Title</h1>
-                                <h1 className={`text-xs md:text-sm font-semibold underline`}>Time</h1>
-                                <h1 className={`text-xs md:text-sm font-semibold underline`}>Description</h1>
-                                {filteredTasks.map((task: ITask, index: number) => (
-                                    <React.Fragment key={index}>
-                                        <Checkbox onClick={() => handleCheckboxClick(task._id, task.completed)} isSelected={task.completed ? true : false} className={`${adminID ? 'cursor-pointer' : 'cursor-default'}`}/>
-                                        <h1 className={`text-xs md:text-sm font-semibold ${task.completed ? 'line-through' : ''}`}>{task.title}</h1>
-                                        <h1 className={`text-xs md:text-sm font-semibold ${task.completed ? 'line-through' : ''}`}>{task.time}</h1>
-                                        <h1 className={`text-xs md:text-sm font-semibold`}>{task.description}</h1>
+                    {filteredTasks.length === 0 ? (
+                        <h1 className={`text-sm md:text-base font-semibold text-center w-full`}>No tasks found</h1>
+                    ) : (
+                        <div className={`grid grid-cols-4 gap-4 px-16`}>
+                            <h1 className={`text-xs md:text-sm font-semibold underline`}>Completed</h1>
+                            <h1 className={`text-xs md:text-sm font-semibold underline`}>Title</h1>
+                            <h1 className={`text-xs md:text-sm font-semibold underline`}>Time</h1>
+                            <h1 className={`text-xs md:text-sm font-semibold underline`}>Description</h1>
+                            {filteredTasks.map((task: ITask, index: number) => (
+                                task.title.map((title, i) => (
+                                    <React.Fragment key={i}>
+                                        <Checkbox onClick={() => handleCheckboxClick(task._id, i)} isSelected={task.completed[i] ? true : false} className={`${adminID ? 'cursor-pointer' : 'cursor-default'}`}/>
+                                        <h1 className={`text-xs md:text-sm font-semibold ${task.completed[i] ? 'line-through' : ''}`}>{title}</h1>
+                                        <h1 className={`text-xs md:text-sm font-semibold ${task.completed[i] ? 'line-through' : ''}`}>{task.time[i]}</h1>
+                                        <h1 className={`text-xs md:text-sm font-semibold`}>{task.description[i]}</h1>
                                     </React.Fragment>
-                                ))}
-                            </div>
-                        )}
+                                ))
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
     );

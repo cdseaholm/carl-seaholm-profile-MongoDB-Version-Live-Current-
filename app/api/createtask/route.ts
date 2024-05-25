@@ -10,14 +10,18 @@ export async function POST(request: Request) {
     try {
         await connectDB();
         const data = await request.json();
-        const taskToAdd = await Task.create({
-            title: data.title,
-            date: data.date,
-            time: data.time,
-            description: data.description,
-            user_email: data.user_email
-        });
-        taskToAdd.save();
+        const taskToAdd = await Task.findOneAndUpdate(
+            { user_email: data.user_email, date: data.date },
+            { 
+                $push: {
+                    title: data.title,
+                    time: data.time,
+                    description: data.description
+                }
+            },
+            { new: true, upsert: true }
+        );
+
         if (!taskToAdd) {
             return createErrorResponse("Task not created", 404);
         }

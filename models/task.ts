@@ -2,7 +2,7 @@ import mongoose, { Schema, models } from "mongoose";
 
 const taskSchema = new Schema({
     title: {
-        type: String,
+        type: [String],
         required: true
     },
     date: {
@@ -10,17 +10,17 @@ const taskSchema = new Schema({
         required: true
     },
     time: {
-        type: String
+        type: [String]
     },
     description: {
-        type: String
+        type: [String]
     },
     user_email: {
         type: String,
         required: true
     },
     completed: {
-        type: Boolean,
+        type: [Boolean],
         default: false
     }
 }, {
