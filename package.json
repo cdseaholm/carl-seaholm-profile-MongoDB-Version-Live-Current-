@@ -57,7 +57,8 @@
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "u": "^0.1.0",
-    "uploadthing": "^6.10.4"
+    "uploadthing": "^6.10.4",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",

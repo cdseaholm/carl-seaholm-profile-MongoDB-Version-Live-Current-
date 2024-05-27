@@ -9,17 +9,21 @@ import { TotalMinutesCalc } from '../helpers/totalminutescalc';
 import { Spinner } from '@/components/misc/Spinner';
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
+import { useModalContext } from '@/app/context/modal/modalContext';
+import { useStore } from '@/models/store/store';
 
-export default function StatsView({hobbies, daysThisMonth}: { hobbies: IHobby[] | null, daysThisMonth: number}) {
+export default function StatsView({daysThisMonth}: { daysThisMonth: number}) {
 
 
     const { data: session } = useSession();
+    const { hobbies } = useStore();
     const [loading, setLoading] = useState<boolean>(false);
     const isBreakpoint = useMediaQuery(768);
     const [totalTime, setTotalTime] = useState<number[]>([]);
     const [totalCounter, setTotalCounter] = useState<number[]>([]);
     const [thisMonth, setThisMonth] = useState<number>(new Date().getMonth());
     let hobbiesSet = [] as IHobby[];
+    
     if (!hobbies) {
         hobbiesSet = [];
     } else {

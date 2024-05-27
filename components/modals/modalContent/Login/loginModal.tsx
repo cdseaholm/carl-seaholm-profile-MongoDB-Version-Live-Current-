@@ -2,7 +2,6 @@
 
 import { useAlertContext } from "@/app/context/alert/alertcontext";
 import { useModalContext } from "@/app/context/modal/modalContext";
-import { set } from "mongoose";
 import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
 
@@ -33,8 +32,6 @@ export default function ModalLogin() {
                 password: event.currentTarget['modalLoginPassword'].value,
                 redirect: false
             });
-            
-            console.log('res', res);
             
             if (res && res.error) {
                 console.log('Error logging in:', res.error);

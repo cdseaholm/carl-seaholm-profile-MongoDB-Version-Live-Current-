@@ -1,18 +1,17 @@
 import { useModalContext } from "@/app/context/modal/modalContext";
 import { useStateContext } from "@/app/context/state/StateContext";
-import task from "@/models/task";
 import { ITask } from "@/models/types/task";
-import { set } from "mongoose";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useStore } from "@/models/store/store";
 
 export default function AddTask () {
 
     const {data: session} = useSession();
     const { urlToUse } = useStateContext();
-    const { setModalOpen, tasks, setTasks } = useModalContext();
+    const { setModalOpen } = useModalContext();
     const [loading, setLoading] = useState(false);
+    const { tasks, setTasks } = useStore();
 
     const updateTasks = async ({newTask}: {newTask: ITask[]}) => {
         setLoading(true);

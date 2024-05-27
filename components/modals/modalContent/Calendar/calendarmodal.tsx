@@ -1,6 +1,5 @@
 'use client'
 
-import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { DateClickArg } from '@fullcalendar/interaction';
@@ -8,15 +7,15 @@ import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { IHobby } from "@/models/types/hobby";
 import { useModalContext } from "@/app/context/modal/modalContext";
-import { set } from "mongoose";
-import { h } from "@fullcalendar/core/preact.js";
+import { useStore } from "@/models/store/store";
 
 const CalendarView = () => {
 
     const { data: session } = useSession();
-    const { setModalOpen, hobbies, daySelected, setDaySelected } = useModalContext();
+    const { setModalOpen, daySelected, setDaySelected } = useModalContext();
     const [hobbyEvents, setHobbyEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
+    const { hobbies } = useStore();
 
     const handleDayClick = (arg: DateClickArg) => {
         console.log(arg.dateStr);

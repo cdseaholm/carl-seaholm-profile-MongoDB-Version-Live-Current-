@@ -1,11 +1,16 @@
-    'use client'
+'use client'
 
 import React, { useRef } from "react";
 import Image from 'next/image';
 
 const MobileDemoBody = () => {
     const divRef = useRef(null);
-    const screenWidth = window.innerWidth;
+    let screenWidth;
+    if (typeof window !== 'undefined') {
+        screenWidth = window.innerWidth;
+    } else {
+        screenWidth = 0;
+    }
 return (
             <div className="bg-black/80 rounded-md mt-5 mx-5">
                 <div style={{ maxHeight: '90vh', overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'rgba(100, 116, 139, 1) rgba(0, 0, 0, 0.1)',}} ref={divRef}>
