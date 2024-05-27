@@ -6,52 +6,70 @@ import { Providers } from "@/app/providers";
 import Navbar from '@/components/nav/Navbar';
 import FooterNavBar from "@/components/nav/footer/footerNavbar";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { AuthProvider } from "@/app/context/session/SessionContext";
 import { AnimatePresence } from "framer-motion";
-import { Spinner } from "@/components/misc/Spinner";
-import { useStateContext } from "./context/state/StateContext";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import MotionWrap from "@/components/listeners/motionwrap";
+import { useStateContext } from "./context/state/StateContext";
+import { useModalContext } from "./context/modal/modalContext";
+import { getHobbies } from "./context/functions/getHobbies";
+import { getTasks } from "./context/functions/getTasks";
+import { Spinner } from "@/components/misc/Spinner";
+import { useStore } from "@/models/store/store";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
+  const { urlToUse, loading, setLoading } = useStateContext();
+  const { hobbies, tasks } = useStore();
+  const { setTasks, setHobbies } = useStore();
   const pathname = usePathname();
-  const { urlToUse, setUrlToUse } = useStateContext();
-  const [loading, setLoading] = useState(true);
-  const [isDemo, setIsDemo] = useState(false);
+  const isDemo = pathname === '/demo_303' ? true : false;
+  const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
 
-  useEffect(() => {
-    if (pathname === '/demo_303') {
-      setIsDemo(true);
-    } else {
-      setIsDemo(false);
-    }
-  }, [pathname]);
-
-  useEffect(() => {
+  const getData = async () => {
+    setLoading(true);
     if (urlToUse === '') {
-       if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_BASE_URL !== undefined && process.env.NEXT_PUBLIC_BASE_URL !== '' && process.env.NEXT_PUBLIC_BASE_URL !== null) {
-        setUrlToUse(process.env.NEXT_PUBLIC_BASE_URL);
-        setLoading(false);
-       } else if (process.env.NODE_ENV === 'production' && process.env. NEXT_PUBLIC_BASE_LIVEURL !== null && process.env.NEXT_PUBLIC_BASE_LIVEURL !== '' && process.env.NEXT_PUBLIC_BASE_LIVEURL !== undefined) {
-        setUrlToUse(process.env.NEXT_PUBLIC_BASE_LIVEURL);
+      console.error('No URL to use');
+      setLoading(false);
+      return;
+    } else {
+      try {
+        if (userID !== undefined && userID !== null && userID !== '') {
+          const hobs = await getHobbies(urlToUse, userID);
+          setHobbies(hobs);
+          const tsk = await getTasks(urlToUse, userID);
+          setTasks(tsk);
+        } else {
+          console.log('No user ID');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
         setLoading(false);
       }
-    } else {
       setLoading(false);
     }
-  }, [urlToUse, setUrlToUse]);
-  
+  };
+
   useEffect(() => {
       document.body.style.overflow = 'hidden';
       return () => {
           document.body.style.overflow = 'unset';
       };
   }, []);
+
+  useEffect(() => {
+    getData();
+  }, [getData]);
+
+  useEffect(() => {
+    console.log('Initial Hobbies:', hobbies);
+    console.log('Initial Tasks:', tasks);
+  }, [hobbies, tasks]);
 
   return (
     <html lang="en">
@@ -61,8 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="bg-white/50 h-dvh">
                 <SpeedInsights/>
                 <Providers> 
-                  {loading && <Spinner />}
-                  {!loading &&
+                  {loading ? <div className="flex justify-center items-center h-screen"><Spinner/></div> :
                     <MotionWrap motionKey={pathname}>
                       <main className={`${isDemo ? 'min-h-screen object-fill bg-gray-800': 'flex flex-col px-5 h-dvh justify-between'}`}>
                         {!isDemo && <Navbar />}

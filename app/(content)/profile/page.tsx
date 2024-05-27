@@ -11,6 +11,10 @@ const ProfilePage = () => {
         console.log('logout');
     }
 
+    const showPassword = async () => {
+        
+    }
+
     return (
         <>
         <InnerHeader>
@@ -21,7 +25,7 @@ const ProfilePage = () => {
                 <button onClick={() => setModalOpen('edituser')}>
                     Edit Profile
                 </button>
-                <button>
+                <button onClick={showPassword}>
                     Change Password
                 </button>
                 <button onClick={handleLogout}>

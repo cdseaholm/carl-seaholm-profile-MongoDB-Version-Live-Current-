@@ -3,14 +3,16 @@
 import { useEffect, useState } from "react";
 import { useModalContext } from "@/app/context/modal/modalContext";
 import useMediaQuery from "@/components/listeners/WidthSettings";
-import { DetailsAccordianPage } from "@/components/dropdowns/DetailsAccordian";
+import { useStore } from "@/models/store/store";
 import { DayDetailsAccordian } from "@/components/dropdowns/daydetailsaccordian";
 
 const DayDetails = () => {
 
     const isBreakpoint = useMediaQuery(768);
-    const { hobbies, daySelected, setDaySelected } = useModalContext();
+    const { daySelected, setDaySelected } = useModalContext();
     const [loading, setLoading] = useState(false);
+    const { hobbies } = useStore();
+
 
     const handleClearDay = () => {
         setDaySelected('');

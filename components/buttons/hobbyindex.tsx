@@ -1,11 +1,13 @@
 
 import { useModalContext } from "@/app/context/modal/modalContext";
 import { useState } from "react";
+import { useStore } from '@/models/store/store';
 
 export default function HobbyIndex() {
-    const { hobbies } = useModalContext();
+
     const [show, setShow] = useState(false);
     const title = show ? 'Close' : 'Color Index';
+    const { hobbies } = useStore();
 
     return (
         <div className="flex flex-col items-end">

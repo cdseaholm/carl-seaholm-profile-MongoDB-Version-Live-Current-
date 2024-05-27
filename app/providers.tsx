@@ -16,13 +16,12 @@ import { ITask } from '@/models/types/task';
 export function Providers({children}: { children: React.ReactNode }) {
 
   //appStates
-  const [urlToUse, setUrlToUse] = useState('');
+  const [loading, setLoading] = useState(false);
 
   //modalStates
   const [showModal, setShowModal] = useState('');
   const [openCategoryModal, setOpenCategoryModal] = useState(false);
   const [hobbyToShow, setHobbyToShow] = useState<IHobby[] | null>(null);
-  const [tasks, setTasks] = useState([] as ITask[]);
 
   //alertStates
   const [showAlert, setShowAlert] = useState(false);
@@ -35,9 +34,7 @@ export function Providers({children}: { children: React.ReactNode }) {
   const [categoryPassed, setCategoryPassed] = useState('');
   const [daySelected, setDaySelected] = useState('');
   const [colorChoice, setColorChoice] = useState('#000000');
-  const [hobbies, setHobbies] = useState([] as IHobby[]);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [calDash, setCalDash] = useState(true);
   const [categories, setCategories] = useState([] as string[]);
   const [titles, setTitles] = useState([] as string[]);
 
@@ -53,9 +50,9 @@ export function Providers({children}: { children: React.ReactNode }) {
   }
 
   return (
-    <StateProvider urlToUse={urlToUse} setUrlToUse={setUrlToUse}>
+    <StateProvider loading={loading} setLoading={setLoading}>
       <AlertProvider showAlert={showAlert} setShowAlert={setShowAlert} alertMessage={alertMessage} setAlertMessage={setAlertMessage} alertParent={alertParent} setAlertParent={setAlertParent} alertConfirm={alertConfirm} setAlertConfirm={setAlertConfirm} resetAlert={resetAlert}>
-        <ModalProvider modalOpen={showModal} setModalOpen={setShowModal} setColorChoice={setColorChoice} colorChoice={colorChoice} setHobbies={setHobbies} hobbies={hobbies} setDaySelected={setDaySelected} daySelected={daySelected} setTasks={setTasks} tasks={tasks}>
+        <ModalProvider modalOpen={showModal} setModalOpen={setShowModal} setColorChoice={setColorChoice} colorChoice={colorChoice} setDaySelected={setDaySelected} daySelected={daySelected}>
           <MainModal />
           <HobbyProvider filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} setRefreshKey={setRefreshKey} refreshKey={refreshKey} hobbyToShow={hobbyToShow} setHobbyToShow={setHobbyToShow} categories={categories} setCategories={setCategories} titles={titles} setTitles={setTitles}>
             <RecipeProvider filterItem={recipeFilter} setFilterItem={setRecipeFilter} recipes={recipes} setRecipes={setRecipes}>

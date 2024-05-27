@@ -1,7 +1,6 @@
 'use client'
 
 import { useAlertContext } from "@/app/context/alert/alertcontext";
-import { useModalContext } from "@/app/context/modal/modalContext";
 import { useSession } from "next-auth/react";
 
 const EditUser = () => {

@@ -6,19 +6,25 @@ import FullCalendar from "@fullcalendar/react";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useModalContext } from "@/app/context/modal/modalContext";
+import { useStore } from '@/models/store/store';
 
 const CalendarView = ({filter}: {filter: string;}) => {
 
     const { data: session } = useSession();
-    const { setModalOpen, hobbies, daySelected, setDaySelected } = useModalContext();
+    const { setModalOpen, daySelected, setDaySelected } = useModalContext();
     const [hobbyEvents, setHobbyEvents] = useState<any[]>([]);
     const [forceUpdate, setForceUpdate] = useState(false);
+    const { hobbies } = useStore();
 
-      useEffect(() => {
+    const openModalDayDetails = () => {
+        setModalOpen('daydetails');
+    }
+
+    useEffect(() => {
         if (daySelected !== '') {
-            setModalOpen('daydetails');
+            openModalDayDetails();
         }
-      }, [daySelected, forceUpdate, setModalOpen]);
+    }, [daySelected, openModalDayDetails]);
 
 
     useEffect(() => {

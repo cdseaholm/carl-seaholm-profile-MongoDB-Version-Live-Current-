@@ -4,15 +4,16 @@ import { useModalContext } from "@/app/context/modal/modalContext";
 import { useStateContext } from "@/app/context/state/StateContext";
 import { ITask } from "@/models/types/task";
 import { Checkbox } from "@nextui-org/react";
-import { get } from "http";
-import { set } from "mongoose";
 import { useSession } from "next-auth/react";
 import React from "react";
 import { useEffect, useState } from "react";
+import { useStore } from '@/models/store/store';
+import { set } from "mongoose";
 
-const ToDoList = ({tasks}: {tasks: ITask[]}) => {
+const ToDoList = () => {
     
     const {data: session} = useSession();
+    const { tasks } = useStore();
     const { urlToUse } = useStateContext();
     const { setModalOpen, modalOpen } = useModalContext();
     const [dateToUse, setDateToUse] = useState(new Date().toLocaleDateString());
@@ -37,7 +38,7 @@ const ToDoList = ({tasks}: {tasks: ITask[]}) => {
             }
         }
         getTasks();
-    }, [modalOpen, dateToUse, urlToUse, userID]);
+    }, [modalOpen, dateToUse, urlToUse, userID, tasks]);
 
     useEffect(() => {
         const firstTask = async () => {
@@ -57,7 +58,7 @@ const ToDoList = ({tasks}: {tasks: ITask[]}) => {
             }
         }
         firstTask();
-    }, [tasks]);
+    }, [tasks, adminID, setModalOpen]);
 
     const handleDateIncrease = () => { 
         const date = new Date(dateToUse);
