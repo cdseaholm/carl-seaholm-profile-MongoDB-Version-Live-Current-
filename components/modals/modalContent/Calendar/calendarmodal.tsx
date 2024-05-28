@@ -10,6 +10,7 @@ import { IHobby } from "@/models/types/hobby";
 import { useStore } from "@/context/dataStore";
 import { useModalStore } from '@/context/modalStore';
 import { useAlertStore } from '@/context/alertStore';
+import { DateSelectArg } from '@fullcalendar/core/index.js';
 
 const CalendarView = () => {
 
@@ -25,11 +26,20 @@ const CalendarView = () => {
     const { hobbies } = useStore();
 
     const handleDayClick = async (arg: DateClickArg) => {
-        console.log(arg.dateStr);
-        setDaySelected(arg.dateStr);
-        console.log('Day selected:', daySelected);
+        const day = new Date(arg.dateStr).toLocaleDateString();
+        setDaySelected(day);
         setAlertMessage('Add a new hobby for this day? Or view existing hobbies on this day?');
         setAlertParent('calendar');
+        setModalOpen('');
+        setAlertOpen(true);
+    };
+
+    const handleDaySelect = async (arg: DateSelectArg) => {
+        const day = new Date(arg.startStr).toLocaleDateString();
+        setDaySelected(day);
+        setAlertMessage('Add a new hobby for this day? Or view existing hobbies on this day?');
+        setAlertParent('calendar');
+        setModalOpen('');
         setAlertOpen(true);
     };
 
@@ -96,8 +106,7 @@ const CalendarView = () => {
                         info.jsEvent.preventDefault();
                     }}
                     select={(info) => {
-                        setDaySelected(info.startStr);
-                        setModalOpen('');
+                        handleDaySelect(info);
                     }}
                     fixedWeekCount={false}
                     contentHeight="auto"
@@ -134,6 +143,7 @@ const CalendarView = () => {
                     dateClick={(arg) => {
                         handleDayClick(arg);
                     }}
+                    dayCellClassNames={['cursor-pointer hover:bg-gray-200']}
                     
                 />
         </div>

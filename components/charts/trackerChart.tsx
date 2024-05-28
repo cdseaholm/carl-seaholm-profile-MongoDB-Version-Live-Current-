@@ -23,11 +23,20 @@ export function TrackerUsage({hobbies, thisMonth}: { hobbies: IHobby[] | null, t
             return;
         }
         const fillTracker = async () => {
-            const monthLength = new Date(new Date().getFullYear(), thisMonth + 1, 0).getDate();
+            const monthLength = new Date(new Date().getFullYear(), thisMonth, 0).getDate();
             setMonthLength(monthLength);
-            const monthHobbies = hobbies?.filter(hobby => new Date(hobby.dates[0]).getMonth() === thisMonth);
-            const daysWithHobbies = monthHobbies?.map(hobby => new Date(hobby.dates[0]).getDate());
-            setDaysWithHobbies(daysWithHobbies);
+            let daysWithHobbies = [] as number[];
+            for (let i = 0; i < hobbies.length; i++) {
+                for (let j = 0; j < hobbies[i].dates.length; j++) {
+                    const date = new Date(hobbies[i].dates[j]);
+                    if (date.getMonth() === thisMonth) {
+                        const day = date.getDate();
+                        if (!daysWithHobbies.includes(day)) {
+                            daysWithHobbies.push(day);
+                        }
+                    }
+                }
+            }
             const newTrackerData = [] as Tracker[];
             for (let i = 1; i <= monthLength; i++) {
                 if (daysWithHobbies?.includes(i)) {
@@ -37,6 +46,7 @@ export function TrackerUsage({hobbies, thisMonth}: { hobbies: IHobby[] | null, t
                 }
             }
             setTrackerData(newTrackerData);
+            setDaysWithHobbies(daysWithHobbies);
         } 
         fillTracker();
     }, [hobbies, thisMonth]);

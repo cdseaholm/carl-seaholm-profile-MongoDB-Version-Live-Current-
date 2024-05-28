@@ -39,7 +39,7 @@ export default function StatsView({daysThisMonth}: { daysThisMonth: number}) {
             }
         });
     }
-
+    
     useEffect(() => {
         const setStats = async () => {
             const thisMonth = new Date().getMonth();

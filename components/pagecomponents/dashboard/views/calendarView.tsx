@@ -42,16 +42,13 @@ const CalendarView = () => {
             const hobbiesToSet = [] as IHobby[];
             hobbies.forEach((hobby: IHobby) => {
                 for (let i = 0; i < hobby.dates.length; i++) {
-                    if (hobby.dates[i] === daySelected) {
+                    const day = new Date(hobby.dates[i]).toLocaleDateString();
+                    if (day === daySelected) {
                         hobbiesToSet.push(hobby);
                     }
                 }
             });
-            if (hobbiesToSet.length === 0) {
-                return;
-            } else {
-                setHobbyEvents(hobbiesToSet);
-            }
+            setHobbyEvents(hobbiesToSet);
         }
     }, [hobbies, adminID, daySelected, setHobbyEvents]);
 
@@ -68,7 +65,11 @@ const CalendarView = () => {
                             <p className="hover:bg-gray-400">{'>'}</p>
                         </button>
                     </div>
-            {
+            {hobbyEvents.length === 0 ? (
+                <div>
+                    No hobbies for this day
+                </div>
+            ) : (
                 hobbyEvents.map((hobby: IHobby, index: number) => {
                     var timeToShow = '0 minutes';
                     for (let i = 0; i < hobby.minutesXsessions.length; i++) {
@@ -82,9 +83,12 @@ const CalendarView = () => {
                             timeToShow = `${nums} minutes`
                         }
                     }
-                    const goal = hobby.goals[index];
-                    const goalParsed = goal.split('-');
-                    const goalUsed = goalParsed[1];
+                    let goal;
+                    if (hobby && hobby.goals && hobby.goals[index]) {
+                        const goalToUse = hobby.goals[index];
+                        const goalParsed = goalToUse.toString().split('-');
+                        goal = goalParsed[1];
+                    }
                     return (
                         <div key={index} className="flex flex-col justify-between items-start w-4/5">
                             <div className="flex flex-row justify-start items-start w-full">
@@ -95,22 +99,23 @@ const CalendarView = () => {
                             <div className="flex flex-row justify-start items-start w-full pl-5 text-xs md:text-sm">
                                 <div className="flex flex-col justify-start items-start w-1/2">
                                     <p>
-                                        Categories: {hobby.categories[index] ? hobby.categories[index] : 'No sessions available'}
+                                        Categories: {hobby.categories && hobby.categories[index] ? hobby.categories[index] : 'No sessions available'}
                                     </p>
                                     <p className={`text-center`}>
-                                        Description: {hobby.descriptions[index] ? hobby.descriptions[index] : 'No description available'}
+                                        Description: {hobby.descriptions && hobby.descriptions[index] ? hobby.descriptions[index] : 'No description available'}
                                     </p>
                                     <p>
                                         Total time: {timeToShow}
                                     </p>
                                     <p>
-                                        Goal: {goalUsed ? goalUsed : 'No goal available'}
+                                        Goal: {goal ? goal : 'No goal available'}
                                     </p>
                                 </div>
                             </div>
                         </div>
                     )
                 })
+            )
             }
         </div>
 )};
