@@ -42,7 +42,7 @@ export default function ToDoList () {
             setLoading(false);
         }
         getTasks();
-    }, [modalOpen, dateToUse, urlToUse, userID, tasks]);
+    }, [modalOpen, dateToUse, urlToUse, userID, tasks, setLoading]);
 
     const handleDateIncrease = () => { 
         const date = new Date(dateToUse);

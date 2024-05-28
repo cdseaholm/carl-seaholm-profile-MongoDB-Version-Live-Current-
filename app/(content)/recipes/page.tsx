@@ -33,7 +33,7 @@ export default function Recipes() {
             }
         }
         console.log('adminID', adminID);
-    }, [adminID]);
+    }, [adminID, id, setAdminID]);
 
     const [recipesSorted, setRecipesSorted] = useState<IRecipe[]>([]);
     const isBreakpoint = useMediaQuery(768);
