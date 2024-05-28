@@ -2,44 +2,60 @@
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 import { DateClickArg } from '@fullcalendar/interaction';
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { IHobby } from "@/models/types/hobby";
-import { useModalContext } from "@/app/context/modal/modalContext";
-import { useStore } from "@/models/store/store";
+import { useStore } from "@/context/dataStore";
+import { useModalStore } from '@/context/modalStore';
+import { useAlertStore } from '@/context/alertStore';
 
 const CalendarView = () => {
 
     const { data: session } = useSession();
-    const { setModalOpen, daySelected, setDaySelected } = useModalContext();
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
+    const daySelected = useModalStore((state) => state.daySelected);
+    const setDaySelected = useModalStore((state) => state.setDaySelected);
+    const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
+    const setAlertOpen = useAlertStore((state) => state.setShowAlert);
+    const setAlertParent = useAlertStore((state) => state.setAlertParent);
     const [hobbyEvents, setHobbyEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const { hobbies } = useStore();
 
-    const handleDayClick = (arg: DateClickArg) => {
+    const handleDayClick = async (arg: DateClickArg) => {
         console.log(arg.dateStr);
         setDaySelected(arg.dateStr);
+        console.log('Day selected:', daySelected);
+        setAlertMessage('Add a new hobby for this day? Or view existing hobbies on this day?');
+        setAlertParent('calendar');
+        setAlertOpen(true);
     };
 
     const hydrateHobbies = useCallback(async () => {
-        const hobbiesToSet = hobbies.map((hobby: IHobby) => {
-            return {
-                title: hobby.title,
-                allDay: true,
-                start: hobby.dates[0],
-                end: hobby.dates[0],
-                editable: session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false,
-                color: hobby.color,
+        const hobbiesToSet = [] as any[];
+        hobbies.forEach((hobby: IHobby) => {
+            for (let i = 0; i < hobby.dates.length; i++) {
+                const hobbyToAdd = {
+                    title: hobby.title,
+                    allDay: true,
+                    start: hobby.dates[i],
+                    end: hobby.dates[i],
+                    editable: session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false,
+                    color: hobby.color,
+                }
+                hobbiesToSet.push(hobbyToAdd);
             }
         });
+        
         if (hobbiesToSet.length === 0) {
             console.log('No hobbies');
             return;
         } else {
             setHobbyEvents(hobbiesToSet);
         }
-    }, [hobbies, session]);
+    }, [hobbies, session, setHobbyEvents]);
     
     useEffect(() => {
         setLoading(true);
@@ -61,7 +77,7 @@ const CalendarView = () => {
     return (
         <div className="h-full w-full p-2">
              <FullCalendar 
-                    plugins={[dayGridPlugin]}  
+                    plugins={[interactionPlugin, dayGridPlugin]}  
                     events={hobbyEvents}
                     headerToolbar={{
                         left: 'title',
@@ -77,8 +93,7 @@ const CalendarView = () => {
                         }
                     }}
                     eventClick={(info) => {
-                        setDaySelected(info.event.startStr);
-                        setModalOpen('');
+                        info.jsEvent.preventDefault();
                     }}
                     select={(info) => {
                         setDaySelected(info.startStr);
@@ -114,6 +129,10 @@ const CalendarView = () => {
                                 </div>
                             </div>
                         )
+                    }}
+                    selectable={true}
+                    dateClick={(arg) => {
+                        handleDayClick(arg);
                     }}
                     
                 />

@@ -4,41 +4,47 @@ import { IHobby } from "@/models/types/hobby";
 import listPlugin from '@fullcalendar/list';
 import FullCalendar from "@fullcalendar/react";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { useModalContext } from "@/app/context/modal/modalContext";
-import { useStore } from '@/models/store/store';
+import { useStore } from '@/context/dataStore';
+import { useModalStore } from "@/context/modalStore";
 
-const CalendarView = ({filter}: {filter: string;}) => {
+const CalendarView = () => {
 
-    const { data: session } = useSession();
-    const { setModalOpen, daySelected, setDaySelected } = useModalContext();
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
+    const setDaySelected = useModalStore((state) => state.setDaySelected);
+    const daySelected = useModalStore((state) => state.daySelected);
     const [hobbyEvents, setHobbyEvents] = useState<any[]>([]);
-    const [forceUpdate, setForceUpdate] = useState(false);
-    const { hobbies } = useStore();
+    const hobbies = useStore((state) => state.hobbies);
+    const adminID = useStore((state) => state.adminID);
 
-    const openModalDayDetails = () => {
-        setModalOpen('daydetails');
+    const handleDateIncrease = () => { 
+        const date = new Date(daySelected);
+        date.setDate(date.getDate() + 1);
+        setDaySelected(date.toLocaleDateString());
+    }
+
+    const handleDateDescrease = () => {
+        const date = new Date(daySelected);
+        date.setDate(date.getDate() - 1);
+        setDaySelected(date.toLocaleDateString());
     }
 
     useEffect(() => {
-        if (daySelected !== '') {
-            openModalDayDetails();
+        if (daySelected === '' && daySelected !== null && daySelected !== undefined) {
+            setDaySelected(new Date().toLocaleString());
+            return;
         }
-    }, [daySelected, openModalDayDetails]);
-
+    }, [daySelected, setDaySelected]);
 
     useEffect(() => {
         if (hobbies === null || hobbies === undefined) {
             return;
         } else {
-            const hobbiesToSet = hobbies.map((hobby: IHobby) => {
-                return {
-                    title: hobby.title,
-                    allDay: true,
-                    start: hobby.dates[0],
-                    end: hobby.dates[0],
-                    editable: session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false,
-                    color: hobby.color,
+            const hobbiesToSet = [] as IHobby[];
+            hobbies.forEach((hobby: IHobby) => {
+                for (let i = 0; i < hobby.dates.length; i++) {
+                    if (hobby.dates[i] === daySelected) {
+                        hobbiesToSet.push(hobby);
+                    }
                 }
             });
             if (hobbiesToSet.length === 0) {
@@ -47,50 +53,66 @@ const CalendarView = ({filter}: {filter: string;}) => {
                 setHobbyEvents(hobbiesToSet);
             }
         }
-    }, [hobbies, session]);
+    }, [hobbies, adminID, daySelected, setHobbyEvents]);
 
     return (
-        <div className="p-2 items-center" style={{flexGrow: 1, overflow: 'auto'}}>
-            <div style={{flexGrow: 1, fontSize: '8px', overflow: 'auto'}}>
-                <FullCalendar 
-                    plugins={[listPlugin]}  
-                    events={hobbyEvents}
-                    initialView="listWeek"
-                    customButtons={{
-                        selectDayCalendarModal: {
-                            text: 'Select Day',
-                            click: function() {
-                                setModalOpen('calendar');
-                            }
+        <div className="p-2 flex flex-col w-full h-full justify-start items-center space-y-10" style={{flexGrow: 1, fontSize: '10px', overflow: 'auto'}}>
+            <div className={`flex flex-row justify-evenly w-1/2 pb-5 self-center`}>
+                        <button className="text-base" onClick={handleDateDescrease}>
+                            <p className="hover:bg-gray-400">{'<'}</p>
+                        </button>
+                        <h1 className={`text-sm md:text-base font-semibold text-center w-2/3 border-b border-black pb-5`}>       
+                            {daySelected ? daySelected : new Date().toLocaleDateString()}
+                        </h1>
+                        <button className="text-base" onClick={handleDateIncrease}>
+                            <p className="hover:bg-gray-400">{'>'}</p>
+                        </button>
+                    </div>
+            {
+                hobbyEvents.map((hobby: IHobby, index: number) => {
+                    var timeToShow = '0 minutes';
+                    for (let i = 0; i < hobby.minutesXsessions.length; i++) {
+                        var timeTot = 0;
+                        timeTot += Number(hobby.minutesXsessions[i]);
+                        if (timeTot > 60) {
+                            const nums = (timeTot / 60).toFixed(2);
+                            timeToShow = `${nums} hours`
+                        } else {
+                            const nums = timeTot.toFixed(2);
+                            timeToShow = `${nums} minutes`
                         }
-                    }}
-                    headerToolbar={{
-                        left: 'selectDayCalendarModal',
-                        center: 'title',
-                        right: 'prev,next'
-                    }}
-                    eventClick={(arg) => {
-                            setDaySelected(arg.event.startStr);
-                            setForceUpdate(!forceUpdate);
-                    }}
-                    select={(arg) => {
-                            setDaySelected(arg.startStr);
-                            setForceUpdate(!forceUpdate);
-                    }}
-                    height={'auto'}
-                    eventContent={(arg) => {
-                        return (
-                            <div className="flex flex-col justify-start cursor-pointer items-start">
-                                <div style={{fontSize: 10}}>
-                                    {arg.event.title}
+                    }
+                    const goal = hobby.goals[index];
+                    const goalParsed = goal.split('-');
+                    const goalUsed = goalParsed[1];
+                    return (
+                        <div key={index} className="flex flex-col justify-between items-start w-4/5">
+                            <div className="flex flex-row justify-start items-start w-full">
+                                <h1 className={`text-sm md:text-base font-semibold text-center underline`}>
+                                    {hobby.title}
+                                </h1>
+                            </div>
+                            <div className="flex flex-row justify-start items-start w-full pl-5 text-xs md:text-sm">
+                                <div className="flex flex-col justify-start items-start w-1/2">
+                                    <p>
+                                        Categories: {hobby.categories[index] ? hobby.categories[index] : 'No sessions available'}
+                                    </p>
+                                    <p className={`text-center`}>
+                                        Description: {hobby.descriptions[index] ? hobby.descriptions[index] : 'No description available'}
+                                    </p>
+                                    <p>
+                                        Total time: {timeToShow}
+                                    </p>
+                                    <p>
+                                        Goal: {goalUsed ? goalUsed : 'No goal available'}
+                                    </p>
                                 </div>
                             </div>
-                        )
-                    }}
-                    
-                />
-            </div>
-    </div>
+                        </div>
+                    )
+                })
+            }
+        </div>
 )};
 
 export default CalendarView;

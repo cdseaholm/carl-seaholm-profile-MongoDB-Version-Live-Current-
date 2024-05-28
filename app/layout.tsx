@@ -12,48 +12,16 @@ import { AuthProvider } from "@/app/context/session/SessionContext";
 import { AnimatePresence } from "framer-motion";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import MotionWrap from "@/components/listeners/motionwrap";
-import { useStateContext } from "./context/state/StateContext";
-import { useModalContext } from "./context/modal/modalContext";
-import { getHobbies } from "./context/functions/getHobbies";
-import { getTasks } from "./context/functions/getTasks";
 import { Spinner } from "@/components/misc/Spinner";
-import { useStore } from "@/models/store/store";
+import { useStateStore } from "@/context/stateStore";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-
-  const { urlToUse, loading, setLoading } = useStateContext();
-  const { hobbies, tasks } = useStore();
-  const { setTasks, setHobbies } = useStore();
+  
+  const loading = useStateStore((state) => state.loading);
   const pathname = usePathname();
   const isDemo = pathname === '/demo_303' ? true : false;
-  const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
-
-  const getData = async () => {
-    setLoading(true);
-    if (urlToUse === '') {
-      console.error('No URL to use');
-      setLoading(false);
-      return;
-    } else {
-      try {
-        if (userID !== undefined && userID !== null && userID !== '') {
-          const hobs = await getHobbies(urlToUse, userID);
-          setHobbies(hobs);
-          const tsk = await getTasks(urlToUse, userID);
-          setTasks(tsk);
-        } else {
-          console.log('No user ID');
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
       document.body.style.overflow = 'hidden';
@@ -61,15 +29,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           document.body.style.overflow = 'unset';
       };
   }, []);
-
-  useEffect(() => {
-    getData();
-  }, [getData]);
-
-  useEffect(() => {
-    console.log('Initial Hobbies:', hobbies);
-    console.log('Initial Tasks:', tasks);
-  }, [hobbies, tasks]);
 
   return (
     <html lang="en">

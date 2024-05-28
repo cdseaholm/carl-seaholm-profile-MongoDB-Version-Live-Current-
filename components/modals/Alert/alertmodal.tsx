@@ -1,28 +1,45 @@
 'use client'
 
-import { useAlertContext } from '@/app/context/alert/alertcontext';
-import { useModalContext } from '@/app/context/modal/modalContext';
 import { signOut } from 'next-auth/react';
-import React from 'react'
+import React from 'react';
+import { useAlertStore } from '@/context/alertStore';
+import { useModalStore } from '@/context/modalStore';
+import { da } from 'date-fns/locale';
+import { useStateStore } from '@/context/stateStore';
 
 export default function AlertModal() {
   
 
-    const { showAlert, setShowAlert, alertParent, alertMessage, setAlertParent } = useAlertContext();
-    const logoutAlert = alertParent === 'logout' ? true : false;
+    const alertParent = useAlertStore((state) => state.alertParent);
+    const setAlertParent = useAlertStore((state) => state.setAlertParent);
+    const showAlert = useAlertStore((state) => state.showAlert);
+    const setShowAlert = useAlertStore((state) => state.setShowAlert);
+    const alertMessage = useAlertStore((state) => state.alertMessage);
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
+    const resetAlert = useAlertStore((state) => state.resetAlert);
+    const setModalParent = useModalStore((state) => state.setModalParent);
+    const setDashToShow = useStateStore((state) => state.setDashToShow);
 
-    const handleAlertAccept = () => {
+    const handleFirstButton = () => {
+        if (alertParent === 'calendar') {
+            setModalParent('calendar');
+            setModalOpen('logsession');
+        }
+        resetAlert();
+    }
+
+    const handleSecondButton = () => {
         if (alertParent === 'logout') {
             signOut();
-            setAlertParent('');
-            setShowAlert(false);
-        } else {
-            setShowAlert(false);
+        } else if (alertParent === 'calendar') {
+            setDashToShow('calendar');
+            console.log('View hobbies already added');
         }
+        resetAlert();
     }
 
     return (
-        <div id="crud-modal" tabIndex={-1} aria-hidden="true" className={`${showAlert ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-md`}>
+        <div id="crud-modal" tabIndex={-1} aria-hidden="true" className={`${showAlert ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-100 max-h-full backdrop-blur-sm`}>
             <div className="relative p-4 w-full max-w-md max-h-full">
                 <div className="relative bg-gray-400 rounded-lg shadow dark:bg-gray-700">
                     <div className="flex items-center justify-between p-4 md:p-5 rounded-t dark:border-gray-600">
@@ -37,11 +54,13 @@ export default function AlertModal() {
                         {alertMessage}
                     </div>
                         <div className="flex flex-row justify-between px-5 py-5">
-                            <button className={`text-black inline-flex items-center ring-gray-700 hover:ring-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:ring-gray-600 dark:hover:ring-gray-700 dark:focus:ring-gray-700`} onClick={() => setShowAlert(false)}>
-                                Cancel
+                            <button className={`text-black inline-flex items-center ring-gray-700 hover:ring-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:ring-gray-600 dark:hover:ring-gray-700 dark:focus:ring-gray-700`} onClick={handleFirstButton}>
+                                {alertParent === 'calendar' ? 'Add Hobbies' : 'Cancel'}
                             </button>
-                            <button type="button" className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`} onClick={handleAlertAccept}>
-                                {logoutAlert ? 'Continue' : 'Okay'}
+                            <button type="button" className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`} onClick={handleSecondButton}>
+                                {alertParent === 'logout' ? 'Continue' : 
+                                 alertParent === 'calendar' ? 'View Hobbies Already Added' :
+                                 'Okay'}
                             </button>
                         </div>
                 </div>

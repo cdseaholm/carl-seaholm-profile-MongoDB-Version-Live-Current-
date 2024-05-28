@@ -1,15 +1,16 @@
-import { useModalContext } from "@/app/context/modal/modalContext";
-import { useStateContext } from "@/app/context/state/StateContext";
+
 import { ITask } from "@/models/types/task";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { useStore } from "@/models/store/store";
+import { useStore } from "@/context/dataStore";
+import { useStateStore } from "@/context/stateStore";
+import { useModalStore } from "@/context/modalStore";
 
 export default function AddTask () {
 
     const {data: session} = useSession();
-    const { urlToUse } = useStateContext();
-    const { setModalOpen } = useModalContext();
+    const urlToUse = useStateStore((state) => state.urlToUse);
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
     const [loading, setLoading] = useState(false);
     const { tasks, setTasks } = useStore();
 

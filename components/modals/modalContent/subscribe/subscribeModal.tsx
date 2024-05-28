@@ -1,14 +1,15 @@
 'use client'
 
-import { useAlertContext } from "@/app/context/alert/alertcontext";
-import { useModalContext } from "@/app/context/modal/modalContext";
-import { useStateContext } from "@/app/context/state/StateContext";
+import { useAlertStore } from "@/context/alertStore";
+import { useModalStore } from "@/context/modalStore";
+import { useStateStore } from "@/context/stateStore";
 
 export default function ModalSubscribe() {
 
-    const { setModalOpen } = useModalContext();
-    const { setShowAlert, setAlertMessage } = useAlertContext();
-    const { urlToUse } = useStateContext();
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
+    const setShowAlert = useAlertStore((state) => state.setShowAlert);
+    const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
+    const urlToUse = useStateStore((state) => state.urlToUse);
 
     const handleSub = async (event: React.FormEvent<HTMLFormElement>) => {
         

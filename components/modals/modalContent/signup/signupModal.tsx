@@ -1,15 +1,16 @@
 'use client'
 
-import { useModalContext } from "@/app/context/modal/modalContext";
+import { useModalStore } from "@/context/modalStore";
+import { useStateStore } from "@/context/stateStore";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { useStateContext } from "@/app/context/state/StateContext";
 
 export default function ModalSignUp() {
 
-    const { setModalOpen, modalOpen } = useModalContext();
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
+    const modalOpen = useModalStore((state) => state.modalOpen);
     const { data: session } = useSession();
-    const { urlToUse } = useStateContext();
+    const urlToUse = useStateStore((state) => state.urlToUse);
     const [emailError, setEmailError] = useState(false);
 
     const handleSignUpSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

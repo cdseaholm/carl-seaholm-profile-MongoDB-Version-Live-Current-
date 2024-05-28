@@ -1,11 +1,9 @@
 'use client'
 
-import { useAlertContext } from "@/app/context/alert/alertcontext";
 import { useSession } from "next-auth/react";
 
 const EditUser = () => {
-    //states
-    const { setAlertMessage } = useAlertContext();
+
     const { data: session } = useSession();
     const userObj = session?.user; 
 

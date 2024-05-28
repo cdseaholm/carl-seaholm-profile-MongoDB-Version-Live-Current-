@@ -6,6 +6,9 @@ export const getTasks = async (urlToUse: string, userID: string): Promise<ITask[
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
+            },
+            next: {
+                revalidate: 3600
             }
         });
         if (!response.ok) {

@@ -1,68 +1,67 @@
  // app/providers.tsx
 'use client'
 
-import {NextUIProvider} from '@nextui-org/react'
-import {ModalProvider} from '@/app/context/modal/modalContext'
-import { useState } from 'react';
-import { HobbyProvider } from './context/hobby/hobbyModalContext';
-import { IHobby } from '@/models/types/hobby';
-import { StateProvider } from './context/state/StateContext';
+import {NextUIProvider} from '@nextui-org/react';
+import { useCallback, useEffect } from 'react';
 import MainModal from '@/components/modals/mainmodal/mainmodal';
-import { AlertProvider } from './context/alert/alertcontext';
-import { RecipeProvider } from './context/recipes/recipecontext';
-import { IRecipe } from '@/models/types/recipe';
-import { ITask } from '@/models/types/task';
+import AlertModal from '@/components/modals/Alert/alertmodal';
+import { useStateStore } from '@/context/stateStore';
+import { useStore } from '@/context/dataStore';
+import { getHobbies } from './context/functions/getHobbies';
+import { getRecipes } from './context/functions/getRecipes';
+import { getTasks } from './context/functions/getTasks';
+import { getCategories } from './context/functions/getCategories';
+import { useHobbyStore } from '@/context/hobbyStore';
 
 export function Providers({children}: { children: React.ReactNode }) {
+  
+  const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
+  const urlToUse = useStateStore((state) => state.urlToUse);
+  const setLoading = useStateStore((state) => state.setLoading);
+  const setTasks = useStore((state) => state.setTasks);
+  const setHobbies = useStore((state) => state.setHobbies);
+  const setRecipes = useStore((state) => state.setRecipes);
+  const setCategories = useHobbyStore((state) => state.setCategories);
 
-  //appStates
-  const [loading, setLoading] = useState(false);
+    const getData = useCallback(async () => {
+      setLoading(true);
+      if (urlToUse === '') {
+        console.error('No URL to use');
+        setLoading(false);
+        return;
+      } else {
+        try {
+          if (userID !== undefined && userID !== null && userID !== '') {
+            const hobs = await getHobbies(urlToUse, userID);
+            setHobbies(hobs);
+            const tsks = await getTasks(urlToUse, userID);
+            setTasks(tsks);
+            const recipes = await getRecipes(urlToUse, userID);
+            setRecipes(recipes);
+            const categories = await getCategories(hobs);
+            setCategories(categories);
+          } else {
+            console.log('No user ID');
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    }, [urlToUse, userID, setHobbies, setTasks, setRecipes, setCategories, setLoading]);
 
-  //modalStates
-  const [showModal, setShowModal] = useState('');
-  const [openCategoryModal, setOpenCategoryModal] = useState(false);
-  const [hobbyToShow, setHobbyToShow] = useState<IHobby[] | null>(null);
-
-  //alertStates
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [alertParent, setAlertParent] = useState('');
-  const [alertConfirm, setAlertConfirm] = useState(false);
-
-  //hobbyStates
-  const [filterItem, setFilterItem] = useState('');
-  const [categoryPassed, setCategoryPassed] = useState('');
-  const [daySelected, setDaySelected] = useState('');
-  const [colorChoice, setColorChoice] = useState('#000000');
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [categories, setCategories] = useState([] as string[]);
-  const [titles, setTitles] = useState([] as string[]);
-
-  //recipeStates
-  const [recipeFilter, setRecipeFilter] = useState('');
-  const [recipes, setRecipes] = useState([] as IRecipe[]);
-
-  const resetAlert = async () => {
-    setAlertMessage('');
-    setAlertParent('');
-    setAlertConfirm(false);
-    setShowAlert(false);
-  }
+  useEffect(() => {
+    getData();
+  }, [getData]);
 
   return (
-    <StateProvider loading={loading} setLoading={setLoading}>
-      <AlertProvider showAlert={showAlert} setShowAlert={setShowAlert} alertMessage={alertMessage} setAlertMessage={setAlertMessage} alertParent={alertParent} setAlertParent={setAlertParent} alertConfirm={alertConfirm} setAlertConfirm={setAlertConfirm} resetAlert={resetAlert}>
-        <ModalProvider modalOpen={showModal} setModalOpen={setShowModal} setColorChoice={setColorChoice} colorChoice={colorChoice} setDaySelected={setDaySelected} daySelected={daySelected}>
-          <MainModal />
-          <HobbyProvider filterItem={filterItem} setFilterItem={setFilterItem} categoryPassed={categoryPassed} setCategoryPassed={setCategoryPassed} openCategoryModal={openCategoryModal} setOpenCategoryModal={setOpenCategoryModal} setRefreshKey={setRefreshKey} refreshKey={refreshKey} hobbyToShow={hobbyToShow} setHobbyToShow={setHobbyToShow} categories={categories} setCategories={setCategories} titles={titles} setTitles={setTitles}>
-            <RecipeProvider filterItem={recipeFilter} setFilterItem={setRecipeFilter} recipes={recipes} setRecipes={setRecipes}>
-              <NextUIProvider style={{height: '100%', width: '100%'}}>
-                {children}
-              </NextUIProvider>
-            </RecipeProvider>
-          </HobbyProvider>
-        </ModalProvider>
-      </AlertProvider>
-    </StateProvider>
+    <>
+    <AlertModal />
+    <MainModal />
+      <NextUIProvider style={{height: '100%', width: '100%'}}>
+        {children}
+      </NextUIProvider>
+    </>
   )
 }

@@ -6,6 +6,7 @@ import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import Image from 'next/image';
 import { jobsArray, schoolsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
 import { JobBite, SchoolBite } from '@/components/pagecomponents/professionalComponents/proBites';
+import { useStateStore } from '@/context/stateStore';
 
 export default function Professional() {
 
@@ -17,7 +18,7 @@ export default function Professional() {
   const imageRef = React.useRef<HTMLDivElement>(null);
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
-  const [loading, setLoading] = React.useState(false);
+  const loading = useStateStore((state) => state.loading);
 
   /**Variables */
 

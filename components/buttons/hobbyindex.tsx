@@ -1,7 +1,6 @@
 
-import { useModalContext } from "@/app/context/modal/modalContext";
 import { useState } from "react";
-import { useStore } from '@/models/store/store';
+import { useStore } from '@/context/dataStore';
 
 export default function HobbyIndex() {
 

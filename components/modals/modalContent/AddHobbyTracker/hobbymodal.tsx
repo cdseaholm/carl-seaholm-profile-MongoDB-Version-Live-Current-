@@ -1,72 +1,32 @@
 'use client'
 
-import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
-import { useModalContext } from "@/app/context/modal/modalContext";
-import { IHobby } from "@/models/types/hobby";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import ntc from 'ntcjs';
-import { useRouter } from "next/navigation";
-import { useStateContext } from "@/app/context/state/StateContext";
+import { useStateStore } from "@/context/stateStore";
+import { useModalStore } from "@/context/modalStore";
+import { useHobbyStore } from "@/context/hobbyStore";
 
 export default function ModalHobby() {
 
     const { data: session } = useSession();
-    const { urlToUse } = useStateContext();
-    const { colorChoice, setColorChoice, setModalOpen } = useModalContext();
-    const { categoryPassed, setRefreshKey, categories, refreshKey } = useHobbyContext();
-    const [loading, setLoading] = useState(false);
-    const [madeCats, setMadeCats] = useState('');
+    const urlToUse = useStateStore((state) => state.urlToUse);
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
+    const colorChoice = useModalStore((state) => state.colorChoice);
+    const setColorChoice = useModalStore((state) => state.setColorChoice);
+    const categoryPassed = useHobbyStore((state) => state.categoryPassed);
+    const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
+    const categories = useHobbyStore((state) => state.categories);
     const [goalChild, setGoalChild] = useState('Goal Value');
     const [goalType, setGoalType] = useState('text');
     const [catCreate, setCatCreate] = useState(false);
     const [goalPlaceHolder, setGoalPlaceHolder] = useState('Pick a Goal Type First');
     const [colorName, setColorName] = useState('');
-    const [localCategories, setLocalCategories] = useState<string[]>([]);
-    const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
 
     const handleColorUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
         setColorChoice(e.target.value);
         setColorName(ntc.name(e.target.value)[1]);
     };
-
-    useEffect(() => {
-        const getHobbies =  async () => {
-          try {
-            setLoading(true);
-            const response = await fetch(`${urlToUse}/api/${userID}/gethobbies`, {
-              next: {
-                revalidate: 3600
-              }
-            });
-      
-            if (!response.ok) {
-              console.log('No hobbies found');
-              setLoading(false);
-              return;
-            }
-            if (response.ok) {
-              const res = await response.json();
-              const hobs = res.hobbies;
-              if (hobs.length === 0) {
-                console.log('No hobbies found');
-                setLoading(false);
-                return;
-              }
-              setLocalCategories(hobs.map((hobby: IHobby) => hobby.categories).flat())
-            }
-          } catch (error) {
-            console.error('Error fetching hobbies', error);
-            return;
-          } finally {
-            console.log('refreshed Key', refreshKey);
-            setLoading(false);
-            return;
-          }
-        }
-        
-        getHobbies();
-      }, [refreshKey, urlToUse, userID]);
 
     useEffect(() => {
         if (colorName === '') {
@@ -88,10 +48,13 @@ export default function ModalHobby() {
                 console.log('Form data:', Object.fromEntries(formData));
                 const titleToUse = formData.get('modalHobbyTitle');
                 const colorToUse = formData.get('modalHobbyColor');
-                const categoryToUse = catCreate === true ? formData.get('modalHobbyCategory') : formData.get('modalHobbyCreate');
+                const categoryToUse = catCreate === false ? formData.get('modalHobbyCategory') : formData.get('modalHobbyCreate');
                 const goalToUse = `${goalType}-${formData.get('modalHobbyGoalValue')}`;
                 const descriptionToUse = formData.get('modalHobbyDescription');
                 const emailToUse = session.user?.email;
+                console.log('CategoryCreated:', categoryToUse)
+                console.log('Other Cat', formData.get('modalHobbyCategory'));
+                console.log('Other cat 2:', formData.get('modalHobbyCreate'));
 
 
             const res = await fetch(`${urlToUse}/api/createhobby`, {
@@ -113,7 +76,7 @@ export default function ModalHobby() {
         
             if (res.ok) {
                 console.log('Hobby created');
-                setRefreshKey(prevKey => prevKey + 1);
+                setRefreshKey(refreshKey => refreshKey + 1);
                 setModalOpen('');
             } else {
                 console.log('Error creating hobby');
@@ -194,7 +157,7 @@ export default function ModalHobby() {
                                     </select>
                                     }
                                     {catCreate &&
-                                        <input type="text" name="modalHobbyCreate" id="modalHobbyCreate" className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500`} placeholder="Type Category name"/>
+                                        <input type='text' name="modalHobbyCreate" id="modalHobbyCreate" className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500`} placeholder="Type Category name"/>
                                     }
                             </div>
                             <div className="flex flex-row justify-between space-x-1">
@@ -224,7 +187,9 @@ export default function ModalHobby() {
                                         <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
                                         Add new Tracker
                                     </button>
-                                    <button type="button" className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-xs md:text-sm ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white pr-5`} data-modal-toggle="crud-modal" onClick={() => setModalOpen('logsession')}>Log a session</button>
+                                    <button type="button" className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-xs md:text-sm ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white px-5`} data-modal-toggle="crud-modal" onClick={() => setModalOpen('logsession')}>
+                                        Log a session
+                                    </button>
                                 </div>
                             </div>
                     </form>

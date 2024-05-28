@@ -3,7 +3,6 @@ import connectDB from '@/lib/mongodb';
 import Hobby from '@/models/hobby';
 import { IHobby } from '@/models/types/hobby';
 import { createErrorResponse } from '@/lib/utils';
-import { useStateContext } from '@/app/context/state/StateContext';
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
 

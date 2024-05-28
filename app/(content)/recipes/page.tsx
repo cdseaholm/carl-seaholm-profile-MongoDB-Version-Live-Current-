@@ -1,11 +1,8 @@
 'use client'
 
 import { useSession } from "next-auth/react";
-import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
-import { useStateContext } from "@/app/context/state/StateContext";
 import ActionButton from "@/components/buttons/actionbutton";
 import { DetailsAccordianPage } from "@/components/dropdowns/DetailsAccordian";
-import { Spinner } from "@/components/misc/Spinner";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { IRecipe } from "@/models/types/recipe";
 import { useEffect, useState } from "react";
@@ -13,92 +10,60 @@ import { FiStar } from "react-icons/fi";
 import Image from 'next/image';
 import openInNewTab from "@/components/listeners/OpenInNewTab";
 import useMediaQuery from "@/components/listeners/WidthSettings";
+import { useStore } from "@/context/dataStore";
 
 export default function Recipes() {
 
     const { data: session } = useSession();
-    var sesh = session;
-    if (session === null || session === undefined) {
-        sesh = null;
-    }
-    const adminID = sesh?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
-    const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
-
-    const { urlToUse } = useStateContext();
-    const { refreshKey } = useHobbyContext();
-
-    const [loading, setLoading] = useState(false);
-    const [localRecipes, setLocalRecipes] = useState<IRecipe[]>([]);
-    const [recipeFilter, setRecipeFilter] = useState<string>('');
-    const [recipesSorted, setRecipesSorted] = useState<IRecipe[]>([]);
-    const isBreakpoint = useMediaQuery(768);
+    const recipes = useStore((state) => state.recipes);
+    const recipeFilter = useStore((state) => state.recipeFilter);
+    const setRecipeFilter = useStore((state) => state.setRecipeFilter);
+    const adminID = useStore((state) => state.adminID);
+    const setAdminID = useStore((state) => state.setAdminID);
+    const id = session?.user?.email;
 
     useEffect(() => {
-        setLoading(true);
-        const getRecipes = async () => {
-            try {
-                const recipesFetched = await fetch(`${urlToUse}/api/${userID}/getrecipes`, {
-                    next: {
-                        revalidate: 3600
-                    }
-                });
-                if (!recipesFetched.ok) {
-                    return;
-                }
-                if (recipesFetched.ok) {
-                    const res = await recipesFetched.json();
-                    const recs = res.recipes;
-                    if (recs.length === 0) {
-                        console.log('No recipes found');
-                        return;
-                    }
-                    setLocalRecipes(recs);
-                }
-            } catch (error) {
-                console.error('Error fetching recipes', error);
-                return;
-            } finally {
-                console.log('refreshed Key', refreshKey);
-                return;
+        if (adminID) {
+            return;
+        } else {
+            if (id === process.env.NEXT_PUBLIC_ADMIN_USERNAME) {
+              setAdminID(true);
+            } else {
+              setAdminID(false);
             }
         }
-        getRecipes();
-        setLoading(false);
-    }, [refreshKey, urlToUse, userID]);
+        console.log('adminID', adminID);
+    }, [adminID]);
+
+    const [recipesSorted, setRecipesSorted] = useState<IRecipe[]>([]);
+    const isBreakpoint = useMediaQuery(768);
 
     useEffect(() => {
         let sorted;
         switch (recipeFilter) {
             case 'newDatesFirst':
-                sorted = localRecipes.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                sorted = recipes.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                 break;
             case 'oldDatesFirst':
-                sorted = localRecipes.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+                sorted = recipes.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                 break;
             case 'highRatingFirst':
-                sorted = localRecipes.sort((a, b) => b.rating - a.rating);
+                sorted = recipes.sort((a, b) => b.rating - a.rating);
                 break;
             case 'lowRatingFirst':
-                sorted = localRecipes.sort((a, b) => a.rating - b.rating);
+                sorted = recipes.sort((a, b) => a.rating - b.rating);
                 break;
             case 'No Filter':
             case '':
-                sorted = localRecipes.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                sorted = recipes.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                 break;
             default:
-                sorted = localRecipes;
+                sorted = recipes;
                 break;
         }
         setRecipesSorted(sorted);
-    }, [localRecipes, recipeFilter]);
+    }, [recipes, recipeFilter]);
 
-    if (loading === true) {
-        return (
-            <MainChild>
-                {Spinner()}
-            </MainChild>
-        )
-    } else {
     return (
         <MainChild>
                 <h1 className="text-center">Recipes</h1>
@@ -124,9 +89,6 @@ export default function Recipes() {
                     ) : <div />}
                 </div>
                 <div className="flex flex-col justify-start p-2 overflow-auto border border-slate-400 scrollbar-thin scrollbar-webkit" style={{height: '100%', width: '100%'}}>
-                {loading ? (
-                    Spinner()
-                ) : (
                     <div className="flex flex-col items-center h-full w-full">
                         {recipesSorted.map((recipe, index) => (
                             <div key={index} className='flex flex-row justify-center p-3 w-full' style={{maxWidth: '800px'}}>
@@ -181,8 +143,7 @@ export default function Recipes() {
                             </div>
                         ))}
                     </div>
-                )}
                 </div>
         </MainChild>
     )
-}}
+}
