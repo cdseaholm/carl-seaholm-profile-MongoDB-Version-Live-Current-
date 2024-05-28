@@ -3,11 +3,12 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/misc/Spinner';
+import { useStateStore } from '@/context/stateStore';
 
 export default function Home() {
 
   const [isShowing, setIsShowing] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
+  const loading = useStateStore((state) => state.loading);
   const router = useRouter();
 
   const navigateToDashboard = async () => {

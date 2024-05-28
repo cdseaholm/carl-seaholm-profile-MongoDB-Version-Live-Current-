@@ -19,7 +19,6 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   
-  const loading = useStateStore((state) => state.loading);
   const pathname = usePathname();
   const isDemo = pathname === '/demo_303' ? true : false;
 
@@ -38,21 +37,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="bg-white/50 h-dvh">
                 <SpeedInsights/>
                 <Providers> 
-                  {loading ? <div className="flex justify-center items-center h-screen"><Spinner/></div> :
-                    <MotionWrap motionKey={pathname}>
-                      <main className={`${isDemo ? 'min-h-screen object-fill bg-gray-800': 'flex flex-col px-5 h-dvh justify-between'}`}>
-                        {!isDemo && <Navbar />}
-                          {pathname !== '/' ? ( 
-                            <MainPageBody>
-                              {children}
-                            </MainPageBody>
-                          ): (
-                            <>{children}</>
-                          )}
-                        {!isDemo && <FooterNavBar />}
-                        </main>
-                    </MotionWrap>
-                  }
+                  <MotionWrap motionKey={pathname}>
+                    <main className={`${isDemo ? 'min-h-screen object-fill bg-gray-800': 'flex flex-col px-5 h-dvh justify-between'}`}>
+                      {!isDemo && <Navbar />}
+                        {pathname !== '/' ? ( 
+                          <MainPageBody>
+                            {children}
+                          </MainPageBody>
+                        ): (
+                          <>{children}</>
+                        )}
+                      {!isDemo && <FooterNavBar />}
+                    </main>
+                  </MotionWrap>
                 </Providers>
             </div>
           </body>

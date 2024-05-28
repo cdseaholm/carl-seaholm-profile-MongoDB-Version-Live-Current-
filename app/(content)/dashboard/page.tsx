@@ -34,7 +34,7 @@ export default function Dashboard() {
           setAdminID(false);
         }
       }
-    }, [status, session]);
+    }, [status, session, setAdminID]);
 
     useEffect(() => {
       if (adminID) {
@@ -42,7 +42,7 @@ export default function Dashboard() {
       } else {
         setToShow('todo');
       }
-    }, [filterItem]);
+    }, [filterItem, adminID, setToShow]);
     
     return (
       <MainChild>
