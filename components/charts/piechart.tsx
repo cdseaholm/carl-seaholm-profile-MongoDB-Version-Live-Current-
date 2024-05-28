@@ -8,9 +8,7 @@ const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 export function PieChartView({hobbies}: { hobbies: IHobby[]}) {
 
-    const [totalTime, setTotalTime] = useState<number>(0);
     const [data, setData] = useState<any[]>([]);
-    const [colors, setColors] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {

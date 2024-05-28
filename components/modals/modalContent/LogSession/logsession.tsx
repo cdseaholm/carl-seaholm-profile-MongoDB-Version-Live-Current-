@@ -1,22 +1,23 @@
 'use client'
 
-import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
-import { useModalContext } from "@/app/context/modal/modalContext";
-import { useStateContext } from "@/app/context/state/StateContext";
-import { IHobby } from "@/models/types/hobby";
+import { useStore } from "@/context/dataStore";
+import { useHobbyStore } from "@/context/hobbyStore";
+import { useModalStore } from "@/context/modalStore";
+import { useStateStore } from "@/context/stateStore";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function LogSessionModal() {
 
     const { data: session } = useSession();
-    const { urlToUse } = useStateContext();
+    const urlToUse = useStateStore((state) => state.urlToUse);
+    const setLoading = useStateStore((state) => state.setLoading);
     const [seshHobby, setSeshHobby] = useState('');
-    const { setModalOpen } = useModalContext();
-    const { setRefreshKey, refreshKey } = useHobbyContext();
-    const [localHobbies, setLocalHobbies] = useState<IHobby[]>([]);
-    const [loading, setLoading] = useState(false);
-    const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
+    const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
+    const modalParent = useModalStore((state) => state.modalParent);
+    const daySelected = useModalStore((state) => state.daySelected);
+    const localHobbies = useStore((state) => state.hobbies);
 
     const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {
         console.log('handleLogSession function called');
@@ -75,50 +76,12 @@ export default function LogSessionModal() {
         }
     }
 
-    useEffect(() => {
-        const getHobbies =  async () => {
-          try {
-            setLoading(true);
-            const response = await fetch(`${urlToUse}/api/${userID}/gethobbies`, {
-              next: {
-                revalidate: 3600
-              }
-            });
-      
-            if (!response.ok) {
-              console.log('No hobbies found');
-              setLoading(false);
-              return;
-            }
-            if (response.ok) {
-              const res = await response.json();
-              const hobs = res.hobbies;
-              if (hobs.length === 0) {
-                console.log('No hobbies found');
-                setLoading(false);
-                return;
-              }
-              setLocalHobbies(hobs);
-            }
-          } catch (error) {
-            console.error('Error fetching hobbies', error);
-            return;
-          } finally {
-            console.log('refreshed Key', refreshKey);
-            setLoading(false);
-            return;
-          }
-        }
-        
-        getHobbies();
-      }, [refreshKey, urlToUse, userID]);
-
     return (
     <form className="p-4 md:p-5" onSubmit={handleCreate}>
                 <div className="grid gap-4 mb-4 grid-cols-1">
                     <div>
                         <label htmlFor="modalSessionDate" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Session Date</label>
-                        <input type="date" name="modalSessionDate" id="modalSessionDate" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="01/01/2024" required />
+                        <input type="date" name="modalSessionDate" id="modalSessionDate" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder='01/01/2024' required defaultValue={modalParent === 'calendar' ? daySelected : ''} />
                     </div>
                     <div>
                         <label htmlFor="modalSessionHobby" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Hobby Session</label>
@@ -152,7 +115,9 @@ export default function LogSessionModal() {
                             </button>
                         </div>
                         <div>
-                            <button type="button" className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white pr-5`} data-modal-toggle="crud-modal" onClick={() => setModalOpen('addhobby')}>Create new Tracker</button>
+                            <button type="button" className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white pr-5`} data-modal-toggle="crud-modal" onClick={() => setModalOpen('addhobby')}>
+                                Create new Tracker
+                            </button>
                         </div>
                     </div>
                 </div>

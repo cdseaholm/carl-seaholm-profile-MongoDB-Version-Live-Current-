@@ -8,10 +8,10 @@ import LogSessionModal from '../LogSession/logsession';
 export default function ActionsModal() {
   const { data: session } = useSession();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [localCalDash, setLocalCalDash] = useState(true);
 
 
   const handleOptionSelect = (option: string) => {
+    console.log('option selected', option);
     setSelectedOption(option);
   };
 

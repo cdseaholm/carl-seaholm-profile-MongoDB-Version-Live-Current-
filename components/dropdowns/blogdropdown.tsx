@@ -7,7 +7,7 @@ import React from "react";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "../pagetemplates/mainchild/mainchild";
 import { useSession } from "next-auth/react";
-import { useModalContext } from "@/app/context/modal/modalContext";
+import { useModalStore } from "@/context/modalStore";
 
 
 const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<string>; posts: Record<string, post[]>}) => {
@@ -19,7 +19,7 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
     const hasShownSubscriptionPrompt = React.useRef(false);
     const { data: session } = useSession();
     const user = session?.user;
-    const { setModalOpen } = useModalContext();
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
 
     React.useEffect(() => {
             if (user === null && !hasShownSubscriptionPrompt.current) {

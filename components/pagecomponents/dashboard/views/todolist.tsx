@@ -1,30 +1,33 @@
 'use client'
 
-import { useModalContext } from "@/app/context/modal/modalContext";
-import { useStateContext } from "@/app/context/state/StateContext";
 import { ITask } from "@/models/types/task";
 import { Checkbox } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
 import React from "react";
 import { useEffect, useState } from "react";
-import { useStore } from '@/models/store/store';
-import { set } from "mongoose";
+import { useStore } from '@/context/dataStore';
+import { useStateStore } from "@/context/stateStore";
+import { useModalStore } from "@/context/modalStore";
 
-const ToDoList = () => {
+
+export default function ToDoList () {
     
-    const {data: session} = useSession();
-    const { tasks } = useStore();
-    const { urlToUse } = useStateContext();
-    const { setModalOpen, modalOpen } = useModalContext();
+    const tasks = useStore((state) => state.tasks);
+    const adminID = useStore((state) => state.adminID);
+    const urlToUse = useStateStore((state) => state.urlToUse);
+    const loading = useStateStore((state) => state.loading);
+    const setLoading = useStateStore((state) => state.setLoading);
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
+    const modalOpen = useModalStore((state) => state.modalOpen);
     const [dateToUse, setDateToUse] = useState(new Date().toLocaleDateString());
     const [filteredTasks, setFilteredTasks] = useState<ITask[]>([]);
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
-    const adminID = session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
-
 
     useEffect(() => {
         const getTasks = async () => {
+            setLoading(true);
             if (tasks === undefined || tasks === null) {
+                console.error('Tasks undefined or null');
+                setLoading(false);
                 return;
             }
             try {
@@ -36,29 +39,10 @@ const ToDoList = () => {
                 console.error('Error fetching tasks', error);
                 return;
             }
+            setLoading(false);
         }
         getTasks();
     }, [modalOpen, dateToUse, urlToUse, userID, tasks]);
-
-    useEffect(() => {
-        const firstTask = async () => {
-            const tasksDoneToday = tasks.filter((task: ITask) => {
-                if (task.date === new Date().toLocaleDateString()) {
-                  return true;
-                } else {
-                  return false;
-                } 
-            });
-            if (adminID && !tasksDoneToday) {
-                if (window.confirm('No tasks found for today yet. Would you like to add a task?')) {
-                    setModalOpen('addtask');
-                } else {
-                    return;
-                }
-            }
-        }
-        firstTask();
-    }, [tasks, adminID, setModalOpen]);
 
     const handleDateIncrease = () => { 
         const date = new Date(dateToUse);
@@ -111,14 +95,14 @@ const ToDoList = () => {
     
     
     return (
-            <div className="p-2 flex flex-col w-full h-full justify-start" style={{flexGrow: 1, fontSize: '10px', overflow: 'auto'}}>
-                {adminID && 
-                    <div className={`flex flex-row justify-end items-center`}>
-                        <button className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded" onClick={() => {setModalOpen('addtask')}}>
-                            Add New Task
-                        </button>
-                    </div>
-                }
+        <div className="p-2 flex flex-col w-full h-full justify-start" style={{flexGrow: 1, fontSize: '10px', overflow: 'auto'}}>
+            {adminID && 
+                <div className={`flex flex-row justify-end items-center`}>
+                    <button className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded" onClick={() => {setModalOpen('addtask')}}>
+                        Add New Task
+                    </button>
+                </div>
+            }
                 <div className={`flex flex-col justify-start w-full h-full`}>
                     <div className={`flex flex-row justify-evenly w-1/2 pb-5 self-center`}>
                         <button className="text-base" onClick={handleDateDescrease}>
@@ -159,5 +143,3 @@ const ToDoList = () => {
             </div>
     );
 }
-
-export default ToDoList;

@@ -4,10 +4,10 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import useMediaQuery from '../../listeners/WidthSettings';
-import { useModalContext } from "@/app/context/modal/modalContext";
 import { useSession } from 'next-auth/react';
 import SocialButton from '@/components/buttons/socialButton';
-import { useAlertContext } from '@/app/context/alert/alertcontext';
+import { useAlertStore } from '@/context/alertStore';
+import { useModalStore } from '@/context/modalStore';
 
 export default function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
 
@@ -15,8 +15,10 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
   const ref = React.useRef<HTMLDivElement>(null);
   const router = useRouter();
   const isBreakpoint = useMediaQuery(768);
-  const { setModalOpen } = useModalContext();
-  const { setAlertMessage, setAlertParent, setShowAlert } = useAlertContext();
+  const setModalOpen = useModalStore((state) => state.setModalOpen);
+  const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
+  const setAlertParent = useAlertStore((state) => state.setAlertParent);
+  const setShowAlert = useAlertStore((state) => state.setShowAlert);
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -63,11 +65,11 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
     return () => window.removeEventListener('mousedown', handleOutsideClick);
   }, [open, ref, toggle]);
 
-    useEffect(() => {
-        if (localStorage.getItem("token")) {
-            router.replace("/dashboard");
-        }
-    }, [router]);
+  useEffect(() => {
+      if (localStorage.getItem("token")) {
+          router.replace("/dashboard");
+      }
+  }, [router]);
 
   return (
     <aside

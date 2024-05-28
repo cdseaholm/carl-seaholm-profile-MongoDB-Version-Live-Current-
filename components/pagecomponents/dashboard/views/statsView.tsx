@@ -1,7 +1,6 @@
 'use client'
 
 import { IHobby } from '@/models/types/hobby';
-import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 import useMediaQuery from '@/components/listeners/WidthSettings';
 import { TrackerUsage } from '../../../charts/trackerChart';
@@ -9,14 +8,11 @@ import { TotalMinutesCalc } from '../helpers/totalminutescalc';
 import { Spinner } from '@/components/misc/Spinner';
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
-import { useModalContext } from '@/app/context/modal/modalContext';
-import { useStore } from '@/models/store/store';
+import { useStore } from '@/context/dataStore';
 
 export default function StatsView({daysThisMonth}: { daysThisMonth: number}) {
 
-
-    const { data: session } = useSession();
-    const { hobbies } = useStore();
+    const hobbies = useStore((state) => state.hobbies);
     const [loading, setLoading] = useState<boolean>(false);
     const isBreakpoint = useMediaQuery(768);
     const [totalTime, setTotalTime] = useState<number[]>([]);

@@ -1,21 +1,22 @@
 'use client'
 
-import { useHobbyContext } from "@/app/context/hobby/hobbyModalContext";
-import { useModalContext } from "@/app/context/modal/modalContext";
-import { useStateContext } from "@/app/context/state/StateContext";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UploadButton } from "@/utils/uploadthing";
 import useHeightMediaQuery from "@/components/listeners/HeightSettings";
+import { useStateStore } from "@/context/stateStore";
+import { useModalStore } from "@/context/modalStore";
+import { useHobbyStore } from "@/context/hobbyStore";
 
 export default function AddRecipes() {
     const {data: session} = useSession();
-    const { urlToUse } = useStateContext();
-    const { setModalOpen } = useModalContext();
-    const { setRefreshKey, refreshKey } = useHobbyContext();
-
-    const [loading, setLoading] = useState(false);
+    const urlToUse = useStateStore((state) => state.urlToUse);
+    const loading = useStateStore((state) => state.loading);
+    const setLoading = useStateStore((state) => state.setLoading);
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
+    const refreshKey = useHobbyStore((state) => state.refreshKey);
+    const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
     const [uploaded, setUploaded] = useState(false);
     const [photo, setPhoto] = useState('');
     const [link, setLink] = useState('');

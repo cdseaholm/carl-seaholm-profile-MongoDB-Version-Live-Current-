@@ -1,31 +1,14 @@
 'use client'
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { Spinner } from '@/components/misc/Spinner';
 
 export default function Home() {
-  const { data: session } = useSession();
+
   const [isShowing, setIsShowing] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const thisUser = session?.user;
-      if (thisUser === null || thisUser === undefined || thisUser) {
-        setLoading(false);
-        return;
-      } else if (thisUser === undefined) {
-        console.error('Failed to fetch user');
-        return;
-      }
-      
-      setLoading(false);
-    }
-    fetchUser();
-  }, [session, router, session?.user]);
 
   const navigateToDashboard = async () => {
     setIsShowing(true);

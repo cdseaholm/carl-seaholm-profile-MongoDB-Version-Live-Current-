@@ -3,10 +3,11 @@
 import React from 'react';
 import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
-import { useModalContext } from '@/app/context/modal/modalContext';
+import { useModalStore } from '@/context/modalStore';
 
 const ProfilePage = () => {
-    const { setModalOpen } = useModalContext();
+
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
     const handleLogout = () => {
         console.log('logout');
     }

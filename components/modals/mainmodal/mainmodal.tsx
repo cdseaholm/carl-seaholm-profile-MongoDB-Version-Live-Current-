@@ -1,6 +1,5 @@
 'use client'
 
-import { useModalContext } from "@/app/context/modal/modalContext";
 import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import ModalLogin from "../modalContent/Login/loginModal";
@@ -12,17 +11,18 @@ import ActionsModal from "../modalContent/Actions/actionsmodal";
 import EditUser from "../modalContent/EditUser/editUser";
 import CalendarModal from "../modalContent/Calendar/calendarmodal";
 import AddRecipes from "../modalContent/Recipes/Add";
-import { model } from "mongoose";
-import DayDetails from "../modalContent/Daydetails/daydetails";
 import AddTask from "../modalContent/AddTask/addtaskmodal";
+import { useModalStore } from "@/context/modalStore";
+import { useStateStore } from "@/context/stateStore";
 
 
 export default function MainModal() {
 
     const [selectedOption, setSelectedOption] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
-    
-    const { modalOpen, setModalOpen } = useModalContext();
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
+    const modalOpen = useModalStore((state) => state.modalOpen);
+    const loading = useStateStore((state) => state.loading);
+    const setLoading = useStateStore((state) => state.setLoading);
     const isModalMenu = modalOpen === 'actions' || modalOpen === 'dashdropdown' ? true : false;
 
     const modalTitleProp = 
@@ -48,9 +48,9 @@ export default function MainModal() {
         };
 
     return (
-        <div id="crud-modal" tabIndex={-1} aria-hidden="true" className={`${modalOpen !== '' ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}>
-            <div className="relative p-4 w-full max-w-md max-h-full">
-                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <div id="crud-modal" tabIndex={-1} aria-hidden="true" className={`${modalOpen !== '' ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
+            <div className={`relative p-4 ${modalOpen === 'calendar' ? 'w-4/5' : 'w-full max-w-md'} max-h-full`}>
+                <div className={`relative bg-white rounded-lg shadow dark:bg-gray-700`}>
                     <div className="flex items-center justify-between p-2 border-b rounded-t border-gray-400">
                         {!isModalMenu && 
                             <h3 className={`text-lg font-semibold text-gray-900 dark:text-white`}>
@@ -91,9 +91,6 @@ export default function MainModal() {
                             </div>
                         }
                         {modalOpen === 'addrecipe' && <AddRecipes />}
-                        {modalOpen === 'daydetails' &&
-                        <DayDetails />
-                        }
                         {modalOpen === 'addtask' &&
                         <AddTask />
                         }

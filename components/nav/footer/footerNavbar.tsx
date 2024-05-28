@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import useMediaQuery from '@/components/listeners/WidthSettings';
-import { useAlertContext } from '@/app/context/alert/alertcontext';
+import { useAlertStore } from '@/context/alertStore';
 
 const FooterNavBar = () => {
     const pathname = usePathname();
     const breakpoint = useMediaQuery(768);
-    const { setShowAlert, setAlertMessage } = useAlertContext();
+    const setShowAlert = useAlertStore((state) => state.setShowAlert);
+    const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
 
     const handleShowAlert = () => {
         setShowAlert(true);
