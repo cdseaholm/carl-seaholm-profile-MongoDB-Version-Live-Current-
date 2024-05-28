@@ -50,7 +50,7 @@ export default function Dashboard() {
           <div className="flex flex-col px-2 pb-2" style={{height: '96.5%'}}>
             <div className="flex flex-row justify-between items-center px-5 py-2">
               <div className="flex flex-row justify-between items-center space-x-5">
-                {toShow === 'Calendar' ? 
+                {toShow !== 'calendar' ? 
                   <button className="text-base hover:bg-gray-400" onClick={() => {
                     setModalOpen('calendar');
                   }}>

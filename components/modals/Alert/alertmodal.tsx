@@ -33,7 +33,6 @@ export default function AlertModal() {
             signOut();
         } else if (alertParent === 'calendar') {
             setDashToShow('calendar');
-            console.log('View hobbies already added');
         }
         resetAlert();
     }
@@ -50,11 +49,12 @@ export default function AlertModal() {
                             <span className="sr-only">Close modal</span>
                         </button>
                     </div>
-                    <div className='flex flex-col items-center justify-center font-bold'>
-                        {alertMessage}
-                    </div>
+                    <div className='flex flex-col font-bold w-full'>
+                        <div className='flex flex-row justify-center items-center text-center w-full'>
+                            {alertMessage}
+                        </div>
                         <div className="flex flex-row justify-between px-5 py-5">
-                            <button className={`text-black inline-flex items-center ring-gray-700 hover:ring-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:ring-gray-600 dark:hover:ring-gray-700 dark:focus:ring-gray-700`} onClick={handleFirstButton}>
+                            <button className={`text-black inline-flex items-center ring-gray-700 hover:ring-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:ring-gray-600 dark:hover:ring-gray-700 dark:focus:ring-gray-700 hover:bg-gray-500`} onClick={handleFirstButton}>
                                 {alertParent === 'calendar' ? 'Add Hobbies' : 'Cancel'}
                             </button>
                             <button type="button" className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`} onClick={handleSecondButton}>
@@ -66,5 +66,6 @@ export default function AlertModal() {
                 </div>
             </div>
         </div> 
+    </div>
     )
 }
