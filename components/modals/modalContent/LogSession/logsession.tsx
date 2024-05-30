@@ -1,5 +1,6 @@
 'use client'
 
+import { getHobbies } from "@/app/context/functions/getHobbies";
 import { useStore } from "@/context/dataStore";
 import { useHobbyStore } from "@/context/hobbyStore";
 import { useModalStore } from "@/context/modalStore";
@@ -7,14 +8,22 @@ import { useStateStore } from "@/context/stateStore";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
+function formatDate(dateString: string) {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
+    return new Date(dateString).toLocaleDateString('en-GB', options).split('/').reverse().join('-');
+}
+
 export default function LogSessionModal() {
 
     const { data: session } = useSession();
+    const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
     const urlToUse = useStateStore((state) => state.urlToUse);
     const setLoading = useStateStore((state) => state.setLoading);
     const [seshHobby, setSeshHobby] = useState('');
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
+    const setHobbies = useStore((state) => state.setHobbies);
+    
     const modalParent = useModalStore((state) => state.modalParent);
     const daySelected = useModalStore((state) => state.daySelected);
     const localHobbies = useStore((state) => state.hobbies);
@@ -66,6 +75,12 @@ export default function LogSessionModal() {
                 setLoading(false);
                 setModalOpen('');
                 setRefreshKey(prevKey => prevKey + 1);
+                if (userID !== undefined && userID !== null && userID !== '') {
+                    const hobs = await getHobbies(urlToUse, userID);
+                    setHobbies(hobs);
+                } else {
+                    console.log('No user ID');
+                }
             } else {
                 setLoading(false);
                 console.log('updateSession', res);
@@ -76,12 +91,15 @@ export default function LogSessionModal() {
         }
     }
 
+    console.log('daySelected', daySelected);
+    console.log('modalParent', modalParent);
+
     return (
     <form className="p-4 md:p-5" onSubmit={handleCreate}>
                 <div className="grid gap-4 mb-4 grid-cols-1">
                     <div>
                         <label htmlFor="modalSessionDate" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Session Date</label>
-                        <input type="date" name="modalSessionDate" id="modalSessionDate" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder='01/01/2024' required defaultValue={modalParent === 'calendar' ? daySelected : ''} />
+                        <input type="date" name="modalSessionDate" id="modalSessionDate" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder='01/01/2024' required defaultValue={modalParent === 'calendar' ? formatDate(daySelected) : ''} />
                     </div>
                     <div>
                         <label htmlFor="modalSessionHobby" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Hobby Session</label>
