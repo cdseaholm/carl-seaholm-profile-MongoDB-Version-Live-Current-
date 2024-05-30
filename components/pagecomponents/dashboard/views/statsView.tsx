@@ -9,12 +9,14 @@ import { Spinner } from '@/components/misc/Spinner';
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
 import { useStore } from '@/context/dataStore';
+import { useStateStore } from '@/context/stateStore';
 
 export default function StatsView({daysThisMonth}: { daysThisMonth: number}) {
 
     const hobbies = useStore((state) => state.hobbies);
-    const [loading, setLoading] = useState<boolean>(false);
-    const isBreakpoint = useMediaQuery(768);
+    const loading = useStateStore((state) => state.loading);
+    const setLoading = useStateStore((state) => state.setLoading);
+    const isBreakpoint = useMediaQuery(950);
     const [totalTime, setTotalTime] = useState<number[]>([]);
     const [totalCounter, setTotalCounter] = useState<number[]>([]);
     const [thisMonth, setThisMonth] = useState<number>(new Date().getMonth());
@@ -52,7 +54,7 @@ export default function StatsView({daysThisMonth}: { daysThisMonth: number}) {
           setLoading(false);
         }
         setStats();
-      }, [hobbies, thisMonth]);
+      }, [hobbies, thisMonth, setLoading]);
 
     if (loading) {
 
@@ -60,33 +62,31 @@ export default function StatsView({daysThisMonth}: { daysThisMonth: number}) {
             <Spinner />
         )
     } else {
-
-
         return (
-                    <div className={`${!isBreakpoint ? 'grid gap-1 grid-cols-2 grid-rows-2' : 'items-center'} w-full h-full p-2 scrollbar-thin scrollbar-webkit`} style={{overflow: 'auto'}}>
-                        <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
-                            <h2 className={`font-bold underline`} style={{fontSize: 14}}>% of Total Time on Each Hobby</h2>
+            <div className={`${!isBreakpoint ? 'grid gap-1 grid-cols-2 grid-rows-2' : 'items-center'} w-full h-full p-2 scrollbar-thin scrollbar-webkit space-y-4`} style={{overflow: 'auto'}}>
+                <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
+                    <h2 className={`font-bold underline`} style={{fontSize: 14}}>% of Total Time on Each Hobby</h2>
                             <PieChartView hobbies={hobbiesSet} />
-                        </div>
-                        <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
-                            <h2 className={`font-bold underline`} style={{fontSize: 14}}>
-                                Total Minutes Spent on Hobbies per Month
-                            </h2>
-                            <BarChartView hobbies={hobbiesSet} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='total'/>
-                        </div>
-                        <div className='flex flex-col w-full text-sm' style={{height: '30dvh'}}>
-                            <h2 className={`font-bold underline`} style={{fontSize: 14}}>
-                                Number of Days this Month with a session
-                            </h2>
-                            <TrackerUsage hobbies={hobbiesSet} thisMonth={thisMonth} />
-                        </div>
-                        <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
-                            <h2 className={`font-bold underline`} style={{fontSize: 14}}>
-                                Average Minutes a Session:
-                            </h2>
-                            <BarChartView hobbies={hobbiesSet} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='avg'/>
-                        </div>
-                    </div>
+                </div>
+                <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
+                    <h2 className={`font-bold underline`} style={{fontSize: 14}}>
+                        Total Minutes Spent on Hobbies per Month
+                    </h2>
+                    <BarChartView hobbies={hobbiesSet} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='total'/>  
+                </div>
+                <div className='flex flex-col w-full text-sm' style={{height: '30dvh'}}>
+                    <h2 className={`font-bold underline`} style={{fontSize: 14}}>
+                        Number of Days this Month with a session
+                    </h2>
+                    <TrackerUsage hobbies={hobbiesSet} thisMonth={thisMonth} />
+                </div>
+                <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
+                    <h2 className={`font-bold underline`} style={{fontSize: 14}}>
+                         Average Minutes a Session:
+                    </h2>
+                    <BarChartView hobbies={hobbiesSet} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='avg'/>
+                </div>
+            </div>
         )
     }
 }

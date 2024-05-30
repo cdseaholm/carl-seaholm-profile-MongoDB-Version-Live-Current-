@@ -1,8 +1,6 @@
 'use client'
 
 import { IHobby } from "@/models/types/hobby";
-import listPlugin from '@fullcalendar/list';
-import FullCalendar from "@fullcalendar/react";
 import { useEffect, useState } from "react";
 import { useStore } from '@/context/dataStore';
 import { useModalStore } from "@/context/modalStore";

@@ -11,6 +11,16 @@ import { useStore } from "@/context/dataStore";
 import { useModalStore } from '@/context/modalStore';
 import { useAlertStore } from '@/context/alertStore';
 import { DateSelectArg } from '@fullcalendar/core/index.js';
+import React from 'react';
+import { useStateStore } from '@/context/stateStore';
+
+interface CalEvent {
+    allDay: boolean;
+    start: string;
+    end: string;
+    editable: boolean;
+    color: string;
+}
 
 const CalendarView = () => {
 
@@ -21,51 +31,64 @@ const CalendarView = () => {
     const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
     const setAlertOpen = useAlertStore((state) => state.setShowAlert);
     const setAlertParent = useAlertStore((state) => state.setAlertParent);
-    const [hobbyEvents, setHobbyEvents] = useState<any[]>([]);
-    const [loading, setLoading] = useState(false);
+    const setLoading = useStateStore((state) => state.setLoading);
+    const setModalParent = useModalStore((state) => state.setModalParent);
+    const loading = useStateStore((state) => state.loading);
+    const [hobbiesInADay, setHobbiesInADay] = useState<CalEvent[]>([]);
+    const [indexOpen, setIndexOpen] = useState<boolean>(false);
     const { hobbies } = useStore();
 
     const handleDayClick = async (arg: DateClickArg) => {
-        const day = new Date(arg.dateStr).toLocaleDateString();
+        const date = new Date(arg.dateStr);
+        const day = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()).toLocaleDateString();
         setDaySelected(day);
         setAlertMessage('Add a new hobby for this day? Or view existing hobbies on this day?');
         setAlertParent('calendar');
+        setModalParent('calendar');
         setModalOpen('');
         setAlertOpen(true);
     };
-
+    
     const handleDaySelect = async (arg: DateSelectArg) => {
-        const day = new Date(arg.startStr).toLocaleDateString();
+        const date = new Date(arg.startStr);
+        const day = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()).toLocaleDateString();
         setDaySelected(day);
         setAlertMessage('Add a new hobby for this day? Or view existing hobbies on this day?');
         setAlertParent('calendar');
+        setModalParent('calendar');
         setModalOpen('');
         setAlertOpen(true);
     };
 
     const hydrateHobbies = useCallback(async () => {
-        const hobbiesToSet = [] as any[];
+        const uniqueDates = new Set<string>();
+        const calEvents = [] as CalEvent[];
+    
         hobbies.forEach((hobby: IHobby) => {
             for (let i = 0; i < hobby.dates.length; i++) {
-                const hobbyToAdd = {
-                    title: hobby.title,
-                    allDay: true,
-                    start: hobby.dates[i],
-                    end: hobby.dates[i],
-                    editable: session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false,
-                    color: hobby.color,
+                if (!uniqueDates.has(hobby.dates[i])) { 
+                    
+                    uniqueDates.add(hobby.dates[i]);
+    
+                    const hobbyDateToAdd = {
+                        allDay: true,
+                        start: hobby.dates[i],
+                        end: hobby.dates[i],
+                        editable: session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false,
+                        color: 'transparent',
+                    }
+                    calEvents.push(hobbyDateToAdd);
                 }
-                hobbiesToSet.push(hobbyToAdd);
             }
         });
-        
-        if (hobbiesToSet.length === 0) {
+    
+        if (calEvents.length === 0) {
             console.log('No hobbies');
             return;
         } else {
-            setHobbyEvents(hobbiesToSet);
+            setHobbiesInADay(calEvents);
         }
-    }, [hobbies, session, setHobbyEvents]);
+    }, [hobbies, session]);
     
     useEffect(() => {
         setLoading(true);
@@ -74,7 +97,7 @@ const CalendarView = () => {
         } else {
           hydrateHobbies();
           setLoading(false);
-      }}, [hobbies, session, hydrateHobbies]);
+      }}, [hobbies, session, hydrateHobbies, setLoading]);
     
     if (loading) {
         return (
@@ -85,14 +108,22 @@ const CalendarView = () => {
     } else {
 
     return (
-        <div className="h-full w-full p-2">
+        <div className="h-full w-full p-2" style={{overflow: 'hidden'}}>
              <FullCalendar 
                     plugins={[interactionPlugin, dayGridPlugin]}  
-                    events={hobbyEvents}
+                    events={hobbiesInADay}
                     headerToolbar={{
-                        left: 'title',
-                        center: '',
+                        left: 'index',
+                        center: 'title',
                         right: 'prev,next'
+                    }}
+                    customButtons={{
+                        index: {
+                            text: 'Index',
+                            click: () => {
+                                setIndexOpen(!indexOpen);
+                            }
+                        }
                     }}
                     views={{
                         dayGridPlugin: {
@@ -110,7 +141,7 @@ const CalendarView = () => {
                     }}
                     fixedWeekCount={false}
                     contentHeight="auto"
-                    eventDisplay="list-item"
+                    eventDisplay="block"
                     dayCellContent={(arg) => {
                         return (
                             <div className="flex flex-col justify-center items-center">
@@ -118,24 +149,23 @@ const CalendarView = () => {
                             </div>
                         )
                     }}
-                    dayMaxEventRows={1}
-                    moreLinkClick={(info) => {
-                        const date = info.date;
-                        const year = date.getFullYear();
-                        const month = ("0" + (date.getMonth() + 1)).slice(-2);
-                        const day = ("0" + date.getDate()).slice(-2);
-                        const selectedDate = `${year}-${month}-${day}`;
-                        setDaySelected(selectedDate);
-                    
-                        const eventsOfTheDay = hobbyEvents.filter(event => event.start?.includes(selectedDate));
-                    }}
+                    dayMaxEventRows={10}
                     eventContent={(arg) => {
+                        const hobbiesThisDay = [] as IHobby[];
+                        for (let i = 0; i < hobbies.length; i++) {
+                            for (let j = 0; j < hobbies[i].dates.length; j++) {
+                                if (arg.event.startStr === hobbies[i].dates[j]) {
+                                    hobbiesThisDay.push(hobbies[i]);
+                                }
+                            }
+                        }
                         return (
-                            <div className="flex items-center truncate">
-                                <div className="h-2 w-2 rounded-full mr-2" style={{backgroundColor: arg.event.backgroundColor}}></div>
-                                <div className="truncate w-3/4">
-                                    {arg.event.title}
-                                </div>
+                            <div className='flex flex-row items-center' style={{overflowWrap: 'normal'}}>
+                                {hobbiesThisDay.length > 0 && hobbiesThisDay.map((hobby: IHobby, index: number) => {
+                                    return (
+                                        <div key={index} className="h-2 w-2 rounded-full mr-2 border border-black" style={{backgroundColor: hobby.color}}/>
+                                    )
+                                })}
                             </div>
                         )
                     }}
@@ -146,6 +176,30 @@ const CalendarView = () => {
                     dayCellClassNames={['cursor-pointer hover:bg-gray-200']}
                     
                 />
+                {indexOpen &&
+                    <div className='flex flex-col w-full border border-black rounded-md px-2'>
+                        <div className='flex flex-row justify-between border-b border-black w-full'>
+                            <h1 className=''>
+                                Color Index:
+                            </h1>
+                            <button className='hover:bg-gray-400 px-1 rounded-md' onClick={() => setIndexOpen(false)}>
+                                Close Index
+                            </button>
+                        </div>
+                        <div className={`grid grid-cols-2 grid-rows-2 p-2 scrollbar-thin scrollbar-webkit space-y-1`} style={{overflow: 'auto'}}>
+                            {hobbies.map((hobby: IHobby, index: number) => {
+                                return (
+                                    <div key={index} className='flex flex-row items-center'>
+                                        <React.Fragment key={index}>
+                                            <div className="h-2 w-2 rounded-full mr-2 border border-black" style={{backgroundColor: hobby.color}}/>
+                                            <p>{hobby.title}</p>
+                                        </React.Fragment>
+                                    </div>
+                                )})
+                            }
+                        </div>
+                    </div>
+                }
         </div>
     )
     };
