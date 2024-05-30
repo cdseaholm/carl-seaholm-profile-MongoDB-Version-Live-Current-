@@ -3,6 +3,7 @@ import { DonutChart, Legend } from '@tremor/react';
 import dynamic from 'next/dynamic';
 import ntc from 'ntcjs';
 import React, { useEffect, useState } from 'react';
+import useMediaQuery from '../listeners/WidthSettings';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
@@ -10,6 +11,7 @@ export function PieChartView({hobbies}: { hobbies: IHobby[]}) {
 
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const isBreakpoint = useMediaQuery(768);
 
     useEffect(() => {
         const beginPercentage = async () => {
@@ -67,14 +69,31 @@ export function PieChartView({hobbies}: { hobbies: IHobby[]}) {
             </div>
         ) : (
             <Plot 
-            data={dataPlot}
-            layout={{
-                barmode: 'stack', plot_bgcolor: 'rgba(0, 0, 0, 0)',
-                paper_bgcolor: 'rgba(0, 0, 0, 0)', margin: {t: 50, b: 30, r: 30, l: 30}, dragmode: false, clickmode: 'none'
-            }} 
-            config={{
-                displayModeBar: false, responsive: true}} style={{width: '100%', height: '100%'
-            }}
+                data={dataPlot}
+                layout={{
+                    barmode: 'stack', 
+                    plot_bgcolor: 'rgba(0, 0, 0, 0)',
+                    paper_bgcolor: 'rgba(0, 0, 0, 0)', 
+                    margin: {t: 25, b: 25, r: 30, l: 30}, 
+                    dragmode: false, 
+                    clickmode: 'none',
+                    legend: {
+                        x: isBreakpoint ? 0.5 : 1,
+                        y: isBreakpoint ? -0.2 : 0.5,
+                        xanchor: isBreakpoint ? 'center' : 'right',
+                        yanchor: isBreakpoint ? 'top' : 'middle',
+                        orientation: isBreakpoint ? 'h' : 'v',
+                        font: {
+                            size: isBreakpoint ? 10 : 12,
+                            color: 'black'
+                        }
+                    }
+                }} 
+                config={{
+                    displayModeBar: false, 
+                    responsive: true
+                }} 
+                style={{width: '100%', height: '95%'}}
             />
         )
     );
