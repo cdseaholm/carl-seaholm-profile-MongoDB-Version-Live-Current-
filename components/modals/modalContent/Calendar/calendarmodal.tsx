@@ -13,6 +13,7 @@ import { useAlertStore } from '@/context/alertStore';
 import { DateSelectArg } from '@fullcalendar/core/index.js';
 import React from 'react';
 import { useStateStore } from '@/context/stateStore';
+import useMediaQuery from '@/components/listeners/WidthSettings';
 
 interface CalEvent {
     allDay: boolean;
@@ -37,6 +38,7 @@ const CalendarView = () => {
     const [hobbiesInADay, setHobbiesInADay] = useState<CalEvent[]>([]);
     const [indexOpen, setIndexOpen] = useState<boolean>(false);
     const { hobbies } = useStore();
+    const isBreakpoint = useMediaQuery(768);
 
     const handleDayClick = async (arg: DateClickArg) => {
         const date = new Date(arg.dateStr);
@@ -160,12 +162,13 @@ const CalendarView = () => {
                             }
                         }
                         return (
-                            <div className='flex flex-row items-center' style={{overflowWrap: 'normal'}}>
-                                {hobbiesThisDay.length > 0 && hobbiesThisDay.map((hobby: IHobby, index: number) => {
+                            <div className={`flex flex-row items-center flex-wrap`}>
+                                {hobbiesThisDay.length > 0 && hobbiesThisDay.slice(0, 6).map((hobby: IHobby, index: number) => {
                                     return (
-                                        <div key={index} className="h-2 w-2 rounded-full mr-2 border border-black" style={{backgroundColor: hobby.color}}/>
+                                        <div key={index} className="h-2 w-2 rounded-full mr-2 mb-1 border border-black" style={{backgroundColor: hobby.color}}/>
                                     )
                                 })}
+                                {hobbiesThisDay.length > 6 && <p>{hobbiesThisDay.length.toString()}+</p>}
                             </div>
                         )
                     }}
