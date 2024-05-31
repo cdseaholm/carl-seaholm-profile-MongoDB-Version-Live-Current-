@@ -1,5 +1,4 @@
 import { IHobby } from '@/models/types/hobby';
-import { DonutChart, Legend } from '@tremor/react';
 import dynamic from 'next/dynamic';
 import ntc from 'ntcjs';
 import React, { useEffect, useState } from 'react';
@@ -12,6 +11,7 @@ export function PieChartView({hobbies}: { hobbies: IHobby[]}) {
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const isBreakpoint = useMediaQuery(768);
+    const [indexShown, setIndexShown] = useState<boolean>(false);
 
     useEffect(() => {
         const beginPercentage = async () => {
@@ -68,33 +68,26 @@ export function PieChartView({hobbies}: { hobbies: IHobby[]}) {
                 Loading...
             </div>
         ) : (
-            <Plot 
-                data={dataPlot}
-                layout={{
-                    barmode: 'stack', 
-                    plot_bgcolor: 'rgba(0, 0, 0, 0)',
-                    paper_bgcolor: 'rgba(0, 0, 0, 0)', 
-                    margin: {t: 25, b: 25, r: 30, l: 30}, 
-                    dragmode: false, 
-                    clickmode: 'none',
-                    legend: {
-                        x: isBreakpoint ? 0.5 : 1,
-                        y: isBreakpoint ? -0.2 : 0.5,
-                        xanchor: isBreakpoint ? 'center' : 'right',
-                        yanchor: isBreakpoint ? 'top' : 'middle',
-                        orientation: isBreakpoint ? 'h' : 'v',
-                        font: {
-                            size: isBreakpoint ? 10 : 12,
-                            color: 'black'
-                        }
-                    }
-                }} 
-                config={{
-                    displayModeBar: false, 
-                    responsive: true
-                }} 
-                style={{width: '100%', height: '95%'}}
-            />
+            <div className='flex flex-col' style={{width: '100%', height: '100%'}}>
+                <Plot 
+                    data={dataPlot}
+                    layout={{
+                        plot_bgcolor: 'rgba(0, 0, 0, 0)',
+                        paper_bgcolor: 'rgba(0, 0, 0, 0)', 
+                        margin: {t: 25, b: 25, r: 30, l: 30}, 
+                        dragmode: false, 
+                        clickmode: 'none',
+                        showlegend: isBreakpoint ? false : true,
+                    }} 
+                    config={{
+                        displayModeBar: false, 
+                        responsive: true,
+
+                    }} 
+                    style={{width: '100%', height: '100%'}}
+                    className='flex-wrap'
+                />
+            </div>
         )
     );
   }

@@ -18,13 +18,17 @@ import { useStateStore } from "@/context/stateStore";
 
 export default function MainModal() {
 
-    const [selectedOption, setSelectedOption] = useState<string>('');
+    //context
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const modalOpen = useModalStore((state) => state.modalOpen);
-    const loading = useStateStore((state) => state.loading);
     const modalParent = useModalStore((state) => state.modalParent);
-    const setLoading = useStateStore((state) => state.setLoading);
     const setModalParent = useModalStore((state) => state.setModalParent);
+
+    //state
+    const [selectedOption, setSelectedOption] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
+
+    //variables
     const secondActionNeeded = modalParent === 'calendar' || modalParent === 'actions' ? true : false;
 
     const modalTitleProp = 

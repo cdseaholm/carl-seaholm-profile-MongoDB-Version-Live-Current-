@@ -18,7 +18,6 @@ export default function LogSessionModal() {
     const { data: session } = useSession();
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
     const urlToUse = useStateStore((state) => state.urlToUse);
-    const setLoading = useStateStore((state) => state.setLoading);
     const [seshHobby, setSeshHobby] = useState('');
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
@@ -53,9 +52,7 @@ export default function LogSessionModal() {
                 console.log('Time is required');
                 return;
             }
-            console.log('id', seshHobby, 'date', date, 'time', time, 'user', session.user.email)
-
-            setLoading(true);
+            console.log('id', seshHobby, 'date', date, 'time', time, 'user', session.user.email);
 
             const res = await fetch(`${urlToUse}/api/logsession`,{
                 method: 'PUT',
@@ -72,7 +69,6 @@ export default function LogSessionModal() {
             });
             if (res.ok) {
                 console.log('updateSession', res);
-                setLoading(false);
                 setModalOpen('');
                 setRefreshKey(prevKey => prevKey + 1);
                 if (userID !== undefined && userID !== null && userID !== '') {
@@ -82,11 +78,9 @@ export default function LogSessionModal() {
                     console.log('No user ID');
                 }
             } else {
-                setLoading(false);
                 console.log('updateSession', res);
             }
         } catch (error) { 
-            setLoading(false);
             console.log('updateSession', error);
         }
     }

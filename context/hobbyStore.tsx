@@ -16,6 +16,8 @@ interface HobbyStore {
     setCategories: (categories: string[]) => void;
     titles: string[];
     setTitles: (titles: string[]) => void;
+    dashToShow: string;
+    setDashToShow: (dashToShow: string) => void;
 }
 
 export const useHobbyStore = create<HobbyStore>((set) => ({
@@ -32,5 +34,7 @@ export const useHobbyStore = create<HobbyStore>((set) => ({
     categories: [] as string[],
     setCategories: (categories) => set({ categories }),
     titles: [] as string[],
-    setTitles: (titles) => set({ titles })
+    setTitles: (titles) => set({ titles }),
+    dashToShow: 'stats',
+    setDashToShow: (dashToShow) => set({dashToShow}),
 }));

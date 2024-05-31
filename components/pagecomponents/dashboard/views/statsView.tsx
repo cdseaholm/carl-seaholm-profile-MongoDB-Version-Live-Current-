@@ -9,19 +9,18 @@ import { Spinner } from '@/components/misc/Spinner';
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
 import { useStore } from '@/context/dataStore';
-import { useStateStore } from '@/context/stateStore';
 
-export default function StatsView({daysThisMonth}: { daysThisMonth: number}) {
+export default function StatsView() {
 
     const hobbies = useStore((state) => state.hobbies);
-    const loading = useStateStore((state) => state.loading);
-    const setLoading = useStateStore((state) => state.setLoading);
     const isBreakpoint = useMediaQuery(950);
     const [totalTime, setTotalTime] = useState<number[]>([]);
     const [totalCounter, setTotalCounter] = useState<number[]>([]);
     const [thisMonth, setThisMonth] = useState<number>(new Date().getMonth());
+    const [loading, setLoading] = useState(true);
+    const [indexShown, setIndexShown] = useState<boolean>(false);
+
     let hobbiesSet = [] as IHobby[];
-    
     if (!hobbies) {
         hobbiesSet = [];
     } else {
@@ -51,22 +50,38 @@ export default function StatsView({daysThisMonth}: { daysThisMonth: number}) {
             setTotalTime(totalTimePerMonth);
             setTotalCounter(counterPerMonth);
           }
-          setLoading(false);
         }
         setStats();
+        setLoading(false);
       }, [hobbies, thisMonth, setLoading]);
 
-    if (loading) {
-
-        return (
+    return (
+        loading ? (
             <Spinner />
-        )
-    } else {
-        return (
+        ):(
             <div className={`${!isBreakpoint ? 'grid gap-1 grid-cols-2 grid-rows-2' : 'items-center'} w-full h-full p-2 scrollbar-thin scrollbar-webkit space-y-4`} style={{overflow: 'auto'}}>
-                <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
-                    <h2 className={`font-bold underline`} style={{fontSize: 14}}>% of Total Time on Each Hobby</h2>
-                            <PieChartView hobbies={hobbiesSet} />
+                <div className='relative flex flex-col justify-start w-full h-full text-sm' style={{height: '30dvh'}}>
+                    <div className='absolute z-20 w-full'>
+                        <div className='flex flex-row items-start justify-between w-full'>
+                            <h2 className={`font-bold underline`} style={{fontSize: 14}}>
+                                % of Total Time on Each Hobby
+                            </h2>
+                            <button className='text-end text-sm text-blue-800 hover:text-gray-500 cursor-pointer px-2' onClick={() => setIndexShown(!indexShown)}>
+                                Color Index
+                                {indexShown && (
+                                    <div className='flex flex-col justify-start bg-gray-300 border border-black'>
+                                        {hobbies.map((hobby: IHobby, index: number) => (
+                                            <li key={index} className='flex flex-row items-center justify-start px-1'>
+                                                <div className="h-2 w-2 rounded-full border border-slate-500" style={{backgroundColor: hobby.color}}/>
+                                                <p className='text-xs text-gray-800 px-1'>{hobby.title}</p>
+                                            </li>
+                                        ))}
+                                    </div>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                    <PieChartView hobbies={hobbiesSet} />
                 </div>
                 <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
                     <h2 className={`font-bold underline`} style={{fontSize: 14}}>
@@ -88,5 +103,5 @@ export default function StatsView({daysThisMonth}: { daysThisMonth: number}) {
                 </div>
             </div>
         )
-    }
+    )
 }

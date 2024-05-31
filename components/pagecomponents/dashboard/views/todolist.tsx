@@ -7,21 +7,27 @@ import { useEffect, useState } from "react";
 import { useStore } from '@/context/dataStore';
 import { useStateStore } from "@/context/stateStore";
 import { useModalStore } from "@/context/modalStore";
+import { Spinner } from "@/components/misc/Spinner";
 
 
-export default function ToDoList () {
+export default function ToDoList ({adminID}: {adminID: boolean}) {
     
+    //context
     const tasks = useStore((state) => state.tasks);
-    const adminID = useStore((state) => state.adminID);
     const urlToUse = useStateStore((state) => state.urlToUse);
-    const loading = useStateStore((state) => state.loading);
-    const setLoading = useStateStore((state) => state.setLoading);
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const modalOpen = useModalStore((state) => state.modalOpen);
+    
+    //state
     const [dateToUse, setDateToUse] = useState(new Date().toLocaleDateString());
     const [filteredTasks, setFilteredTasks] = useState<ITask[]>([]);
-    const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
+    const [loading, setLoading] = useState<boolean>(true);
 
+    //variables
+    const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
+    const completedHead = document.getElementById('completedHead');
+
+    //functions
     useEffect(() => {
         const getTasks = async () => {
             setLoading(true);
@@ -35,14 +41,15 @@ export default function ToDoList () {
                     return task.date === dateToUse;
                 });
                 setFilteredTasks(tasksFiltered);
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching tasks', error);
+                setLoading(false);
                 return;
             }
-            setLoading(false);
         }
         getTasks();
-    }, [modalOpen, dateToUse, urlToUse, userID, tasks, setLoading]);
+    }, [modalOpen, dateToUse, urlToUse, userID, tasks, setLoading, setFilteredTasks, setDateToUse, completedHead, adminID]);
 
     const handleDateIncrease = () => { 
         const date = new Date(dateToUse);
@@ -95,51 +102,77 @@ export default function ToDoList () {
     
     
     return (
-        <div className="p-2 flex flex-col w-full h-full justify-start" style={{flexGrow: 1, fontSize: '10px', overflow: 'auto'}}>
-            {adminID && 
-                <div className={`flex flex-row justify-end items-center`}>
-                    <button className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded" onClick={() => {setModalOpen('addtask')}}>
-                        Add New Task
-                    </button>
-                </div>
-            }
-                <div className={`flex flex-col justify-start w-full h-full`}>
-                    <div className={`flex flex-row justify-evenly w-1/2 pb-5 self-center`}>
-                        <button className="text-base" onClick={handleDateDescrease}>
-                            <p className="hover:bg-gray-400">{'<'}</p>
-                        </button>
-                        <div>
-                            <h1 className={`text-base md:text-lg font-bold text-center underline`}>
-                                To-Do List</h1>
-                            <h1 className={`text-sm md:text-base font-semibold text-center`}>       
-                                {dateToUse}
-                            </h1>
-                        </div>
-                        <button className="text-base" onClick={handleDateIncrease}>
-                            <p className="hover:bg-gray-400">{'>'}</p>
+        loading ? (
+            <Spinner />
+        ):(
+            <div className="p-2 flex flex-col w-full h-full justify-start" style={{flexGrow: 1, fontSize: '10px', overflow: 'auto'}}>
+                {adminID && 
+                    <div className={`flex flex-row justify-end items-center`}>
+                        <button className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded" onClick={() => {setModalOpen('addtask')}}>
+                            Add New Task
                         </button>
                     </div>
-                    {filteredTasks.length === 0 ? (
-                        <h1 className={`text-sm md:text-base font-semibold text-center w-full`}>No tasks found</h1>
-                    ) : (
-                        <div className={`grid grid-cols-4 gap-4 px-16`}>
-                            <h1 className={`text-xs md:text-sm font-semibold underline`}>Completed</h1>
-                            <h1 className={`text-xs md:text-sm font-semibold underline`}>Title</h1>
-                            <h1 className={`text-xs md:text-sm font-semibold underline`}>Time</h1>
-                            <h1 className={`text-xs md:text-sm font-semibold underline`}>Description</h1>
-                            {filteredTasks.map((task: ITask, index: number) => (
-                                task.title.map((title, i) => (
-                                    <React.Fragment key={i}>
-                                        <Checkbox onClick={() => handleCheckboxClick(task._id, i)} isSelected={task.completed[i] ? true : false} className={`${adminID ? 'cursor-pointer' : 'cursor-default'}`}/>
-                                        <h1 className={`text-xs md:text-sm font-semibold ${task.completed[i] ? 'line-through' : ''}`}>{title}</h1>
-                                        <h1 className={`text-xs md:text-sm font-semibold ${task.completed[i] ? 'line-through' : ''}`}>{task.time[i]}</h1>
-                                        <h1 className={`text-xs md:text-sm font-semibold`}>{task.description[i]}</h1>
-                                    </React.Fragment>
-                                ))
-                            ))}
+                }
+                    <div className={`flex flex-col justify-start w-full h-full`}>
+                        <div className={`flex flex-row justify-evenly w-1/2 pb-5 self-center`}>
+                            <button className="text-base" onClick={handleDateDescrease}>
+                                <p className="hover:bg-gray-400">{'<'}</p>
+                            </button>
+                            <div>
+                                <h1 className={`text-base md:text-lg font-bold text-center underline`}>
+                                    To-Do List</h1>
+                                <h1 className={`text-sm md:text-base font-semibold text-center`}>       
+                                    {dateToUse}
+                                </h1>
+                            </div>
+                            <button className="text-base" onClick={handleDateIncrease}>
+                                <p className="hover:bg-gray-400">{'>'}</p>
+                            </button>
                         </div>
-                    )}
+                        {filteredTasks.length === 0 ? (
+                            <h1 className={`text-sm md:text-base font-semibold text-center w-full`}>No tasks found</h1>
+                        ) : (
+                            <div className={`flex flex-col w-full px-3 items-start justify-start`}>
+                                <div className={`flex flex-row w-full items-center justify-start`}>
+                                    <div className={`flex flex-row justify-between`} style={{width: '55%'}}>
+                                        <h1 className={`text-xs md:text-sm font-semibold underline text-center`}id={`completedHead`} style={{width: '20%'}}>Completed</h1>
+                                        <h1 className={`text-xs md:text-sm font-semibold underline text-center`} style={{width: '40%'}}>Title</h1>
+                                        <h1 className={`text-xs md:text-sm font-semibold underline text-center`} style={{width: '40%'}}>Time</h1>
+                                    </div>
+                                    <div className={`flex flex-row`} style={{width: '45%'}}>
+                                        <h1 className={`text-xs md:text-sm font-semibold underline text-center`}>Description</h1>
+                                    </div>
+                                </div>
+                                {filteredTasks.map((task: ITask, index: number) => (
+                                    task.title.map((title, i) => (
+                                        <div className={`flex flex-row w-full items-start justify-start pt-5`} key={i}>
+                                            <React.Fragment key={i}>
+                                                <div className={`flex flex-row justify-between items-start`} style={{width: '55%'}}>
+                                                    <div className={`flex flex-col items-center justify-start`} style={{width: '25%'}}>
+                                                        <Checkbox onClick={() => handleCheckboxClick(task._id, i)} isSelected={task.completed[i] ? true : false} className={`${adminID ? 'cursor-pointer' : 'cursor-default'}`} id={`checkbox${i}`} name={`checkbox${i}`} aria-labelledby={`checkbox${i}`} isDisabled={adminID ? false : true}/>
+                                                    </div>
+
+                                                    <h1 className={`text-xs md:text-sm font-semibold ${task.completed[i] ? 'line-through' : ''}`} id={`title${i}`} style={{width: '30%'}}>
+                                                        {title}
+                                                    </h1>
+                                                    <h1 className={`text-xs md:text-sm font-semibold ${task.completed[i] ? 'line-through' : ''}`} id={`time${i}`} style={{width: '25%'}}>
+                                                        {task.time[i]}
+                                                    </h1>
+                                                </div>
+                                                <div className={`flex flex-row`} style={{width: '45%'}}>
+                                                    <h1 className={`text-xs md:text-sm font-semibold`} id={`description${i}`}>
+                                                        {task.description[i]}
+                                                    </h1>
+                                                </div>
+                                            </React.Fragment>
+                                        </div>
+                                    ))
+                                ))}
+                            </div>
+                        )
+                    }
                 </div>
             </div>
+        )
     );
 }
