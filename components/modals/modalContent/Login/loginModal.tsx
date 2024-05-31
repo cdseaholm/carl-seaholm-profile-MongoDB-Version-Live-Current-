@@ -2,20 +2,29 @@
 
 import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
-import { useStore } from '@/context/dataStore';
 import { useModalStore } from "@/context/modalStore";
 import { useAlertStore } from "@/context/alertStore";
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function ModalLogin() {
 
+    //context
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const setShowAlert = useAlertStore((state) => state.setShowAlert);
     const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
-    const setAdminID = useStore((state) => state.setAdminID);
-    const adminID = useStore((state) => state.adminID);
-    const { data: session } = useSession();
-    const id = session?.user?.email;
+    const { data: session, status } = useSession();
 
+    //state
+    const [signInError, setSignInError] = useState<string>('');
+
+    //variables
+    const id = session?.user?.email;
+    const adminIDBool = status === 'authenticated' && session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
+    const pathName = usePathname();
+    const router = useRouter();
+
+    //functions
     const handleOpenSub = () => {
         setModalOpen('subscribe');
     }
@@ -24,42 +33,30 @@ export default function ModalLogin() {
         event.preventDefault();
         console.log('handleSubmit function called');
         try {
+            
             if (session?.user !== null && session?.user !== undefined) {
                 alert('You are already logged in');
                 return;
             }
+
             const res = await signIn('credentials', {
                 email: event.currentTarget['modalLoginEmail'].value,
                 password: event.currentTarget['modalLoginPassword'].value,
-                redirect: true
+                redirect: false,
             });
             
             if (res && res.error) {
                 console.log('Error logging in:', res.error);
-                setShowAlert(true);
-                setAlertMessage('Invalid email or password');
+                setSignInError('Email or password is incorrect');
                 return;
             }
-
-            if (res && res.ok) {
-                console.log('Logged in successfully');
-                if (adminID) {
-                    return;
-                } else {
-                    if (id === process.env.NEXT_PUBLIC_ADMIN_USERNAME) {
-                      setAdminID(true);
-                    } else {
-                      setAdminID(false);
-                    }
-                }
-                setAdminID(true);
-                setModalOpen('');
-            }
+            
+            setModalOpen('');
+            router.replace(pathName);
             
         } catch (error) {
-            setShowAlert(true);
-            setAlertMessage('An error occurred. Please try again.');
             console.log('Error logging in', error);
+            setSignInError('Email or password is incorrect');
         }
     }
 
@@ -72,22 +69,29 @@ export default function ModalLogin() {
                 <label htmlFor="modalLoginPassword" className={`block my-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white`}>Password</label>
                 <input type="password" name="modalLoginPassword" id="modalLoginPassword" autoComplete='current-password' className={`bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 text-xs md:text-sm`} placeholder="Password" required/>
             </div>
-            <button type="submit" className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}>
-                Sign In
-            </button>
-            <div className="flex flex-row justify-around my-4 p-2 text-sm space-x-1">
+            <div className="flex flex-row justify-between px-5 items-center">
+                <button type="submit" className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}>
+                    Sign In
+                </button>
+                <div>
                 {
-                    /**<p className="text-black">
-                        Don&apos;t have an account yet? 
-                    </p>
-                    <div className="text-sky-700 cursor-pointer" onClick={swapAuthDesire}>
-                        Create an account here
-                    </div>*/
+                    signInError ? 
+                        <p className="text-red-500 text-xs md:text-sm">
+                            {signInError}
+                        </p>
+                    : 
+                        ' '
                 }
-                <p className="text-black">
-                    Looking for a way to Follow? 
-                </p>
-                <div className="text-sky-700 cursor-pointer" onClick={handleOpenSub}>
+                </div>
+            </div>
+            <div className="flex flex-col justify-around items-center space-y-1 pt-5">
+                {/*<div className="text-sky-700 cursor-pointer text-sm hover:text-gray-700">
+                    Forgot password?
+                </div>
+                <div className="text-sky-700 cursor-pointer text-sm hover:text-gray-700" onClick={() => {console.log('createClicked')}}>
+                    Create an account here
+                </div>**/}
+                <div className="text-sky-700 cursor-pointer text-sm hover:text-gray-700" onClick={handleOpenSub}>
                     Subscribe here
                 </div>
             </div>

@@ -21,15 +21,18 @@ export async function PUT(request: Request) {
         if (!taskInitial) {
             return createErrorResponse("Task not found", 404);
         }
-        const taskToEdit = await Task.updateOne({
-            title: taskInitial.title,
-            date: taskInitial.date,
-            time: taskInitial.time,
-            description: taskInitial.description,
-            user_email: taskInitial.user_email,
-            completed: data.completed,
-            updatedAt: new Date()
-        });
+        const taskToEdit = await Task.updateOne(
+            { _id: objectID },
+            {
+                title: taskInitial.title,
+                date: taskInitial.date,
+                time: taskInitial.time,
+                description: taskInitial.description,
+                user_email: taskInitial.user_email,
+                completed: data.completed,
+                updatedAt: new Date()
+            }
+        );
 
         if (!taskToEdit) {
             return createErrorResponse("Task not edited", 404);

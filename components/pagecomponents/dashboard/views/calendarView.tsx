@@ -5,14 +5,12 @@ import { useEffect, useState } from "react";
 import { useStore } from '@/context/dataStore';
 import { useModalStore } from "@/context/modalStore";
 
-const CalendarView = () => {
+const CalendarView = ({adminID}: {adminID: boolean}) => {
 
-    const setModalOpen = useModalStore((state) => state.setModalOpen);
     const setDaySelected = useModalStore((state) => state.setDaySelected);
     const daySelected = useModalStore((state) => state.daySelected);
     const [hobbyEvents, setHobbyEvents] = useState<any[]>([]);
     const hobbies = useStore((state) => state.hobbies);
-    const adminID = useStore((state) => state.adminID);
 
     const handleDateIncrease = () => { 
         const date = new Date(daySelected);
@@ -27,21 +25,14 @@ const CalendarView = () => {
     }
 
     useEffect(() => {
-        if (daySelected === '' && daySelected !== null && daySelected !== undefined) {
-            setDaySelected(new Date().toLocaleString());
-            return;
-        }
-    }, [daySelected, setDaySelected]);
-
-    useEffect(() => {
         if (hobbies === null || hobbies === undefined) {
             return;
         } else {
             const hobbiesToSet = [] as IHobby[];
             hobbies.forEach((hobby: IHobby) => {
                 for (let i = 0; i < hobby.dates.length; i++) {
-                    const day = new Date(hobby.dates[i]).toLocaleDateString();
-                    if (day === daySelected) {
+                    const date = new Date(hobby.dates[i] + 'T00:00');
+                    if (date.toLocaleDateString() === daySelected) {
                         hobbiesToSet.push(hobby);
                     }
                 }

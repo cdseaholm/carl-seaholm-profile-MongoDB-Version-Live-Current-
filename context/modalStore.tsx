@@ -16,7 +16,7 @@ export const useModalStore = create<ModalStore>((set) => ({
     setModalOpen: (modalOpen) => set({ modalOpen }),
     colorChoice: '',
     setColorChoice: (colorChoice) => set({ colorChoice }),
-    daySelected: '',
+    daySelected: new Date().toLocaleString(),
     setDaySelected: (daySelected) => set({ daySelected }),
     modalParent: '',
     setModalParent: (modalParent) => set({ modalParent }),

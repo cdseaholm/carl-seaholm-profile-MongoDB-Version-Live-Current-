@@ -12,8 +12,6 @@ import { useHobbyStore } from "@/context/hobbyStore";
 export default function AddRecipes() {
     const {data: session} = useSession();
     const urlToUse = useStateStore((state) => state.urlToUse);
-    const loading = useStateStore((state) => state.loading);
-    const setLoading = useStateStore((state) => state.setLoading);
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const refreshKey = useHobbyStore((state) => state.refreshKey);
     const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
@@ -54,8 +52,6 @@ export default function AddRecipes() {
 
             const image = photo;
 
-            setLoading(true);
-
             const res = await fetch(`${urlToUse}/api/createrecipe`,{
                 method: 'POST',
                 headers: {
@@ -74,16 +70,13 @@ export default function AddRecipes() {
             });
             if (res.ok) {
                 console.log('CreateRecipe', res);
-                setLoading(false);
                 setModalOpen('');
                 setRefreshKey(prevKey => prevKey + 1);
                 router.refresh();
             } else {
-                setLoading(false);
                 console.log('CreateRecipe', res);
             }
         } catch (error) { 
-            setLoading(false);
             console.log('CreateRecipe', error);
         }
     }

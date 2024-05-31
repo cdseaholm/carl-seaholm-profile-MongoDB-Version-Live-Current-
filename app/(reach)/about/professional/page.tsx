@@ -18,7 +18,7 @@ export default function Professional() {
   const imageRef = React.useRef<HTMLDivElement>(null);
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
-  const loading = useStateStore((state) => state.loading);
+  const [loading, setLoading] = useState(false);
 
   /**Variables */
 

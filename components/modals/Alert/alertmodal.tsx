@@ -6,10 +6,12 @@ import { useAlertStore } from '@/context/alertStore';
 import { useModalStore } from '@/context/modalStore';
 import { FiArrowLeft } from "react-icons/fi";
 import { useStateStore } from '@/context/stateStore';
+import { useHobbyStore } from '@/context/hobbyStore';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function AlertModal() {
   
-
+    //context
     const alertParent = useAlertStore((state) => state.alertParent);
     const setAlertParent = useAlertStore((state) => state.setAlertParent);
     const showAlert = useAlertStore((state) => state.showAlert);
@@ -17,10 +19,13 @@ export default function AlertModal() {
     const alertMessage = useAlertStore((state) => state.alertMessage);
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const resetAlert = useAlertStore((state) => state.resetAlert);
-    const setModalParent = useModalStore((state) => state.setModalParent);
-    const setDashToShow = useStateStore((state) => state.setDashToShow);
+    const setGlobalLoading = useStateStore((state) => state.setGlobalLoading);
+    const setDashToShow = useHobbyStore((state) => state.setDashToShow);
     const selectedDay = useModalStore((state) => state.daySelected);
 
+    //variables
+
+    //functions
     const handleFirstButton = () => {
         if (alertParent === 'calendar') {
             setModalOpen('logsession');
@@ -28,13 +33,19 @@ export default function AlertModal() {
         resetAlert();
     }
 
-    const handleSecondButton = () => {
-        if (alertParent === 'logout') {
-            signOut();
-        } else if (alertParent === 'calendar') {
-            setDashToShow('calendar');
-        }
+    const handleSecondButtonCalendar = async () => {
+        setDashToShow('calendar');
         resetAlert();
+    }
+
+    const handleSecondButtonLogout = async () => {
+        try {
+          await signOut();
+        } catch (error) {
+          console.error('Error signing out:', error);
+        } finally {
+          resetAlert();
+        }
     }
 
     return (
@@ -61,7 +72,7 @@ export default function AlertModal() {
                             <button className={`text-black inline-flex items-center font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center hover:bg-gray-500`} onClick={handleFirstButton}>
                                 {alertParent === 'calendar' ? `Log session on ${selectedDay}` : 'Cancel'}
                             </button>
-                            <button type="button" className={`text-black inline-flex items-center hover:bg-gray-500 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center`} onClick={handleSecondButton}>
+                            <button type="button" className={`text-black inline-flex items-center hover:bg-gray-500 font-medium rounded-lg text-xs md:text-sm px-3 py-1.5 text-center`} onClick={alertParent === 'calendar' ? handleSecondButtonCalendar : handleSecondButtonLogout}>
                                 {alertParent === 'logout' ? 'Continue' : 
                                  alertParent === 'calendar' ? `View Hobbies on ${selectedDay}` :
                                  'Okay'}

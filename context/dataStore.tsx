@@ -8,8 +8,6 @@ type Store = {
   setTasks: (tasks: ITask[]) => void;
   hobbies: IHobby[];
   setHobbies: (hobbies: IHobby[]) => void;
-  adminID: boolean;
-  setAdminID: (adminID: boolean) => void;
   recipes: IRecipe[];
   setRecipes: (recipes: IRecipe[]) => void;
   recipeFilter: string;
@@ -21,8 +19,6 @@ export const useStore = create<Store>((set) => ({
   setTasks: (tasks) => set({ tasks }),
   hobbies: [],
   setHobbies: (hobbies) => set({ hobbies }),
-  adminID: false,
-  setAdminID: (adminID) => set({ adminID }),
   recipes: [],
   setRecipes: (recipes) => set({ recipes }),
   recipeFilter: '',

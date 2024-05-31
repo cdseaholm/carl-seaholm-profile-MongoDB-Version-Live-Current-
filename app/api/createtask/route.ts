@@ -16,7 +16,8 @@ export async function POST(request: Request) {
                 $push: {
                     title: data.title,
                     time: data.time,
-                    description: data.description
+                    description: data.description,
+                    completed: data.completed
                 }
             },
             { new: true, upsert: true }
