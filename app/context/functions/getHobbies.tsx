@@ -4,6 +4,10 @@ export const getHobbies = async (urlToUse: string, userID: string): Promise<IHob
 
     try {
         const response = await fetch(`${urlToUse}/api/${userID}/gethobbies`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             next: {
                 revalidate: 3600
             }

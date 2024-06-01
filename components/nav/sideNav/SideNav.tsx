@@ -88,7 +88,8 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
           <div />
           </div>
           <div className='divide-y divide-solid'>
-            <div className="my-5">{children}
+            <div className="my-5">
+              {children}
           </div>
           <div className='flex flex-col mx-3 py-5 items-center'>
             <div className={`max-md:text-sm`}>

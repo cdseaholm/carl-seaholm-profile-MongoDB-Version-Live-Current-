@@ -32,7 +32,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             notes: hobby.notes,
             user: hobby.user,
             image: hobby.image,
-            link: hobby.link
+            link: hobby.link,
+            _id: hobby.id,
+            createdAt: hobby.createdAt,
+            updatedAt: hobby.updatedAt
         }
       });
 
@@ -44,5 +47,4 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     console.log(error.message);
     return createErrorResponse(error.message, 500);
   }
-
 }

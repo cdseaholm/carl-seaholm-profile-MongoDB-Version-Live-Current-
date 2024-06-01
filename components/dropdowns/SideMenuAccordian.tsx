@@ -117,8 +117,8 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
             </Link>
           </div>
           <div className="mb-4 px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={'' /* "/about/personal" */} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/about/personal" ? "underline" : ""}`}>
-            - Personal - Soon
+            <Link onClick={toggle} href={"/about/personal"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/about/personal" ? "underline" : ""}`}>
+            - Personal
             </Link>
           </div>
           <div className="mb-4 px-2 py-1 cursor-pointer">

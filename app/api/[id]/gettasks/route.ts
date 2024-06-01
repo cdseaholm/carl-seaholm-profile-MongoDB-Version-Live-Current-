@@ -19,9 +19,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
         return createErrorResponse("Null or Undefined", 400);
   
-      }else if (ts.length === 0) {
+      } else if (ts.length === 0) {
+
         return NextResponse.json({status: 404, message: "No tasks found"});
-      }
+
+      } else {
 
       const tasks =  ts?.map((task: ITask) => {
           return {
@@ -39,6 +41,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       const response = NextResponse.json({tasks, status: 200});
       response.headers.set('Access-Control-Allow-Origin', '*');
       return response;
+    }
 
     } catch (error: any) {
       return createErrorResponse(error.message, 500);

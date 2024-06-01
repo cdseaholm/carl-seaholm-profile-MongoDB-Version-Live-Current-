@@ -3,8 +3,9 @@
 import { useModalStore } from "@/context/modalStore";
 
 export default function ActionButton({whichModal}: {whichModal: string}) {
-    
+
     const setModalOpen = useModalStore((state) => state.setModalOpen);
+    
     const handleClick = () => {
         setModalOpen(whichModal);
     };
