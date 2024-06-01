@@ -56,8 +56,8 @@ export default function Personal() {
         <h1 className="flex text-6xl font-bold pt-5 pr-5 justify-end">
           Carl Seaholm
         </h1>
-        <div className='p-2 pt-15 w-full flex flex-row'>
-          <div style={{flexGrow: 1, overflow: 'auto'}} className='scrollbar-thin scrollbar-webkit flex flex-col justify-start w-2/3'>
+        <div className='p-2 pt-15 w-full flex flex-row' style={{height: '91%'}}>
+          <div style={{flexGrow: 1, overflow: 'auto'}} className='scrollbar-thin scrollbar-webkit flex flex-col justify-start items-start w-2/3 space-y-2'>
             <div className='flex justify-start w-2/3'>
               {blurbs[blurb]}
             </div>
@@ -79,8 +79,8 @@ export default function Personal() {
                 onClick={() => setClicked(clicked ? false : true)}
                 priority
                 src={`${blurb === 9 ? '/images/george.jpg' : ''}`}
-                height={100}
-                width={100}
+                height={200}
+                width={200}
                 alt="Carl Seaholm Profile Photo"
                 style={{objectFit: 'scale-down', height: 'auto', width: 'auto'}}
               />
