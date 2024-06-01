@@ -1,6 +1,4 @@
 export type IRecipe = {
-    logo: any;
-    logoAlt: any;
     id: string;
     name: string;
     date: string;
@@ -9,4 +7,6 @@ export type IRecipe = {
     user: string;
     image: string;
     link: string;
+    createdAt: string;
+    updatedAt: string;
 };

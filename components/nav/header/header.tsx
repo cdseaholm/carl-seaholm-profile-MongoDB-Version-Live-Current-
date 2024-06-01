@@ -69,7 +69,7 @@ const SideNavHeader = () => {
                 Home
               </Link>
             </div>
-          {pathname === '/about/professional' &&
+          {pathname === '/about/professional' || pathname === '/about/personal' &&
             <div ref={imageRef} className={`mt-3 ml-5 ${clicked ? style.profilepicture.large : style.profilepicture.small}`}>
               <Image
                 onClick={imageClick}
@@ -81,6 +81,7 @@ const SideNavHeader = () => {
                 alt="Carl Seaholm Profile Photo"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
+                style={{objectFit: 'cover', height: 'auto', width: 'auto'}}
               />
             </div>
           }

@@ -92,6 +92,7 @@ export default function Professional() {
                     height={clicked ? 200 : 70}
                     width={clicked ? 200 : 70}
                     alt="Carl Seaholm Profile Photo"
+                    style={{objectFit: 'cover', height: 'auto', width: 'auto'}}
                     />
                 </div>
                 }
