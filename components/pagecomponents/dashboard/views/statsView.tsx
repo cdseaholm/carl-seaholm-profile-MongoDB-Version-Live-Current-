@@ -9,16 +9,17 @@ import { Spinner } from '@/components/misc/Spinner';
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
 import { useStore } from '@/context/dataStore';
+import { Signal } from '@preact/signals-react';
 
 export default function StatsView() {
 
-    const hobbies = useStore((state) => state.hobbies);
     const isBreakpoint = useMediaQuery(950);
     const [totalTime, setTotalTime] = useState<number[]>([]);
     const [totalCounter, setTotalCounter] = useState<number[]>([]);
     const [thisMonth, setThisMonth] = useState<number>(new Date().getMonth());
     const [loading, setLoading] = useState(true);
     const [indexShown, setIndexShown] = useState<boolean>(false);
+    const hobbies = useStore((state) => state.hobbies);
 
     let hobbiesSet = [] as IHobby[];
     if (!hobbies) {
