@@ -13,9 +13,12 @@ import { useStateStore } from "@/context/stateStore";
 import { useModalStore } from "@/context/modalStore";
 import { useHobbyStore } from "@/context/hobbyStore";
 import { getCategories } from "@/app/context/functions/getCategories";
-import { getHobbies } from "@/app/context/functions/getHobbies";
 import { getTasks } from "@/app/context/functions/getTasks";
+import { signal } from '@preact/signals-react';
+import { getHobbies } from "@/app/context/functions/getHobbies";
 
+const name = signal(0);
+console.log(name);
 
 export default function Dashboard() {
 
@@ -26,8 +29,8 @@ export default function Dashboard() {
   const toShow = useHobbyStore((state) => state.dashToShow);
   const urlToUse = useStateStore((state) => state.urlToUse);
   const setTasks = useStore((state) => state.setTasks);
-  const setHobbies = useStore((state) => state.setHobbies);
   const setCategories = useHobbyStore((state) => state.setCategories);
+  const setHobbies = useStore((state) => state.setHobbies);
 
   //state
   const [loading, setLoading] = useState(true);
@@ -60,7 +63,7 @@ export default function Dashboard() {
     }
     getData();
     setLoading(false);
-  }, [setLoading, setHobbies, setTasks, setCategories, urlToUse, userID, status, session, setDashToShow]);
+  }, [setLoading, setTasks, setCategories, urlToUse, userID, status, session, setDashToShow]);
 
   return (
     loading ? 

@@ -53,12 +53,17 @@ export default function Personal() {
             style={{objectFit: 'cover', height: 'auto', width: 'auto'}}
           />
         }
-        <h1 className="flex text-6xl font-bold pt-5 pr-5 justify-end">
-          Carl Seaholm
-        </h1>
+        <div className='py-5 px-5 mx-5 justify-end border-b border-black'>
+          <h1 className="flex text-6xl font-bold justify-end">
+            Carl Seaholm
+          </h1>
+          <h2 className="flex text-base font-bold justify-end">
+            Personal Life
+          </h2>
+        </div>
         <div className='p-2 pt-15 w-full flex flex-row' style={{height: '91%'}}>
-          <div style={{flexGrow: 1, overflow: 'auto'}} className='scrollbar-thin scrollbar-webkit flex flex-col justify-start items-start w-2/3 space-y-2'>
-            <div className='flex justify-start w-2/3'>
+          <div style={{flexGrow: 1, overflow: 'auto', width: '90%'}} className='scrollbar-thin scrollbar-webkit flex flex-col justify-start items-start space-y-2 border-r border-black'>
+            <div className='flex justify-start'>
               {blurbs[blurb]}
             </div>
             {
@@ -86,20 +91,20 @@ export default function Personal() {
               />
             }
           </div>
-          <div className='flex flex-col justify-start'>
-            <div className='text-2xl font-bold'>
+          <div className='flex flex-col justify-start pl-5'>
+            <div className='text-xl font-bold'>
               Hobbies
             </div>
             {hobbies.map((hobby, index) => (
-              <li key={index} className='cursor-pointer hover:text-gray-600' onClick={() => setBlurb(index + 1)}>
+              <li key={index} className='cursor-pointer hover:text-gray-600 py-2' onClick={() => setBlurb(index + 1)} style={{fontSize: '12px'}}>
                 {hobby}
               </li>
             ))}
-            <div className='text-2xl font-bold'>
+            <div className='text-xl font-bold'>
               Pets
             </div>
             {pets.map((pet, index) => (
-              <li key={index} className='cursor-pointer hover:text-gray-600' onClick={() => setBlurb(index + 8)}>
+              <li key={index} className='cursor-pointer hover:text-gray-600 py-2' onClick={() => setBlurb(index + 8)} style={{fontSize: '12px'}}>
                 {pet}
               </li>
             ))}

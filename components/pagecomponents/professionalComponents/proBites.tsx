@@ -22,7 +22,7 @@ const SchoolBite = ({ school }: { school: School; index: number; }) => {
                 <div className={`text-xs md:text-sm font-bold text-slate-400`}>{startDate} - {endDate}</div>
             </div>
             <div>
-                <Image src={school.logo} width={80} height={80} alt={school.logoAlt} style={{width: 'auto', height: 'auto'}}/>
+                <Image src={school.logo} width={80} height={80} alt={school.logoAlt} style={{objectFit: 'cover', height: 'auto', width: 'auto'}}/>
             </div>
         </div>
     );
@@ -42,7 +42,7 @@ const JobBite = ({ job, index }: { job: Job; index: number; }) => {
                     <div className={`text-xs md:text-sm font-bold text-slate-400`}>{startDate} - {endDate}</div>
                 </div>
                 <div>
-                    <Image src={job.logo} width={80} height={80} alt={job.logoAlt} style={{width: 'auto', height: 'auto'}}/>
+                    <Image src={job.logo} width={80} height={80} alt={job.logoAlt} style={{objectFit: 'cover', height: 'auto', width: 'auto'}}/>
                 </div>
             </div>
             <DetailsAccordianPage 

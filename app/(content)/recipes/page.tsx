@@ -22,7 +22,7 @@ export default function Recipes() {
     const setRecipes = useStore((state) => state.setRecipes);
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const urlToUse = useStateStore((state) => state.urlToUse);
-
+    
     //state
     const [recipesSorted, setRecipesSorted] = useState<IRecipe[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
