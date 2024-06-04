@@ -3,7 +3,6 @@
 import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
 import { useModalStore } from "@/context/modalStore";
-import { useAlertStore } from "@/context/alertStore";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -11,8 +10,7 @@ export default function ModalLogin() {
 
     //context
     const setModalOpen = useModalStore((state) => state.setModalOpen);
-    const setShowAlert = useAlertStore((state) => state.setShowAlert);
-    const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
+
     const { data: session, status } = useSession();
 
     //state

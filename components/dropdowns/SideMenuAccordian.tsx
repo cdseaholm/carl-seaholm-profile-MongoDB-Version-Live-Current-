@@ -52,12 +52,11 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
       }
       <Accordion defaultPanel={defaultPanel}>
         <AccordionItem toggle="panel-1" className="text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5">
-          Projects - Soon
+          Projects
         </AccordionItem>
-        {/*
         <AccordionPanel id="panel-1">
         <div className="mb-4 px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={"/projects/npapps"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/projects/npapps" ? "underline" : ""}`}>
+            <Link onClick={toggle} href={""} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/projects/npapps" ? "underline" : ""}`}>
             - New Progress Applications
           </Link>
         </div>
@@ -72,7 +71,6 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
           </Link>
         </div>
         </AccordionPanel>
-        */}
         <AccordionItem toggle="panel-2" className="text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5">
           Services
         </AccordionItem>
