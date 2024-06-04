@@ -63,7 +63,7 @@ export default function Dashboard() {
     }
     getData();
     setLoading(false);
-  }, [setLoading, setTasks, setCategories, urlToUse, userID, status, session, setDashToShow]);
+  }, [setLoading, setTasks, setCategories, urlToUse, userID, status, session, setDashToShow, setHobbies]);
 
   return (
     loading ? 

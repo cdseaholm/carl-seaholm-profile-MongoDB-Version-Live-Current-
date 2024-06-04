@@ -14,4 +14,5 @@ export const useStateStore = create<StateStore>((set) => ({
     : '',
     globalLoading: false,
     setGlobalLoading: (globalLoading) => set({globalLoading}),
+    
 }));
