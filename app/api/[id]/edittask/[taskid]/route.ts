@@ -1,7 +1,7 @@
 
 import connectDB from "@/lib/mongodb";
 import { NextResponse } from "next/server";
-import Task from "@/models/task";
+import Task from "@/models/tasks/tasksByUser";
 import { createErrorResponse, stringToObjectId } from "@/lib/utils";
 
 

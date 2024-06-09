@@ -14,11 +14,8 @@ import { useModalStore } from "@/context/modalStore";
 import { useHobbyStore } from "@/context/hobbyStore";
 import { getCategories } from "@/app/context/functions/getCategories";
 import { getTasks } from "@/app/context/functions/getTasks";
-import { signal } from '@preact/signals-react';
 import { getHobbies } from "@/app/context/functions/getHobbies";
-
-const name = signal(0);
-console.log(name);
+import { useTaskStore } from "@/context/taskStore";
 
 export default function Dashboard() {
 
@@ -28,9 +25,10 @@ export default function Dashboard() {
   const setDashToShow = useHobbyStore((state) => state.setDashToShow);
   const toShow = useHobbyStore((state) => state.dashToShow);
   const urlToUse = useStateStore((state) => state.urlToUse);
-  const setTasks = useStore((state) => state.setTasks);
+  const setTasks = useTaskStore((state) => state.setTasks);
   const setCategories = useHobbyStore((state) => state.setCategories);
   const setHobbies = useStore((state) => state.setHobbies);
+  const setTasksByUser = useTaskStore((state) => state.setTasksByUser);
 
   //state
   const [loading, setLoading] = useState(true);
@@ -56,14 +54,19 @@ export default function Dashboard() {
         const hobs = await getHobbies(urlToUse, userID);
         setHobbies(hobs);
         const tsks = await getTasks(urlToUse, userID);
-        setTasks(tsks);
+        if (tsks === null || tsks === undefined) {
+          console.error('No tasks found');
+          return;
+        } else {
+          setTasksByUser(tsks);
+        }
         const categories = await getCategories(hobs);
         setCategories(categories);
       }
     }
     getData();
     setLoading(false);
-  }, [setLoading, setTasks, setCategories, urlToUse, userID, status, session, setDashToShow, setHobbies]);
+  }, [setLoading, setTasks, setCategories, urlToUse, userID, status, session, setDashToShow, setHobbies, setTasksByUser]);
 
   return (
     loading ? 
