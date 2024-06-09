@@ -10,6 +10,10 @@ const userSchema = new Schema(
             type: String,
             required: true
         },
+        phone: {
+            type: String,
+            required: false
+        },
         password: {
             type: String,
             required: true
@@ -17,7 +21,8 @@ const userSchema = new Schema(
         blogsub: {
             type: Boolean,
             required: true
-        }
+        },
+        customFields: Schema.Types.Mixed
     },
     {
         timestamps: true

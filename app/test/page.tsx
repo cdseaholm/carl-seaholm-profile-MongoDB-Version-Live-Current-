@@ -1,12 +1,13 @@
 'use client'
 
+import { useLifeAspectStore } from "@/context/lifeAspectStore";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 
 
 
 export default function Page() {
     const { data: session } = useSession();
+    const setOpenLifeAspectModal = useLifeAspectStore((state) => state.setOpenLifeAspectModal);
 
 
     return (
@@ -17,6 +18,7 @@ export default function Page() {
             {session === null ? 'Null' : 'Not Null'}
             {session?.user?.email === undefined ? 'Undefined' : 'Not Undefined'}
         </div>
+        <button onClick={() => setOpenLifeAspectModal('addcustom')}>Click me</button>
         </div>
     );
 }

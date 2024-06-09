@@ -30,9 +30,9 @@ export async function POST(request: Request) {
         if (!hobbyToAdd) {
             return createErrorResponse("Hobby not created", 404);
         }
+        return NextResponse.json({ status: 200, hobby: hobbyToAdd });
     } catch (error: any) {
         console.error('Error creating hobby', error);
         return createErrorResponse("Hobby not created - outside catch", 500);
     }
-    return NextResponse.json({status: 200});
 }

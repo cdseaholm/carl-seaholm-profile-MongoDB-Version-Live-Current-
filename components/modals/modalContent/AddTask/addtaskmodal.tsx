@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useStore } from "@/context/dataStore";
 import { useStateStore } from "@/context/stateStore";
 import { useModalStore } from "@/context/modalStore";
+import { useTaskStore } from "@/context/taskStore";
 
 export default function AddTask () {
 
@@ -12,12 +13,8 @@ export default function AddTask () {
     const urlToUse = useStateStore((state) => state.urlToUse);
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const [loading, setLoading] = useState(false);
-    const { tasks, setTasks } = useStore();
-
-    const updateTasks = async ({newTask}: {newTask: ITask[]}) => {
-        setLoading(true);
-
-    }
+    const setTasks = useTaskStore((state) => state.setTasks);
+    const tasks = useTaskStore((state) => state.tasks);
 
     const handleCreateTask = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -42,14 +39,12 @@ export default function AddTask () {
             return;
         }
         const newTask = {
-            title: title,
-            time: time,
-            description: description,
-            date: date,
-            user_email: user,
+            title,
+            time,
+            description,
+            user_email: session.user.email,
         } as ITask;
-        console.log('check', newTask.time)
-        console.log('check', newTask.date)
+
         const response = await fetch(`${urlToUse}/api/createtask`, {
             method: 'POST',
             headers: {
@@ -64,10 +59,12 @@ export default function AddTask () {
         if (response.ok) {
             const res = await response.json();
             console.log('Task created', res);
+            console.log('Task created', res.task);
             setTasks([...tasks, res.task]);
             setModalOpen('');
         }
     }
+
     if (loading) {
         return (
             <div className="flex flex-col justify-center items-center">

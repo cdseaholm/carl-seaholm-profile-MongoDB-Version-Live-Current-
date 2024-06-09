@@ -1,6 +1,6 @@
-import { ITask } from "@/models/types/task";
+import { ITasksByUser } from "@/models/types/task";
 
-export const getTasks = async (urlToUse: string, userID: string): Promise<ITask[]> => {
+export const getTasks = async (urlToUse: string, userID: string): Promise<ITasksByUser | null> => {
     try {
         const response = await fetch(`${urlToUse}/api/${userID}/gettasks`, {
             method: 'GET',
@@ -13,18 +13,18 @@ export const getTasks = async (urlToUse: string, userID: string): Promise<ITask[
         });
         if (!response.ok) {
             console.log('No tasks found');
-            return [];
+            return null;
         }
         if (response.ok) {
             const res = await response.json();
             if (res.status === 404) {
-                return [];
+                return null;
             }
-            return res.tasks || [];
+            return res.tasks || null;
         }
     } catch (error) {
         console.error('Error fetching tasks', error);
-        return [];
+        return null;
     }
-    return [];
+    return null;
 }

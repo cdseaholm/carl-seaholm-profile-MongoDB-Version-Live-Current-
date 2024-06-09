@@ -9,7 +9,6 @@ import { Spinner } from '@/components/misc/Spinner';
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
 import { useStore } from '@/context/dataStore';
-import { Signal } from '@preact/signals-react';
 
 export default function StatsView() {
 

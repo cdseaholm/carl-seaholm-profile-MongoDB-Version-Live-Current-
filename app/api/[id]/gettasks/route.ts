@@ -1,49 +1,47 @@
 
 import connectDB from "@/lib/mongodb";
 import { createErrorResponse } from "@/lib/utils";
-import Task from "@/models/task";
-import { ITask } from "@/models/types/task";
+import TasksByUser from "@/models/tasks/tasksByUser";
+import { ITaskByDate, ITasksByUser } from "@/models/types/task";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
 
-    var adminID = req.url.split('/')[4];
+  var adminID = req.url.split('/')[4];
 
-    try {
-      
-      await connectDB();
+  try {
     
-      const ts = await Task.find({user_email: adminID});
-
-      if (ts === null || ts === undefined) {
-
-        return createErrorResponse("Null or Undefined", 400);
+    await connectDB();
   
-      } else if (ts.length === 0) {
+    const ts = await TasksByUser.find({user_email: adminID});
 
-        return NextResponse.json({status: 404, message: "No tasks found"});
+    console.log('Tasks1', JSON.stringify(ts, null, 2));
 
-      } else {
+    if (ts === null || ts === undefined) {
 
-      const tasks =  ts?.map((task: ITask) => {
-          return {
-            title: task.title,
-            date: task.date,
-            time: task.time,
-            description: task.description,
-            user_email: task.user_email,
-            _id: task._id,
-            createdAt: task.createdAt,
-            updatedAt: task.updatedAt,
-            completed: task.completed
-          }});
+      return createErrorResponse("Null or Undefined", 400);
 
-      const response = NextResponse.json({tasks, status: 200});
-      response.headers.set('Access-Control-Allow-Origin', '*');
-      return response;
-    }
+    } else if (ts.length === 0) {
 
-    } catch (error: any) {
-      return createErrorResponse(error.message, 500);
-    }
+      return NextResponse.json({status: 404, message: "No tasks found"});
+
+    } else {
+
+    const tasks =  ts?.map((tasks: ITasksByUser) => {
+        return {
+          _id: tasks._id,
+          tasksByDate: tasks.tasksByDate as ITaskByDate[],
+          user_email: tasks.user_email
+        }
+    });
+    console.log('Tasks2', JSON.stringify(tasks, null, 2));
+
+    const response = NextResponse.json({tasks, status: 200});
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    return response;
   }
+
+  } catch (error: any) {
+    return createErrorResponse(error.message, 500);
+  }
+}

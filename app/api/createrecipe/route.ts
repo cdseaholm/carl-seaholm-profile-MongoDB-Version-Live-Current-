@@ -32,9 +32,9 @@ export async function POST(request: Request) {
         if (!recipeToAdd) {
             return createErrorResponse("Recipe not created", 404);
         }
+        return NextResponse.json({ status: 200, recipe: recipeToAdd });
     } catch (error: any) {
         console.error('Error creating Recipe', error);
         return createErrorResponse("Recipe not created - outside catch", 500);
     }
-    return NextResponse.json({status: 200});
 }

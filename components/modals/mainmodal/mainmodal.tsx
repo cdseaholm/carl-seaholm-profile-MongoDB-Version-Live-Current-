@@ -13,7 +13,6 @@ import CalendarModal from "../modalContent/Calendar/calendarmodal";
 import AddRecipes from "../modalContent/Recipes/Add";
 import AddTask from "../modalContent/AddTask/addtaskmodal";
 import { useModalStore } from "@/context/modalStore";
-import { useStateStore } from "@/context/stateStore";
 
 
 export default function MainModal() {
@@ -43,6 +42,7 @@ export default function MainModal() {
         modalOpen === 'calendar' ? 'Calendar' :
         modalOpen === 'addrecipe' ? 'Add Recipe' :
         modalOpen === 'addtask' ? 'Add Task' :
+        modalOpen === 'addcustom' ? 'Add Custom' :
         '';
 
     const handleOptionSelect = (option: string) => {
