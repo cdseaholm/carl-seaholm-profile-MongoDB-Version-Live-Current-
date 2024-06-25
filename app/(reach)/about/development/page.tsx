@@ -1,13 +1,14 @@
 'use client'
 
 import React from 'react';
-import useMediaQuery from '@/components/listeners/WidthSettings';
 import DevelopmentDesktop from '@/app/(reach)/about/development/desktop';
 import DevelopmentMobile from '@/app/(reach)/about/development//mobile';
+import { useStateStore } from '@/context/stateStore';
 
 
 export default function Development() {
-  const isBreakpoint = useMediaQuery(768);
+  
+  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
 
   return (
     <main>

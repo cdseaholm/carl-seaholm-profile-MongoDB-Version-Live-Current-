@@ -5,9 +5,7 @@ import React from 'react';
 import { useAlertStore } from '@/context/alertStore';
 import { useModalStore } from '@/context/modalStore';
 import { FiArrowLeft } from "react-icons/fi";
-import { useStateStore } from '@/context/stateStore';
 import { useHobbyStore } from '@/context/hobbyStore';
-import { usePathname, useRouter } from 'next/navigation';
 
 export default function AlertModal() {
   
@@ -19,7 +17,6 @@ export default function AlertModal() {
     const alertMessage = useAlertStore((state) => state.alertMessage);
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const resetAlert = useAlertStore((state) => state.resetAlert);
-    const setGlobalLoading = useStateStore((state) => state.setGlobalLoading);
     const setDashToShow = useHobbyStore((state) => state.setDashToShow);
     const selectedDay = useModalStore((state) => state.daySelected);
 

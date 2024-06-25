@@ -4,10 +4,8 @@ import React, { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { schoolsArray, jobsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
 import { SchoolBite, JobBite } from '@/components/pagecomponents/professionalComponents/proBites';
-import useMediaQuery from '@/components/listeners/WidthSettings';
 
 export default function DevelopmentDesktop() {
-  const isBreakpoint = useMediaQuery(768);
   const [isHovered, setIsHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [category, setCategory] = useState('Timeline');

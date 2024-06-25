@@ -1,6 +1,5 @@
 'use client'
 
-import useMediaQuery from "@/components/listeners/WidthSettings";
 import { Spinner } from "@/components/misc/Spinner";
 import { useStateStore } from "@/context/stateStore";
 import { useTaskStore } from "@/context/taskStore";
@@ -17,8 +16,8 @@ export default function ToDoComp({adminID, dateToUse}: {adminID: boolean, dateTo
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
     const tasksByUser = useTaskStore((state) => state.tasksByUser);
     const [loading, setLoading] = useState<boolean>(true);
-    const isBreakpoint = useMediaQuery(768);
-    const smallBreakpoint = useMediaQuery(580);
+    const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
+    const smallBreakpoint = useStateStore((state) => state.widthQuery) < 580 ? true : false;
     const taskDetailsToShow = useTaskStore((state) => state.taskDetailsToShow);
     const setTaskDetailsToShow = useTaskStore((state) => state.setTaskDetailsToShow);
     const [editTask, setEditTask] = useState<boolean>(false);

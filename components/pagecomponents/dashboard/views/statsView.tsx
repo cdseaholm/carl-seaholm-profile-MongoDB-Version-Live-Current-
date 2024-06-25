@@ -2,17 +2,17 @@
 
 import { IHobby } from '@/models/types/hobby';
 import React, { useEffect, useState } from 'react'
-import useMediaQuery from '@/components/listeners/WidthSettings';
 import { TrackerUsage } from '../../../charts/trackerChart';
 import { TotalMinutesCalc } from '../helpers/totalminutescalc';
 import { Spinner } from '@/components/misc/Spinner';
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
 import { useStore } from '@/context/dataStore';
+import { useStateStore } from '@/context/stateStore';
 
 export default function StatsView() {
 
-    const isBreakpoint = useMediaQuery(950);
+    const isBreakpoint = useStateStore((state) => state.widthQuery) < 950 ? true : false;
     const [totalTime, setTotalTime] = useState<number[]>([]);
     const [totalCounter, setTotalCounter] = useState<number[]>([]);
     const [thisMonth, setThisMonth] = useState<number>(new Date().getMonth());
@@ -59,7 +59,7 @@ export default function StatsView() {
         loading ? (
             <Spinner />
         ):(
-            <div className={`${!isBreakpoint ? 'grid gap-1 grid-cols-2 grid-rows-2' : 'items-center'} w-full h-full p-2 scrollbar-thin scrollbar-webkit space-y-4`} style={{overflow: 'auto'}}>
+            <div className={`${!isBreakpoint ? 'grid gap-1 grid-cols-2 grid-rows-2' : 'items-center'} w-full h-full p-2 space-y-4`} style={{overflow: 'auto'}}>
                 <div className='relative flex flex-col justify-start w-full h-full text-sm' style={{height: '30dvh'}}>
                     <div className='absolute z-20 w-full'>
                         <div className='flex flex-row items-start justify-between w-full'>

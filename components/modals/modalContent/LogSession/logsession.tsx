@@ -13,7 +13,7 @@ function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString('en-GB', options).split('/').reverse().join('-');
 }
 
-export default function LogSessionModal() {
+export default function LogSessionModal({daySelected}: {daySelected: string}) {
 
     const { data: session } = useSession();
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
@@ -22,9 +22,7 @@ export default function LogSessionModal() {
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
     const setHobbies = useStore((state) => state.setHobbies);
-    
     const modalParent = useModalStore((state) => state.modalParent);
-    const daySelected = useModalStore((state) => state.daySelected);
     const localHobbies = useStore((state) => state.hobbies);
 
     const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -86,7 +84,6 @@ export default function LogSessionModal() {
     }
 
     console.log('daySelected', daySelected);
-    console.log('modalParent', modalParent);
 
     return (
     <form className="p-4 md:p-5" onSubmit={handleCreate}>

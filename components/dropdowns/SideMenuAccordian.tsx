@@ -2,12 +2,12 @@ import React from 'react';
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import useMediaQuery from '@/components/listeners/WidthSettings';
 import openInNewTab from '../listeners/OpenInNewTab';
+import { useStateStore } from '@/context/stateStore';
 
 
 export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
-  const isBreakpoint = useMediaQuery(768);
+  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
   const pathname  = usePathname();
   var defaultPanel = "";
   if (pathname === "projects") {

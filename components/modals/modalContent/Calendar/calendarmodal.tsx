@@ -12,10 +12,8 @@ import { useModalStore } from '@/context/modalStore';
 import { useAlertStore } from '@/context/alertStore';
 import { DateSelectArg, EventContentArg } from '@fullcalendar/core/index.js';
 import React from 'react';
-import { useStateStore } from '@/context/stateStore';
-import useMediaQuery from '@/components/listeners/WidthSettings';
-import { set } from 'mongoose';
 import { Spinner } from '@/components/misc/Spinner';
+import { useStateStore } from '@/context/stateStore';
 
 interface CalEvent {
     allDay: boolean;
@@ -44,7 +42,7 @@ const CalendarModal = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     //variables
-    const isBreakpoint = useMediaQuery(768);
+    const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
     const adminIDBool = status === 'authenticated' && session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
 
     //functions
