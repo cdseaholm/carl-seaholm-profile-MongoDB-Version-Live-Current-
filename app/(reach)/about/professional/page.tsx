@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useRef, useState } from 'react';
-import useMediaQuery from '@/components/listeners/WidthSettings';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import Image from 'next/image';
 import { jobsArray, schoolsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
@@ -10,7 +9,7 @@ import { useStateStore } from '@/context/stateStore';
 
 export default function Professional() {
 
-  const isBreakpoint = useMediaQuery(768);
+  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
   const [clicked, setClicked] = useState(false);
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState('Timeline');

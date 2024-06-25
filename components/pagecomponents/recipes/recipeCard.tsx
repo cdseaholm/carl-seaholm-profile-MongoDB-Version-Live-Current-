@@ -2,15 +2,15 @@
 
 import { DetailsAccordianPage } from "@/components/dropdowns/DetailsAccordian";
 import openInNewTab from "@/components/listeners/OpenInNewTab";
-import useMediaQuery from "@/components/listeners/WidthSettings";
 import { IRecipe } from "@/models/types/recipe";
 import { FiStar } from "react-icons/fi";
 import Image from 'next/image';
+import { useStateStore } from "@/context/stateStore";
 
 
 export const RecipeCard = ({ recipesSorted }: { recipesSorted: IRecipe[]}) => {
 
-    const isBreakpoint = useMediaQuery(768);
+    const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
 
     return (
         recipesSorted.map((recipe: IRecipe, index: number) => (

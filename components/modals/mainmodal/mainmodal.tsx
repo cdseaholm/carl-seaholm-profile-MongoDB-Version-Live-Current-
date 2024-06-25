@@ -22,6 +22,7 @@ export default function MainModal() {
     const modalOpen = useModalStore((state) => state.modalOpen);
     const modalParent = useModalStore((state) => state.modalParent);
     const setModalParent = useModalStore((state) => state.setModalParent);
+    const daySelected = useModalStore((state) => state.daySelected);
 
     //state
     const [selectedOption, setSelectedOption] = useState<string>('');
@@ -91,7 +92,7 @@ export default function MainModal() {
                         {modalOpen === 'login' && <ModalLogin />}
                         {modalOpen === 'signup' && <SignupModal />}
                         {modalOpen === 'subscribe' && <ModalSubscribe />}
-                        {modalOpen === 'logsession' && <LogSessionModal />}
+                        {modalOpen === 'logsession' && <LogSessionModal daySelected={daySelected} />}
                         {modalOpen === 'addhobby' && <ModalHobby />}
                         {modalOpen === 'actions' && <ActionsModal />}
                         {modalOpen === 'edituser' && <EditUser />}

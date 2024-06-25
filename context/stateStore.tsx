@@ -5,6 +5,8 @@ interface StateStore {
     urlToUse: string;
     globalLoading: boolean;
     setGlobalLoading: (globalLoading: boolean) => void;
+    widthQuery: number;
+    setWidthQuery: (width: number) => void;
 }
 
 export const useStateStore = create<StateStore>((set) => ({
@@ -14,5 +16,6 @@ export const useStateStore = create<StateStore>((set) => ({
     : '',
     globalLoading: false,
     setGlobalLoading: (globalLoading) => set({globalLoading}),
-    
+    widthQuery: 0,
+    setWidthQuery: (width) => set({ widthQuery: width }),
 }));

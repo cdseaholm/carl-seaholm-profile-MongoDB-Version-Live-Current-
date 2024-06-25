@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import useMediaQuery from '@/components/listeners/WidthSettings';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
+import { useStateStore } from '@/context/stateStore';
 
 export default function Personal() {
   const [isHovered, setIsHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [blurb, setBlurb] = useState(0);
-  const isBreakpoint = useMediaQuery(768);
+  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
   const hobbies = ['Brazilian Jiu Jitsu', 'Coding', 'Guitar', 'Language Learning', 'Piano', 'Reading', 'Writing'];
   const pets = ['Benji', 'George'];
   const blurbs = [

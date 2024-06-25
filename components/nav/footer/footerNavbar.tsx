@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import useMediaQuery from '@/components/listeners/WidthSettings';
 import { useAlertStore } from '@/context/alertStore';
+import { useStateStore } from '@/context/stateStore';
 
 const FooterNavBar = () => {
     const pathname = usePathname();
-    const breakpoint = useMediaQuery(768);
+    const breakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
     const setShowAlert = useAlertStore((state) => state.setShowAlert);
     const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
 
@@ -17,7 +17,7 @@ const FooterNavBar = () => {
     }
 
     return (
-        <footer className={`flex flex-row justify-center items-center ${breakpoint ? 'py-3' : 'py-4 mt-2'}`}>
+        <footer className={`flex flex-row justify-center items-center ${breakpoint ? 'py-1' : 'py-4 mt-2'}`}>
             {!breakpoint && pathname !== '/' &&
             [
                 ["Contact", "/contact"],

@@ -1,8 +1,8 @@
+import { useStateStore } from '@/context/stateStore';
 import { IHobby } from '@/models/types/hobby';
 import dynamic from 'next/dynamic';
 import ntc from 'ntcjs';
 import React, { useEffect, useState } from 'react';
-import useMediaQuery from '../listeners/WidthSettings';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
@@ -10,7 +10,7 @@ export function PieChartView({hobbies}: { hobbies: IHobby[]}) {
 
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const isBreakpoint = useMediaQuery(768);
+    const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
     const [indexShown, setIndexShown] = useState<boolean>(false);
 
     useEffect(() => {

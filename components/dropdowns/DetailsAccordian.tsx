@@ -1,5 +1,6 @@
+'use client'
 
-import useMediaQuery from '@/components/listeners/WidthSettings';
+import { useStateStore } from '@/context/stateStore';
 import React from 'react';
 
 export const DetailsAccordianPage = ({details, detailsIndex}: {details: Array<string>; detailsIndex: number}) => {
@@ -47,7 +48,7 @@ const useAccordion = () => React.useContext(Context);
 
 function AccordionItem({ toggle, children, className }: { toggle: string; children: React.ReactNode; className?: string; }) {
     const { selected, toggleItem } = useAccordion() as { selected: string; toggleItem: (id: string) => () => void };
-    const isBreakpoint = useMediaQuery(768);
+    const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
     return (
         <>
       <div

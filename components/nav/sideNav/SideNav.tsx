@@ -3,18 +3,18 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import useMediaQuery from '../../listeners/WidthSettings';
 import { useSession } from 'next-auth/react';
 import SocialButton from '@/components/buttons/socialButton';
 import { useAlertStore } from '@/context/alertStore';
 import { useModalStore } from '@/context/modalStore';
+import { useStateStore } from '@/context/stateStore';
 
 export default function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
 
   // constants
   const ref = React.useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const isBreakpoint = useMediaQuery(768);
+  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
   const setModalOpen = useModalStore((state) => state.setModalOpen);
   const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
   const setAlertParent = useAlertStore((state) => state.setAlertParent);

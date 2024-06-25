@@ -1,13 +1,8 @@
 'use client'
 
-import { ITask } from "@/models/types/task";
-import { Checkbox } from "@nextui-org/react";
 import React from "react";
-import { useEffect, useState } from "react";
-import { useStore } from '@/context/dataStore';
-import { useStateStore } from "@/context/stateStore";
+import { useState } from "react";
 import { useModalStore } from "@/context/modalStore";
-import { Spinner } from "@/components/misc/Spinner";
 import ToDoComp from "../helpers/todocomp";
 
 

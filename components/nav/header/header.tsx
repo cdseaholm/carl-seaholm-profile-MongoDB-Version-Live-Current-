@@ -3,15 +3,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useCallback } from "react";
 import React from "react";
-import useMediaQuery from "@/components/listeners/WidthSettings";
 import Sidenav from "../sideNav/SideNav";
 import { SideMenuAccordian } from "../../dropdowns/SideMenuAccordian";
 import SocialButton from "@/components/buttons/socialButton";
 import Image from 'next/image'
+import { useStateStore } from "@/context/stateStore";
 
 
 const SideNavHeader = () => {
-    const isBreakpoint = useMediaQuery(768);
+    const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
     const [open, setOpen] = useState(false);
     const pathname = usePathname();
     const toggle = () => {
@@ -57,7 +57,7 @@ const SideNavHeader = () => {
               aria-disabled={open}
               disabled={open}
               onClick={toggle}
-              className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`}
+              className={`text-black text-sm md:text-base font-medium ${open ? 'text-transparent' : 'text-black'}`}
             >
               Menu
             </button>
@@ -65,7 +65,7 @@ const SideNavHeader = () => {
               |
             </div>
             <div>
-              <Link className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`} href='/'>
+              <Link className={`text-black text-sm md:text-base font-medium ${open ? 'text-transparent' : 'text-black'}`} href='/'>
                 Home
               </Link>
             </div>

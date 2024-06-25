@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { IRecipe } from "@/models/types/recipe";
 import { useEffect, useState } from "react";
-import useMediaQuery from "@/components/listeners/WidthSettings";
 import { useStore } from "@/context/dataStore";
 import { getRecipes } from "@/app/context/functions/getRecipes";
 import { Spinner } from "@/components/misc/Spinner";
@@ -30,7 +29,6 @@ export default function Recipes() {
     //variables
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
     const adminIDBool = status === 'authenticated' && session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
-    const isBreakpoint = useMediaQuery(768);
     const recipesToPass = recipeFilter === '' ? recipes : recipesSorted;
     
 
