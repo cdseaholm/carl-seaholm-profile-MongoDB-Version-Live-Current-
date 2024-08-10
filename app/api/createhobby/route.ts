@@ -25,7 +25,7 @@ export async function POST(request: Request) {
             minutesXsessions: data.minutesXsessions,
             dates: data.dates,
             color: data.color,
-        });
+        }) as any;
         hobbyToAdd.save();
         if (!hobbyToAdd) {
             return createErrorResponse("Hobby not created", 404);

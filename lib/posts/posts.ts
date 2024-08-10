@@ -47,7 +47,7 @@ export const getCategorisedPosts = (): Record<string, post[]> => {
         if (!categorisedPosts[post.category]) {
             categorisedPosts[post.category] = [];
         }
-        categorisedPosts[post.category].push(post);
+        categorisedPosts[post.category]?.push(post);
     });
 
     return categorisedPosts;

@@ -1,6 +1,7 @@
+{/**
 import { ITasksByUser } from "@/models/types/task";
 
-export const getTasks = async (urlToUse: string, userID: string): Promise<ITasksByUser | null> => {
+export const getTasks = async (urlToUse: string, userID: string): Promise<ITasksByUser[] | null> => {
     try {
         const response = await fetch(`${urlToUse}/api/${userID}/gettasks`, {
             method: 'GET',
@@ -27,4 +28,4 @@ export const getTasks = async (urlToUse: string, userID: string): Promise<ITasks
         return null;
     }
     return null;
-}
+} */}

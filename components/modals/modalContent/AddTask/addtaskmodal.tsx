@@ -2,7 +2,6 @@
 import { ITask } from "@/models/types/task";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { useStore } from "@/context/dataStore";
 import { useStateStore } from "@/context/stateStore";
 import { useModalStore } from "@/context/modalStore";
 import { useTaskStore } from "@/context/taskStore";
@@ -14,7 +13,12 @@ export default function AddTask () {
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const [loading, setLoading] = useState(false);
     const setTasks = useTaskStore((state) => state.setTasks);
-    const tasks = useTaskStore((state) => state.tasks);
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0');
+    let yyyy = today.getFullYear();
+
+    let currentDate = yyyy + '-' + mm + '-' + dd;
 
     const handleCreateTask = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -22,8 +26,7 @@ export default function AddTask () {
         const title = form['taskCreateTitle'].value;
         const time = form['taskCreateTime'].value;
         const description = form['taskCreateDescription'].value;
-        const date = new Date().toLocaleDateString();
-        const user = session?.user?.email;
+        const date = form['taskCreateDate'].value;
         if (!title) {
             console.log('Please make sure to add a title');
             return;
@@ -42,6 +45,7 @@ export default function AddTask () {
             title,
             time,
             description,
+            date, 
             user_email: session.user.email,
         } as ITask;
 
@@ -60,7 +64,7 @@ export default function AddTask () {
             const res = await response.json();
             console.log('Task created', res);
             console.log('Task created', res.task);
-            setTasks([...tasks, res.task]);
+            setTasks(res.task);
             setModalOpen('');
         }
     }
@@ -78,8 +82,16 @@ export default function AddTask () {
                     <label htmlFor="taskCreateTitle" className={`block my-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white`}>Task Name</label>
                     <input type="text" name="taskCreateTitle" id="taskCreateTitle" autoComplete='off' className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500`} placeholder="Type a name" required/>
 
-                    <label htmlFor="taskCreateTime" className={`block my-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white`}>Time</label>
-                    <input id="taskCreateTime" name="taskCreateTime" type='time' autoComplete="off" className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500`}/>
+                    <div className="flex flex-row justify-between items-center space-x-2">
+                        <div className="flex flex-col w-1/2">
+                            <label htmlFor="taskCreateDate" className={`block my-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white`}>Date</label>
+                            <input id="taskCreateDate" name="taskCreateDate" type='date' autoComplete="off" className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500`} defaultValue={currentDate} />
+                        </div>
+                        <div className="flex flex-col w-1/2">
+                            <label htmlFor="taskCreateTime" className={`block my-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white`}>Time</label>
+                            <input id="taskCreateTime" name="taskCreateTime" type='time' autoComplete="off" className={`bg-gray-50 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500`}/>
+                        </div>
+                    </div>
 
                     <label htmlFor="taskCreateDescription" className={`block my-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white`}>Description</label>
                     <textarea id="taskCreateDescription" name="taskCreateDescription" autoComplete="off" rows={4} className={`block p-2.5 w-full text-xs md:text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} placeholder="Write description here"/>

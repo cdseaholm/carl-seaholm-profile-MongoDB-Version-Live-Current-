@@ -62,7 +62,7 @@ export default function MainModal() {
     };
 
     return (
-        <div id="crud-modal" tabIndex={-1} aria-hidden="true" className={`${modalOpen !== '' ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
+        <div id="crud-modal" tabIndex={-1} aria-hidden={modalOpen !== '' ? "false" : "true"} className={`${modalOpen !== '' ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
             <div className={`relative p-4 ${modalOpen === 'calendar' ? '' : 'w-full max-w-md'} max-h-full`} style={{width: `${modalOpen === 'calendar' ? '95%' : ''}`}}>
                 <div className={`relative bg-white rounded-lg shadow dark:bg-gray-700`}>
                     <div className={`flex items-center justify-between space-x-4 p-2 border-b rounded-t border-gray-400 w-full`}>

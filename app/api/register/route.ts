@@ -39,7 +39,8 @@ export async function POST(request: Request) {
                 name: body.modalRegisterName, 
                 email: body.modalRegisterEmail, 
                 blogsub: body.modalRegisterBlogsub ? true : false, 
-                password: hashedPassword
+                password: hashedPassword,
+                customFields: {}
             });
 
             if (!user) {

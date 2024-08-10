@@ -37,6 +37,7 @@ div.childFirst {
   background-color: rgba(51, 65, 85, 0.5);
   border-radius: 10px;
   box-shadow: 0 0 10px 10px rgba(51, 65, 85, 0.5);
+  padding-bottom: 12px;
   flex-grow: 1;
   overflow: hidden;
 }

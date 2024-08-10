@@ -83,8 +83,6 @@ export default function LogSessionModal({daySelected}: {daySelected: string}) {
         }
     }
 
-    console.log('daySelected', daySelected);
-
     return (
     <form className="p-4 md:p-5" onSubmit={handleCreate}>
                 <div className="grid gap-4 mb-4 grid-cols-1">
@@ -95,7 +93,6 @@ export default function LogSessionModal({daySelected}: {daySelected: string}) {
                     <div>
                         <label htmlFor="modalSessionHobby" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Hobby Session</label>
                         <select name="modalSessionHobby" id="modalSessionHobby" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" defaultValue='No Session Chosen' required onChange={(e) => {
-                            console.log('e.target.value', e.target.value);
                             const target = e.target.value;
                             setSeshHobby(target);
                         } }>

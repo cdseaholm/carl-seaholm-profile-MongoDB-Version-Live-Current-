@@ -11,37 +11,34 @@ export default function Home() {
   const navigateToDashboard = async () => {
     setIsShowing(true);
     setTimeout(() => {
-        router.replace('/dashboard');
+      router.replace('/dashboard');
     }, 500);
   };
 
   const navigateToProfessional = async () => {
     setIsShowing(true);
     setTimeout(() => {
-        router.replace('/about/professional');
+      router.replace('/about/professional');
     }, 500);
   };
 
 
   return (
     <main>
-      
-        <div className={`landing-page ${isShowing ? 'slide-up' : ''}`}>
-          <div className={`flex flex-col px-8 pt-2 pb-8 md:pt-16`}>
-            <h1 className={`flex flex-start text-6xl md:text-8xl font-semibold text-slate-600`}>Carl Seaholm</h1>
-            <div className='py-5 px-3'>
-              <h2 className={`flex text-xl md:text-2xl font-semibold text-slate-600 pb-10`}>A Professional and Personal Portfolio</h2>
-              <div className='flex flex-row items-start space-x-10'>
-                <button className={`flex text-sm p-2 md:text-md p-3 bg-slate-500/70 text-white rounded-lg`} onClick={navigateToDashboard}>
-                  Personal Dashboard
-                </button>
-                <button className={`flex text-sm p-2 md:text-md p-3 bg-slate-500/70 text-white rounded-lg`} onClick={navigateToProfessional}>
-                      Professional Hub
-                </button>
-              </div>
-            </div>
-          </div>
+      <div className={`landing-page ${isShowing ? 'slide-up' : ''}`}>
+        <div className={`flex flex-col w-full h-full justify-center items-center space-y-6`}>
+          <h1 className={`text-5xl md:text-7xl font-semibold text-slate-600 text-center`}>Carl Seaholm</h1>
+          <h2 className={`text-xl md:text-2xl font-semibold text-slate-600 text-center`}>A Professional and Personal Portfolio</h2>
+          <section className='flex flex-col items-center justify-center w-full h-full space-y-3'>
+            <button className={`text-sm p-2 md:text-md p-3 bg-slate-500/70 text-white rounded-lg w-1/2 md:w-1/3 lg:w-1/4`} onClick={navigateToDashboard}>
+              <p className='text-center'>{`Personal Dashboard`}</p>
+            </button>
+            <button className={`text-sm p-2 md:text-md p-3 bg-slate-500/70 text-white rounded-lg w-1/2 md:w-1/3 lg:w-1/4`} onClick={navigateToProfessional}>
+              <p className='text-center'>{`Professional Hub`}</p>
+            </button>
+          </section>
         </div>
+      </div>
     </main>
   );
 }

@@ -1,4 +1,3 @@
-import type { Config } from "tailwindcss";
 import {nextui} from "@nextui-org/react";
 import { withUt } from "uploadthing/tw";
 

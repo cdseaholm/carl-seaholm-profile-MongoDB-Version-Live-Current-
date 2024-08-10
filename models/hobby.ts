@@ -1,4 +1,5 @@
-import mongoose, { Schema, models } from "mongoose";
+import mongoose, { Model, Schema, models } from "mongoose";
+import { IHobby } from "./types/hobby";
 
 const hobbySchema = new Schema(
     {
@@ -42,4 +43,4 @@ const hobbySchema = new Schema(
 
 const Hobby = models.Hobby || mongoose.model("Hobby", hobbySchema);
 
-export default Hobby;
+export default Hobby as Model<IHobby>;

@@ -1,4 +1,5 @@
-import mongoose, { Schema, models } from "mongoose";
+import mongoose, { Model, Schema, models } from "mongoose";
+import { IUser } from "./types/user";
 
 const userSchema = new Schema(
     {
@@ -22,7 +23,13 @@ const userSchema = new Schema(
             type: Boolean,
             required: true
         },
-        customFields: Schema.Types.Mixed
+        customFields: [Schema.Types.Mixed],
+        resetPasswordToken: {
+            type: String
+        },
+        resetPasswordExpires: {
+            type: String
+        }
     },
     {
         timestamps: true
@@ -31,4 +38,4 @@ const userSchema = new Schema(
 
 const User = models.User || mongoose.model("User", userSchema);
 
-export default User;
+export default User as Model<IUser>;

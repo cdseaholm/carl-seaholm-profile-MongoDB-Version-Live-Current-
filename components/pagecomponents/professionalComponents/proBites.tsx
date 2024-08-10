@@ -2,16 +2,16 @@ import React from "react";
 import { DetailsAccordianPage } from "@/components/dropdowns/DetailsAccordian";
 import { Job } from "@/models/types/job";
 import { School } from "@/models/types/education";
-import Image from "next/image";
+import ImageFormat from "@/components/misc/imageFormat";
 
 const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString('default', { month: 'long', year: 'numeric' });
 };
 
-const SchoolBite = ({ school }: { school: School; index: number; }) => {
-    const [startDate, setStartDate] = React.useState(formatDate(school.date.startDate));
-    const [endDate, setEndDate] = React.useState(formatDate(school.date.endDate));
+const SchoolBite = ({ school, index }: { school: School; index: number }) => {
+    const startDate = formatDate(school.date.startDate);
+    const endDate = formatDate(school.date.endDate);
 
     return (
         <div className="flex flex-row relative p-5 justify-between items-center">
@@ -22,15 +22,15 @@ const SchoolBite = ({ school }: { school: School; index: number; }) => {
                 <div className={`text-xs md:text-sm font-bold text-slate-400`}>{startDate} - {endDate}</div>
             </div>
             <div>
-                <Image src={school.logo} width={80} height={80} alt={school.logoAlt} style={{objectFit: 'cover', height: 'auto', width: 'auto'}}/>
+                <ImageFormat imSize={80} image={school.logo} index={index} blur={false} priority={true}/>
             </div>
         </div>
     );
 };
 
 const JobBite = ({ job, index }: { job: Job; index: number; }) => {
-    const [startDate, setStartDate] = React.useState(formatDate(job.date.startDate));
-    const [endDate, setEndDate] = React.useState(formatDate(job.date.endDate));
+    const startDate = formatDate(job.date.startDate);
+    const endDate = formatDate(job.date.endDate);
 
     return (
         <div className="flex flex-col">
@@ -42,7 +42,7 @@ const JobBite = ({ job, index }: { job: Job; index: number; }) => {
                     <div className={`text-xs md:text-sm font-bold text-slate-400`}>{startDate} - {endDate}</div>
                 </div>
                 <div>
-                    <Image src={job.logo} width={80} height={80} alt={job.logoAlt} style={{objectFit: 'cover', height: 'auto', width: 'auto'}}/>
+                    <ImageFormat imSize={80} image={job.logo} index={index} blur={false} priority={true}/>
                 </div>
             </div>
             <DetailsAccordianPage 

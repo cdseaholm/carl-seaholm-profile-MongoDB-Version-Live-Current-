@@ -83,7 +83,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
         </button>
         <div className='mx-3 divide-y divide-solid width-4/6'>
           <div className={`px-10 rounded-lg px-3 mt-8 pt-5 pb-7 text-slate-200 ${isBreakpoint ? 'text-xs' : 'text-sm'}`}>
-            Carl Seaholm&apos;s Portfolio
+            {`Carl Seaholm's Portfolio`}
           </div>
           <div />
           </div>

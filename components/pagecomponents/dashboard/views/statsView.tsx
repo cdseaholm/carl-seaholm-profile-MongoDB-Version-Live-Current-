@@ -1,64 +1,17 @@
 'use client'
 
 import { IHobby } from '@/models/types/hobby';
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { TrackerUsage } from '../../../charts/trackerChart';
-import { TotalMinutesCalc } from '../helpers/totalminutescalc';
-import { Spinner } from '@/components/misc/Spinner';
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
-import { useStore } from '@/context/dataStore';
 import { useStateStore } from '@/context/stateStore';
 
-export default function StatsView() {
+export default function StatsView({setIndexShown, indexShown, hobbies, totalTime, totalCounter, thisMonth}: {setIndexShown: any, indexShown: boolean, hobbies: IHobby[], totalTime: number[], totalCounter: number[], thisMonth: number}) {
 
     const isBreakpoint = useStateStore((state) => state.widthQuery) < 950 ? true : false;
-    const [totalTime, setTotalTime] = useState<number[]>([]);
-    const [totalCounter, setTotalCounter] = useState<number[]>([]);
-    const [thisMonth, setThisMonth] = useState<number>(new Date().getMonth());
-    const [loading, setLoading] = useState(true);
-    const [indexShown, setIndexShown] = useState<boolean>(false);
-    const hobbies = useStore((state) => state.hobbies);
-
-    let hobbiesSet = [] as IHobby[];
-    if (!hobbies) {
-        hobbiesSet = [];
-    } else {
-        hobbiesSet = hobbies.map((hobby: IHobby) => {
-            return {
-                title: hobby.title,
-                categories: hobby.categories,
-                dates: hobby.dates,
-                descriptions: hobby.descriptions,
-                minutesXsessions: hobby.minutesXsessions,
-                color: hobby.color,
-                _id: hobby._id,
-                user_email: hobby.user_email,
-                goals: hobby.goals,
-                createdAt: hobby.createdAt,
-                updatedAt: hobby.updatedAt,
-            }
-        });
-    }
-    
-    useEffect(() => {
-        const setStats = async () => {
-            const thisMonth = new Date().getMonth();
-            setThisMonth(thisMonth);
-          if (hobbies && hobbies.length > 0) {
-            const {totalTimePerMonth, counterPerMonth} = await TotalMinutesCalc({hobbies, thisMonth: thisMonth});
-            setTotalTime(totalTimePerMonth);
-            setTotalCounter(counterPerMonth);
-          }
-        }
-        setStats();
-        setLoading(false);
-      }, [hobbies, thisMonth, setLoading]);
 
     return (
-        loading ? (
-            <Spinner />
-        ):(
             <div className={`${!isBreakpoint ? 'grid gap-1 grid-cols-2 grid-rows-2' : 'items-center'} w-full h-full p-2 space-y-4`} style={{overflow: 'auto'}}>
                 <div className='relative flex flex-col justify-start w-full h-full text-sm' style={{height: '30dvh'}}>
                     <div className='absolute z-20 w-full'>
@@ -81,27 +34,26 @@ export default function StatsView() {
                             </button>
                         </div>
                     </div>
-                    <PieChartView hobbies={hobbiesSet} />
+                    <PieChartView hobbies={hobbies} />
                 </div>
                 <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
                     <h2 className={`font-bold underline`} style={{fontSize: 14}}>
                         Total Minutes Spent on Hobbies per Month
                     </h2>
-                    <BarChartView hobbies={hobbiesSet} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='total'/>  
+                    <BarChartView hobbies={hobbies} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='total'/>  
                 </div>
                 <div className='flex flex-col w-full text-sm' style={{height: '30dvh'}}>
                     <h2 className={`font-bold underline`} style={{fontSize: 14}}>
                         Number of Days this Month with a session
                     </h2>
-                    <TrackerUsage hobbies={hobbiesSet} thisMonth={thisMonth} />
+                    <TrackerUsage hobbies={hobbies} thisMonth={thisMonth} />
                 </div>
                 <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
                     <h2 className={`font-bold underline`} style={{fontSize: 14}}>
                          Average Minutes a Session:
                     </h2>
-                    <BarChartView hobbies={hobbiesSet} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='avg'/>
+                    <BarChartView hobbies={hobbies} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='avg'/>
                 </div>
             </div>
-        )
     )
 }

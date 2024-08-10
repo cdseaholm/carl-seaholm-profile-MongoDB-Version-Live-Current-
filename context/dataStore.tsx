@@ -1,6 +1,7 @@
 import {create} from 'zustand';
 import { IHobby } from '../models/types/hobby';
 import { IRecipe } from '../models/types/recipe';
+import { IUser } from '@/models/types/user';
 
 type Store = {
   hobbies: IHobby[];
@@ -9,6 +10,8 @@ type Store = {
   setRecipes: (recipes: IRecipe[]) => void;
   recipeFilter: string;
   setRecipeFilter: (recipeFilter: string) => void;
+  userInfo: IUser;
+  setUserInfo: (userInfo: IUser) => void;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -18,4 +21,6 @@ export const useStore = create<Store>((set) => ({
   setRecipes: (recipes) => set({ recipes }),
   recipeFilter: '',
   setRecipeFilter: (recipeFilter) => set({ recipeFilter }),
+  userInfo: {} as IUser,
+  setUserInfo: (userInfo) => set({ userInfo })
 }));
