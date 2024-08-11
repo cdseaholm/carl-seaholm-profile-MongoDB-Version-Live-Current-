@@ -1,19 +1,20 @@
-import { CustomField } from "@/models/types/customField";
+
 import { getCsrfToken, getSession } from "next-auth/react";
 
-export async function CreateCustomField({ customField, urlToUse }: { customField: CustomField, urlToUse: string }) {
+export async function CreateCustomField({ fieldTitle, value, type, urlToUse, customFieldObjectName }: { fieldTitle: string, value: string, type: any, urlToUse: string, customFieldObjectName: string }) {
+
     try {
         const token = await getCsrfToken();
         if (!token) {
-            throw new Error('No CSRF token found!');
+            return {message: 'No token found', success: false};
         }
         const session = await getSession();
         if (!session) {
-            throw new Error('No session found!');
+            return {message: 'No session found', success: false};
         }
         const user = session?.user?.email;
         if (!user) {
-            throw new Error('No user found in session!');
+            return {message: 'No user found', success: false};
         }
         const response = await fetch(`${urlToUse}/api/${user}/createCustom`, {
             method: 'POST',
@@ -21,14 +22,18 @@ export async function CreateCustomField({ customField, urlToUse }: { customField
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({customField: customField})
+            body: JSON.stringify({ fieldTitle: fieldTitle, value: value, type: type, objectName: customFieldObjectName })
         });
+
         const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message || 'Something went wrong!');
+
+        if (data.status !== 200) {
+            return {message: 'Error creating custom field', success: false};
         }
-        return data.message;
+
+        return {message: 'Custom field created', success: true};
     } catch (error) {
         console.error('Error creating custom field, error: ', error);
+        return {message: 'Error creating custom field', success: false};
     }
 }

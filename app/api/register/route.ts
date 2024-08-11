@@ -1,9 +1,10 @@
 
-import { Argon2id } from 'oslo/password';
 import connectDB from '@/lib/mongodb';
 import { NextResponse } from 'next/server';
 import User from '@/models/user';
 import { createErrorResponse } from '@/lib/utils';
+import Argon2id from 'argon2';
+import { ICustomField } from '@/models/types/customField';
 
 function isValidEmail(email: string): boolean {
     return /.+@.+/.test(email);
@@ -32,7 +33,7 @@ export async function POST(request: Request) {
             return createErrorResponse("Password is required", 405);
         }
 
-        const hashedPassword = await new Argon2id().hash(body.modalRegisterPassword);
+        const hashedPassword = await Argon2id.hash(body.modalRegisterPassword);
 
         try {
             const user = await User.create({
@@ -40,7 +41,7 @@ export async function POST(request: Request) {
                 email: body.modalRegisterEmail, 
                 blogsub: body.modalRegisterBlogsub ? true : false, 
                 password: hashedPassword,
-                customFields: {}
+                customFields: [] as ICustomField[]
             });
 
             if (!user) {

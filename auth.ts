@@ -1,11 +1,11 @@
 import NextAuth from 'next-auth';
 //import Google from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import connectDB from '@/lib/mongodb';
-import User from '@/models/user';
-import { Argon2id } from 'oslo/password';
+import { PassCheck } from './utils/helpers/passCheck';
+import { getUrl } from './utils/helpers/config';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+
     providers: [
         //Google,
         CredentialsProvider({
@@ -21,26 +21,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 }
 
                 try {
-                    await connectDB();
-                    const user = await User.findOne({ email });
-                    if (!user) {
+                    const urlToUse = await getUrl();
+                    const authenticated = await PassCheck(password, email, urlToUse);
+                    if (!authenticated) {
                         return null;
                     }
 
-                    const validPassword = await new Argon2id().verify(
-                        user.password,
-                        password
-                    );
-                    if (!validPassword) {
-                        return null;
-                    }
                     return {
-                        id: user._id,
-                        name: user.name,
-                        email: user.email,
-                        phone: user.phone,
-                        customFields: user.customFields,
-                    }
+                        id: authenticated.id,
+                        email: authenticated.email,
+                        name: authenticated.name,
+                    };
+
                 } catch (error) {
                     console.error('error: ', error);
                     return null;

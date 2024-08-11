@@ -8,7 +8,6 @@ import { useState } from "react";
 export default function ModalSignUp() {
 
     const setModalOpen = useModalStore((state) => state.setModalOpen);
-    const modalOpen = useModalStore((state) => state.modalOpen);
     const { data: session } = useSession();
     const urlToUse = useStateStore((state) => state.urlToUse);
     const [emailError, setEmailError] = useState(false);
@@ -35,6 +34,7 @@ export default function ModalSignUp() {
             if (res.ok) {
                 setModalOpen('login');
             } else {
+                setEmailError(true);
                 console.log('Error creating account:', res ? res : 'No response')
                 return;
             }

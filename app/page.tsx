@@ -22,7 +22,6 @@ export default function Home() {
     }, 500);
   };
 
-
   return (
     <main>
       <div className={`landing-page ${isShowing ? 'slide-up' : ''}`}>

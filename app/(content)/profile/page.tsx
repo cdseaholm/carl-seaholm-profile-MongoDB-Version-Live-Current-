@@ -10,7 +10,6 @@ import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import { IRecipe } from '@/models/types/recipe';
 import { CreateCustomField } from '@/utils/customFields/create';
-import { CustomField } from '@/models/types/customField';
 import { DeleteUser } from '@/utils/userHelpers/delete';
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
@@ -28,7 +27,7 @@ export default function ProfilePage() {
     const [data, setData] = React.useState<DataState>({ hobbies: [], tasks: [], recipes: [] });
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState<string | null>(null);
-    const [customField, setCustomField] = React.useState<string | null>(null);
+    const [customFieldTitle, setCustomFieldTitle] = React.useState<string | null>(null);
     const [customFieldValue, setCustomFieldValue] = React.useState<string | null>(null);
     const [customObject, setCustomObject] = React.useState<string | null>(null);
     const router = useRouter();
@@ -73,24 +72,21 @@ export default function ProfilePage() {
     };
 
     const handleTestCustomField = async () => {
-        if (!customField || !customFieldValue || !customObject) {
+        if (!customFieldTitle || !customFieldValue || !customObject) {
             console.log('Custom Field or Value is empty');
             return;
         }
-        const updatedFields = await CreateCustomField({ 
-            customField: { 
-                [customObject]: {
-                    fieldTitle: customField, 
-                    type: 'string',
-                    value: customFieldValue,
-                }
-            }, 
-            urlToUse: urlToUse 
-        }) as CustomField;
-        if (updatedFields.ok) {
-            console.log('Updated hobbies');
+        const updatedFields = await CreateCustomField({
+                fieldTitle: customFieldTitle as string,
+                type: 'string' as string,
+                value: customFieldValue as any,
+            customFieldObjectName: customObject as string,
+            urlToUse: urlToUse as string
+        });
+        if (updatedFields.success) {
+            console.log('Updated Custom Fields');
         } else {
-            console.log('Failed to update hobbies');
+            console.log(updatedFields.message);
         }
     }
 
@@ -126,9 +122,9 @@ export default function ProfilePage() {
                             }}>
                                 Update Hobbies Local
                             </button>
-                            <input type="text" placeholder="Custom Object Name" onChange={(e) => {setCustomObject(e.target.value)}} />
-                            <input type="text" placeholder="Custom Field Name" onChange={(e) => {setCustomField(e.target.value)}} />
-                            <input type="text" placeholder="Custom Field Value" onChange={(e) => {setCustomFieldValue(e.target.value)}} />
+                            <input type="text" placeholder="Custom Object Name" onChange={(e) => { setCustomObject(e.target.value) }} />
+                            <input type="text" placeholder="Custom Field Name" onChange={(e) => { setCustomFieldTitle(e.target.value) }} />
+                            <input type="text" placeholder="Custom Field Value" onChange={(e) => { setCustomFieldValue(e.target.value) }} />
                             <button onClick={() => {
                                 handleTestCustomField();
                             }}>
