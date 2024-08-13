@@ -1,13 +1,13 @@
 'use client'
 
-import { IHobby } from '@/models/types/hobby';
 import React from 'react'
 import { TrackerUsage } from '../../../charts/trackerChart';
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
 import { useStateStore } from '@/context/stateStore';
+import { IEntry } from '@/models/types/objectEntry';
 
-export default function StatsView({setIndexShown, indexShown, hobbies, totalTime, totalCounter, thisMonth}: {setIndexShown: any, indexShown: boolean, hobbies: IHobby[], totalTime: number[], totalCounter: number[], thisMonth: number}) {
+export default function StatsView({setIndexShown, indexShown, entriesOTD, totalTime, totalCounter, thisMonth, objectTitle}: {setIndexShown: any, indexShown: boolean, entriesOTD: IEntry[], totalTime: number[], totalCounter: number[], thisMonth: number, objectTitle: string}) {
 
     const isBreakpoint = useStateStore((state) => state.widthQuery) < 950 ? true : false;
 
@@ -23,36 +23,37 @@ export default function StatsView({setIndexShown, indexShown, hobbies, totalTime
                                 Color Index
                                 {indexShown && (
                                     <div className='flex flex-col justify-start bg-gray-300 border border-black'>
-                                        {hobbies.map((hobby: IHobby, index: number) => (
+                                        {entriesOTD.map((field: IEntry, index: number) => (
                                             <li key={index} className='flex flex-row items-center justify-start px-1'>
-                                                <div className="h-2 w-2 rounded-full border border-slate-500" style={{backgroundColor: hobby.color}}/>
-                                                <p className='text-xs text-gray-800 px-1'>{hobby.title}</p>
+                                                <div className="h-2 w-2 rounded-full border border-slate-500" style={{backgroundColor: field.fields.find(field => field.name === 'color')?.value}}/>
+                                                <p className='text-xs text-gray-800 px-1'>{objectTitle + field._id}</p>
                                             </li>
+                                            //incorrect
                                         ))}
                                     </div>
                                 )}
                             </button>
                         </div>
                     </div>
-                    <PieChartView hobbies={hobbies} />
+                    <PieChartView entriesOTD={entriesOTD} totalTime={totalTime.reduce((a: number, b: number) => a + b)} />
                 </div>
                 <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
                     <h2 className={`font-bold underline`} style={{fontSize: 14}}>
                         Total Minutes Spent on Hobbies per Month
                     </h2>
-                    <BarChartView hobbies={hobbies} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='total'/>  
+                    <BarChartView entriesOTD={entriesOTD} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='total'/>  
                 </div>
                 <div className='flex flex-col w-full text-sm' style={{height: '30dvh'}}>
                     <h2 className={`font-bold underline`} style={{fontSize: 14}}>
                         Number of Days this Month with a session
                     </h2>
-                    <TrackerUsage hobbies={hobbies} thisMonth={thisMonth} />
+                    <TrackerUsage entriesOTD={entriesOTD} thisMonth={thisMonth} />
                 </div>
                 <div className='flex flex-col w-full h-full text-sm' style={{height: '30dvh'}}>
                     <h2 className={`font-bold underline`} style={{fontSize: 14}}>
                          Average Minutes a Session:
                     </h2>
-                    <BarChartView hobbies={hobbies} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='avg'/>
+                    <BarChartView entriesOTD={entriesOTD} thisMonth={thisMonth} totalTime={totalTime} totalCount={totalCounter} parent='avg'/>
                 </div>
             </div>
     )

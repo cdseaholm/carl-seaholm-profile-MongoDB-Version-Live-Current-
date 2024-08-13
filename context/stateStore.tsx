@@ -1,3 +1,5 @@
+
+import { IEntry } from '@/models/types/objectEntry';
 import { create } from 'zustand';
 
 
@@ -8,6 +10,8 @@ interface StateStore {
     setGlobalLoading: (globalLoading: boolean) => void;
     widthQuery: number;
     setWidthQuery: (width: number) => void;
+    taskDetailToShow: IEntry;
+    setTaskDetailToShow: (taskDetailToShow: IEntry) => void;
 }
 
 export const useStateStore = create<StateStore>((set) => ({
@@ -17,4 +21,6 @@ export const useStateStore = create<StateStore>((set) => ({
     setGlobalLoading: (globalLoading) => set({globalLoading}),
     widthQuery: 0,
     setWidthQuery: (width) => set({ widthQuery: width }),
+    taskDetailToShow: {} as IEntry,
+    setTaskDetailToShow: (taskDetailToShow) => set({ taskDetailToShow }),
 }));

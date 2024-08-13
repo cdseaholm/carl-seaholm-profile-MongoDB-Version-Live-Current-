@@ -1,6 +1,6 @@
-import { IHobby } from '@/models/types/hobby';
-import { Card, Tracker, type Color } from '@tremor/react';
-import { set } from 'mongoose';
+
+import { IEntry } from '@/models/types/objectEntry';
+import { Tracker, type Color } from '@tremor/react';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 
@@ -11,31 +11,29 @@ interface Tracker {
     tooltip: string;
 }
 
-export function TrackerUsage({hobbies, thisMonth}: { hobbies: IHobby[] | null, thisMonth: number}) {
+export function TrackerUsage({entriesOTD, thisMonth}: { entriesOTD: IEntry[] | null, thisMonth: number}) {
     
-    const [loading, setLoading] = useState<boolean>(true);
-    const [trackerData, setTrackerData] = useState<Tracker[]>([]);
     const [daysWithHobbies, setDaysWithHobbies] = useState<number[] | undefined>([]);
     const [monthLength, setMonthLength] = useState<number>(0);
 
     useEffect(() => {
-        if (hobbies === null) {
+        if (entriesOTD === null) {
             return;
         }
         const fillTracker = async () => {
             const monthLength = new Date(new Date().getFullYear(), thisMonth, 0).getDate();
             setMonthLength(monthLength);
             let daysWithHobbies = [] as number[];
-            for (let i = 0; i < hobbies.length; i++) {
-                for (let j = 0; j < hobbies[i].dates.length; j++) {
-                    const date = new Date(hobbies[i].dates[j]);
+            for (let i = 0; i < entriesOTD.length; i++) {
+                const dateToUse = entriesOTD[i]?.date as string; 
+                    const date = new Date(dateToUse);
                     if (date.getMonth() === thisMonth) {
                         const day = date.getDate();
                         if (!daysWithHobbies.includes(day)) {
                             daysWithHobbies.push(day);
                         }
                     }
-                }
+                
             }
             const newTrackerData = [] as Tracker[];
             for (let i = 1; i <= monthLength; i++) {
@@ -45,16 +43,15 @@ export function TrackerUsage({hobbies, thisMonth}: { hobbies: IHobby[] | null, t
                     newTrackerData.push({color: 'red', tooltip: 'No hobby completed'});
                 }
             }
-            setTrackerData(newTrackerData);
             setDaysWithHobbies(daysWithHobbies);
         } 
         fillTracker();
-    }, [hobbies, thisMonth]);
+    }, [entriesOTD, thisMonth]);
 
-    if (hobbies === null || daysWithHobbies === undefined || daysWithHobbies.length === 0) {
+    if (entriesOTD === null || daysWithHobbies === undefined || daysWithHobbies.length === 0) {
         return (
             <div>
-                No hobbies completed yet this month
+                No entriesOTD completed yet this month
             </div>
         )
     }

@@ -5,20 +5,15 @@ import { useStateStore } from "@/context/stateStore";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Spinner } from "./Spinner";
-import { useHobbyStore } from "@/context/hobbyStore";
-import { useTaskStore } from "@/context/taskStore";
-import { getCategories } from "@/app/context/functions/getCategories";
 import { IUser } from "@/models/types/user";
+import { IUserObject } from "@/models/types/userObject";
 
 export default function DBWrapper({ children }: Readonly<{ children: React.ReactNode }>) {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const setUserInfo = useStore((state) => state.setUserInfo);
-    const setHobbies = useStore((state) => state.setHobbies);
-    const setTasks = useTaskStore((state) => state.setTasks);
-    const setRecipes = useStore((state) => state.setRecipes);
-    const setCategories = useHobbyStore((state) => state.setCategories);
+    const setCustomFields = useStore((state) => state.setUserObjects);
     const urlToUse = useStateStore((state) => state.urlToUse);
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
 
@@ -33,26 +28,17 @@ export default function DBWrapper({ children }: Readonly<{ children: React.React
                     return;
                 }
                 const userInfo = userData.userInfo as IUser;
-                if (!userInfo.customFields as any) {
-                    userInfo.customFields = {
-                        hobbies: [],
-                        tasks: [],
-                        recipes: [],
-                        categories: []
-                    }
+                if (!userInfo.customFields) {
+                    userInfo.customFields = [] as IUserObject[];
                 }
-                const categories = await getCategories(userInfo.customFields.hobbies);
-                setUserInfo(userInfo);
-                setHobbies(userInfo.customFields.hobbies);
-                setTasks(userInfo.customFields.tasks);
-                setRecipes(userInfo.customFields.recipes);
-                setCategories(categories);
+                const customFields = userInfo.customFields as IUserObject[];
+                setCustomFields(customFields);
                 setLoading(false);
             });
         } catch (error) {
             setError(error as string);
         }
-    }, [setUserInfo, urlToUse, userID]);
+    }, [setUserInfo, urlToUse, userID, setCustomFields]);
 
     if (error) {
         return (

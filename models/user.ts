@@ -1,6 +1,6 @@
 import mongoose, { Model, Schema, models } from "mongoose";
 import { IUser } from "./types/user";
-import { customFieldSchema } from "./customField";
+import { userObjectSchema } from "./userObject";
 
 const userSchema = new Schema(
     {
@@ -24,8 +24,8 @@ const userSchema = new Schema(
             type: Boolean,
             required: true
         },
-        customFields: {
-            type: [customFieldSchema],
+        userObjects: {
+            type: [userObjectSchema],
             required: false
         },
         resetPasswordToken: {

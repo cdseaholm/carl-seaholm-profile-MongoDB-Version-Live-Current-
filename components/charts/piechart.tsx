@@ -1,56 +1,53 @@
 import { useStateStore } from '@/context/stateStore';
-import { IHobby } from '@/models/types/hobby';
+import { IEntry } from '@/models/types/objectEntry';
 import dynamic from 'next/dynamic';
-import ntc from 'ntcjs';
 import React, { useEffect, useState } from 'react';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
-export function PieChartView({hobbies}: { hobbies: IHobby[]}) {
+export function PieChartView({ entriesOTD, totalTime }: { entriesOTD: IEntry[], totalTime: number }) {
 
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
-    const [indexShown, setIndexShown] = useState<boolean>(false);
 
     useEffect(() => {
         const beginPercentage = async () => {
-            let totalTimeLocal = 0;
             let colorsLocal = [] as string[];
             const setColorMap = async () => {
-                if (hobbies && hobbies.length > 0) {
+                if (entriesOTD && entriesOTD.length > 0) {
                     let newColors = [];
-                    for (let i = 0; i < hobbies.length; i++) {
-                        newColors.push(ntc.name(hobbies[i].color)[1]);
+                    for (let i = 0; i < entriesOTD.length; i++) {
+                        const entries = entriesOTD[i]?.fields.find(field => field.name === 'color')?.value;
+                        if (!entries) {
+                            return;
+                        }
+                        const colorToAdd = entriesOTD[i]?.fields.find(field => field.name === 'color')?.value;
+                        if (!colorToAdd) {
+                            return;
+                        }
+                        newColors.push(colorToAdd);
                     }
                     colorsLocal = newColors;
                 }
             }
-            if (hobbies) {
-                try {
-                    const timeH = hobbies.map(hobby => hobby.minutesXsessions).flat();
-                    const time = timeH.reduce((a, b) => a + parseInt(b), 0);
-                    totalTimeLocal = time;
-                } catch (e) {
-                    console.error(e);
-                } finally {
-                    if (hobbies && totalTimeLocal > 0) {
-                        await setColorMap();
-                        const newData = hobbies.map((hobby, index) => {
-                            return {
-                                name: hobby.title,
-                                value: hobby.minutesXsessions.reduce((a, b) => a + parseInt(b), 0) / totalTimeLocal * 100,
-                                color: colorsLocal[index]
-                            }
-                        });
-                        setData(newData);
-                    }
+            if (entriesOTD) {
+                if (entriesOTD && totalTime > 0) {
+                    await setColorMap();
+                    const newData = entriesOTD.map((entry: IEntry, index: number) => {
+                        return {
+                            name: entry.fields.find(field => field.name === 'title')?.value ?? '',
+                            value: entry.fields.find(field => field.name === 'minutesXsessions')?.value.reduce((a: number, b: number) => a + b, 0) / totalTime * 100,
+                            color: colorsLocal[index]
+                        }
+                    });
+                    setData(newData);
                 }
+                setLoading(false);
             }
-            setLoading(false);
         }
         beginPercentage();
-    }, [hobbies]);
+    }, [entriesOTD, totalTime]);
 
     const dataPlot = [{
         values: data.map((d: any) => d.value),
@@ -61,33 +58,33 @@ export function PieChartView({hobbies}: { hobbies: IHobby[]}) {
         },
     }]
 
-    
+
     return (
         loading ? (
             <div>
                 Loading...
             </div>
         ) : (
-            <div className='flex flex-col' style={{width: '100%', height: '100%'}}>
-                <Plot 
+            <div className='flex flex-col' style={{ width: '100%', height: '100%' }}>
+                <Plot
                     data={dataPlot}
                     layout={{
                         plot_bgcolor: 'rgba(0, 0, 0, 0)',
-                        paper_bgcolor: 'rgba(0, 0, 0, 0)', 
-                        margin: {t: 25, b: 25, r: 30, l: 30}, 
-                        dragmode: false, 
+                        paper_bgcolor: 'rgba(0, 0, 0, 0)',
+                        margin: { t: 25, b: 25, r: 30, l: 30 },
+                        dragmode: false,
                         clickmode: 'none',
                         showlegend: isBreakpoint ? false : true,
-                    }} 
+                    }}
                     config={{
-                        displayModeBar: false, 
+                        displayModeBar: false,
                         responsive: true,
 
-                    }} 
-                    style={{width: '100%', height: '100%'}}
+                    }}
+                    style={{ width: '100%', height: '100%' }}
                     className='flex-wrap'
                 />
             </div>
         )
     );
-  }
+}

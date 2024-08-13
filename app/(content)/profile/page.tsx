@@ -9,7 +9,6 @@ import { Spinner } from '@/components/misc/Spinner';
 import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import { IRecipe } from '@/models/types/recipe';
-import { CreateCustomField } from '@/utils/customFields/create';
 import { DeleteUser } from '@/utils/userHelpers/delete';
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
@@ -27,9 +26,6 @@ export default function ProfilePage() {
     const [data, setData] = React.useState<DataState>({ hobbies: [], tasks: [], recipes: [] });
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState<string | null>(null);
-    const [customFieldTitle, setCustomFieldTitle] = React.useState<string | null>(null);
-    const [customFieldValue, setCustomFieldValue] = React.useState<string | null>(null);
-    const [customObject, setCustomObject] = React.useState<string | null>(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -57,38 +53,20 @@ export default function ProfilePage() {
     }
 
     const handleUpdateHobbiesLocal = async () => {
-        const updatedFields = await fetch(urlToUse + '/api/' + userID + '/edituser', {
+        const updatedFields = await fetch(urlToUse + '/api/' + userID + '/transferOldObjects', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ hobbies: data.hobbies, tasks: data.tasks, recipes: data.recipes }),
         });
-        if (updatedFields.ok) {
-            console.log('Updated hobbies');
+        const response = await updatedFields.json();
+        if (response.updated) {
+            toast.success('Updated hobbies');
         } else {
-            console.log('Failed to update hobbies');
+            toast.error('Failed to update hobbies');
         }
     };
-
-    const handleTestCustomField = async () => {
-        if (!customFieldTitle || !customFieldValue || !customObject) {
-            console.log('Custom Field or Value is empty');
-            return;
-        }
-        const updatedFields = await CreateCustomField({
-                fieldTitle: customFieldTitle as string,
-                type: 'string' as string,
-                value: customFieldValue as any,
-            customFieldObjectName: customObject as string,
-            urlToUse: urlToUse as string
-        });
-        if (updatedFields.success) {
-            console.log('Updated Custom Fields');
-        } else {
-            console.log(updatedFields.message);
-        }
-    }
 
     const handleDeleteUser = async () => {
         if (!userID) {
@@ -122,13 +100,11 @@ export default function ProfilePage() {
                             }}>
                                 Update Hobbies Local
                             </button>
-                            <input type="text" placeholder="Custom Object Name" onChange={(e) => { setCustomObject(e.target.value) }} />
-                            <input type="text" placeholder="Custom Field Name" onChange={(e) => { setCustomFieldTitle(e.target.value) }} />
-                            <input type="text" placeholder="Custom Field Value" onChange={(e) => { setCustomFieldValue(e.target.value) }} />
-                            <button onClick={() => {
-                                handleTestCustomField();
-                            }}>
-                                Test Custom Field
+                            <button onClick={() => setModalOpen('addNewObject')}>
+                                Add New Object
+                            </button>
+                            <button onClick={() => setModalOpen('addNewEntryToObject')}>
+                                Add New Entry to Object
                             </button>
                             <button onClick={() => handleDeleteUser()}>
                                 Delete Account

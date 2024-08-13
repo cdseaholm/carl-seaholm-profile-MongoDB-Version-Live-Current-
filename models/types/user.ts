@@ -1,4 +1,4 @@
-import { ICustomField } from "./customField";
+import { IUserObject } from "./userObject";
 
 
 export interface IUser {
@@ -7,7 +7,7 @@ export interface IUser {
     email: string;
     phone: string;
     password: string;
-    customFields: ICustomField[];
+    userObjects: IUserObject[];
     _id: string;
     createdAt: string;
     updatedAt: string;

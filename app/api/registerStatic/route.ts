@@ -4,7 +4,7 @@ import connectDB from '@/lib/mongodb';
 import { NextResponse } from 'next/server';
 import User from '@/models/user';
 import { createErrorResponse } from '@/lib/utils';
-import { ICustomField } from '@/models/types/customField';
+import { ICustomField } from '@/models/types/userObjectModels';
 
 function isValidEmail(email: string): boolean {
     return /.+@.+/.test(email);

@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import ModalLogin from "../modalContent/Login/loginModal";
 import SignupModal from "../modalContent/signup/signupModal";
@@ -11,8 +10,9 @@ import ActionsModal from "../modalContent/Actions/actionsmodal";
 import EditUser from "../modalContent/EditUser/editUser";
 import CalendarModal from "../modalContent/Calendar/calendarmodal";
 import AddRecipes from "../modalContent/Recipes/Add";
-import AddTask from "../modalContent/AddTask/addtaskmodal";
 import { useModalStore } from "@/context/modalStore";
+import AddNewObject from "../modalContent/AddNewObject/addNewObject";
+import AddNewEntryToObject from "../modalContent/AddNewEntryToObject/addNewEntryToObject";
 
 
 export default function MainModal() {
@@ -23,10 +23,6 @@ export default function MainModal() {
     const modalParent = useModalStore((state) => state.modalParent);
     const setModalParent = useModalStore((state) => state.setModalParent);
     const daySelected = useModalStore((state) => state.daySelected);
-
-    //state
-    const [selectedOption, setSelectedOption] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
 
     //variables
     const secondActionNeeded = modalParent === 'calendar' || modalParent === 'actions' ? true : false;
@@ -44,11 +40,9 @@ export default function MainModal() {
         modalOpen === 'addrecipe' ? 'Add Recipe' :
         modalOpen === 'addtask' ? 'Add Task' :
         modalOpen === 'addcustom' ? 'Add Custom' :
+        modalOpen === 'addNewObject' ? 'Add New Object' :
+        modalOpen === 'addNewEntryToObject' ? 'Add New Entry' :
         '';
-
-    const handleOptionSelect = (option: string) => {
-        setSelectedOption(option);
-    };
     
     const handleBack = () => {
         if (modalParent === 'actions') {
@@ -81,11 +75,6 @@ export default function MainModal() {
                             <span className="sr-only">Close modal</span>
                         </button>
                     </div>
-                    {loading ? (
-                        <div className="flex justify-center items-center h-full">
-                            <div className="w-10 h-10 border-2 border-t-primary-500 rounded-full animate-spin"/>
-                        </div>
-                    ) : (
                         <>
                         {modalOpen !== '' &&
                         <>
@@ -102,13 +91,11 @@ export default function MainModal() {
                             </div>
                         }
                         {modalOpen === 'addrecipe' && <AddRecipes />}
-                        {modalOpen === 'addtask' &&
-                        <AddTask />
-                        }
+                        {modalOpen === 'addNewObject' && <AddNewObject />}
+                        {modalOpen === 'addNewEntryToObject' && <AddNewEntryToObject />}
                         </>
                         }
                         </>
-                    )}
                     </div>
                 </div>
             </div>

@@ -4,19 +4,21 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import ToDoComp from "../helpers/todocomp";
 import { useStateStore } from "@/context/stateStore";
-import { useTaskStore } from "@/context/taskStore";
 import { ITask } from "@/models/types/task";
+import { IUserObject } from "@/models/types/userObject";
+import { IEntry } from "@/models/types/objectEntry";
 
 
-export default function ToDoList ({adminID, setModalOpen, handleDateDecrease, handleDateIncrease, dateToUse, tasks}: {adminID: boolean, setModalOpen: (title: string) => void, handleDateDecrease: () => void, handleDateIncrease: () => void, dateToUse: string, tasks: ITask[]}) {
+export default function ToDoList ({adminID, setModalOpen, handleDateDecrease, handleDateIncrease, dateToUse, entriesOTD}: {adminID: boolean, setModalOpen: (title: string) => void, handleDateDecrease: () => void, handleDateIncrease: () => void, dateToUse: string, entriesOTD: any}) {
 
     const urlToUse = useStateStore((state) => state.urlToUse);
-    const [filteredTasks, setFilteredTasks] = useState<ITask[]>([]);
+    const [filteredTasks, setFilteredTasks] = useState<IEntry[]>([]);
     const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
     const [loading, setLoading] = useState<boolean>(true);
     const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
     const smallBreakpoint = useStateStore((state) => state.widthQuery) < 580 ? true : false;
-    const setTaskDetailsToShow = useTaskStore((state) => state.setTaskDetailsToShow);
+    const tasks = entriesOTD.find((field: IUserObject) => field.title === 'tasks');
+    const setTaskDetailsToShow = useStateStore((state) => state.setTaskDetailToShow);
     
     useEffect(() => {
         const getTasks = async () => {
@@ -47,7 +49,8 @@ export default function ToDoList ({adminID, setModalOpen, handleDateDecrease, ha
     }, [dateToUse, tasks, setLoading, adminID]);
 
 
-    const handleCheckboxClick = async (passedTask: ITask) => {
+    const handleCheckboxClick = async (passedTask: IEntry) => {
+
         if (!adminID) return;
         try {
             const updatedTask = await fetch(`${urlToUse}/api/${userID}/edittask/${passedTask._id}`, {
@@ -56,7 +59,7 @@ export default function ToDoList ({adminID, setModalOpen, handleDateDecrease, ha
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    completed: passedTask.completed
+                    completed: passedTask.fields.find((entry) => entry.name === 'completed')?.value
                 })
             });
             if (!updatedTask.ok) {
@@ -71,14 +74,15 @@ export default function ToDoList ({adminID, setModalOpen, handleDateDecrease, ha
             console.error('Error updating task', error);
             return;
         }
+        const completedTask = passedTask.fields.find((entry) => entry.name === 'completed')?.value;
         setFilteredTasks(prevTasks =>
             prevTasks.map(task =>
-                task._id === passedTask._id ? { ...task, completed: passedTask.completed } : task
+                task._id === passedTask._id ? { ...task, completed: completedTask } : task
             )
         );
     };
 
-    const handleDetailSelect = (passedTask: ITask) => {
+    const handleDetailSelect = (passedTask: IEntry) => {
         if (passedTask === null || passedTask === undefined) return;
         setTaskDetailsToShow(passedTask);
         console.log('Task details to show', passedTask);

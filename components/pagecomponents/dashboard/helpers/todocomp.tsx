@@ -1,13 +1,13 @@
 'use client'
 
 import { Spinner } from "@/components/misc/Spinner";
-import { ITask } from "@/models/types/task";
+import { IFieldValue, IObjectEntry } from "@/models/types/objectEntry";
 import React from "react";
 import { FiEdit } from "react-icons/fi";
 import { FiTrash2 } from "react-icons/fi";
 import { FiMessageSquare } from "react-icons/fi";
 
-export default function ToDoComp({adminID, loading, filteredTasks, smallBreakpoint, isBreakpoint, handleCheckboxClick, handleDetailSelect}: {adminID: boolean, loading: boolean, filteredTasks: ITask[], smallBreakpoint: boolean, isBreakpoint: boolean, handleCheckboxClick: (task: ITask) => void, handleDetailSelect: (task: ITask) => void}) {
+export default function ToDoComp({adminID, loading, filteredTasks, smallBreakpoint, isBreakpoint, handleCheckboxClick, handleDetailSelect}: {adminID: boolean, loading: boolean, filteredTasks: IObjectEntry[], smallBreakpoint: boolean, isBreakpoint: boolean, handleCheckboxClick: (task: IObjectEntry) => void, handleDetailSelect: (task: IObjectEntry) => void}) {
     
   return (
     loading ? (
@@ -17,17 +17,23 @@ export default function ToDoComp({adminID, loading, filteredTasks, smallBreakpoi
             <h1 className={`border-y border-neutral-700 text-sm md:text-base font-semibold text-center w-4/5 self-center py-10 my-5`}>No tasks found</h1>
         ) : (
             <div className={`flex flex-col items-center justify-center border-y border-neutral-700 ${smallBreakpoint ? 'py-8 my-2 w-full mx-2' : isBreakpoint ? 'py-8 my-2 w-full mx-2' : 'py-10 my-5 w-4/5'} space-y-2`}>
-                {filteredTasks.map((task: ITask, i: number) => (
+                {filteredTasks.map((task: IObjectEntry, i: number) => {
+                    const checkboxToClick = task.fieldValues.find((field: IFieldValue) => field.field === 'completed');
+                    return (
                         <div className={`flex flex-row items-center justify-center w-full bg-stone-300 rounded-md`} key={i}>
                             <div className={`flex flex-grow justify-start items-center p-2 space-x-5`} style={{width: '48%'}}>
-                                <input id={`checkboxTask${i}${task._id}`} aria-label={`checkboxTask${i}${task._id}`} type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded hover:ring-blue-500 hover:ring-blue-600 hover:ring-2 cursor-pointer" onChange={() => handleCheckboxClick(task)} checked={task.completed} title={`${task.completed ? 'Mark Incomplete' : 'Mark Complete'}`} />
+                                <input id={`checkboxTask${i}${task._id}`} aria-label={`checkboxTask${i}${task._id}`} type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded hover:ring-blue-500 hover:ring-blue-600 hover:ring-2 cursor-pointer" onChange={() => {
+                                    if (checkboxToClick) {
+                                        handleCheckboxClick(task);
+                                    }
+                                }} checked={checkboxToClick?.value === 'true' ? true : false} title={`${checkboxToClick?.value === 'true' ? 'Mark Incomplete' : 'Mark Complete'}`} />
                                 <p className={`text-sm md:text-base font-semibold text-start overflow-ellipsis overflow-hidden`} id={`titleTask${i}${task._id}`} aria-label={`titleTask${i}${task._id}`}>
-                                    {task.title}
+                                    {task.fieldValues.find((field: IFieldValue) => field.field === 'title')?.value}
                                 </p>
                             </div>
                             <div className={`flex flex-row items-start justify-start space-x-5 px-2 border-l border-black`} style={{width: '20%'}}>
                                 <p className={`p-1 text-sm md:text-base text-start`} id={`timeTask${i}${task._id}`} aria-label={`timeTask${i}${task._id}`}>
-                                {new Date(`1970-01-01T${task.time}:00Z`).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
+                                {new Date(`1970-01-01T${task.fieldValues.find((field: IFieldValue) => field.field === 'time')?.value}:00Z`).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
                                 </p>
                             </div>
                             <div className="flex flex-row items-center justify-evenly space-x-5 px-2 border-l border-black" style={{width: '32%'}}>
@@ -46,7 +52,7 @@ export default function ToDoComp({adminID, loading, filteredTasks, smallBreakpoi
                                 ) : null}
                             </div>
                         </div>
-                ))}
+                )})}
             </div>
         )
     )

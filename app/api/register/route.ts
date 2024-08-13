@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import User from '@/models/user';
 import { createErrorResponse } from '@/lib/utils';
 import Argon2id from 'argon2';
-import { ICustomField } from '@/models/types/customField';
+import { IUserObject } from '@/models/types/userObject';
 
 function isValidEmail(email: string): boolean {
     return /.+@.+/.test(email);
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
                 email: body.modalRegisterEmail, 
                 blogsub: body.modalRegisterBlogsub ? true : false, 
                 password: hashedPassword,
-                customFields: [] as ICustomField[]
+                userObjects: [] as IUserObject[]
             });
 
             if (!user) {
