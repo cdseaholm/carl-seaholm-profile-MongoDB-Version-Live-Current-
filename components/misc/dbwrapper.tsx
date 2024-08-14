@@ -28,11 +28,11 @@ export default function DBWrapper({ children }: Readonly<{ children: React.React
                     return;
                 }
                 const userInfo = userData.userInfo as IUser;
-                if (!userInfo.customFields) {
-                    userInfo.customFields = [] as IUserObject[];
+                if (!userInfo.userObjects) {
+                    userInfo.userObjects = [] as IUserObject[];
                 }
-                const customFields = userInfo.customFields as IUserObject[];
-                setCustomFields(customFields);
+                const userObjects = userInfo.userObjects as IUserObject[];
+                setCustomFields(userObjects);
                 setLoading(false);
             });
         } catch (error) {

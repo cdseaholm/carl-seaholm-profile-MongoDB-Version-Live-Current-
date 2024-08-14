@@ -12,6 +12,6 @@ type Store = {
 export const useStore = create<Store>((set) => ({
   userInfo: {} as IUser,
   setUserInfo: (userInfo) => set({ userInfo }),
-  userObjects: [],
+  userObjects: [] as IUserObject[],
   setUserObjects: (userObjects) => set({ userObjects }),
 }));

@@ -27,8 +27,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       const userInfo = user?.map((info: IUser) => {
         return {
           _id: info._id,
+          name: info.name,
           email: info.email,
-          customFields: info.customFields,
+          blogsub: info.blogsub,
+          userObjects: info.userObjects,
+          phone: info.phone,
+          createdAt: info.createdAt,
+          updatedAt: info.updatedAt,
         }
       }) as IUser[];
 

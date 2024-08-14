@@ -61,12 +61,13 @@ export async function CreateCustomObject({object}: {object: IUserObject}) {
                 'Content-Type': 'application/json',
                 'authorization': `Bearer ${authToken}`,
             },
-            body: JSON.stringify(object),
+            body: JSON.stringify({object: object}),
         });
-        if (!response.ok) {
-            return {created: false, message: 'Error creating custom object'};
-        }
         const res = await response.json();
+        console.log('res', res);
+        if (res.status === 404) {
+            return {created: false, message: 'User not found'};
+        }
         if (res.status !== 200) {
             return {created: false, message: res.message};
         }

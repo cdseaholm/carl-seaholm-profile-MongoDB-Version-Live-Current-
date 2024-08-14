@@ -7,6 +7,7 @@ export interface IUser {
     email: string;
     phone: string;
     password: string;
+    blogsub: boolean;
     userObjects: IUserObject[];
     _id: string;
     createdAt: string;
