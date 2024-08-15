@@ -1,28 +1,26 @@
-import { IObjectDate } from "@/models/types/objectEntryByDate";
+import { IEntry } from "@/models/types/objectEntry";
 
-
-export async function TotalMinutesCalc({ arrayOfDates, thisMonth }: { arrayOfDates: IObjectDate[], thisMonth: number }): Promise<{ totalTimePerMonth: number[], counterPerMonth: number[] }> {
+export async function TotalMinutesCalc({ entries, thisMonth }: { entries: IEntry[], thisMonth: number }): Promise<{ totalTimePerMonth: number[], counterPerMonth: number[] }> {
     let totalTimePerMonth = [0, 0, 0, 0, 0];
     let counterPerMonth = [0, 0, 0, 0, 0];
-    if (arrayOfDates === null) {
+    if (entries === null) {
         return Promise.resolve({ totalTimePerMonth, counterPerMonth });
     }
     const calc = async () => {
-        arrayOfDates.forEach((singleDateObject: IObjectDate) => {
-            const date = new Date(singleDateObject.date);
+        entries.forEach((entry: IEntry) => {
+            const date = new Date(entry.date);
             const month = date.getMonth();
-            singleDateObject.entries.forEach((entry, fvIndex) => {
-                if (entry.fieldValues.length === 0) {
+            entry.fields.forEach((field) => {
+                if (field.name !== 'session') {
                     return;
                 }
-                const fv = entry.fieldValues[fvIndex];
+                const fv = field.value;
                 if (!fv) {
                     return;
                 }
-                const minutes = fv?.value;
-                const parsedMinutes = parseInt(minutes);
+                const parsedMinutes = parseInt(fv);
                 if (isNaN(parsedMinutes)) {
-                    console.error(`Invalid minutes value: ${minutes}`);
+                    console.error(`Invalid minutes value: ${fv}`);
                     return;
                 }
                 if (month === thisMonth - 4) {

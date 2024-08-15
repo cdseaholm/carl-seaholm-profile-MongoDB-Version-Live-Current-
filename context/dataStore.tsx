@@ -7,6 +7,8 @@ type Store = {
   setUserInfo: (userInfo: IUser) => void;
   userObjects: IUserObject[];
   setUserObjects: (userObjects: IUserObject[]) => void;
+  globalObjectToUse: IUserObject | null;
+  setGlobalObjectToUse: (globalObjectToUse: IUserObject) => void;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -14,4 +16,6 @@ export const useStore = create<Store>((set) => ({
   setUserInfo: (userInfo) => set({ userInfo }),
   userObjects: [] as IUserObject[],
   setUserObjects: (userObjects) => set({ userObjects }),
+  globalObjectToUse: null,
+  setGlobalObjectToUse: (globalObjectToUse) => set({ globalObjectToUse }),
 }));

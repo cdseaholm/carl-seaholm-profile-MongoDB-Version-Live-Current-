@@ -5,14 +5,13 @@ import { IEntry } from "@/models/types/objectEntry";
 
 function ConvertTime(object: IEntry) {
     let timeToShow = null as string | null;
-    if (!object.fields.map((field) => field.name === 'minutesXsessions')) {
+    if (object.fields.map((field) => field.name === 'session')) {
         var timeTot = 0;
-        for (let i = 0; i < object.fields.length; i++) {
 
-            const min = object.fields.find((field) => field.name === 'minutesXsessions')?.value;
-            timeTot += Number(min);
-            timeTot += Number(object.fields.find((field) => field.name === 'minutesXsessions')?.value);
-        };
+        const min = object.fields.find((field) => field.name === 'session')?.value;
+        timeTot += Number(min);
+        timeTot += Number(object.fields.find((field) => field.name === 'session')?.value);
+
         if (timeTot > 60) {
             const nums = (timeTot / 60).toFixed(2);
             timeToShow = `${nums} hours`
@@ -26,10 +25,8 @@ function ConvertTime(object: IEntry) {
     return timeToShow;
 }
 
-const CalendarView = ({ adminID, handleDateDecrease, handleDateIncrease, entriesOTD, objectTitle }: { adminID: boolean, handleDateDecrease: () => void, handleDateIncrease: () => void, entriesOTD: IEntry[], objectTitle: string}) => {
+const CalendarView = ({ adminID, handleDateDecrease, handleDateIncrease, entriesOTD, objectTitle, daySelected, handleDaySelected }: { adminID: boolean, handleDateDecrease: () => void, handleDateIncrease: () => void, entriesOTD: IEntry[], objectTitle: string, daySelected: string, handleDaySelected: (daySelected: string) => void }) => {
 
-    const setDaySelected = useModalStore((state) => state.setDaySelected);
-    const daySelected = useModalStore((state) => state.daySelected);
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const setModalParent = useModalStore((state) => state.setModalParent);
 
@@ -55,7 +52,7 @@ const CalendarView = ({ adminID, handleDateDecrease, handleDateIncrease, entries
                         <button className="text-sm md:text-base border border-neutral-400 rounded-md m-1 p-1" onClick={() => {
                             setModalOpen('logsession');
                             setModalParent('calendar')
-                            setDaySelected(daySelected);
+                            handleDaySelected(daySelected);
                         }}>
                             <p className="hover:bg-gray-400 text-center p-1 rounded-md">{'+ Add Another Session to Today'}</p>
                         </button>
@@ -66,26 +63,28 @@ const CalendarView = ({ adminID, handleDateDecrease, handleDateIncrease, entries
                     {entriesOTD.map((entry: IEntry, index: number) => {
                         const timeToShow = ConvertTime(entry);
                         let goal;
-                        if (entry.fields.find((field) => field.name === 'goals')) {
-                            const hobbyGoals = entry.fields.find((field) => field.name === 'goals');
-                            const goalToUse = hobbyGoals?.value;
-                            const goalParsed = goalToUse?.toString().split('-') as string[];
-                            goal = goalParsed[1] as string;
+                        if (entry.fields.find((field) => field.name === 'goal')) {
+                            const hobbyGoals = entry.fields.find((field) => field.name === 'goal')?.value;
+                            const goalParsed = hobbyGoals?.toString().split('-') as string[];
+                            goal = goalParsed[1];
                         }
+                        const category = entry.fields.find((field) => field.name === 'category')?.value;
+                        const description = entry.fields.find((field) => field.name === 'description')?.value;
+                        const title = entry.fields.find((field) => field.name === `${objectTitle}Entry`)?.value;
                         return (
                             <div key={index} className="flex flex-col justify-between items-start w-4/5">
                                 <div className="flex flex-row justify-start items-start w-full">
                                     <h1 className={`text-sm md:text-base font-semibold text-center underline`}>
-                                        {objectTitle}
+                                        {title || 'No title available'}
                                     </h1>
                                 </div>
                                 <div className="flex flex-row justify-start items-start w-full pl-5 text-xs md:text-sm">
                                     <div className="flex flex-col justify-start items-start w-1/2">
                                         <p>
-                                            Categories: {entry.fields.find((field) => field.name === 'categories')?.value.flat().join(', ') || 'No categories available'}
+                                            Categories: {category && category !== 'null' ? category : 'No categories available'}
                                         </p>
                                         <p className={`text-center`}>
-                                            Description: {entry.fields.find((field) => field.name === 'descriptions')?.value.join('') || 'No description available'}
+                                            Description: {description && description !== 'null' ? description : 'No description available'}
                                         </p>
                                         <p>
                                             Total time: {timeToShow}
@@ -103,7 +102,7 @@ const CalendarView = ({ adminID, handleDateDecrease, handleDateIncrease, entries
                             <button className="text-sm md:text-base border border-neutral-400 rounded-md m-1 p-1" onClick={() => {
                                 setModalOpen('logsession');
                                 setModalParent('calendar')
-                                setDaySelected(daySelected);
+                                handleDaySelected(daySelected);
                             }}>
                                 <p className="hover:bg-gray-400 text-center p-1 rounded-md">{'+ Add Another Session to Today'}</p>
                             </button>

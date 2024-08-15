@@ -1,15 +1,12 @@
-import { th } from "date-fns/locale";
-
 export async function MonthProv(monthsGiven: number[], yearGiven: number) {
 
     let monthsReturned = [] as string[];
     let colorsReturned = [] as string[];
-    let monthsTuple = [monthsReturned, colorsReturned]
     if (monthsGiven === null || yearGiven === null) {
         return console.log("Month or year not provided")
     } else {
         for (let i = 0; i < monthsGiven.length; i++) { 
-            if (monthsGiven[i] < 0 || monthsGiven[i] > 11) {
+            if (monthsGiven[i] as number < 0 || monthsGiven[i] as number > 11) {
                 return console.log("Month must be between 0 and 11")
             } else if (monthsGiven === undefined || yearGiven === undefined) {
                 return console.log("Month or year not provided")

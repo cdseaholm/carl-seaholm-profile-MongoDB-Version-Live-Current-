@@ -8,6 +8,7 @@ import { useStateStore } from "@/context/stateStore";
 import Navbar from "../nav/Navbar";
 import FooterNavBar from "../nav/footer/footerNavbar";
 import DBWrapper from "./dbwrapper";
+import ToastWrapper from "./toastWrapper";
 
 
 export default function PageWrapper({ children }: Readonly<{ children: React.ReactNode; }>) {
@@ -46,17 +47,19 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
 
   return (
     <div className="bg-white/50 h-dvh overflow-hidden">
-      <Providers>
-        <MotionWrap motionKey={pathname}>
-          <DBWrapper>
-            <main className={'flex flex-col px-2 h-dvh justify-between'} ref={targetRef}>
-              <Navbar />
-              {children}
-              <FooterNavBar />
-            </main>
-          </DBWrapper>
-        </MotionWrap>
-      </Providers>
+      <ToastWrapper>
+        <Providers>
+          <MotionWrap motionKey={pathname}>
+            <DBWrapper>
+              <main className={'flex flex-col px-2 h-dvh justify-between'} ref={targetRef}>
+                <Navbar />
+                {children}
+                <FooterNavBar />
+              </main>
+            </DBWrapper>
+          </MotionWrap>
+        </Providers>
+      </ToastWrapper>
     </div>
   )
 }

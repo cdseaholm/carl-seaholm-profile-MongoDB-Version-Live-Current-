@@ -83,6 +83,10 @@ export default function ProfilePage() {
         }
     };
 
+    const testToast = () => {
+        toast.success('Test toast');
+    };
+
     return (
         loading ? <Spinner /> :
             error ? <div>{error}</div> :
@@ -105,6 +109,9 @@ export default function ProfilePage() {
                             </button>
                             <button onClick={() => setModalOpen('addNewEntryToObject')}>
                                 Add New Entry to Object
+                            </button>
+                            <button onClick={() => testToast()}>
+                                Test Toast
                             </button>
                             <button onClick={() => handleDeleteUser()}>
                                 Delete Account

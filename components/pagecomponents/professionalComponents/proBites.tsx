@@ -2,7 +2,7 @@ import React from "react";
 import { DetailsAccordianPage } from "@/components/dropdowns/DetailsAccordian";
 import { Job } from "@/models/types/job";
 import { School } from "@/models/types/education";
-import ImageFormat from "@/components/misc/imageFormat";
+import ImageFormat from "@/components/helpers/imageFormat";
 
 const formatDate = (dateString: string) => {
     const date = new Date(dateString);

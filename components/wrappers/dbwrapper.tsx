@@ -4,7 +4,7 @@ import { useStore } from "@/context/dataStore";
 import { useStateStore } from "@/context/stateStore";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Spinner } from "./Spinner";
+import { Spinner } from "../misc/Spinner";
 import { IUser } from "@/models/types/user";
 import { IUserObject } from "@/models/types/userObject";
 
@@ -25,6 +25,7 @@ export default function DBWrapper({ children }: Readonly<{ children: React.React
             ]).then(async ([userData]) => {
                 if (!userData.userInfo) {
                     console.log('userData.userInfo is undefined');
+                    setLoading(false);
                     return;
                 }
                 const userInfo = userData.userInfo as IUser;
@@ -37,6 +38,7 @@ export default function DBWrapper({ children }: Readonly<{ children: React.React
             });
         } catch (error) {
             setError(error as string);
+            setLoading(false);
         }
     }, [setUserInfo, urlToUse, userID, setCustomFields]);
 
