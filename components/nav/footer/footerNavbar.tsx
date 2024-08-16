@@ -2,15 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useStateStore } from '@/context/stateStore';
 
 const FooterNavBar = () => {
+
     const pathname = usePathname();
-    const breakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
 
     return (
-        <footer className={`flex flex-row justify-center items-center ${breakpoint ? 'py-1' : 'py-4 mt-2'}`}>
-            {!breakpoint && pathname !== '/' &&
+        <footer className={`flex flex-row justify-center items-center py-4 mt-2`}>
+            {pathname !== '/' &&
             [
                 ["Contact", "/contact"],
             ].map(([name, route], index) => (

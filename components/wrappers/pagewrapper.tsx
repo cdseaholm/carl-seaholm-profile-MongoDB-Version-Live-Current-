@@ -1,22 +1,22 @@
 'use client'
 
 import { Providers } from "@/app/providers";
-import MotionWrap from '@/components/listeners/motionwrap';
-import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useStateStore } from "@/context/stateStore";
-import Navbar from "../nav/Navbar";
-import FooterNavBar from "../nav/footer/footerNavbar";
-import DBWrapper from "./dbwrapper";
+import DBWrapper from "./dbWrapper";
 import ToastWrapper from "./toastWrapper";
+import MotionWrap from "./motionWrap";
+import { usePathname } from "next/navigation";
+import { widthContext } from "@/context/context";
 
 
 export default function PageWrapper({ children }: Readonly<{ children: React.ReactNode; }>) {
 
-  const pathname = usePathname();
-  const targetRef = useRef<HTMLElement>(null);
+  const targetRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
   const setWidthQuery = useStateStore((state) => state.setWidthQuery);
   const setUrlToUse = useStateStore((state) => state.setUrlToUse);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (targetRef.current === null) {
@@ -24,11 +24,13 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
     } else {
       const newWidth = targetRef.current.offsetWidth;
       setWidthQuery(newWidth);
+      setWidth(newWidth);
     }
 
     const updateMedia = () => {
       const innerWidth = window.innerWidth;
       setWidthQuery(innerWidth);
+      setWidth(innerWidth);
     }
 
     window.addEventListener('resize', updateMedia);
@@ -43,19 +45,17 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
     setUrlToUse(currentUrl);
   }, [setUrlToUse]);
 
-
-
   return (
-    <div className="bg-white/50 h-dvh overflow-hidden">
+    <div ref={targetRef} className="bg-white/50 h-dvh overflow-hidden">
       <ToastWrapper>
         <Providers>
           <MotionWrap motionKey={pathname}>
             <DBWrapper>
-              <main className={'flex flex-col px-2 h-dvh justify-between'} ref={targetRef}>
-                <Navbar />
-                {children}
-                <FooterNavBar />
-              </main>
+              <widthContext.Provider value={width}>
+                <main className={'flex flex-col h-dvh'}>
+                  {children}
+                </main>
+              </widthContext.Provider>
             </DBWrapper>
           </MotionWrap>
         </Providers>

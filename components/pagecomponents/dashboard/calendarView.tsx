@@ -31,7 +31,7 @@ const CalendarView = ({ adminID, handleDateDecrease, handleDateIncrease, entries
     const setModalParent = useModalStore((state) => state.setModalParent);
 
     return (
-        <div className="p-2 flex flex-col w-full h-full justify-start items-center space-y-10" style={{ flexGrow: 1, fontSize: '10px', overflow: 'hidden' }}>
+        <div className="p-2 flex flex-col w-full h-full justify-start items-center space-y-10" style={{ fontSize: '10px'}}>
             <div className={`flex flex-row justify-evenly w-1/2 pb-5 self-center`}>
                 <button className="text-base" onClick={handleDateDecrease}>
                     <p className="hover:bg-gray-400">{'<'}</p>

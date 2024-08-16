@@ -42,20 +42,23 @@ export default function DBWrapper({ children }: Readonly<{ children: React.React
         }
     }, [setUserInfo, urlToUse, userID, setCustomFields]);
 
-    if (error) {
-        return (
-            <div>
-                <p>{error}</p>
-            </div>
-        );
-    }
-
     return (
-        loading ?
+        error ? (
+
+            <div className={`w-full h-full flex justify-center items-center`}>
+                <h1 className={`text-red-500`}>{error}</h1>
+            </div>
+
+        ) : loading ? (
+
             <Spinner />
-            :
+
+        ) : (
+
             <div className={`w-full h-full`}>
                 {children}
             </div>
+            
+        )
     );
 }

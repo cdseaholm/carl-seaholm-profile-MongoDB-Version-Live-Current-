@@ -1,7 +1,7 @@
 import { useStateStore } from '@/context/stateStore';
 import dynamic from 'next/dynamic';
 import React from 'react';
-import { dataType } from '../pagecomponents/dashboard/views/statsView';
+import { dataType } from '../pagecomponents/dashboard/statsView';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 

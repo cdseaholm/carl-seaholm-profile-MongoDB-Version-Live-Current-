@@ -3,13 +3,11 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
-import { useStateStore } from '@/context/stateStore';
+import openInNewTab from '@/components/listeners/OpenInNewTab';
 
 export default function Personal() {
-  const [isHovered, setIsHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [blurb, setBlurb] = useState(0);
-  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
   const hobbies = ['Brazilian Jiu Jitsu', 'Coding', 'Guitar', 'Language Learning', 'Piano', 'Reading', 'Writing'];
   const pets = ['Benji', 'George'];
   const blurbs = [
@@ -25,44 +23,31 @@ export default function Personal() {
     "George is a 6 months old Bengal Cat. He is much more wild and crazy than his brother Benjamin. Both share the same dad so they have taken to eachother very well. George is very playful. He loves to cuddle and has a great purr. You'll find he has no issues going after what he wants.",
   ];
 
-
-  const imageClick = () => {
-    setIsHovered(!isHovered);
-    setClicked(!clicked);
-  };
-
-  const style = {
-    profilepicture: {
-      large: `fixed z-20 top-25 left-10 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`,
-      small: `fixed z-20 top-25 left-10 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`
-    },
-  };
-
   return (
     <MainChild>
-      <div className="flex flex-col h-full px-2 pb-2">
-        {!isBreakpoint &&
+      <div className="flex flex-col w-full h-full px-2 pb-2">
+        <div className='flex flex-row justify-between items-center py-5 px-5 mx-5 border-b border-black w-full'>
           <Image
-            onClick={imageClick}
+            onClick={() => openInNewTab('/images/carlseaholmimage.jpg')}
             priority
             src="/images/carlseaholmimage.jpg"
-            className={`${clicked ? style.profilepicture.large : style.profilepicture.small} cursor-pointer`}
-            height={clicked ? 200 : 100}
-            width={clicked ? 200 : 100}
+            className={`rounded-full cursor-pointer`}
+            height={80}
+            width={80}
             alt="Carl Seaholm Profile Photo"
-            style={{objectFit: 'cover', height: 'auto', width: 'auto'}}
+            style={{ objectFit: 'cover', height: 'auto', width: 'auto' }}
           />
-        }
-        <div className='py-5 px-5 mx-5 justify-end border-b border-black'>
-          <h1 className="flex text-6xl font-bold justify-end">
-            Carl Seaholm
-          </h1>
-          <h2 className="flex text-base font-bold justify-end">
-            Personal Life
-          </h2>
+          <div className='flex flex-col items-end justify-center px-4'>
+            <h1 className="flex text-6xl font-bold justify-end">
+              Carl Seaholm
+            </h1>
+            <h2 className="flex text-base font-bold justify-end">
+              Personal Life
+            </h2>
+          </div>
         </div>
-        <div className='p-2 pt-15 w-full flex flex-row' style={{height: '91%'}}>
-          <div style={{flexGrow: 1, overflow: 'auto', width: '90%'}} className='scrollbar-thin scrollbar-webkit flex flex-col justify-start items-start space-y-2 border-r border-black'>
+        <div className='p-2 pt-15 w-full flex flex-row' style={{ height: '91%' }}>
+          <div style={{ flexGrow: 1, overflow: 'auto', width: '90%' }} className='scrollbar-thin scrollbar-webkit flex flex-col justify-start items-start space-y-2 border-r border-black'>
             <div className='flex justify-start'>
               {blurbs[blurb]}
             </div>
@@ -75,7 +60,7 @@ export default function Personal() {
                 height={200}
                 width={200}
                 alt="Carl Seaholm Profile Photo"
-                style={{objectFit: 'scale-down', height: 'auto', width: 'auto'}}
+                style={{ objectFit: 'scale-down', height: 'auto', width: 'auto' }}
               />
             }
             {
@@ -87,7 +72,7 @@ export default function Personal() {
                 height={200}
                 width={200}
                 alt="Carl Seaholm Profile Photo"
-                style={{objectFit: 'scale-down', height: 'auto', width: 'auto'}}
+                style={{ objectFit: 'scale-down', height: 'auto', width: 'auto' }}
               />
             }
           </div>
@@ -96,7 +81,7 @@ export default function Personal() {
               Hobbies
             </div>
             {hobbies.map((hobby, index) => (
-              <li key={index} className='cursor-pointer hover:text-gray-600 py-2' onClick={() => setBlurb(index + 1)} style={{fontSize: '12px'}}>
+              <li key={index} className='cursor-pointer hover:text-gray-600 py-2' onClick={() => setBlurb(index + 1)} style={{ fontSize: '12px' }}>
                 {hobby}
               </li>
             ))}
@@ -104,7 +89,7 @@ export default function Personal() {
               Pets
             </div>
             {pets.map((pet, index) => (
-              <li key={index} className='cursor-pointer hover:text-gray-600 py-2' onClick={() => setBlurb(index + 8)} style={{fontSize: '12px'}}>
+              <li key={index} className='cursor-pointer hover:text-gray-600 py-2' onClick={() => setBlurb(index + 8)} style={{ fontSize: '12px' }}>
                 {pet}
               </li>
             ))}
