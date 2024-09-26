@@ -61,7 +61,9 @@ export async function GetDataset({ objectToUse, totalTime, totalCounter, thisMon
                 return color;
             });
 
-            const newData = objectToUse.entries.map((_field, index) => {
+            const entries = objectToUse ? objectToUse.entries : [];
+
+            const newData = entries ? entries.map((_field, index) => {
                 if (monthNames !== undefined && monthColors !== undefined) {
                     const total = totalTimeFixed[index];
                     return {
@@ -75,7 +77,7 @@ export async function GetDataset({ objectToUse, totalTime, totalCounter, thisMon
                     time: 0,
                     color: ''
                 };
-            }) as { date: string, time: number, color: string }[];
+            }) as { date: string, time: number, color: string }[] : [];
 
             const newDataTwo = objectToUse.entries.map((_field, index) => {
                 if (monthNames !== undefined && monthColors !== undefined) {

@@ -93,11 +93,11 @@ const BlogDropdown = ({categoriesForDrop, posts}: {categoriesForDrop: Array<stri
             </InnerHeader>
                     <div className={`${category === 'All' ? `md:grid md:grid-cols-2 w-full h-full justify-center` : `flex flex-col items-center`} scrollbar-thin scrollbar-webkit`} style={{overflow: 'auto'}}>
                             {posts !== null && category === 'All' &&
-                                Object.keys(posts).map((category, id) => <PostItemList key={id} category={category} posts={posts[category]} />
+                                Object.keys(posts).map((category, id) => <PostItemList key={id} category={category} posts={posts[category] ? posts[category] : []} />
                                 )
                             }
                             {posts !== null && category !== 'All' &&
-                                <PostItemList category={category} posts={posts[category]} />
+                                <PostItemList category={category} posts={posts[category] ? posts[category] : []} />
                             }
                     </div>
             </MainChild>

@@ -48,10 +48,6 @@ export default function ProfilePage() {
         console.log('logout');
     }
 
-    const showPassword = async () => {
-
-    }
-
     const handleUpdateHobbiesLocal = async () => {
         const updatedFields = await fetch(urlToUse + '/api/' + userID + '/transferOldObjects', {
             method: 'PUT',
@@ -116,7 +112,7 @@ export default function ProfilePage() {
                             <button onClick={() => handleDeleteUser()}>
                                 Delete Account
                             </button>
-                            <button onClick={showPassword}>
+                            <button onClick={() => setModalOpen('changepassword')}>
                                 Change Password
                             </button>
                             <button onClick={handleLogout}>

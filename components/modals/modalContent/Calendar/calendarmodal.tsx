@@ -12,6 +12,7 @@ import { IEntry } from '@/models/types/objectEntry';
 import { IUserObject } from '@/models/types/userObject';
 import { Session } from 'next-auth';
 import { useAlertStore } from '@/context/alertStore';
+import { ColorMapType } from '@/models/types/colorMap';
 
 interface CalEvent {
     allDay: boolean;
@@ -21,7 +22,7 @@ interface CalEvent {
     color: string;
 }
 
-const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDaySelected, session, objectTitle }: { show: boolean, closeCalendar: () => void, adminIDBool: boolean, objectToUse: IUserObject | null, handleDaySelected: (dateSelected: string) => void, session: Session | null, objectTitle: string }) => {
+const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDaySelected, session, colorMap }: { show: boolean, closeCalendar: () => void, adminIDBool: boolean, objectToUse: IUserObject | null, handleDaySelected: (dateSelected: string) => void, session: Session | null, colorMap: ColorMapType[] }) => {
 
     //state
     const [objectsInADay, setObjectsInADay] = useState<CalEvent[]>([]);
@@ -58,8 +59,9 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
     const hydrateObjects = useCallback(async () => {
         const uniqueDates = new Set<string>();
         const calEvents = [] as CalEvent[];
+        const entries = objectToUse ? objectToUse.entries : [] as IEntry[];
 
-        objectToUse?.entries.map((entry: IEntry) => {
+        entries ? entries.map((entry: IEntry) => {
             const dateOfEntry = entry.date;
             if (!uniqueDates.has(dateOfEntry)) {
 
@@ -76,7 +78,7 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
                 calEvents.push(entryDateToAdd);
             }
 
-        });
+        }) : [] as IEntry[];
 
         if (calEvents.length === 0) {
             return;
@@ -94,12 +96,6 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
         }
         setLoading(false);
     }, [objectToUse, session, hydrateObjects, setLoading]);
-
-    const colorMap = Array.from(new Set(objectToUse?.entries.map((entry: IEntry) => {
-        const color = entry.fields.find(field => field.name === 'color')?.value;
-        const title = entry.fields.find(field => field.name === `${objectTitle}Entry`)?.value;
-        return JSON.stringify({ color: color, title: title });
-    }))).map(color => JSON.parse(color));
 
     return (
         <div id="crud-modal" tabIndex={-1} aria-hidden={show ? "false" : "true"} className={`${show ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
@@ -122,6 +118,7 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
                     ) : (
                         <div className="h-full w-full p-2" style={{ overflow: 'hidden' }}>
                             <FullCalendar
+                            
                                 plugins={[interactionPlugin, dayGridPlugin]}
                                 events={objectsInADay}
                                 headerToolbar={{
@@ -191,7 +188,7 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
                                         handleDayClick(arg);
                                     }
                                 }}
-                                dayCellClassNames={adminIDBool ? 'cursor-pointer hover:bg-gray-200' : ''}
+                                dayCellClassNames={'cursor-pointer hover:bg-blue-300'}
                             />
                             {indexOpen &&
                                 <div className='flex flex-col w-full border border-black rounded-md px-2'>

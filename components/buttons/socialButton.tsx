@@ -32,7 +32,7 @@ export default function SocialButton({networkName, parent}: {networkName: string
 
 return (
     <div className='cursor-pointer' onClick={() => openInNewTab(networkLink)}>
-        <SocialIcon style={parent === true ? style.headerIcon : style.icon} network={networkName}/>
+        <SocialIcon style={parent === true ? style.headerIcon : style.icon} network={networkName} title={networkName === 'github' ? `Carl's Github` : `Carl's LinkedIn`}/>
     </div>
 )
 

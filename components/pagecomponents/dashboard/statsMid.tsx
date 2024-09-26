@@ -2,11 +2,10 @@ import { Spinner } from "@/components/misc/Spinner";
 import StatsView, { dataType } from "./statsView";
 import { BeginPercentage, GetDataset, FillTracker } from "@/app/actions/statsActions/statActions";
 import { useStateStore } from "@/context/stateStore";
-import { IEntry } from "@/models/types/objectEntry";
 import React, { useEffect } from "react";
 import { IUserObject } from "@/models/types/userObject";
 
-export default function StatsMid({ setIndexShown, indexShown, objectToUse, totalTime, totalCounter, thisMonth, objectTitle }: { setIndexShown: any, indexShown: boolean, objectToUse: IUserObject | null, totalTime: number[], totalCounter: number[], thisMonth: number, objectTitle: string }) {
+export default function StatsMid({ objectToUse, totalTime, totalCounter, thisMonth, objectTitle }: { objectToUse: IUserObject | null, totalTime: number[], totalCounter: number[], thisMonth: number, objectTitle: string }) {
     
     const isBreakpoint = useStateStore((state) => state.widthQuery) < 950 ? true : false;
     const [data, setData] = React.useState<dataType[]>([]);
@@ -18,12 +17,6 @@ export default function StatsMid({ setIndexShown, indexShown, objectToUse, total
     const [daysWithHobbies, setDaysWithHobbies] = React.useState<number[]>([]);
     const [loading, setLoading] = React.useState(true);
     const reducedTime = totalTime.reduce((a: number, b: number) => a + b);
-
-    const colorMap = Array.from(new Set(objectToUse?.entries.map((entry: IEntry) => {
-        const color = entry.fields.find(field => field.name === 'color')?.value;
-        const title = entry.fields.find(field => field.name === `${objectTitle}Entry`)?.value;
-        return JSON.stringify({ color: color, title: title });
-    }))).map(color => JSON.parse(color));
 
     useEffect(() => {
         const getData = async () => {
@@ -63,7 +56,7 @@ export default function StatsMid({ setIndexShown, indexShown, objectToUse, total
         loading ? (
             <Spinner />
         ) : (
-            <StatsView isBreakpoint={isBreakpoint} indexShown={indexShown} colorMap={colorMap} data={data} colorsToChart={colorsToChart} monthsToChart={monthsToChart} barChartData={barChartData} barChartDataTwo={barChartDataTwo} monthLength={monthLength} daysWithHobbies={daysWithHobbies} objectTitle={objectTitle} setIndexShown={setIndexShown} />
+            <StatsView isBreakpoint={isBreakpoint} data={data} colorsToChart={colorsToChart} monthsToChart={monthsToChart} barChartData={barChartData} barChartDataTwo={barChartDataTwo} monthLength={monthLength} daysWithHobbies={daysWithHobbies} objectTitle={objectTitle} />
         )
     )
 }

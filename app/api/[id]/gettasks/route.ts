@@ -1,9 +1,6 @@
-
 import connectDB from "@/lib/mongodb";
-import { createErrorResponse } from "@/lib/utils";
 import TasksByUser from "@/models/tasks/tasksByUser";
 import { ITask } from "@/models/types/task";
-import { IUser } from "@/models/types/user";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {

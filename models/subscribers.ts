@@ -1,10 +1,5 @@
-export interface Subscriber {
-    email: string;
-    name: string;
-    subscribed: boolean;
-}
-
-import mongoose, { Schema, models } from "mongoose";
+import mongoose, { Schema, models, Model } from "mongoose";
+import { ISubscriber } from "./types/subscriber";
 
 const subscriberSchema = new Schema(
     {
@@ -28,4 +23,4 @@ const subscriberSchema = new Schema(
 
 const Subscriber = models.Subscriber || mongoose.model("Subscriber", subscriberSchema);
 
-export default Subscriber;
+export default Subscriber as Model<ISubscriber>;

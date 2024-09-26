@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import Sidenav from "../sideNav/SideNav";
 import { SideMenuAccordian } from "../../dropdowns/SideMenuAccordian";
@@ -14,17 +14,32 @@ const SideNavHeader = () => {
 
   const isBreakpoint = useStateStore((state) => state.widthQuery) < 768;
   const [open, setOpen] = useState(false);
+  const [pageSelected, setPageSelected] = useState('');
   const pathname = usePathname();
   const toggle = () => {
     setOpen((prevState) => !prevState);
   };
+
+  useEffect(() => {
+    if (pathname === '/dashboard') {
+      setPageSelected('Dashboard');
+    } else if (pathname === '/blog') {
+      setPageSelected('Blog');
+    } else if (pathname === '/projects') {
+      setPageSelected('Projects');
+    } else if (pathname === '/services') {
+      setPageSelected('Services');
+    } else if (pathname === '/about') {
+      setPageSelected('About');
+    }
+  }, [pathname]);
 
   return (
     <>
       {pathname !== '/' &&
         <div className={`flex flex-row ${isBreakpoint ? 'justify-start' : 'justify-between'} items-center w-full`}>
           {isBreakpoint &&
-            <>
+            <div className={`flex flex-row items-center space-x-3`}>
               <button
                 type='button'
                 aria-disabled={open}
@@ -34,11 +49,17 @@ const SideNavHeader = () => {
               >
                 <FiMenu size={20} />
               </button>
-            </>
+              <p>
+                {`-`}
+              </p>
+              <p>
+                {pageSelected}
+              </p>
+            </div>
           }
           {!isBreakpoint &&
             <>
-              <div className={`flex flex-row items-center`}>
+              <div className={`flex flex-row items-center space-x-3`}>
                 <button
                   type='button'
                   aria-disabled={open}
@@ -48,6 +69,12 @@ const SideNavHeader = () => {
                 >
                   <FiMenu size={25} />
                 </button>
+                <p>
+                  {`-`}
+                </p>
+                <p>
+                  {pageSelected}
+                </p>
               </div>
               <div className='flex items-center'>
                 <SocialButton networkName='github' parent={true} />
@@ -67,5 +94,6 @@ const SideNavHeader = () => {
     </>
   );
 };
+
 
 export default SideNavHeader;

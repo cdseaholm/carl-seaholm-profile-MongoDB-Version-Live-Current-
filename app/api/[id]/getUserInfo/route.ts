@@ -1,7 +1,7 @@
-
 import connectDB from "@/lib/mongodb";
 import { IUser } from "@/models/types/user";
 import User from "@/models/user";
+import * as argon2id from "argon2";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
@@ -11,6 +11,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
 
     await connectDB();
+    const password = await req.json();
 
     const user = await User.find({ email: adminID }) as IUser[];
 
@@ -23,6 +24,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ status: 404, userInfo: {} as IUser });
 
     } else {
+      
+      const passwordToCheck = user[0] ? user[0].password : '' as string;
+
+      const validPassword = await argon2id.verify(passwordToCheck, password);
+
+      if (!validPassword) {
+        return NextResponse.json({ status: 401, userInfo: {} as IUser });
+      }
 
       const userInfo = user?.map((info: IUser) => {
         return {
@@ -31,7 +40,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           email: info.email,
           blogsub: info.blogsub,
           userObjects: info.userObjects,
-          phone: info.phone,
           createdAt: info.createdAt,
           updatedAt: info.updatedAt,
         }

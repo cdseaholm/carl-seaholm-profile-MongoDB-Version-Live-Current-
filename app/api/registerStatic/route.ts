@@ -4,7 +4,7 @@ import connectDB from '@/lib/mongodb';
 import { NextResponse } from 'next/server';
 import User from '@/models/user';
 import { createErrorResponse } from '@/lib/utils';
-import { ICustomField } from '@/models/types/userObjectModels';
+import { IUserObject } from '@/models/types/userObject';
 
 function isValidEmail(email: string): boolean {
     return /.+@.+/.test(email);
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
                 email: body.registerEmail, 
                 blogsub: body.registerBlogsub ? true : false, 
                 password: hashedPassword,
-                customFields: [] as ICustomField[]
+                customFields: [] as IUserObject[]
             });
 
             if (!user) {

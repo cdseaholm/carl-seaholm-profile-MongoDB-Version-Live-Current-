@@ -3,15 +3,13 @@ import connectDB from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import { createErrorResponse } from "@/lib/utils";
 import TasksByUser from "@/models/tasks/tasksByUser";
-import { ITask } from "@/models/types/task";
-
 
 export async function POST(request: Request) {
 
     try {
         await connectDB();
         const data = await request.json();
-        const usersTasks = await TasksByUser.findOne({ user_email: data.user_email });
+        const usersTasks = await TasksByUser.findOne({ user_email: data.user_email }) as any;
         if (!usersTasks) {
             const taskToAdd = new TasksByUser({
                 tasks: [{
@@ -21,9 +19,9 @@ export async function POST(request: Request) {
                         completed: data.completed,
                         user_email: data.user_email,
                         date: data.date,
-                }],
+                }] as any,
                 user_email: data.user_email
-            });
+            }) as any;
             await taskToAdd.save();
             return NextResponse.json({ status: 200, tasks: taskToAdd.tasks });
         } else {

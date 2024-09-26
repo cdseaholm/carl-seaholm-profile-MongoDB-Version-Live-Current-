@@ -9,7 +9,7 @@ export default function DevelopmentDesktop() {
   const [isHovered, setIsHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [category, setCategory] = useState('Timeline');
-  const [showDivider, setShowDivider] = useState(false);
+  const showDivider = false;
   const divRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
@@ -63,18 +63,6 @@ export default function DevelopmentDesktop() {
     'Sales',
     'Education'
   ];
-
-  const handleScroll = () => {
-    const divElement = divRef.current as unknown as HTMLDivElement;
-    if (divElement) {
-        const scrollPosition = divElement.scrollTop;
-        if (scrollPosition > 5) {
-            setShowDivider(true);
-        } else {
-            setShowDivider(false);
-        }
-    }
-    };
 
   return (
     <main>

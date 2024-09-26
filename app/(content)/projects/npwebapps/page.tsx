@@ -1,10 +1,10 @@
 'use client'
 
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
-import React, { useState } from 'react';
+import React from 'react';
 
 const NPWebAppPage = () => {
-    const [webDropdown, setWebDropdown] = useState(false);
+    const webDropdown = false;
 
     const webapps = [
         {name: "Carl Seaholm's Web Profile (This site)", description: "A place for me to shocwcase my Development and Design skills, as well as show more insights into my personal and professional life!"},

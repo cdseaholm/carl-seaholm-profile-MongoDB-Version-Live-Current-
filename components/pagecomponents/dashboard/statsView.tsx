@@ -17,7 +17,7 @@ export interface Tracker {
     tooltip: string;
 }
 
-export default function StatsView({ isBreakpoint, indexShown, colorMap, setIndexShown, data, colorsToChart, monthsToChart, barChartData, barChartDataTwo, monthLength, daysWithHobbies, objectTitle }: { isBreakpoint: boolean, indexShown: boolean, colorMap: { color: string, title: string }[], data: dataType[], colorsToChart: string[], monthsToChart: string[], barChartData: { date: string, time: number, color: string }[], barChartDataTwo: { date: string, time: number, color: string }[], monthLength: number, daysWithHobbies: number[], objectTitle: string, setIndexShown: (indexShown: boolean) => void }) {
+export default function StatsView({ isBreakpoint, data, colorsToChart, monthsToChart, barChartData, barChartDataTwo, monthLength, daysWithHobbies, objectTitle }: { isBreakpoint: boolean, data: dataType[], colorsToChart: string[], monthsToChart: string[], barChartData: { date: string, time: number, color: string }[], barChartDataTwo: { date: string, time: number, color: string }[], monthLength: number, daysWithHobbies: number[], objectTitle: string }) {
 
     return (
             <div className={`${!isBreakpoint ? 'grid gap-1 grid-cols-2 grid-rows-2' : 'items-center'} w-full h-full p-2 space-y-4`}>
@@ -27,23 +27,6 @@ export default function StatsView({ isBreakpoint, indexShown, colorMap, setIndex
                             <h2 className={`font-bold underline`} style={{ fontSize: 14 }}>
                                 % of Total Time on Each Hobby
                             </h2>
-                            <button className='text-end text-sm text-blue-800 hover:text-gray-500 cursor-pointer px-2' onClick={() => setIndexShown(!indexShown)}>
-                                Color Index
-                                {indexShown && (
-                                    <div className='flex flex-col justify-start bg-gray-300 border border-black'>
-                                        {colorMap?.map((map: { color: string, title: string }, index: number) => {
-                                            const color = map.color;
-                                            const title = map.title;
-                                            return (
-                                                <li key={index} className='flex flex-row items-center justify-start px-1'>
-                                                    <div className="h-2 w-2 rounded-full border border-slate-500" style={{ backgroundColor: color }} />
-                                                    <p className='text-xs text-gray-800 px-1'>{title}</p>
-                                                </li>
-                                            )
-                                        })}
-                                    </div>
-                                )}
-                            </button>
                         </div>
                     </div>
                     <PieChartView data={data} />

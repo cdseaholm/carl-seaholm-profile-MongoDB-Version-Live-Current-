@@ -1,12 +1,13 @@
 'use client'
 
-import { useSession } from "next-auth/react";
-import { signIn } from "next-auth/react";
+import { signIn } from "@/auth";
 import { useModalStore } from "@/context/modalStore";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
 
-export default function ModalLogin() {
+export default function ChangePassword() {
 
     //context
     const setModalOpen = useModalStore((state) => state.setModalOpen);
@@ -17,8 +18,6 @@ export default function ModalLogin() {
     const [signInError, setSignInError] = useState<string>('');
 
     //variables
-    {/**const id = session?.user?.email;
-    const adminIDBool = status === 'authenticated' && session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false; */}
     const pathName = usePathname();
     const router = useRouter();
 
@@ -82,7 +81,7 @@ export default function ModalLogin() {
                 }
                 </div>
             </div>
-            <div className="flex flex-row justify-around items-center space-y-1 pt-5">
+            <div className="flex flex-col justify-around items-center space-y-1 pt-5">
                 <div className="text-sky-700 cursor-pointer text-sm hover:text-gray-700" onClick={() => setModalOpen('forgotpassword')}>
                     Forgot password?
                 </div>

@@ -12,6 +12,8 @@ import AddRecipes from "../modalContent/Recipes/Add";
 import { useModalStore } from "@/context/modalStore";
 import AddNewObject from "../modalContent/AddNewObject/addNewObject";
 import AddNewEntryToObject from "../modalContent/AddNewEntryToObject/addNewEntryToObject";
+import ForgotPassword from "../modalContent/forgotpassword/forgotPassword";
+import ChangePassword from "../modalContent/changePassword/changePassword";
 
 
 export default function MainModal() {
@@ -40,6 +42,8 @@ export default function MainModal() {
         modalOpen === 'addcustom' ? 'Add Custom' :
         modalOpen === 'addNewObject' ? 'Add New Object' :
         modalOpen === 'addNewEntryToObject' ? 'Add New Entry' :
+        modalOpen === 'forgotpassword' ? 'Forgot Password' :
+        modalOpen === 'changepassword' ? 'Change Password' :
         '';
     
     const handleBack = () => {
@@ -84,6 +88,8 @@ export default function MainModal() {
                         {modalOpen === 'addrecipe' && <AddRecipes />}
                         {modalOpen === 'addNewObject' && <AddNewObject />}
                         {modalOpen === 'addNewEntryToObject' && <AddNewEntryToObject />}
+                        {modalOpen === 'forgotpassword' && <ForgotPassword />}
+                        {modalOpen === 'changepassword' && <ChangePassword />}
                         </>
                         }
                         </>
