@@ -1,7 +1,6 @@
 
 import connectDB from '@/lib/mongodb';
 import User from '@/models/user';
-import argon2id from 'argon2';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -20,7 +19,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             return NextResponse.json({ error: 'User not found' });
         }
 
-        const validPassword = await argon2id.verify(user.password, password);
+        const validPassword = password === user.password;
+
+        {/**const validPassword = await argon2id.verify(passwordToCheck, password); */ }
         if (!validPassword) {
             return NextResponse.json({ error: 'Invalid password' });
         }

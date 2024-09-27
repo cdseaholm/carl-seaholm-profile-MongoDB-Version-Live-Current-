@@ -3,7 +3,7 @@
 import { Providers } from "@/app/providers";
 import { useEffect, useRef, useState } from "react";
 import { useStateStore } from "@/context/stateStore";
-import DBWrapper from "./dbWrapper";
+import DBWrapper from "./dbwrapper";
 import ToastWrapper from "./toastWrapper";
 import MotionWrap from "./motionWrap";
 import { usePathname } from "next/navigation";

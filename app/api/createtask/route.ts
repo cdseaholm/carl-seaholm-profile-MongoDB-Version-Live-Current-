@@ -1,8 +1,8 @@
-
 import connectDB from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import { createErrorResponse } from "@/lib/utils";
 import TasksByUser from "@/models/tasks/tasksByUser";
+
 
 export async function POST(request: Request) {
 
@@ -11,7 +11,7 @@ export async function POST(request: Request) {
         const data = await request.json();
         const usersTasks = await TasksByUser.findOne({ user_email: data.user_email }) as any;
         if (!usersTasks) {
-            const taskToAdd = new TasksByUser({
+            const taskToAdd = await TasksByUser.create({
                 tasks: [{
                         title: data.title,
                         time: data.time,

@@ -50,7 +50,7 @@ export default function StatsMid({ objectToUse, totalTime, totalCounter, thisMon
         
         getData();
         setLoading(false);
-    }, [objectToUse, totalTime]);
+    }, [objectToUse, totalTime, totalCounter, thisMonth, objectTitle, reducedTime]);
 
     return (
         loading ? (

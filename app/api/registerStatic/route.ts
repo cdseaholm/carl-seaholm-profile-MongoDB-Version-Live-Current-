@@ -1,5 +1,4 @@
 
-import Argon2id from 'argon2';
 import connectDB from '@/lib/mongodb';
 import { NextResponse } from 'next/server';
 import User from '@/models/user';
@@ -33,7 +32,9 @@ export async function POST(request: Request) {
             return createErrorResponse("Password is required", 405);
         }
 
-        const hashedPassword = await Argon2id.hash(body.registerPassword);
+        {/**const hashedPassword = await Argon2id.hash(body.registerPassword); */}
+
+        const hashedPassword = body.registerPassword;
 
         try {
             const user = await User.create({

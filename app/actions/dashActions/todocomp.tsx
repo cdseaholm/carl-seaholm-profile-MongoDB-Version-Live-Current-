@@ -2,13 +2,13 @@
 
 import { Spinner } from "@/components/misc/Spinner";
 import { IField } from "@/models/types/field";
-import { IUserObject } from "@/models/types/userObject";
+import { IEntry } from "@/models/types/objectEntry";
 import React from "react";
 import { FiEdit } from "react-icons/fi";
 import { FiTrash2 } from "react-icons/fi";
 import { FiMessageSquare } from "react-icons/fi";
 
-export default function ToDoComp({ adminID, loading, filteredTasks, smallBreakpoint, isBreakpoint, handleCheckboxClick, handleDetailSelect }: { adminID: boolean, loading: boolean, filteredTasks: IUserObject[], smallBreakpoint: boolean, isBreakpoint: boolean, handleCheckboxClick: (task: IUserObject) => void, handleDetailSelect: (task: IUserObject) => void }) {
+export default function ToDoComp({ adminID, loading, filteredTasks, smallBreakpoint, isBreakpoint, handleCheckboxClick, handleDetailSelect }: { adminID: boolean, loading: boolean, filteredTasks: IEntry[], smallBreakpoint: boolean, isBreakpoint: boolean, handleCheckboxClick: (task: IEntry) => void, handleDetailSelect: (task: IEntry) => void }) {
 
     return (
         loading ? (
@@ -18,7 +18,7 @@ export default function ToDoComp({ adminID, loading, filteredTasks, smallBreakpo
                 <h1 className={`border-y border-neutral-700 text-sm md:text-base font-semibold text-center w-4/5 self-center py-10 my-5`}>No tasks found</h1>
             ) : (
                 <div className={`flex flex-col items-center justify-center border-y border-neutral-700 ${smallBreakpoint ? 'py-8 my-2 w-full mx-2' : isBreakpoint ? 'py-8 my-2 w-full mx-2' : 'py-10 my-5 w-4/5'} space-y-2`}>
-                    {filteredTasks.map((task: IUserObject, i: number) => {
+                    {filteredTasks.map((task: IEntry, i: number) => {
                         const checkboxToClick = task.fields.find((field: IField) => field.value === 'completed');
                         return (
                             <div className={`flex flex-row items-center justify-center w-full bg-stone-300 rounded-md`} key={i}>

@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 
     const mailOptions: Mail.Options = {
         from: process.env.NEXT_PUBLIC_ADMIN_USERNAME,
-        to: process.env.email,
+        to: email,
         // cc: email, (uncomment this line if you want to send a copy to the sender)
         subject: `Message from ${email}`,
         text: `Your temporary password is ${tempPW}`,

@@ -55,7 +55,7 @@ export default function DashHub({ showCalendar, closeCalendar, adminID, objectTo
             }) : [] as IEntry[];
             setEntriesOTD(fieldsToSet);
         }
-    }, [objectToUse, daySelected]);
+    }, [objectToUse, daySelected, entries]);
 
     const colorMap = entries ? Array.from(new Set(entries.map((entry: IEntry) => {
         const color = entry.fields.find(field => field.name === 'color')?.value;

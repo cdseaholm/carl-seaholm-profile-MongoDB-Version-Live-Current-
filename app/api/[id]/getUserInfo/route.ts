@@ -1,7 +1,6 @@
 import connectDB from "@/lib/mongodb";
 import { IUser } from "@/models/types/user";
 import User from "@/models/user";
-import * as argon2id from "argon2";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
@@ -27,7 +26,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       
       const passwordToCheck = user[0] ? user[0].password : '' as string;
 
-      const validPassword = await argon2id.verify(passwordToCheck, password);
+      const validPassword = passwordToCheck === password.password;
+
+      {/**const validPassword = await argon2id.verify(passwordToCheck, password); */}
 
       if (!validPassword) {
         return NextResponse.json({ status: 401, userInfo: {} as IUser });

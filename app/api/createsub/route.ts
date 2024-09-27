@@ -1,4 +1,3 @@
-
 import connectDB from "@/lib/mongodb";
 import { createErrorResponse } from "@/lib/utils";
 import Subscriber from "@/models/subscribers";

@@ -42,7 +42,7 @@ export default function AddNewEntryToObject() {
             setFieldMap(newFieldMap || []);
         }
         setLoading(false);
-    }, [modalParent, userObjects]);
+    }, [modalParent, userObjects, fieldMap, extraFields]);
 
     const handleCreateEntry = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

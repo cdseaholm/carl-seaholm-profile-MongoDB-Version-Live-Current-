@@ -13,14 +13,18 @@ export const useObserveElementWidth = <T extends HTMLElement>() => {
             setWidthQuery(entry.contentRect.width);
         });
 
-        if (ref.current) {
-            observer.observe(ref.current);
+        const currentRef = ref.current;
+
+        if (currentRef) {
+            observer.observe(currentRef);
         }
 
         return () => {
-            ref.current && observer.unobserve(ref.current);
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
         };
-    }, []);
+    }, [setWidthQuery]);
 
     return {
         width,
