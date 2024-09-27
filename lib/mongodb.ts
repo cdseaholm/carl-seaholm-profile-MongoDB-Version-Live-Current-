@@ -1,3 +1,4 @@
+import { getMongoDBUri } from "@/utils/helpers/helpers";
 import _mongoose, { connect } from "mongoose";
 
 declare global {
@@ -7,19 +8,20 @@ declare global {
   };
 }
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI || MONGODB_URI.length === 0) {
-  throw new Error("Please add your MongoDB URI to .env.local");
-}
-
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
-
 async function connectDB() {
+
+  const MONGODB_URI = await getMongoDBUri() as string;
+
+  if (MONGODB_URI === "" || !MONGODB_URI) {
+    console.log('uri:', MONGODB_URI);
+    throw new Error("Please add your MongoDB URI to .env.local");
+  }
+
+  let cached = global.mongoose;
+
+  if (!cached) {
+    cached = global.mongoose = { conn: null, promise: null };
+  }
   if (cached.conn) {
     console.log("🚀 Using cached connection");
     return cached.conn;

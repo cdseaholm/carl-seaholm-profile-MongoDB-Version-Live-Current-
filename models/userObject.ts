@@ -1,4 +1,4 @@
-import mongoose, { Model, Schema, models } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import { IUserObject } from "./types/userObject";
 import { entrySchema } from "./objectEntry";
 import { fieldSchema } from "./field";
@@ -23,6 +23,6 @@ export const userObjectSchema = new Schema(
     }
 );
 
-const UserObject = models.UserObject || mongoose.model("UserObject", userObjectSchema);
+const UserObject = mongoose.models?.UserObject || mongoose.model("UserObject", userObjectSchema);
 
 export default UserObject as Model<IUserObject>;

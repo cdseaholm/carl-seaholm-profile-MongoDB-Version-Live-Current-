@@ -1,4 +1,4 @@
-import mongoose, { Model, Schema, models } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import { IEntry } from "./types/objectEntry";
 import { fieldSchema } from "./field";
 
@@ -19,6 +19,6 @@ export const entrySchema = new Schema(
     }
 );
 
-const Entry = models.Entry || mongoose.model("Entry", entrySchema);
+const Entry = mongoose.models?.Entry || mongoose.model("Entry", entrySchema);
 
 export default Entry as Model<IEntry>;

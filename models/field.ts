@@ -1,5 +1,5 @@
-import mongoose, { Model, Schema, models } from "mongoose";
-import { IEntry } from "./types/objectEntry";
+import mongoose, { Model, Schema } from "mongoose";
+import { IField } from "./types/field";
 
 export const fieldSchema = new Schema(
     {
@@ -31,6 +31,6 @@ export const fieldSchema = new Schema(
     }
 );
 
-const Field = models.Field || mongoose.model("Field", fieldSchema);
+const Field = mongoose.models?.Field || mongoose.model("Field", fieldSchema);
 
-export default Field as Model<IEntry>;
+export default Field as Model<IField>;
