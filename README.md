@@ -15,14 +15,13 @@ The portfolio is divided into three main sections:
 This portfolio is built with the following technologies:
 
 - **Frontend**: NextJS, Javascript, Typescript, TailwindCSS, React
-- **Backend**: Prisma, PostgreSQL
+- **Backend**: MongoDB
 - **Deployment**: Vercel
-- **Data Fetching**: Apollo, GraphQL
-- **Miscellaneous**: Lucia, Gray-matter
+- **Data Fetching**: REST APIs
 
 ## Architecture
 
-The architecture of this portfolio is designed to be scalable and easy to update. While most of the data is currently hardcoded due to budget constraints, the structure is in place to easily transition to a server-based setup. This would allow for real-time updates and a more dynamic user experience.
+The architecture of this portfolio is designed to be scalable and easy to update. I have a mixture of hardcoded data and data fetched from MongoDB on their Atlas (free version). This could possibly change once budget constraints are lifed.
 
 ## Running Locally
 
@@ -37,7 +36,7 @@ It is also available at http://www.carlseaholm.com without the auth/DB functiona
 
 ## Future Plans
 
-As funds become available, I plan to transition to a server-based setup. This will allow for real-time updates and a more dynamic user experience. Stay tuned for updates!
+Building this out into a larger Professional and Personal portfolio for non-technical individuals to use. This way they can showcase both their personal and professional lives. Stay tuned for updates!
 
 ## Contact
 
