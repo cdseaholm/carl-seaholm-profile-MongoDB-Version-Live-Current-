@@ -4,55 +4,38 @@ import User from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  const adminID = req.url.split('/')[4];
+  console.log('adminID', adminID);
 
-  var adminID = req.url.split('/')[4];
+  if (!adminID) {
+    return NextResponse.json({ status: 400, message: 'Missing adminID' });
+  }
 
   try {
-
     await connectDB();
-    const password = await req.json();
 
     const user = await User.find({ email: adminID }) as IUser[];
 
-    if (user === null || user === undefined) {
-
-      return NextResponse.json({ status: 400, userInfo: {} as IUser });
-
-    } else if (user.length === 0) {
-
+    if (!user || user.length === 0) {
       return NextResponse.json({ status: 404, userInfo: {} as IUser });
-
-    } else {
-      
-      const passwordToCheck = user[0] ? user[0].password : '' as string;
-
-      const validPassword = passwordToCheck === password.password;
-
-      {/**const validPassword = await argon2id.verify(passwordToCheck, password); */}
-
-      if (!validPassword) {
-        return NextResponse.json({ status: 401, userInfo: {} as IUser });
-      }
-
-      const userInfo = user?.map((info: IUser) => {
-        return {
-          _id: info._id,
-          name: info.name,
-          email: info.email,
-          blogsub: info.blogsub,
-          userObjects: info.userObjects,
-          createdAt: info.createdAt,
-          updatedAt: info.updatedAt,
-        }
-      }) as IUser[];
-
-      const response = NextResponse.json({ status: 200, userInfo: userInfo[0] as IUser });
-      response.headers.set('Access-Control-Allow-Origin', '*');
-      return response;
-
     }
 
+    const userInfo = user.map((info: IUser) => ({
+      _id: info._id,
+      name: info.name,
+      email: info.email,
+      blogsub: info.blogsub,
+      userObjects: info.userObjects,
+      createdAt: info.createdAt,
+      updatedAt: info.updatedAt,
+    })) as IUser[];
+
+    const response = NextResponse.json({ status: 200, userInfo: userInfo[0] });
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    return response;
+
   } catch (error: any) {
-    return NextResponse.json({ status: 500, tasks: {} as IUser });
+    console.error(error);
+    return NextResponse.json({ status: 500, message: 'Internal Server Error' });
   }
 }

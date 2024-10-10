@@ -14,7 +14,6 @@ const Blog = () => {
         }
     });
     const categoriesForDrop = Object.keys(posts);
-    categoriesForDrop.push('All');
     const catSort = categoriesForDrop.sort((a, b) => a < b ? -1 : 1).filter(category => category !== 'demo');
     
     return (

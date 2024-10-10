@@ -61,7 +61,7 @@ export async function GetDataset({ objectToUse, totalTime, totalCounter, thisMon
                 return color;
             });
 
-            const entries = objectToUse ? objectToUse.entries : [];
+            const entries = objectToUse ? objectToUse.entries as IEntry[] : [] as IEntry[];
 
             const newData = entries ? entries.map((_field, index) => {
                 if (monthNames !== undefined && monthColors !== undefined) {
@@ -79,7 +79,7 @@ export async function GetDataset({ objectToUse, totalTime, totalCounter, thisMon
                 };
             }) as { date: string, time: number, color: string }[] : [];
 
-            const newDataTwo = objectToUse.entries.map((_field, index) => {
+            const newDataTwo = entries ? entries.map((_field, index) => {
                 if (monthNames !== undefined && monthColors !== undefined) {
                     const total = avgTotalTimeFixed[index];
                     return {
@@ -93,7 +93,7 @@ export async function GetDataset({ objectToUse, totalTime, totalCounter, thisMon
                     time: 0,
                     color: ''
                 };
-            }) as { date: string, time: number, color: string }[];
+            }) as { date: string, time: number, color: string }[] : [];
             returnData = { monthNames: barMonths, monthColors: barColors, newData, newDataTwo };
         }
     } else {
@@ -105,13 +105,13 @@ export async function GetDataset({ objectToUse, totalTime, totalCounter, thisMon
 export async function FillTracker({ objectToUse, thisMonth }: { objectToUse: IUserObject, thisMonth: number }) {
 
     let daysWithHobbies = [] as number[];
-
+    const entries = objectToUse ? objectToUse.entries as IEntry[] : [] as IEntry[];
     const monthLength = new Date(new Date().getFullYear(), thisMonth, 0).getDate();
-
+    const entLen = entries ? entries.length : 0;
     if (!objectToUse) {
         return;
     }
-    for (let i = 0; i < objectToUse.entries.length; i++) {
+    for (let i = 0; i < entLen; i++) {
         const dateToUse = objectToUse.entries[i]?.date as string;
         const date = new Date(dateToUse);
         if (date.getMonth() === thisMonth) {
@@ -120,7 +120,6 @@ export async function FillTracker({ objectToUse, thisMonth }: { objectToUse: IUs
                 daysWithHobbies.push(day);
             }
         }
-
     }
     const newTrackerData = [] as Tracker[];
     for (let i = 1; i <= monthLength; i++) {

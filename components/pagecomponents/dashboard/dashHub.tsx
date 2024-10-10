@@ -67,7 +67,7 @@ export default function DashHub({ showCalendar, closeCalendar, adminID, objectTo
     return (
         <MainChild>
             <CalendarModal show={showCalendar} closeCalendar={closeCalendar} adminIDBool={adminID} objectToUse={objectToUse} handleDaySelected={handleDaySelected} session={session} colorMap={colorMap} />
-            <DashButtonBoard dashToShow={dashToShow} handleDashToShow={handleDashToShow} userObjects={userObjects} handleUserObjectToShow={handleUserObjectToShow} indexShown={indexShown} setIndexShown={setIndexShown} adminID={adminID} session={session} colorMap={colorMap} />
+            <DashButtonBoard dashToShow={dashToShow} handleDashToShow={handleDashToShow} userObjects={userObjects} handleUserObjectToShow={handleUserObjectToShow} indexShown={indexShown} setIndexShown={setIndexShown} adminID={adminID} colorMap={colorMap} />
             <InnerTemplate>
                 {
                     dashToShow === 'calendar' ? (

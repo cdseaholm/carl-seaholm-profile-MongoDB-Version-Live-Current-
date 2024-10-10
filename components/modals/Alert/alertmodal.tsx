@@ -5,7 +5,6 @@ import React from 'react';
 import { useAlertStore } from '@/context/alertStore';
 import { useModalStore } from '@/context/modalStore';
 import { FiArrowLeft } from "react-icons/fi";
-import { useHobbyStore } from '@/context/hobbyStore';
 
 export default function AlertModal() {
   
@@ -16,21 +15,24 @@ export default function AlertModal() {
     const alertMessage = useAlertStore((state) => state.alertMessage);
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const resetAlert = useAlertStore((state) => state.resetAlert);
-    const setDashToShow = useHobbyStore((state) => state.setDashToShow);
     const selectedDay = useModalStore((state) => state.daySelected);
+    const setShowCalendar = useModalStore((state) => state.setShowCalendar);
+    const setDashToShow = useModalStore((state) => state.setDashToShow);
 
     //variables
 
     //functions
     const handleFirstButton = () => {
         if (alertParent === 'calendar') {
-            setModalOpen('logsession');
+            setDashToShow('calendar');
+            setShowCalendar(true);
+            setModalOpen('');
         }
         resetAlert();
     }
 
     const handleSecondButtonCalendar = async () => {
-        setDashToShow('calendar');
+
         resetAlert();
     }
 

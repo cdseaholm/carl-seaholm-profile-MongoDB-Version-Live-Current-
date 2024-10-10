@@ -13,13 +13,15 @@ import { IEntry } from "@/models/types/objectEntry";
 export default function DashboardPage() {
 
   const { data: session } = useSession();
-  const [dashToShow, setDashToShow] = useState('stats');
+  const dashToShow = useModalStore((state) => state.dashToShow);
+  const setDashToShow = useModalStore((state) => state.setDashToShow);
   const userInfo = useStore((state) => state.userInfo);
   const userObjects = userInfo?.userObjects;
   const adminID = session ? session.user ? session.user.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME : false : false;
   const setGlobalObjectToUse = useStore((state) => state.setGlobalObjectToUse);
   const [objectToUse, setObjectToUse] = useState<IUserObject>(userObjects ? userObjects[0] as IUserObject : {} as IUserObject);
-  const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const showCalendar = useModalStore((state) => state.showCalendar);
+  const setShowCalendar = useModalStore((state) => state.setShowCalendar);
   const setGlobalDaySelected = useModalStore((state) => state.setDaySelected);
   const [daySelected, setDaySelected] = useState<string>(new Date().toLocaleDateString());
   const [loading, setLoading] = useState<boolean>(true);
@@ -85,7 +87,6 @@ export default function DashboardPage() {
         });
         const { totalTimePerMonth, counterPerMonth } = await TotalMinutesCalc({ entries: modelsToPass, thisMonth: thisMonth });
         setTotalTime(totalTimePerMonth);
-        console.log(totalTimePerMonth);
         setTotalCounter(counterPerMonth);
       }
     }
