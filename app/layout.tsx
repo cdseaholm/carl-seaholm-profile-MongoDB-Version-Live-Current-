@@ -3,6 +3,7 @@ import React from "react";
 import { Metadata } from "next";
 import AnimateAndAuthWrapper from "@/components/wrappers/animateandauthwrapper";
 import PageWrapper from "@/components/wrappers/pagewrapper";
+import "@/app/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
