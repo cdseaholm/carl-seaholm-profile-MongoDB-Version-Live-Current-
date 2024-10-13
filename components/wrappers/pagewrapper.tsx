@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation";
 import { widthContext } from "@/context/context";
 
 
-export function PageWrapper({ children }: Readonly<{ children: React.ReactNode; }>) {
+export default function PageWrapper({ children }: Readonly<{ children: React.ReactNode; }>) {
 
   const targetRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);

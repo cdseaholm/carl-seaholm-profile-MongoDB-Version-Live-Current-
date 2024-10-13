@@ -3,7 +3,7 @@
 import { AuthProvider } from "@/app/context/session/SessionContext";
 import { AnimatePresence } from "framer-motion";
 
-export function AnimateAndAuthWrapper({children}: Readonly<{
+export default function AnimateAndAuthWrapper({children}: Readonly<{
 children: React.ReactNode;}>) {
     return (
         <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
