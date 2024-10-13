@@ -40,5 +40,3 @@ next-env.d.ts
 /prisma
 
 /notes
-
-/app/api/sendTempPW/route.ts
