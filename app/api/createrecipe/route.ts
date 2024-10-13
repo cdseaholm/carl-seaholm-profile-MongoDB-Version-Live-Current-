@@ -1,10 +1,8 @@
 
 import connectDB from "@/lib/mongodb";
 import { NextResponse } from "next/server";
-import Hobby from "@/models/hobby";
 import { createErrorResponse } from "@/lib/utils";
 import Recipe from "@/models/recipes";
-import { link } from "fs";
 
 
 export async function POST(request: Request) {

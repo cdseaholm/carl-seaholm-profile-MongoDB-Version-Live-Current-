@@ -35,10 +35,6 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
     toggle();
   };
 
-  {/**const handleClickedSignUp = () => {
-    setModalSignUpOpen(true);
-  };*/}
-
   const handleClickedSub = () => {
     setModalOpen('subscribe');
   }
@@ -82,9 +78,11 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
           &times;
         </button>
         <div className='mx-3 divide-y divide-solid width-4/6'>
-          <div className={`px-10 rounded-lg px-3 mt-8 pt-5 pb-7 text-slate-200 ${isBreakpoint ? 'text-xs' : 'text-sm'}`}>
-            Carl Seaholm&apos;s Portfolio
-          </div>
+          <Link href='/'>
+            <p className={`px-10 rounded-lg px-3 mt-8 pt-5 pb-7 text-slate-200 ${isBreakpoint ? 'text-xs' : 'text-sm'}`}>
+              {`Carl Seaholm's Portfolio`}
+            </p>
+          </Link>
           <div />
           </div>
           <div className='divide-y divide-solid'>

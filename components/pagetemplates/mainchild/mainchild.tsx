@@ -1,15 +1,15 @@
 'use client'
 
-import { useStateStore } from "@/context/stateStore";
+import NavBar from "@/components/nav/Navbar";
 
-const MainChild = ({children}: {children: React.ReactNode}) => {
+const MainChild = ({ children }: { children: React.ReactNode }) => {
 
-  const widthQuery = useStateStore((state) => state.widthQuery);
-
-    return (
-      <div className="flex flex-col bg-white/30 rounded-md flex-grow w-full h-full overflow-hidden">
+  return (
+    <div className="flex flex-col bg-white/30 w-full h-full overflow-hidden px-2 pb-2">
+      <NavBar />
         {children}
-      </div>
-    );
-  };
+    </div>
+  );
+};
+
 export default MainChild;

@@ -1,3 +1,4 @@
+import { toasty } from '@/models/types/toasty';
 import { create } from 'zustand';
 
 interface AlertStore {
@@ -12,6 +13,8 @@ interface AlertStore {
     alertSecondButton: boolean;
     setAlarmSecondButton: (alertSecondButton: boolean) => void;
     resetAlert: () => void;
+    showToast: toasty;
+    setShowToast: (showToast: toasty) => void;
 }
 
 export const useAlertStore = create<AlertStore>((set) => ({
@@ -25,5 +28,7 @@ export const useAlertStore = create<AlertStore>((set) => ({
     setAlarmFirstButton: (alertFirstButton) => set({ alertFirstButton }),
     alertSecondButton: false,
     setAlarmSecondButton: (alertSecondButton) => set({ alertSecondButton }),
-    resetAlert: () => set({ showAlert: false, alertMessage: '', alertParent: '', alertFirstButton: false, alertSecondButton: false})
+    resetAlert: () => set({ showAlert: false, alertMessage: '', alertParent: '', alertFirstButton: false, alertSecondButton: false}),
+    showToast: { type: '', message: '' },
+    setShowToast: (showToast) => set({ showToast }),
 }));

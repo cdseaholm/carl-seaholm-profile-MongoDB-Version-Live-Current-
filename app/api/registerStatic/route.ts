@@ -1,10 +1,9 @@
 
-import { Argon2id } from 'oslo/password';
 import connectDB from '@/lib/mongodb';
 import { NextResponse } from 'next/server';
 import User from '@/models/user';
-import { create } from 'domain';
 import { createErrorResponse } from '@/lib/utils';
+import { IUserObject } from '@/models/types/userObject';
 
 function isValidEmail(email: string): boolean {
     return /.+@.+/.test(email);
@@ -33,14 +32,17 @@ export async function POST(request: Request) {
             return createErrorResponse("Password is required", 405);
         }
 
-        const hashedPassword = await new Argon2id().hash(body.registerPassword);
+        {/**const hashedPassword = await Argon2id.hash(body.registerPassword); */}
+
+        const hashedPassword = body.registerPassword;
 
         try {
             const user = await User.create({
                 name: body.registerName, 
                 email: body.registerEmail, 
                 blogsub: body.registerBlogsub ? true : false, 
-                password: hashedPassword
+                password: hashedPassword,
+                customFields: [] as IUserObject[]
             });
 
             if (!user) {

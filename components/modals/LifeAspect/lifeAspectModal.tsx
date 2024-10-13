@@ -1,8 +1,6 @@
 'use client'
 
-import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
-import { useModalStore } from "@/context/modalStore";
 import AddLifeAspect from "./AddLifeAspect/addcustom";
 import { useLifeAspectStore } from "@/context/lifeAspectStore";
 
@@ -15,9 +13,6 @@ export default function LifeAspectModal() {
     const setLifeAspectParent = useLifeAspectStore((state) => state.setLifeAspectParent);
     const setOpenLifeAspectModal = useLifeAspectStore((state) => state.setOpenLifeAspectModal);
     const openLifeAspectModal = useLifeAspectStore((state) => state.openLifeAspectModal);
-
-    //state
-    const [loading, setLoading] = useState<boolean>(false);
 
     //variables
     const secondActionNeeded = lifeAspectParent === 'calendar' || lifeAspectParent === 'actions' ? true : false;
@@ -46,11 +41,7 @@ export default function LifeAspectModal() {
                             <span className="sr-only">Close modal</span>
                         </button>
                     </div>
-                    {loading ? (
-                        <div className="flex justify-center items-center h-full">
-                            <div className="w-10 h-10 border-2 border-t-primary-500 rounded-full animate-spin"/>
-                        </div>
-                    ) : (
+                    
                         <div className="flex flex-col h-4/5 overflow-hidden">
                                 {openLifeAspectModal !== '' &&
                                 <>
@@ -58,7 +49,7 @@ export default function LifeAspectModal() {
                                 </>
                                 }
                         </div>
-                    )}
+                 
                     </div>
                 </div>
             </div>

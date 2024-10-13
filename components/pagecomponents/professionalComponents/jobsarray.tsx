@@ -2,11 +2,11 @@
 const jobsArray =[
 {
     company: "ERP Automated",
-    title: "Sales Devlopment Team Lead / Stand In IT Manager / Website Developer",
-    date: {startDate: '2023-08' , endDate: '2024-01' },
-    descriptions: ["Set up, implement, and deploy an entire Sales/Marketing Function", "Filled in for IT in my most previous role (Email set-up and permissions, website debugging, API access/integrations, and virus protection)", "Enhance the teams Marketing capabilities and Web Presence", "Build custom tables and worksheets with HTML and Javascript. These were for the Sales team to send out and implemented into Landing Pages", "Re-work and enhance the company website from the ground up"],
+    title: "Team Lead",
+    date: {startDate: '2023-08' , endDate: '2024-04' },
+    descriptions: [`Revamped site front-end to be more dynamic, user-friendly, engages users more, and pushes users to correct/trackable CTAs. This improved site speeds by 33% and 40% increase in CTA clicks.`, `Created customizable pricing sheets using JavaScript for each user to customize their own pricing plan from thousands of D365 license prices. This led to a 100% increase in speed when discussing pricing plans with potential customers.`, `Served as IT lead, navigating the team through email protection, unifying the team email system, and site protection`, `Built out entire Sales/Marketing functions for the company which are still in place today, resulting in 33% increases to revenue each quarter and nearly a dozen hours of work for leadership each week`, `Led the team through two D365 conferences as Sales and IT consultant to the team`],
     location: "Remote - Denver, CO",
-    category: ['Development', 'Sales'],
+    category: ['IT', 'Development', 'Sales/Marketing'],
     logo: '/images/erp.png',
     logoAlt: 'ERP Automated Logo'
 },
@@ -30,11 +30,9 @@ const jobsArray =[
 {
 
     company: "Loom",
-    title: "Sales Development Representative",
-    date: {startDate: '2021-09' , endDate: '2022-10' },
-    descriptions: ["Help build out the Inbound and Outbound SDR role", "Generate 20 SQLs monthly, resulting in an average of 250k-400k monthly",
-   "Use Outreach to keep pipeline and sequences fresh and up to date",
-   "Provide AEs assistance with outbound into ten named accounts a month"],
+    title: "SDR/SDR Team Lead",
+    date: {startDate: '2021-10' , endDate: '2022-11' },
+    descriptions: ["Created the SDR system that is currently in place to help scale the team to a full 12 SDRs to support 20 Sales roles", "Took initiative on small accounts (less than 10 seats), to qualify and close the accounts", "Led the SDR team through meetings and trainings", "Led the SDR team through 12+ conferences that hit 100% of goals going into each Tech conference"],
     category: ['Sales', 'Management'],
     location: "Remote - Denver, CO",
     logo: '/images/loom.png',
@@ -144,7 +142,7 @@ const jobsArray =[
 
     company: 'carlseaholm.com (Current)',
     title: "Developer and Creator",
-    date: {startDate: '2024-01' , endDate: '2024-03' },
+    date: {startDate: '2024-01' , endDate: 'Today' },
     descriptions: ["Transitioning over my WordPress Blog to my own site using Vercel, Next.js, and React", "This blog will be combined with a Professional Profile for myself to allow others to see my personal life, professional life, as well as current projects I'm working on.", "In addition to the stack mentioned above (Vercel, Next.js, and React), I am writing this with tsx. For styling I am using Tailwind CSS. I am also using Prisma for my database and NextAuth for authentication."],
     category: ['Development'],
     location: "Remote",
@@ -152,11 +150,11 @@ const jobsArray =[
     logoAlt: 'Carl Seaholm Logo'
  },
 {
-    company: 'newprogressco.com (Current)',
-    title: "Developer and Creator",
-    date: {startDate: '2023-06' , endDate: '2024-03' },
-    descriptions: ["Along with transitioning over my WordPress blog into it's own entity, I am beginning to implement my own Business site using Vercel, Next.js, and React.", "I expect this to be running within the next month.", "For styling I am using Tailwind CSS. I am also using Prisma for my database and NextAuth for authentication. I will implement Stripe for payments and am in the process of setting up a subscription service", "This site is a professional site for my company New Progress. It is a place where I can showcase my work, and allow potential clients to reach out to me.", "I offer services as small as bug fixes, to writing out Websites for Clients. Pricing is based on speed in which they need the project done and then heaviness of the load."],
-    category: ['Development'],
+    company: 'New Progress Consulting (Current)',
+    title: "CEO & Founder",
+    date: {startDate: '2021-04' , endDate: 'Today' },
+    descriptions: ["Led development of diverse web solutions including a static CPA/Financial site, and a modern apparel company", "Architected and implemented full-stack solutions to deliver scalable, manageable, and organized projects", "Managed complete project lifecycles from discovery through deployment, ensuring alignment between technical solutions and business objectives", "Implemented responsive front-ends using Next.js and TypeScript, focusing on performance, optimization and SEO best practices", "Tracked average increases in Site Visits by 110%, Action Clicks/Submissions by 50%, Session times by 20%, and Site load times by 15%", "Designed and built RESTful APIs integrating with MongoDB and AWS services to support scalable data management", "Maintained 100% client satisfaction rate while delivering projects on time if not 2 weeks ahead of schedule"],
+    category: ['Software Engineering', 'Development'],
     location: "Remote",
     logo: '/images/nplogo.png',
     logoAlt: 'New Progress Logo'
@@ -165,7 +163,7 @@ const jobsArray =[
 {
     company: 'New Progress Application Projects: NP Financr, NP Taskr, and NP Gamr (Current)',
     title: "Developer and Creator",
-    date: {startDate: '2023-03' , endDate: '2024-03' },
+    date: {startDate: '2023-03' , endDate: 'Today' },
     descriptions: ["Have built 2 applications in 10 months for my own personal use. Planning to deploy 1 soon, then the others later.",
     "Taught myself to code building these apps with Frameworks, Libraries, and Languages such as React Native, EXPO Go, PostgreSQL, JavaScript, and Tailwind.", "All of these are still under development. I went into each application with the idea of making the free and easy to use.",
     "NP Financr is a light-weight intuitive Financial tracking application where the user gets to set up how they want to see their money. There is tons of customizability. Initially written with Flutter/Dart, I am currently rewriting this to use React Native with Expo Go.",
@@ -184,7 +182,7 @@ const schoolsArray = [
     school: "University of Colorado Boulder",
     degree: "Bachelor of Science",
     major: "Computer Science/Engineering",
-    date: {startDate: '2024-01' , endDate: '2025-12' },
+    date: {startDate: '2023-02' , endDate: '2025-01' },
     location: "Boulder, CO",
     category: 'Education',
     logo: '/images/Colorado_Buffaloes_logo.svg.png',

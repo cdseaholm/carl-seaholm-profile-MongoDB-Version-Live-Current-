@@ -1,8 +1,10 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
+import { ITask } from "../types/task";
 
 const taskSchema = new Schema({
     title: String,
     time: String,
+    date: String,
     description: String,
     completed: Boolean,
     _id: String,
@@ -10,16 +12,8 @@ const taskSchema = new Schema({
     updatedAt: String
 });
 
-const tasksByDateSchema = new Schema({
-    tasks: [taskSchema],
-    date: String,
-    _id: String,
-    createdAt: String,
-    updatedAt: String
-});
-
 const tasksByUserSchema = new Schema({
-    tasksByDate: [tasksByDateSchema],
+    tasks: [taskSchema],
     user_email: {
         type: String,
         required: true
@@ -30,4 +24,4 @@ const tasksByUserSchema = new Schema({
 
 const TasksByUser = mongoose.models.TasksByUser || mongoose.model("TasksByUser", tasksByUserSchema);
 
-export default TasksByUser;
+export default TasksByUser as Model<ITask>;

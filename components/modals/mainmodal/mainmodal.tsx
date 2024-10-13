@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import ModalLogin from "../modalContent/Login/loginModal";
 import SignupModal from "../modalContent/signup/signupModal";
@@ -9,10 +8,12 @@ import LogSessionModal from "../modalContent/LogSession/logsession";
 import ModalHobby from "../modalContent/AddHobbyTracker/hobbymodal";
 import ActionsModal from "../modalContent/Actions/actionsmodal";
 import EditUser from "../modalContent/EditUser/editUser";
-import CalendarModal from "../modalContent/Calendar/calendarmodal";
 import AddRecipes from "../modalContent/Recipes/Add";
-import AddTask from "../modalContent/AddTask/addtaskmodal";
 import { useModalStore } from "@/context/modalStore";
+import AddNewObject from "../modalContent/AddNewObject/addNewObject";
+import AddNewEntryToObject from "../modalContent/AddNewEntryToObject/addNewEntryToObject";
+import ForgotPassword from "../modalContent/forgotpassword/forgotPassword";
+import ChangePassword from "../modalContent/changePassword/changePassword";
 
 
 export default function MainModal() {
@@ -24,12 +25,8 @@ export default function MainModal() {
     const setModalParent = useModalStore((state) => state.setModalParent);
     const daySelected = useModalStore((state) => state.daySelected);
 
-    //state
-    const [selectedOption, setSelectedOption] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
-
     //variables
-    const secondActionNeeded = modalParent === 'calendar' || modalParent === 'actions' ? true : false;
+    const secondActionNeeded = modalParent === 'actions' ? true : false;
 
     const modalTitleProp = 
         modalOpen === 'login' ? 'Login' : 
@@ -40,21 +37,18 @@ export default function MainModal() {
         modalOpen === 'actions' ? 'Actions' : 
         modalOpen === 'dashdropdown' ? 'Menu' : 
         modalOpen === 'edituser' ? 'Edit User' :
-        modalOpen === 'calendar' ? 'Calendar' :
         modalOpen === 'addrecipe' ? 'Add Recipe' :
         modalOpen === 'addtask' ? 'Add Task' :
         modalOpen === 'addcustom' ? 'Add Custom' :
+        modalOpen === 'addNewObject' ? 'Add New Object' :
+        modalOpen === 'addNewEntryToObject' ? 'Add New Entry' :
+        modalOpen === 'forgotpassword' ? 'Forgot Password' :
+        modalOpen === 'changepassword' ? 'Change Password' :
         '';
-
-    const handleOptionSelect = (option: string) => {
-        setSelectedOption(option);
-    };
     
     const handleBack = () => {
         if (modalParent === 'actions') {
             setModalOpen('actions');
-        } else if (modalParent === 'calendar') {
-            setModalOpen('calendar');
         } else {
             setModalOpen('');
         }
@@ -62,8 +56,8 @@ export default function MainModal() {
     };
 
     return (
-        <div id="crud-modal" tabIndex={-1} aria-hidden="true" className={`${modalOpen !== '' ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
-            <div className={`relative p-4 ${modalOpen === 'calendar' ? '' : 'w-full max-w-md'} max-h-full`} style={{width: `${modalOpen === 'calendar' ? '95%' : ''}`}}>
+        <div id="crud-modal" tabIndex={-1} aria-hidden={modalOpen !== '' ? "false" : "true"} className={`${modalOpen !== '' ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
+            <div className={`relative p-4 w-full max-w-md max-h-full`}>
                 <div className={`relative bg-white rounded-lg shadow dark:bg-gray-700`}>
                     <div className={`flex items-center justify-between space-x-4 p-2 border-b rounded-t border-gray-400 w-full`}>
                         {secondActionNeeded &&
@@ -81,11 +75,6 @@ export default function MainModal() {
                             <span className="sr-only">Close modal</span>
                         </button>
                     </div>
-                    {loading ? (
-                        <div className="flex justify-center items-center h-full">
-                            <div className="w-10 h-10 border-2 border-t-primary-500 rounded-full animate-spin"/>
-                        </div>
-                    ) : (
                         <>
                         {modalOpen !== '' &&
                         <>
@@ -96,19 +85,14 @@ export default function MainModal() {
                         {modalOpen === 'addhobby' && <ModalHobby />}
                         {modalOpen === 'actions' && <ActionsModal />}
                         {modalOpen === 'edituser' && <EditUser />}
-                        {modalOpen === 'calendar' &&
-                            <div style={{height: '85%'}}> 
-                                <CalendarModal />
-                            </div>
-                        }
                         {modalOpen === 'addrecipe' && <AddRecipes />}
-                        {modalOpen === 'addtask' &&
-                        <AddTask />
-                        }
+                        {modalOpen === 'addNewObject' && <AddNewObject />}
+                        {modalOpen === 'addNewEntryToObject' && <AddNewEntryToObject />}
+                        {modalOpen === 'forgotpassword' && <ForgotPassword />}
+                        {modalOpen === 'changepassword' && <ChangePassword />}
                         </>
                         }
                         </>
-                    )}
                     </div>
                 </div>
             </div>

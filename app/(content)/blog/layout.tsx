@@ -2,7 +2,7 @@ import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: 'Carl Seaholm Blog',
+    title: "Carl Seaholm's Blog",
     description: 'A page dedicated to the blog Carl Seaholm had written.',
 }
 

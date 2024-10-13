@@ -1,21 +1,26 @@
+
+import { IEntry } from '@/models/types/objectEntry';
 import { create } from 'zustand';
 
 
 interface StateStore {
     urlToUse: string;
+    setUrlToUse: (url: string) => void;
     globalLoading: boolean;
     setGlobalLoading: (globalLoading: boolean) => void;
     widthQuery: number;
     setWidthQuery: (width: number) => void;
+    taskDetailToShow: IEntry;
+    setTaskDetailToShow: (taskDetailToShow: IEntry) => void;
 }
 
 export const useStateStore = create<StateStore>((set) => ({
-    urlToUse: process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_BASE_URL !== undefined && process.env.NEXT_PUBLIC_BASE_URL !== '' && process.env.NEXT_PUBLIC_BASE_URL !== null ? process.env.NEXT_PUBLIC_BASE_URL
-    : 
-    process.env.NODE_ENV === 'production' && process.env. NEXT_PUBLIC_BASE_LIVEURL !== null && process.env.NEXT_PUBLIC_BASE_LIVEURL !== '' && process.env.NEXT_PUBLIC_BASE_LIVEURL !== undefined ? process.env.NEXT_PUBLIC_BASE_LIVEURL 
-    : '',
+    urlToUse: '',
+    setUrlToUse: (url) => set({urlToUse: url}),
     globalLoading: false,
     setGlobalLoading: (globalLoading) => set({globalLoading}),
     widthQuery: 0,
     setWidthQuery: (width) => set({ widthQuery: width }),
+    taskDetailToShow: {} as IEntry,
+    setTaskDetailToShow: (taskDetailToShow) => set({ taskDetailToShow }),
 }));

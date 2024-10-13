@@ -2,7 +2,7 @@
 
 import { DetailsAccordianPage } from '@/components/dropdowns/DetailsAccordian';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
-import React, { useState } from 'react';
+import React from 'react';
 
 const WritingPage = () => {
 

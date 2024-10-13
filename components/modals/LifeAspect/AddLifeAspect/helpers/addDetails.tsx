@@ -6,7 +6,7 @@ import { useLifeAspectStore } from "@/context/lifeAspectStore";
 import { useState } from "react";
 import { Detail } from "@/models/types/detail";
 
-export default function AddDetails({parent}: {parent: string}) {
+export default function AddDetails() {
 
     const [detailName, setDetailName] = useState<string>('');
     const [detailType, setDetailType] = useState<string>('text');

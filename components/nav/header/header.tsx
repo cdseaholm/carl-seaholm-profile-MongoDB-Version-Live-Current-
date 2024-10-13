@@ -1,130 +1,105 @@
+'use client'
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import Sidenav from "../sideNav/SideNav";
 import { SideMenuAccordian } from "../../dropdowns/SideMenuAccordian";
 import SocialButton from "@/components/buttons/socialButton";
-import Image from 'next/image'
+import { FiMenu } from "react-icons/fi";
 import { useStateStore } from "@/context/stateStore";
 
 
 const SideNavHeader = () => {
-    const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
-    const [open, setOpen] = useState(false);
-    const pathname = usePathname();
-    const toggle = () => {
-      setOpen((prevState) => !prevState);
-    };
-    const [isHovered, setIsHovered] = useState(false);
-    const [clicked, setClicked] = useState(false);
-    
-  
-    const imageClick = useCallback(() => {
-      setIsHovered(prevHovered => !prevHovered);
-      setClicked(prevClicked => !prevClicked);
-    }, []);
-  
-    const imageRef = React.useRef<HTMLDivElement>(null);
 
-    const style = {
-      profilepicture: {
-        large: `absolute z-40 top-0 right-10 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`,
-        small: `absolute z-40 top-0 right-10 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`
-      },
-    };
-  
-    React.useEffect(() => {
-      const handleOutsideClick = (event: { target: any; }) => {
-        if (!imageRef.current || !imageRef.current.contains(event.target as HTMLDivElement)) {
-          if (!clicked) return;
-          imageClick();
-        }
-      };
-      window.addEventListener('mousedown', handleOutsideClick);
-      return () => window.removeEventListener('mousedown', handleOutsideClick);
-    }, [clicked, isHovered, imageRef, imageClick]);
-  
-    return (
-      <>
-        {pathname !== '/'  && pathname !== '/demo_303' &&
-        <div className={`flex flex-row ${isBreakpoint ? 'justify-start' : 'justify-between'} items-center pb-2 w-full`}>
-        {isBreakpoint &&
-        <>
-            <button 
-              type='button'
-              aria-disabled={open}
-              disabled={open}
-              onClick={toggle}
-              className={`text-black text-sm md:text-base font-medium ${open ? 'text-transparent' : 'text-black'}`}
-            >
-              Menu
-            </button>
-            <div className={`mx-5 my-1 ${open ? 'text-transparent' : 'text-black'}`}>
-              |
-            </div>
-            <div>
-              <Link className={`text-black text-sm md:text-base font-medium ${open ? 'text-transparent' : 'text-black'}`} href='/'>
-                Home
-              </Link>
-            </div>
-          {pathname === '/about/professional' || pathname === '/about/personal' &&
-            <div ref={imageRef} className={`mt-3 ml-5 ${clicked ? style.profilepicture.large : style.profilepicture.small}`}>
-              <Image
-                onClick={imageClick}
-                priority
-                src="/images/carlseaholmimage.jpg"
-                className={`z-30 rounded-full overflow-x-hidden transition-all ease duration-200 ${isHovered ? 'cursor-pointer' : ''}`}
-                height={clicked ? 200 : 60}
-                width={clicked ? 200 : 60}
-                alt="Carl Seaholm Profile Photo"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                style={{objectFit: 'cover', height: 'auto', width: 'auto'}}
-              />
-            </div>
-          }
-        </>
-        }
-        {!isBreakpoint &&
-          <>
-            <div className={`flex flex-row items-center`}>
-              <button 
+  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768;
+  const [open, setOpen] = useState(false);
+  const [pageSelected, setPageSelected] = useState('');
+  const pathname = usePathname();
+  const toggle = () => {
+    setOpen((prevState) => !prevState);
+  };
+
+  useEffect(() => {
+    if (pathname === '/dashboard') {
+      setPageSelected('Dashboard');
+    } else if (pathname === '/blog') {
+      setPageSelected('Blog');
+    } else if (pathname === '/projects') {
+      setPageSelected('Projects');
+    } else if (pathname === '/services') {
+      setPageSelected('Services');
+    } else if (pathname === '/about') {
+      setPageSelected('About');
+    } else if (pathname === '/about/professional') {
+      setPageSelected('Professional')
+    }  else if (pathname === '/about/personal') {
+      setPageSelected('Personal')
+    }  else if (pathname === '/recipes') {
+      setPageSelected('Recipe Ratings')
+    }
+  }, [pathname]);
+
+  return (
+    <>
+      {pathname !== '/' &&
+        <div className={`flex flex-row ${isBreakpoint ? 'justify-start' : 'justify-between'} items-center w-full`}>
+          {isBreakpoint &&
+            <div className={`flex flex-row items-center space-x-3`}>
+              <button
                 type='button'
                 aria-disabled={open}
                 disabled={open}
                 onClick={toggle}
-                className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`}
+                className={`text-black text-sm md:text-base font-medium ${open ? 'text-transparent' : 'text-black'}`}
               >
-                Menu
+                <FiMenu size={20} />
               </button>
-              <>
-              <div className={`mx-5 my-1 ${open ? 'text-transparent' : 'text-black'}`}>|</div>
-              <div>
-                <Link className={`text-black font-medium ${open ? 'text-transparent' : 'text-black'}`} href='/'>
-                  Home
-                </Link>
+              <p>
+                {`-`}
+              </p>
+              <p>
+                {pageSelected}
+              </p>
+            </div>
+          }
+          {!isBreakpoint &&
+            <>
+              <div className={`flex flex-row items-center space-x-3`}>
+                <button
+                  type='button'
+                  aria-disabled={open}
+                  disabled={open}
+                  onClick={toggle}
+                  className={`text-black text-sm md:text-base font-medium ${open ? 'text-transparent' : 'text-black'}`}
+                >
+                  <FiMenu size={25} />
+                </button>
+                <p>
+                  {`-`}
+                </p>
+                <p>
+                  {pageSelected}
+                </p>
               </div>
-              </>
-            </div>
-            <div className='flex items-center'>
-              <SocialButton networkName='github' parent={true} />
-              <p className='mx-3'>|</p>
-              <SocialButton networkName='linkedin' parent={true} />
-            </div>
-          </>
-        }
+              <div className='flex items-center'>
+                <SocialButton networkName='github' parent={true} />
+                <p className='mx-3'>|</p>
+                <SocialButton networkName='linkedin' parent={true} />
+              </div>
+            </>
+          }
 
           <Sidenav open={open} toggle={toggle}>
             {open ? (
-                <SideMenuAccordian toggle={toggle} />
-                ) : null}
+              <SideMenuAccordian toggle={toggle} />
+            ) : null}
           </Sidenav>
         </div>
-        }
-      </>
-    );
-  };
+      }
+    </>
+  );
+};
+
 
 export default SideNavHeader;

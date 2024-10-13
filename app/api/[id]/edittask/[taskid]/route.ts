@@ -15,7 +15,7 @@ export async function PUT(request: Request) {
     try {
         await connectDB();
         const data = await request.json();
-        const objectID = stringToObjectId(taskID);
+        const objectID = stringToObjectId(taskID ? taskID : '');
         const taskInitial = await Task.findById(objectID);
         console.log('checkTaskEDIT', taskInitial);
         if (!taskInitial) {

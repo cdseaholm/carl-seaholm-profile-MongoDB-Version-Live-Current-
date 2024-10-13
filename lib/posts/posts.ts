@@ -47,24 +47,29 @@ export const getCategorisedPosts = (): Record<string, post[]> => {
         if (!categorisedPosts[post.category]) {
             categorisedPosts[post.category] = [];
         }
-        categorisedPosts[post.category].push(post);
+        categorisedPosts[post.category]?.push(post);
     });
 
     return categorisedPosts;
 };
 
 export const getPostData = async (id: string) => {
+  const fullPath = path.join(postsDirectory, `${id}.md`);
+  const fileContents = fs.readFileSync(fullPath, "utf-8");
 
-  const fullPath = path.join(postsDirectory, `${id}.md`)
-  const fileContents = fs.readFileSync(fullPath, "utf-8")
+  console.log("File Contents:", fileContents);
 
-  const matterResult = matter(fileContents)
+  const matterResult = matter(fileContents);
+
+  console.log("Matter Result:", matterResult);
 
   const processedContent = await remark()
     .use(html)
-    .process(matterResult.content)
+    .process(matterResult.content);
 
-  const contentHtml = processedContent.toString()
+  const contentHtml = processedContent.toString();
+
+  console.log("Processed Content HTML:", contentHtml);
 
   return {
     id,
@@ -73,4 +78,4 @@ export const getPostData = async (id: string) => {
     category: matterResult.data.category,
     date: moment(matterResult.data.date, "DD-MM-YYYY").format("MMMM Do, YYYY"),
   };
-}
+};

@@ -11,14 +11,14 @@ export default function ModalLogin() {
     //context
     const setModalOpen = useModalStore((state) => state.setModalOpen);
 
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
 
     //state
     const [signInError, setSignInError] = useState<string>('');
 
     //variables
-    const id = session?.user?.email;
-    const adminIDBool = status === 'authenticated' && session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
+    {/**const id = session?.user?.email;
+    const adminIDBool = status === 'authenticated' && session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false; */}
     const pathName = usePathname();
     const router = useRouter();
 
@@ -82,11 +82,11 @@ export default function ModalLogin() {
                 }
                 </div>
             </div>
-            <div className="flex flex-col justify-around items-center space-y-1 pt-5">
-                {/*<div className="text-sky-700 cursor-pointer text-sm hover:text-gray-700">
+            <div className="flex flex-row justify-around items-center space-y-1 pt-5">
+                <div className="text-sky-700 cursor-pointer text-sm hover:text-gray-700" onClick={() => setModalOpen('forgotpassword')}>
                     Forgot password?
                 </div>
-                <div className="text-sky-700 cursor-pointer text-sm hover:text-gray-700" onClick={() => {console.log('createClicked')}}>
+                {/*<div className="text-sky-700 cursor-pointer text-sm hover:text-gray-700" onClick={() => {console.log('createClicked')}}>
                     Create an account here
                 </div>**/}
                 <div className="text-sky-700 cursor-pointer text-sm hover:text-gray-700" onClick={handleOpenSub}>

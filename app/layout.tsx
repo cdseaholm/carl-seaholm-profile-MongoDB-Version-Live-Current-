@@ -1,8 +1,8 @@
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import React from "react";
-import AnimateAndAuthWrapper from "@/components/misc/animateandauthwrapper";
-import PageWrapper from "@/components/misc/pagewrapper";
+import AnimateAndAuthWrapper from "@/components/wrappers/animateAndAuthWrapper";
+import PageWrapper from "@/components/wrappers/pageWrapper";
 import { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className} suppressHydrationWarning>
       <AnimateAndAuthWrapper>
-        <body className={`${inter.className}`}>
+        <body>
           <PageWrapper>
             {children}
           </PageWrapper>

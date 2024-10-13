@@ -17,7 +17,7 @@ export default function AddRecipes() {
     const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
     const [uploaded, setUploaded] = useState(false);
     const [photo, setPhoto] = useState('');
-    const [link, setLink] = useState('');
+    const link = '';
     const router = useRouter();
     const tooSmall = useHeightMediaQuery(560);
 

@@ -1,4 +1,5 @@
-import mongoose, { Schema, models } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
+import { IRecipe } from "./types/recipe";
 
 const recipeSchema = new Schema(
     {
@@ -33,6 +34,6 @@ const recipeSchema = new Schema(
     }
 );
 
-const Recipe = models.Recipe || mongoose.model("Recipe", recipeSchema);
+const Recipe = mongoose.models?.Recipe || mongoose.model("Recipe", recipeSchema);
 
-export default Recipe;
+export default Recipe as Model<IRecipe>;

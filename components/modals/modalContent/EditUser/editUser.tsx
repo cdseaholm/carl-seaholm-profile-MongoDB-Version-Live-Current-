@@ -9,17 +9,10 @@ const EditUser = () => {
 
 
     //functions
-    const changeUser = () => {
-        fetch(`/api`, {
-            method: 'PUT',
-            body: JSON.stringify(userObj)
-        })
-    }
 
     const editUser = async (event: React.FormEvent<HTMLFormElement>) => {
         //in future, user would be passed as prop, GET for now
-        const formData = new FormData(event.currentTarget);
-        const user = Object.fromEntries(formData);
+        event.preventDefault();
         fetch(`/api`, {
             method: 'GET'
         })

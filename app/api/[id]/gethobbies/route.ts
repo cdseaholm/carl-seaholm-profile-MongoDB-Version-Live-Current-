@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Hobby from '@/models/hobby';
 import { IHobby } from '@/models/types/hobby';
-import { createErrorResponse } from '@/lib/utils';
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
 
@@ -16,11 +15,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     
     if (hobs === null || hobs === undefined) {
 
-      return createErrorResponse("Null or Undefined", 400);
+      return NextResponse.json({status: 400, hobbies: [] as IHobby[]});
 
     } else if (hobs.length === 0) {
 
-      return NextResponse.json({status: 404, message: "No hobbies found"});
+      return NextResponse.json({status: 404, hobbies: [] as IHobby[]});
 
     } else {
       const hobbies = hobs.map((hobby: IHobby) => {
@@ -37,15 +36,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           createdAt: hobby.createdAt,
           updatedAt: hobby.updatedAt
         }
-      });
+      }) as IHobby[];
 
-      const response = NextResponse.json({hobbies, status: 200});
+      const response = NextResponse.json({status: 200, hobbies: hobbies as IHobby[]});
       response.headers.set('Access-Control-Allow-Origin', '*');
       return response;
     }
   } catch (error: any) {
     console.log(error.message);
-    return createErrorResponse(error.message, 500);
+    return NextResponse.json({status: 500, hobbies: [] as IHobby[]});
   }
 
 }
