@@ -4,6 +4,7 @@ import { useStore } from "@/context/dataStore";
 import { useHobbyStore } from "@/context/hobbyStore";
 import { useModalStore } from "@/context/modalStore";
 import { useStateStore } from "@/context/stateStore";
+import { IField } from "@/models/types/field";
 import { IUserObject } from "@/models/types/userObject";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -24,13 +25,18 @@ export default function LogSessionModal({ daySelected }: { daySelected: string }
     const userInfo = useStore((state) => state.userInfo);
     const modalParent = useModalStore((state) => state.modalParent);
     const [localHobbies, setHobbies] = useState<IUserObject[]>([]);
+    const [hobbyTitles, setHobbyTitles] = useState<string[]>([]);
+
+    console.log(localHobbies);
 
     useEffect(() => {
         const getHobbiesToSet = async () => {
             try {
                 if (userInfo && userInfo.userObjects) {
-                    const hobs = userInfo.userObjects.filter((userObject) => userObject.title === 'hobbies');
-                    setHobbies(hobs);
+                    const hobs = userInfo.userObjects.filter((userObject) => userObject.title === 'hobbies') as IUserObject[];
+                    const hobbyFields = hobs[0]?.fields?.filter((field) => field.name === 'hobbiesEntry') as IField[];
+                    const hobbyTitles = hobbyFields[0]?.uniqueFieldTracker?.map((field) => field) as string[];
+                    setHobbyTitles(hobbyTitles);
                 }
             } catch (error) {
                 console.error('Error initializing hobbies', error);
@@ -113,11 +119,10 @@ export default function LogSessionModal({ daySelected }: { daySelected: string }
                         </option>
                         <optgroup label=" " />
                         <optgroup label="Filter by Title:">
-                            {localHobbies && localHobbies.length > 0 && localHobbies.map((hobby, index) => (
-                                <option key={index} value={hobby._id}>
-                                    {hobby.title}
-                                </option>
-                            ))}
+                            {hobbyTitles.map((title, index) => {
+                                return (
+                                <option key={index} value={title}>{title}</option>
+                            )})}
                         </optgroup>
                     </select>
                 </div>
