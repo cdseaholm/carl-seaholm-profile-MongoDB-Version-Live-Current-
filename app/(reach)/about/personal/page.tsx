@@ -11,13 +11,13 @@ export default function Personal() {
   const hobbies = ['Brazilian Jiu Jitsu', 'Coding', 'Guitar', 'Language Learning', 'Piano', 'Reading', 'Writing'];
   const pets = ['Benji', 'George'];
   const blurbs = [
-    'My name is Carl Seaholm. I am a software engineer, writer, and musician. I am currently working on building a path for myself in the Development world. I have a strong passion for development, fitness, and overall self-improvement. Click on any of the hobbies or pets on the right to learn more.',
+    'My name is Carl Seaholm. I am a software engineer, writer, and musician. I am currently working on building a career path for myself in the Engineering world. I have a strong passion for development, fitness, and overall self-improvement. Click on any of the hobbies or pets on the right to learn more.',
     'Currently a purple belt, I relish the challenges that comes with Jiu Jitsu and the lessions it teaches me. I hope to some day be a blackbelt.',
     'I am currently focusing on improving my JavaScript and TSX applications, as well as working on updating clients websites to be a bit more updated and fresh. I am also currently working on a coding project that will hopefully unite a professional and personal experience for those that want to enhance their hireability, improve outreach for their hobbies, or stay conneted with close ones.',
     'When it comes to guitar playing, I am working on my music theory and how it applies to jazz chords, triads, and fingerstyle techniques.',
-    'I am currently learning Spanish, Japanese, and Mandarin. I have dabbled in Latin. And I am a bit more advanced in Italian.',
+    'I am currently learning Spanish, Japanese, and Mandarin. I have dabbled in Latin. And I am a bit more advanced in Italian. I can not speak any of these languages fluently, or well for that matter (except maybe Italian), it is just a fun mental excercise for me to do everyday.',
     'I am learning to site read while playing piano.',
-    'I am currently reading "The Burning God" by R.F. Kuang',
+    'I am currently reading "Iron Flame" by Rebecca Yarros. Previous reads: "The Burning God" by R.F. Kuang',
     'I am polishing my first novel as well as submitting to agencies for my first publication. As well as I have begun to write my second book which should be the first in a series.',
     'Benji is a 1 year old Bengal Cat. He is very sweet, loving, and is an overall playful cat. He tends to enjoy being alone from time from time to time, but he is very good with guests. He is a very good cat to have around.',
     "George is a 6 months old Bengal Cat. He is much more wild and crazy than his brother Benjamin. Both share the same dad so they have taken to eachother very well. George is very playful. He loves to cuddle and has a great purr. You'll find he has no issues going after what he wants.",
@@ -47,7 +47,7 @@ export default function Personal() {
           </div>
         </div>
         <div className='p-2 pt-15 w-full flex flex-row' style={{ height: '91%' }}>
-          <div style={{ flexGrow: 1, overflow: 'auto', width: '90%' }} className='scrollbar-thin scrollbar-webkit flex flex-col justify-start items-start space-y-2 border-r border-black'>
+          <div style={{ flexGrow: 1, overflow: 'auto', width: '90%' }} className='scrollbar-thin scrollbar-webkit flex flex-col justify-start items-start space-y-2 border-r border-black p-8'>
             <div className='flex justify-start'>
               {blurbs[blurb]}
             </div>

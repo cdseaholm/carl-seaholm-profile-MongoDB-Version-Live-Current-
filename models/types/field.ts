@@ -4,6 +4,7 @@ export interface IField {
     type: string;
     trackable: boolean;
     mapPiece: boolean;
+    uniqueFieldTracker: string[];
     _id: string;
     createdAt: string;
     updatedAt: string;

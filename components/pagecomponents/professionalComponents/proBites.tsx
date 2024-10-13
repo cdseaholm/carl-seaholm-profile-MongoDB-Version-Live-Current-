@@ -21,8 +21,8 @@ const SchoolBite = ({ school, index }: { school: School; index: number }) => {
                 <div className={`text-sm md:text-base font-bold`}>{school.location}</div>
                 <div className={`text-xs md:text-sm font-bold text-slate-400`}>{startDate} - {endDate}</div>
             </div>
-            <div>
-                <ImageFormat imSize={80} image={school.logo} index={index} blur={false} priority={true}/>
+            <div className="w-25 h-25 rounded-full flex justify-center items-center p-2">
+                <ImageFormat imSize={80} image={school.logo} index={index} blur={false} priority={true} />
             </div>
         </div>
     );
@@ -42,12 +42,12 @@ const JobBite = ({ job, index }: { job: Job; index: number; }) => {
                     <div className={`text-xs md:text-sm font-bold text-slate-400`}>{startDate} - {endDate}</div>
                 </div>
                 <div>
-                    <ImageFormat imSize={80} image={job.logo} index={index} blur={false} priority={true}/>
+                    <ImageFormat imSize={80} image={job.logo} index={index} blur={false} priority={true} />
                 </div>
             </div>
-            <DetailsAccordianPage 
-                details={job.descriptions} 
-                detailsIndex={index} 
+            <DetailsAccordianPage
+                details={job.descriptions}
+                detailsIndex={index}
             />
         </div>
     );

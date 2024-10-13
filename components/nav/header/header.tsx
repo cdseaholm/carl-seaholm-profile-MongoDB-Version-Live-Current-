@@ -31,6 +31,12 @@ const SideNavHeader = () => {
       setPageSelected('Services');
     } else if (pathname === '/about') {
       setPageSelected('About');
+    } else if (pathname === '/about/professional') {
+      setPageSelected('Professional')
+    }  else if (pathname === '/about/personal') {
+      setPageSelected('Personal')
+    }  else if (pathname === '/recipes') {
+      setPageSelected('Recipe Ratings')
     }
   }, [pathname]);
 

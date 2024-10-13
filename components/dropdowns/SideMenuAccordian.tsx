@@ -51,7 +51,8 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
         </>
       }
       <Accordion defaultPanel={defaultPanel}>
-        <AccordionItem toggle="panel-1" className="text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5">
+        {/**
+         * <AccordionItem toggle="panel-1" className="text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5">
           Projects
         </AccordionItem>
         <AccordionPanel id="panel-1">
@@ -71,6 +72,7 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
           </Link>
         </div>
         </AccordionPanel>
+         */}
         <AccordionItem toggle="panel-2" className="text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5">
           Services
         </AccordionItem>
@@ -119,11 +121,13 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
             - Personal
             </Link>
           </div>
-          <div className="mb-4 px-2 py-1 cursor-pointer">
+          
+          {/** Removing until model is sorted out
+           * <div className="mb-4 px-2 py-1 cursor-pointer">
             <Link onClick={toggle} href={"/recipes"} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400 ${pathname === "/recipes" ? "underline" : ""}`}>
             - Recipe Ratings
             </Link>
-          </div>
+          </div> */}
         </AccordionPanel>
       </Accordion>
       <div className="block text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg px-3 py-5 cursor-pointer">
