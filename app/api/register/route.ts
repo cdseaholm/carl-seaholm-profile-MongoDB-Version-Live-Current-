@@ -1,17 +1,18 @@
 
-import connectDB from '@/lib/mongodb';
-import { NextResponse } from 'next/server';
-import User from '@/models/user';
 import { createErrorResponse } from '@/lib/utils';
-import { IUserObject } from '@/models/types/userObject';
 
-function isValidEmail(email: string): boolean {
+{/**
+    
+    function isValidEmail(email: string): boolean {
     return /.+@.+/.test(email);
-}
+}*/}
 
-export async function POST(request: Request) {
+export async function POST() {
 
-    try {
+    return createErrorResponse("Not implemented", 501);
+    {/**
+        
+        try {
         const body = await request.json();
         await connectDB();
 
@@ -34,7 +35,7 @@ export async function POST(request: Request) {
 
         const hashedPassword = body.modalRegisterPassword;
 
-        {/**const validPassword = await argon2id.verify(passwordToCheck, password); */ }
+        onst validPassword = await argon2id.verify(passwordToCheck, password);
 
         try {
             const user = await User.create({
@@ -59,5 +60,5 @@ export async function POST(request: Request) {
         }
     } catch (error: any) {
         return createErrorResponse('Top Catch', 500);
-    }
+    }*/}
 }

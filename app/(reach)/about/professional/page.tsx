@@ -72,7 +72,7 @@ export default function Professional() {
     } else {
       setFilteredJobs(jobsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1).filter(job => job.category.includes(category)));
     }
-  }, [category]);
+  }, [category, updateJobsWithToday]);
 
   return (
     <MainChild>
