@@ -17,7 +17,7 @@
 /build
 
 # misc
-.DS_Storep
+.DS_Store
 *.pem
 
 # debug
