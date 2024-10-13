@@ -1,9 +1,9 @@
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import React from "react";
-import AnimateAndAuthWrapper from "@/components/wrappers/animateAndAuthWrapper";
-import PageWrapper from "@/components/wrappers/pageWrapper";
 import { Metadata } from "next";
+import AnimateAndAuthWrapper from "../components/wrappers/animateAndAuthWrapper";
+import PageWrapper from "../components/wrappers/pageWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 

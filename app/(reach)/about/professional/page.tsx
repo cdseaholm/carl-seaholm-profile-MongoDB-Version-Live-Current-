@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import { jobsArray, schoolsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
 import { JobBite, SchoolBite } from '@/components/pagecomponents/professionalComponents/proBites';
@@ -22,8 +22,8 @@ type JobType = {
 export default function Professional() {
 
   const [category, setCategory] = useState('Timeline');
-  const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
-  const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
+  const [filteredSchools, setFilteredSchools] = useState(schoolsArray);
+  const [filteredJobs, setFilteredJobs] = useState(jobsArray);
 
   /**Variables */
 
@@ -42,7 +42,7 @@ export default function Professional() {
     return `${year}-${month}`;
   }
 
-  const updateJobsWithToday = (jobs: JobType[]) => {
+  const updateJobsWithToday = useCallback((jobs: JobType[]) => {
     const currentDate = getCurrentDate();
     return jobs.map(job => {
       if (job.date.endDate === 'Today') {
@@ -56,14 +56,14 @@ export default function Professional() {
       }
       return job;
     });
-  };
+  }, []);
 
   const sortJobsByEndDate = (jobs: JobType[]) => {
     return jobs.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1);
   };
 
   /** Effects */
-  React.useEffect(() => {
+  useEffect(() => {
     let updatedJobs = updateJobsWithToday(jobsArray);
     if (category === 'Timeline') {
       setFilteredJobs(sortJobsByEndDate(updatedJobs));
