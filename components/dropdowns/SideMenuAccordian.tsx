@@ -78,7 +78,7 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
         </AccordionItem>
         <AccordionPanel id="panel-2">
           <div className="flex flex-row mb-4 px-2 py-1 cursor-pointer justify-center">
-            <Link onClick={() => openInNewTab('https://www.newprogressco.com/services')} href={''} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400`}>
+            <Link onClick={() => openInNewTab('https://www.newprogressco.com/webdevelopment')} href={''} className={`px-10 rounded-lg px-3 py-5 text-slate-200 text-xs hover:text-slate-400`}>
               Click here to take you to the New Progress Co. website
             </Link>
           </div>

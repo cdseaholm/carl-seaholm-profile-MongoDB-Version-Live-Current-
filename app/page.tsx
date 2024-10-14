@@ -6,6 +6,7 @@ import SocialBar from '@/components/buttons/socialbar';
 import Image from 'next/image';
 import { useStateStore } from '@/context/stateStore';
 import { Spinner } from '@/components/misc/Spinner';
+import openInNewTab from '@/components/listeners/OpenInNewTab';
 
 export default function Home() {
 
@@ -53,10 +54,10 @@ export default function Home() {
               Carl Seaholm
             </h1>
             <h2 className={`text-sm md:text-2xl font-semibold text-slate-300 ${isImageVisible ? 'fade-in' : 'fade-out'}`}>
-              A Professional and Personal Portfolio
+              A Personal and Professional Portfolio
             </h2>
           </div>
-          <div className={`relative flex flex-col justify-center items-center rounded-full border border-white ${isImageVisible ? 'fade-in' : 'fade-out'}`}>
+          <div className={`relative flex flex-col justify-center items-center rounded-full border border-white ${isImageVisible ? 'fade-in' : 'fade-out'} cursor-pointer`} onClick={() => openInNewTab('/images/carlseaholmimage.jpg')}>
             <Image
               priority
               src={`/images/carlseaholmimage.jpg`}
