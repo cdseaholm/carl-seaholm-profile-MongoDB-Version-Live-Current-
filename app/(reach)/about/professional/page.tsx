@@ -4,6 +4,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import { jobsArray, schoolsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
 import { JobBite, SchoolBite } from '@/components/pagecomponents/professionalComponents/proBites';
+import InnerTemplate from '@/components/pagetemplates/innerTemplate/innerTemplate';
+import { useStateStore } from '@/context/stateStore';
 
 type JobType = {
   company: string;
@@ -24,6 +26,7 @@ export default function Professional() {
   const [category, setCategory] = useState('Timeline');
   const [filteredSchools, setFilteredSchools] = useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = useState(jobsArray);
+  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
 
   /**Variables */
 
@@ -70,52 +73,42 @@ export default function Professional() {
     } else if (category === 'Education') {
       setFilteredSchools(schoolsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1));
     } else {
-      setFilteredJobs(jobsArray.sort((a, b) => (a.date.endDate < b.date.endDate) ? 1 : -1).filter(job => job.category.includes(category)));
+      setFilteredJobs(sortJobsByEndDate(updatedJobs).filter(job => job.category.includes(category)));
     }
   }, [category, updateJobsWithToday]);
 
   return (
     <MainChild>
-      <div className="flex flex-col h-full px-2 pb-2">
-        <div className={`flex flex-row w-full justify-end px-10 py-4`}>
-          <div className={`flex flex-col items-end`}>
-            <h1 className={`flex text-xl md:text-5xl font-bold justify-end`}>
-              Carl Seaholm
-            </h1>
-            <div className='flex flex-row justify-evenly items-center'>
-              <select id='professionalFilter' name='professionalFilter' className='text-xs md:text-sm bg-zinc-200 rounded-lg' defaultValue={'Timeline'} onChange={(e) => {
-                setCategory(e.target.value);
-              }}>
-                {categories.map((item, index) => (
-                  <option
-                    key={index}
-                    value={item}
-                    className='block px-2 py-1 text-sm text-black hover:bg-slate-600'>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </div>
+      <div className={`flex flex-row w-full justify-between items-center px-5 md:px-10 py-2 md:py-4 w-full`}>
+        <h1 className={`text-lg md:text-3xl font-bold`}>
+          Carl Seaholm
+        </h1>
+        <select id='professionalFilter' name='professionalFilter' className='text-xs md:text-sm bg-zinc-200 rounded-lg' defaultValue={'Timeline'} onChange={(e) => {
+          setCategory(e.target.value);
+        }}>
+          {categories.map((item, index) => (
+            <option
+              key={index}
+              value={item}
+              className='block px-2 py-1 text-sm text-black hover:bg-slate-600'>
+              {item}
+            </option>
+          ))}
+        </select>
+      </div>
+      <InnerTemplate>
+        {category === 'Education' && filteredSchools.map((item, index) => (
+          <div key={index} className='md:px-8 pb-1 md:pt-1 border border-black shadow-lg my-2 md:mx-2 rounded-md bg-slate-800/50 w-full'>
+            <SchoolBite school={item} index={index} isBreakpoint={isBreakpoint} />
           </div>
-        </div>
-        <div style={{ flexGrow: 1, fontSize: '8px', overflow: 'auto' }} className='scrollbar-thin scrollbar-webkit'>
-          {category === 'Education' && filteredSchools.map((item, index) => (
-            <div key={index} className='justify-center px-4 py-1'>
-              <div className='border border-black shadow-lg rounded-md m-2 bg-slate-800/50'>
-                <SchoolBite school={item} index={index} />
-              </div>
+        ))}
+        {category !== 'Education' && filteredJobs.length > 0 &&
+          filteredJobs.map((item, index) => (
+            <div key={index} className='md:px-8 pb-1 md:pt-1 border border-black shadow-lg my-2 md:mx-2 rounded-md bg-slate-800/50 w-full'>
+              <JobBite job={item} index={index} isBreakpoint={isBreakpoint} />
             </div>
           ))}
-          {category !== 'Education' && filteredJobs.length > 0 &&
-            filteredJobs.map((item, index) => (
-              <div key={index} className='justify-center px-4 py-1'>
-                <div className='border border-black shadow-lg m-2 rounded-md bg-slate-800/50'>
-                  <JobBite job={item} index={index} />
-                </div>
-              </div>
-            ))}
-        </div>
-      </div>
-    </MainChild>
+      </InnerTemplate>
+    </MainChild >
   );
 }

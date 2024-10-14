@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
-import openInNewTab from '@/components/listeners/OpenInNewTab';
+import InnerTemplate from '@/components/pagetemplates/innerTemplate/innerTemplate';
 
 export default function Personal() {
   const [clicked, setClicked] = useState(false);
@@ -11,7 +11,7 @@ export default function Personal() {
   const hobbies = ['Brazilian Jiu Jitsu', 'Coding', 'Guitar', 'Language Learning', 'Piano', 'Reading', 'Writing'];
   const pets = ['Benji', 'George'];
   const blurbs = [
-    'My name is Carl Seaholm. I am a software engineer, writer, and musician. I am currently working on building a career path for myself in the Engineering world. I have a strong passion for development, fitness, and overall self-improvement. Click on any of the hobbies or pets on the right to learn more.',
+    'I am a software engineer, writer, and musician. I am currently working on building a career path for myself in the Engineering world. I have a strong passion for development, fitness, and overall self-improvement. The amount of hobbies and interests I have would create a wall of text here, so click on any of the hobbies or pets on the right to learn more.',
     'Currently a purple belt, I relish the challenges that comes with Jiu Jitsu and the lessions it teaches me. I hope to some day be a blackbelt.',
     'I am currently focusing on improving my JavaScript and TSX applications, as well as working on updating clients websites to be a bit more updated and fresh. I am also currently working on a coding project that will hopefully unite a professional and personal experience for those that want to enhance their hireability, improve outreach for their hobbies, or stay conneted with close ones.',
     'When it comes to guitar playing, I am working on my music theory and how it applies to jazz chords, triads, and fingerstyle techniques.',
@@ -25,77 +25,66 @@ export default function Personal() {
 
   return (
     <MainChild>
-      <div className="flex flex-col w-full h-full px-2 pb-2">
-        <div className='flex flex-row justify-between items-center py-5 px-5 mx-5 border-b border-black w-full'>
-          <Image
-            onClick={() => openInNewTab('/images/carlseaholmimage.jpg')}
-            priority
-            src="/images/carlseaholmimage.jpg"
-            className={`rounded-full cursor-pointer`}
-            height={80}
-            width={80}
-            alt="Carl Seaholm Profile Photo"
-            style={{ objectFit: 'cover', height: 'auto', width: 'auto' }}
-          />
-          <div className='flex flex-col items-end justify-center px-4'>
-            <h1 className="flex text-6xl font-bold justify-end">
-              Carl Seaholm
-            </h1>
-            <h2 className="flex text-base font-bold justify-end">
-              Personal Life
-            </h2>
-          </div>
-        </div>
-        <div className='p-2 pt-15 w-full flex flex-row' style={{ height: '91%' }}>
-          <div style={{ flexGrow: 1, overflow: 'auto', width: '90%' }} className='scrollbar-thin scrollbar-webkit flex flex-col justify-start items-start space-y-2 border-r border-black p-8'>
-            <div className='flex justify-start'>
-              {blurbs[blurb]}
-            </div>
-            {
-              blurb === 8 &&
-              <Image
-                onClick={() => setClicked(clicked ? false : true)}
-                priority
-                src={`${blurb === 8 ? '/images/benji.jpg' : ''}`}
-                height={200}
-                width={200}
-                alt="Carl Seaholm Profile Photo"
-                style={{ objectFit: 'scale-down', height: 'auto', width: 'auto' }}
-              />
-            }
-            {
-              blurb === 9 &&
-              <Image
-                onClick={() => setClicked(clicked ? false : true)}
-                priority
-                src={`${blurb === 9 ? '/images/george.jpg' : ''}`}
-                height={200}
-                width={200}
-                alt="Carl Seaholm Profile Photo"
-                style={{ objectFit: 'scale-down', height: 'auto', width: 'auto' }}
-              />
-            }
-          </div>
-          <div className='flex flex-col justify-start pl-5'>
-            <div className='text-xl font-bold'>
-              Hobbies
-            </div>
+      <div className={`flex flex-row w-full justify-between items-center px-5 md:px-10 py-2 md:py-4 w-full`}>
+        <h1 className="text-lg md:text-3xl font-bold justify-end">
+          Carl Seaholm
+        </h1>
+        <select id='personalFilter' name='personalFilter' className='text-xs md:text-sm bg-zinc-200 rounded-lg' defaultValue={'All'} onChange={(e) => {
+          setBlurb(parseInt(e.target.value));
+        }}>
+          <option value={0}>All</option>
+          <optgroup label='Hobbies'>
             {hobbies.map((hobby, index) => (
-              <li key={index} className='cursor-pointer hover:text-gray-600 py-2' onClick={() => setBlurb(index + 1)} style={{ fontSize: '12px' }}>
+              <option key={index} value={index + 1} className="w-full text-black bg-transparent hover:text-neutral-600 hover:underline">
                 {hobby}
-              </li>
+              </option>
             ))}
-            <div className='text-xl font-bold'>
-              Pets
-            </div>
+          </optgroup>
+          <optgroup label='Pets'>
             {pets.map((pet, index) => (
-              <li key={index} className='cursor-pointer hover:text-gray-600 py-2' onClick={() => setBlurb(index + 8)} style={{ fontSize: '12px' }}>
+              <option key={index} value={index + 8} className="w-full text-black bg-transparent hover:text-neutral-600 hover:underline">
                 {pet}
-              </li>
+              </option>
             ))}
-          </div>
-        </div>
+          </optgroup>
+        </select>
       </div>
+      <InnerTemplate>
+        <div className='flex flex-col justify-start items-start p-2'>
+          {blurb === 0 &&
+            <div className='text-md md:text-lg font-bold pb-2'>
+              {`About me personally:`}
+            </div>
+          }
+          <div className='text-sm md:text-base'>
+            {blurbs[blurb]}
+          </div>
+          {
+            blurb === 8 &&
+            <Image
+              onClick={() => setClicked(clicked ? false : true)}
+              priority
+              src={`${blurb === 8 ? '/images/benji.jpg' : ''}`}
+              height={200}
+              width={200}
+              alt="Carl Seaholm Profile Photo"
+              style={{ objectFit: 'scale-down', height: 'auto', width: 'auto' }}
+            />
+          }
+          {
+            blurb === 9 &&
+            <Image
+              onClick={() => setClicked(clicked ? false : true)}
+              priority
+              src={`${blurb === 9 ? '/images/george.jpg' : ''}`}
+              height={200}
+              width={200}
+              alt="Carl Seaholm Profile Photo"
+              style={{ objectFit: 'scale-down', height: 'auto', width: 'auto' }}
+            />
+          }
+        </div>
+      </InnerTemplate>
     </MainChild>
   );
 }

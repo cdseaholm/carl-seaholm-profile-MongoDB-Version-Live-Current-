@@ -20,26 +20,23 @@ export function PieChartView({ data }: { data: dataType[] }) {
 
 
     return (
-            <div className='flex flex-col' style={{ width: '100%', height: '100%' }}>
-                <Plot
-                    data={dataPlot}
-                    layout={{
-                        plot_bgcolor: 'rgba(0, 0, 0, 0)',
-                        paper_bgcolor: 'rgba(0, 0, 0, 0)',
-                        margin: { t: 25, b: 25, r: 30, l: 30 },
-                        dragmode: false,
-                        clickmode: 'none',
-                        showlegend: isBreakpoint ? false : true,
-                    }}
-                    config={{
-                        displayModeBar: false,
-                        responsive: true,
+        <Plot
+            data={dataPlot}
+            layout={{
+                plot_bgcolor: 'rgba(0, 0, 0, 0)',
+                paper_bgcolor: 'rgba(0, 0, 0, 0)',
+                margin: { t: 50, b: 50, r: 50, l: 50 },
+                dragmode: false,
+                clickmode: 'none',
+                showlegend: isBreakpoint ? false : true,
+            }}
+            config={{
+                displayModeBar: false,
+                responsive: true,
 
-                    }}
-                    style={{ width: '100%', height: '100%' }}
-                    className='flex-wrap'
-                />
-            </div>
-        
+            }}
+            className='w-full h-full'
+        />
+
     );
 }
