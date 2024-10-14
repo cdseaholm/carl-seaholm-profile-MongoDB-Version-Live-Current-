@@ -4,6 +4,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { schoolsArray, jobsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
 import { SchoolBite, JobBite } from '@/components/pagecomponents/professionalComponents/proBites';
+import { useStateStore } from '@/context/stateStore';
 
 export default function DevelopmentDesktop() {
   const [isHovered, setIsHovered] = useState(false);
@@ -14,6 +15,7 @@ export default function DevelopmentDesktop() {
   const [open, setOpen] = useState(false);
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
+  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
 
   /**Variables */
 
@@ -124,7 +126,7 @@ export default function DevelopmentDesktop() {
               {filteredSchools.map((item, index) => (
                 <div key={index} className='flex flex-row justify-center'>
                   {category === 'Education' &&
-                    <SchoolBite school={item} index={index}/>
+                    <SchoolBite school={item} index={index} isBreakpoint={isBreakpoint}/>
                   }
                 </div>
               ))}
@@ -132,7 +134,7 @@ export default function DevelopmentDesktop() {
                 filteredJobs.map((item, index) => (
                   <div key={index} className='flex flex-row justify-center'>
                     {category !== 'Education' &&
-                      <JobBite job={item} index={index}/>
+                      <JobBite job={item} index={index} isBreakpoint={isBreakpoint}/>
                     }
                   </div>
               ))}
