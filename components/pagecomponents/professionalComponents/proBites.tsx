@@ -9,40 +9,42 @@ const formatDate = (dateString: string) => {
     return date.toLocaleString('default', { month: 'long', year: 'numeric' });
 };
 
-const SchoolBite = ({ school, index }: { school: School; index: number }) => {
+const SchoolBite = ({ school, index , isBreakpoint}: { school: School, index: number, isBreakpoint: boolean }) => {
     const startDate = formatDate(school.date.startDate);
     const endDate = formatDate(school.date.endDate);
+    const size = isBreakpoint ? 50 : 80;
 
     return (
         <div className="flex flex-row relative p-5 justify-between items-center">
             <div className="flex flex-col w-2/3">
-                <div className={`text-base md:text-lg font-bold`}>{school.school}</div>
-                <div className={`text-sm md:text-base font-bold font-semibold text-stone-700`}>{school.major}</div>
-                <div className={`text-sm md:text-base font-bold`}>{school.location}</div>
-                <div className={`text-xs md:text-sm font-bold text-slate-400`}>{startDate} - {endDate}</div>
+                <div className={`text-base md:text-lg font-bold text-black underline`}>{school.school}</div>
+                <div className={`text-sm md:text-base font-bold font-semibold overflow-wrap text-neutral-900`}>{school.major}</div>
+                <div className={`text-sm md:text-base font-bold text-slate-400`}>{school.location}</div>
+                <div className={`text-xs md:text-sm font-bold text-blue-300/60`}>{startDate} - {endDate}</div>
             </div>
-            <div className="w-25 h-25 rounded-full flex justify-center items-center p-2">
-                <ImageFormat imSize={80} image={school.logo} index={index} blur={false} priority={true} />
+            <div>
+                <ImageFormat imSize={size} image={school.logo} index={index} blur={false} priority={true} />
             </div>
         </div>
     );
 };
 
-const JobBite = ({ job, index }: { job: Job; index: number; }) => {
+const JobBite = ({ job, index, isBreakpoint }: { job: Job, index: number, isBreakpoint: boolean }) => {
     const startDate = formatDate(job.date.startDate);
     const endDate = formatDate(job.date.endDate);
+    const size = isBreakpoint ? 50 : 80;
 
     return (
         <div className="flex flex-col">
             <div className="flex flex-row relative p-5 justify-between items-center">
                 <div className="flex flex-col w-2/3">
-                    <div className={`text-base md:text-lg font-bold`}>{job.title}</div>
-                    <div className={`text-sm md:text-base font-bold font-semibold overflow-wrap text-stone-700`}>{job.company}</div>
-                    <div className={`text-sm md:text-base font-bold`}>{job.location}</div>
-                    <div className={`text-xs md:text-sm font-bold text-slate-400`}>{startDate} - {endDate}</div>
+                    <div className={`text-base md:text-lg font-bold text-black underline`}>{job.title}</div>
+                    <div className={`text-sm md:text-base font-bold font-semibold overflow-wrap text-neutral-900`}>{job.company}</div>
+                    <div className={`text-sm md:text-base font-bold text-slate-400`}>{job.location}</div>
+                    <div className={`text-xs md:text-sm font-bold text-blue-300/60`}>{startDate} - {endDate}</div>
                 </div>
                 <div>
-                    <ImageFormat imSize={80} image={job.logo} index={index} blur={false} priority={true} />
+                    <ImageFormat imSize={size} image={job.logo} index={index} blur={false} priority={true} />
                 </div>
             </div>
             <DetailsAccordianPage

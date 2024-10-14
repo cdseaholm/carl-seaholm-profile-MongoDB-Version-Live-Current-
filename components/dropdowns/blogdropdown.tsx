@@ -7,6 +7,7 @@ import React from "react";
 import MainChild from "../pagetemplates/mainchild/mainchild";
 import { useSession } from "next-auth/react";
 import { useModalStore } from "@/context/modalStore";
+import InnerTemplate from "../pagetemplates/innerTemplate/innerTemplate";
 
 
 const BlogDropdown = ({ categoriesForDrop, posts }: { categoriesForDrop: Array<string>; posts: Record<string, post[]> }) => {
@@ -52,8 +53,7 @@ const BlogDropdown = ({ categoriesForDrop, posts }: { categoriesForDrop: Array<s
 
     return (
         <MainChild>
-            <section className="w-full h-full flex flex-col pt-16 pb-12">
-                <div className="flex flex-row justify-start items-start w-full pb-8">
+                <div className="flex flex-row justify-start items-start w-full pb-2">
                     <select defaultValue={'defaultcategory'} onChange={handleCategoryChange} className="bg-transparent cursor-pointer border-0 rounded-md">
                         <option value={'All'}>All categories</option>
                         {categoriesForDrop.map((category, id) => (
@@ -63,16 +63,17 @@ const BlogDropdown = ({ categoriesForDrop, posts }: { categoriesForDrop: Array<s
                         ))}
                     </select>
                 </div>
-                <div className={`flex flex-col items-center scrollbar-thin scrollbar-webkit w-full px-24`} style={{ overflow: 'auto', overflowX: 'hidden' }}>
-                    {posts !== null && category === 'All' &&
-                        Object.keys(posts).map((category, id) => <PostItemList key={id} category={category} posts={posts[category] ? posts[category] : []} />
-                        )
-                    }
-                    {posts !== null && category !== 'All' &&
-                        <PostItemList category={category} posts={posts[category] ? posts[category] : []} />
-                    }
-                </div>
-            </section>
+                <InnerTemplate>
+                    <div className={`flex flex-col items-center scrollbar-thin scrollbar-webkit w-full h-full md:px-24`} style={{ overflow: 'auto', overflowX: 'hidden' }}>
+                        {posts !== null && category === 'All' &&
+                            Object.keys(posts).map((category, id) => <PostItemList key={id} category={category} posts={posts[category] ? posts[category] : []} />
+                            )
+                        }
+                        {posts !== null && category !== 'All' &&
+                            <PostItemList category={category} posts={posts[category] ? posts[category] : []} />
+                        }
+                    </div>
+                </InnerTemplate>
         </MainChild>
     );
 }

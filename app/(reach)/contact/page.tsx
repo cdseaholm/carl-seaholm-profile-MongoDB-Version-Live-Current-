@@ -5,8 +5,8 @@ const Contact = () => {
     return (
         <MainChild>
             <InnerTemplate>
-                <div className="flex flex-col justify-center items-center text-center h-full w-full">
-                    <h1 className="text-black font-bold">cdseaholm@gmail.com</h1>
+                <div className="flex flex-col justify-center items-center text-center h-full w-full space-y-2" style={{minHeight: '50dvh'}}>
+                    <h1 className="text-black font-bold">Email: cdseaholm@gmail.com</h1>
                     <h1 className="text-black font-bold">For more information, email with your inquiry.</h1>
                 </div>
             </InnerTemplate>

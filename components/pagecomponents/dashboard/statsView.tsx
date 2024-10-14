@@ -20,36 +20,40 @@ export interface Tracker {
 export default function StatsView({ isBreakpoint, data, colorsToChart, monthsToChart, barChartData, barChartDataTwo, monthLength, daysWithHobbies, objectTitle }: { isBreakpoint: boolean, data: dataType[], colorsToChart: string[], monthsToChart: string[], barChartData: { date: string, time: number, color: string }[], barChartDataTwo: { date: string, time: number, color: string }[], monthLength: number, daysWithHobbies: number[], objectTitle: string }) {
 
     return (
-            <div className={`${!isBreakpoint ? 'grid gap-1 grid-cols-2 grid-rows-2' : 'items-center'} w-full h-full p-2 space-y-4`}>
-                <div className='relative flex flex-col justify-start w-full h-full text-sm' style={{ height: '30dvh' }}>
-                    <div className='absolute z-20 w-full'>
-                        <div className='flex flex-row items-start justify-between w-full'>
-                            <h2 className={`font-bold underline`} style={{ fontSize: 14 }}>
-                                % of Total Time on Each Hobby
-                            </h2>
-                        </div>
-                    </div>
+        <div className={`${!isBreakpoint ? 'grid gap-1 grid-cols-2 grid-rows-2' : 'grid gap-1 grid-cols-1 grid-rows-4'} w-full h-full p-2`}>
+            <div className='flex flex-col justify-start items-start w-full h-full text-sm' style={{ minHeight: '40dvh' }}>
+                <h2 className={`font-bold underline`}>
+                    % of Total Time on Each Hobby
+                </h2>
+                <div className='flex flex-row justify-start items-start w-full h-4/5'>
                     <PieChartView data={data} />
                 </div>
-                <div className='flex flex-col w-full h-full text-sm' style={{ height: '30dvh' }}>
-                    <h2 className={`font-bold underline`} style={{ fontSize: 14 }}>
-                        Total Minutes Spent on Hobbies per Month
-                    </h2>
+            </div>
+            <div className='flex flex-col justify-start items-start w-full h-full text-sm' style={{ minHeight: '40dvh' }}>
+                <h2 className={`font-bold underline`}>
+                    Total Minutes Spent on Hobbies per Month
+                </h2>
+                <div className='flex flex-row justify-start items-start w-full h-4/5'>
                     <BarChartView colorsToChart={colorsToChart} monthsToChart={monthsToChart} barChartData={barChartData} />
                 </div>
-                <div className='flex flex-col w-full text-sm' style={{ height: '30dvh' }}>
-                    <h2 className={`font-bold underline`} style={{ fontSize: 14 }}>
-                        Number of Days this Month with a session
-                    </h2>
+            </div>
+            <div className='flex flex-col w-full text-sm' style={{ minHeight: '40dvh' }}>
+                <h2 className={`font-bold underline`}>
+                    Number of Days this Month with a session
+                </h2>
+                <div className='flex flex-row justify-start items-start w-full h-4/5'>
                     <TrackerUsage objectTitle={objectTitle} daysWithHobbies={daysWithHobbies} monthLength={monthLength} />
                 </div>
-                <div className='flex flex-col w-full h-full text-sm' style={{ height: '30dvh' }}>
-                    <h2 className={`font-bold underline`} style={{ fontSize: 14 }}>
-                        Average Minutes a Session:
-                    </h2>
+            </div>
+            <div className='flex flex-col justify-start items-start w-full h-full text-sm' style={{ minHeight: '40dvh' }}>
+                <h2 className={`font-bold underline`}>
+                    Average Minutes a Session:
+                </h2>
+                <div className='flex flex-row justify-start items-start w-full h-4/5'>
                     <BarChartView colorsToChart={colorsToChart} monthsToChart={monthsToChart} barChartData={barChartDataTwo} />
                 </div>
             </div>
-        
+        </div>
+
     )
 }

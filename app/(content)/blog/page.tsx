@@ -15,11 +15,9 @@ const Blog = () => {
     });
     const categoriesForDrop = Object.keys(posts);
     const catSort = categoriesForDrop.sort((a, b) => a < b ? -1 : 1).filter(category => category !== 'demo');
-    
+
     return (
-        <section className="mb-5 h-full w-full">
-            <BlogDropdown categoriesForDrop={catSort} posts={posts} />
-        </section>
+        <BlogDropdown categoriesForDrop={catSort} posts={posts} />
     );
 };
 
