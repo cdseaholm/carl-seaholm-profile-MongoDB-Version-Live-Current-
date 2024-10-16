@@ -21,8 +21,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  <MainPageBody>
-    <OverviewPage />
-  </MainPageBody>
-  
+  return (
+    <MainPageBody>
+      <OverviewPage />
+    </MainPageBody>
+  )
 }

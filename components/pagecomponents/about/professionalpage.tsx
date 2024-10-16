@@ -21,7 +21,7 @@ type JobType = {
   logoAlt: string;
 }
 
-export default function Professional() {
+export default function ProfessionalPage() {
 
   const [category, setCategory] = useState('Timeline');
   const [filteredSchools, setFilteredSchools] = useState(schoolsArray);
