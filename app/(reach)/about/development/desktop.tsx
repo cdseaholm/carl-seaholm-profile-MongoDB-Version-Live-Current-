@@ -4,24 +4,18 @@ import React, { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { schoolsArray, jobsArray } from '@/components/pagecomponents/professionalComponents/jobsarray';
 import { SchoolBite, JobBite } from '@/components/pagecomponents/professionalComponents/proBites';
-import useMediaQuery from '@/components/listeners/WidthSettings';
-
-const openInNewTab = (url: string) => {
-  const win = window.open(url, '_blank');
-  win?.focus();
-};
+import { useStateStore } from '@/context/stateStore';
 
 export default function DevelopmentDesktop() {
-  const isBreakpoint = useMediaQuery(768);
   const [isHovered, setIsHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [category, setCategory] = useState('Timeline');
-  const [showDivider, setShowDivider] = useState(false);
+  const showDivider = false;
   const divRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [filteredSchools, setFilteredSchools] = React.useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = React.useState(jobsArray);
-  const breakBool = isBreakpoint ? true : false;
+  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
 
   /**Variables */
 
@@ -62,7 +56,7 @@ export default function DevelopmentDesktop() {
     };
     window.addEventListener('mousedown', handleOutsideClick);
     return () => window.removeEventListener('mousedown', handleOutsideClick);
-  }, [clicked, imageClick, imageRef]);
+  }, [clicked, imageRef, imageClick]);
 
   const categories = [
     'Timeline',
@@ -71,18 +65,6 @@ export default function DevelopmentDesktop() {
     'Sales',
     'Education'
   ];
-
-  const handleScroll = () => {
-    const divElement = divRef.current as unknown as HTMLDivElement;
-    if (divElement) {
-        const scrollPosition = divElement.scrollTop;
-        if (scrollPosition > 5) {
-            setShowDivider(true);
-        } else {
-            setShowDivider(false);
-        }
-    }
-    };
 
   return (
     <main>
@@ -144,7 +126,7 @@ export default function DevelopmentDesktop() {
               {filteredSchools.map((item, index) => (
                 <div key={index} className='flex flex-row justify-center'>
                   {category === 'Education' &&
-                    <SchoolBite breakBool={breakBool} school={item} index={index}/>
+                    <SchoolBite school={item} index={index} isBreakpoint={isBreakpoint}/>
                   }
                 </div>
               ))}
@@ -152,7 +134,7 @@ export default function DevelopmentDesktop() {
                 filteredJobs.map((item, index) => (
                   <div key={index} className='flex flex-row justify-center'>
                     {category !== 'Education' &&
-                      <JobBite breakBool={breakBool} job={item} index={index}/>
+                      <JobBite job={item} index={index} isBreakpoint={isBreakpoint}/>
                     }
                   </div>
               ))}

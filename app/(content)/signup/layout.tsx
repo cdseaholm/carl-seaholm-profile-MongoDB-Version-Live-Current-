@@ -1,23 +1,16 @@
-'use client'
-
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
-import { motion } from "framer-motion";
+import { Metadata } from "next";
 
-export default function SignupLayout({ children }: { children: React.ReactNode }) {
+export const metadata: Metadata = {
+    title: 'Sign Up page',
+    description: 'A page that allows users to sign up.',
+}
+
+export default function SignUpLayout({ children }: { children: React.ReactNode }) {
+    
     return (
-        <motion.div
-        initial={{ y: 300, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: -300, opacity: 0 }}
-        transition={{
-            type: "spring",
-            stiffness: 100,
-            damping: 20,
-            delay: 0.2,
-        }}>
-            <MainPageBody>
-                {children}
-            </MainPageBody>
-        </motion.div>
+        <MainPageBody>
+            {children}
+        </MainPageBody>
     );
 }

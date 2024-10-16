@@ -1,12 +1,16 @@
-export const metadata = {
-    title: "Personal",
-    description: "A brief overview of Carl Seaholm's Personal Life"
-};
+import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Carl Seaholm Personal Page',
+    description: 'A page dedicated to the personal life of Carl Seaholm.',
+}
 
 export default function PersonalLayout({ children }: { children: React.ReactNode }) {
+    
     return (
-        <div className="childFirst min-w-screen min-h-screen my-10 mx-10">
-        {children}
-        </div>
+        <MainPageBody>
+            {children}
+        </MainPageBody>
     );
 }

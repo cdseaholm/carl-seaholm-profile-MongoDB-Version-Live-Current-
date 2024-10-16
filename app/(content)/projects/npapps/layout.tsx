@@ -1,12 +1,16 @@
-export const metadata = {
-    title: "NP Apps",
-    description: "A One Sheet for NP Apps."
-};
+import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'NPApps Page',
+    description: 'A page dedicated to the side projects that consist of New Progress Applications.',
+}
 
 export default function NPAppsLayout({ children }: { children: React.ReactNode }) {
+    
     return (
-        <div className="childFirst min-w-screen min-h-screen my-10 mx-10">
-        {children}
-        </div>
+        <MainPageBody>
+            {children}
+        </MainPageBody>
     );
 }

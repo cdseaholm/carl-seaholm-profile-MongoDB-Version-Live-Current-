@@ -1,12 +1,12 @@
-import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
+import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
+import { Metadata } from "next";
 
-export const metadata = {
-    title: "Blog",
-    description: "A collection of blog posts from Carl Seaholm."
-};
+export const metadata: Metadata = {
+    title: "Carl Seaholm's Blog",
+    description: 'A page dedicated to the blog Carl Seaholm had written.',
+}
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
-
     
     return (
         <MainPageBody>

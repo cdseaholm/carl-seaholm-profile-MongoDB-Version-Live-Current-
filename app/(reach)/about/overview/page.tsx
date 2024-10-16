@@ -3,11 +3,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 
-const openInNewTab = (url: string) => {
-  const win = window.open(url, '_blank');
-  win?.focus();
-};
-
 export default function OverviewPage() {
   const [isHovered, setIsHovered] = useState(false);
   const [clicked, setClicked] = useState(false);

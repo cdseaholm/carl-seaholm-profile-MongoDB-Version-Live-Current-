@@ -1,12 +1,16 @@
-export const metadata = {
-    title: "Development Layout",
-    description: "A Landing Page for my Professional Development History"
-};
+import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Carl Seaholm Development Page',
+    description: 'A page dedicated to the Development work of Carl Seaholm.',
+}
 
 export default function DevelopmentLayout({ children }: { children: React.ReactNode }) {
+    
     return (
-        <div>
-        {children}
-        </div>
+        <MainPageBody>
+            {children}
+        </MainPageBody>
     );
 }
