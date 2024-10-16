@@ -1,4 +1,5 @@
-import Professional from "@/components/pagecomponents/about/professionapage";
+
+import ProfessionalPage from "@/components/pagecomponents/about/professionalpage";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { GetData } from "@/utils/data/get";
 import { Metadata } from "next";
@@ -20,7 +21,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  <MainPageBody>
-    <Professional />
-  </MainPageBody>
+  return (
+    <MainPageBody>
+      <ProfessionalPage />
+    </MainPageBody>
+  );
 }

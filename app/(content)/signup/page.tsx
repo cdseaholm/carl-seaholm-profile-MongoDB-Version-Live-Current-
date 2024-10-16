@@ -8,7 +8,9 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-    <MainPageBody>
-        <SignUpPage />
-    </MainPageBody>
+    return (
+        <MainPageBody>
+            <SignUpPage />
+        </MainPageBody>
+    )
 }
