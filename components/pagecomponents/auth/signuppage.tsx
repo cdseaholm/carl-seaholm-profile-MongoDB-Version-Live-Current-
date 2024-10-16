@@ -1,53 +1,13 @@
 'use client'
 
-import { signIn } from "@/auth";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import SignInAttempt from "@/utils/helpers/signIn";
+import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
-
-    const { data: session } = useSession();
     const router = useRouter();
 
-    const handleSignUpSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        console.log('formData', Object.fromEntries(formData));
-
-        if (session?.user) {
-            console.log('You are already logged in');
-            return;
-        }
-
-        try {
-            const res = await fetch('/api/registerStatic', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(Object.fromEntries(formData)),
-            });
-
-            if (res.ok) {
-                const approvedRes = await signIn('credentials', {
-                    email: event.currentTarget['registerEmail'].value,
-                    password: event.currentTarget['registerPassword'].value,
-                    redirect: false
-                });
-                if (approvedRes && approvedRes.ok) {
-                    router.replace('/dashboard');
-                } else {
-                    console.log('Error logging in:', approvedRes ? approvedRes : 'No response')
-                    return;
-                }
-            } else {
-                console.log('Error creating account:', res ? res : 'No response')
-                return;
-            }
-        } catch (error) {
-            console.log('Error creating account:', error ? error : 'No error')
-        }
-
+    const handleSignUpSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        SignInAttempt({ event: e, router: router });
     };
 
     return (
