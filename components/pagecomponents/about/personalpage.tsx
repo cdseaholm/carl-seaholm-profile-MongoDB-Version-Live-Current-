@@ -1,3 +1,5 @@
+'use client'
+
 import InnerTemplate from "@/components/pagetemplates/innerTemplate/innerTemplate";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { useState } from "react";

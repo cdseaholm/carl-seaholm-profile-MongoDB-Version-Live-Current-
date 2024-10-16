@@ -1,3 +1,5 @@
+'use client'
+
 import { useStateStore } from "@/context/stateStore"
 import React, { useState, useRef, useCallback } from "react";
 import { schoolsArray, jobsArray } from "../professional/jobsarray";
