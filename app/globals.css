@@ -22,6 +22,16 @@
   }
 }
 
+@keyframes fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+@keyframes fadeOut {
+  0% {opacity: 1;}
+  100% {opacity: 0;}
+}
+
 /* body-pieces */
 
 html, body {
@@ -33,34 +43,23 @@ button:hover {
   cursor: pointer;
 }
 
-div.childFirst {
+.childFirstColor {
   background-color: rgba(51, 65, 85, 0.5);
+}
+
+div.childFirst {
   flex-grow: 1;
   overflow: hidden;
 }
 
 /* transitions */
 
-.landing-page {
-  transition: transform 1s ease-in-out;
-}
-
-.slide-up {
-  transform: translateY(-100%);
-}
-
-.scale-150 {
-  transition: transform 0.3s;
-  transform: scale(1.5);
-}
-
 .fade-in {
-  opacity: 1;
-  transition: opacity 0.5s ease-in;
+  animation: fadeIn 2s ease-out;
 }
 
 .fade-out {
-  opacity: 0;
-  transition: opacity 0.5s ease-out;
+  animation: fadeOut 1s ease-out;
 }
+
 /* images */

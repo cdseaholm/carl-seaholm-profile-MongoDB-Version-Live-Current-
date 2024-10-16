@@ -1,8 +1,27 @@
 import BlogDropdown from "@/components/dropdowns/blogdropdown";
+import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { getCategorisedPosts } from "@/lib/posts/posts";
 import { post } from "@/models/types/post";
+import { GetData } from "@/utils/data/get";
+import { Metadata } from "next";
 
-const Blog = () => {
+async function initData() {
+    const data = await GetData();
+    const returnData = data.data;
+    return returnData;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+    const data = await initData();
+    const userName = data.name;
+
+    return {
+        title: `${userName}'s Blog`,
+        description: `A page dedicated to the blog ${userName} had written.`,
+    };
+}
+
+export default async function Page() {
     const posts = getCategorisedPosts();
     Object.keys(posts).forEach(category => {
         if (!category) {
@@ -17,8 +36,8 @@ const Blog = () => {
     const catSort = categoriesForDrop.sort((a, b) => a < b ? -1 : 1).filter(category => category !== 'demo');
 
     return (
-        <BlogDropdown categoriesForDrop={catSort} posts={posts} />
+        <MainPageBody>
+            <BlogDropdown categoriesForDrop={catSort} posts={posts} />
+        </MainPageBody>
     );
 };
-
-export default Blog;

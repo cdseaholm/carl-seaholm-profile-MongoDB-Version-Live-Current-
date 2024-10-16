@@ -1,9 +1,14 @@
-'use client'
-
-import MainChild from '@/components/pagetemplates/mainchild/mainchild';
+import NPWebApps from '@/components/pagecomponents/np/npwebapps/npwebapps';
+import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
+import { Metadata } from 'next';
 import React from 'react';
 
-const NPWebAppPage = () => {
+export const metadata: Metadata = {
+    title: 'NP Web Apps',
+    description: 'A page dedicated to web pages written by New Progress Co.',
+}
+
+export default async function Page() {
     const webDropdown = false;
 
     const webapps = [
@@ -13,22 +18,8 @@ const NPWebAppPage = () => {
     ];
 
     return (
-        <MainChild>
-            <div className="p-2">
-                <div className="flex justify-center pb-10 p-2">
-                    <h1 className="text-2xl">New Progress Web Applications</h1>
-                </div>
-                <div className='flex flex-col justify-center items-start'>
-                {webDropdown && webapps.map((app, index) => (
-                    <div key={index}>
-                        <li>{app.name}</li>
-                        <p className="pl-10 pb-10">{app.description}</p>
-                    </div>   
-                ))}
-                </div>
-            </div>
-        </MainChild>
+        <MainPageBody>
+            <NPWebApps webDropdown={webDropdown} webapps={webapps}/>
+        </MainPageBody>
     );
 };
-
-export default NPWebAppPage;
