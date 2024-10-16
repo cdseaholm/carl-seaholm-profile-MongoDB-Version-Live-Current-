@@ -16,27 +16,34 @@ export function PieChartView({ data }: { data: dataType[] }) {
         markers: {
             colors: data.map((d: dataType) => d.color)
         },
-    }]
-
+    }];
 
     return (
-        <Plot
-            data={dataPlot}
-            layout={{
-                plot_bgcolor: 'rgba(0, 0, 0, 0)',
-                paper_bgcolor: 'rgba(0, 0, 0, 0)',
-                margin: { t: 50, b: 50, r: 50, l: 50 },
-                dragmode: false,
-                clickmode: 'none',
-                showlegend: isBreakpoint ? false : true,
-            }}
-            config={{
-                displayModeBar: false,
-                responsive: true,
+        <div className='flex flex-col justify-start items-start w-full h-full text-sm' style={{ minHeight: '40dvh' }}>
+            <h2 className={`font-bold underline`}>
+                % of Total Time on Each Hobby
+            </h2>
+            <div className='flex flex-row justify-start items-start w-full h-4/5'>
 
-            }}
-            className='w-full h-full'
-        />
+                <Plot
+                    data={dataPlot}
+                    layout={{
+                        plot_bgcolor: 'rgba(0, 0, 0, 0)',
+                        paper_bgcolor: 'rgba(0, 0, 0, 0)',
+                        margin: { t: 50, b: 50, r: 50, l: 50 },
+                        dragmode: false,
+                        clickmode: 'none',
+                        showlegend: isBreakpoint ? false : true,
+                    }}
+                    config={{
+                        displayModeBar: false,
+                        responsive: true,
+
+                    }}
+                    className='w-full h-full'
+                />
+            </div>
+        </div>
 
     );
 }

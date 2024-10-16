@@ -3,10 +3,7 @@
 import { Providers } from "@/app/providers";
 import { useEffect, useRef, useState } from "react";
 import { useStateStore } from "@/context/stateStore";
-import DBWrapper from "./dbwrapper";
 import ToastWrapper from "./toastWrapper";
-import MotionWrap from "./motionWrap";
-import { usePathname } from "next/navigation";
 import { widthContext } from "@/context/context";
 
 
@@ -16,7 +13,6 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
   const [width, setWidth] = useState(0);
   const setWidthQuery = useStateStore((state) => state.setWidthQuery);
   const setUrlToUse = useStateStore((state) => state.setUrlToUse);
-  const pathname = usePathname();
 
   useEffect(() => {
     if (targetRef.current === null) {
@@ -49,15 +45,13 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
     <div ref={targetRef} className="bg-white/50 h-dvh overflow-hidden">
       <ToastWrapper>
         <Providers>
-          <MotionWrap motionKey={pathname}>
-            <DBWrapper>
-              <widthContext.Provider value={width}>
-                <main className={'flex flex-col h-dvh'}>
-                  {children}
-                </main>
-              </widthContext.Provider>
-            </DBWrapper>
-          </MotionWrap>
+          <div className="bg-slate-900/50 fade-in fade-out">
+            <widthContext.Provider value={width}>
+              <main className={'flex flex-col h-dvh'}>
+                {children}
+              </main>
+            </widthContext.Provider>
+          </div>
         </Providers>
       </ToastWrapper>
     </div>

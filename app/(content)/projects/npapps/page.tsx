@@ -1,40 +1,18 @@
-'use client'
 
-import React, { useState } from 'react';
+import NPAppsPage from '@/components/pagecomponents/np/npapps/npapps';
+import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
+import { Metadata } from 'next';
+import React from 'react';
 
-const NPAppsPage = () => {
-    const [npDropdown, setNpDropdown] = useState(false);
+export const metadata: Metadata = {
+    title: 'NPApps Page',
+    description: 'A page dedicated to the side projects that consist of New Progress Applications.',
+}
 
-    const npapps = [
-        {name: "Financr App", description: "Description/Github"},
-        {name: "Trackr App", description: "Description/Github"},
-        {name: "Gamr App", description: "Description/Github"}
-    ];
-
+export default async function Page() {
     return (
-        <div className='flex justify-evenly flex-col items-center space-y-4'>
-            <div className="flex justify-center">
-                <h1 className="text-2xl">New Progress Applications</h1>
-            </div>
-            <div className="py-10">
-                <div onClick={() => {
-                    if (npDropdown === false) {
-                        setNpDropdown(true)
-                    } else {
-                        setNpDropdown(false)
-                    }
-                }}>
-                    <h2 className="text-2xl underline hover:text-slate-300">New Progress Applications</h2>
-                </div>
-                {npDropdown && npapps.map((app, index) => (
-                <div key={index}>
-                    <li>{app.name}</li>
-                    <p className="pl-10 pb-10">{app.description}</p>
-                </div>
-                ))}
-            </div>
-        </div>
+        <MainPageBody>
+            <NPAppsPage />
+        </MainPageBody>
     );
 };
-
-export default NPAppsPage;
