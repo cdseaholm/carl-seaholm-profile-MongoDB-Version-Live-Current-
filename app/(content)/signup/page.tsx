@@ -1,3 +1,4 @@
+
 import SignUpPage from "@/components/pagecomponents/auth/signuppage";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { Metadata } from "next";
@@ -7,7 +8,8 @@ export const metadata: Metadata = {
     description: 'A page that allows users to sign up.',
 }
 
-export default function Page() {
+export default async function Page() {
+    
     return (
         <MainPageBody>
             <SignUpPage />
