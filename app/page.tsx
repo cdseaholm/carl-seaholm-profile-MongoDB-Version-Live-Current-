@@ -18,14 +18,14 @@ export default function Home() {
   const [fadeBegin, setFadeBegin] = useState(false);
 
   useEffect(() => {
-    setFadeBegin(true);
-    setIsImageVisible(true); // Show after loading
-    setDashShow(true); // Show after loading
-    setProShow(true); // Show after loading
+    setIsImageVisible(true);
+    setDashShow(true);
+    setProShow(true);
     setLoading(false);
   }, []);
 
   const navigateToDashboard = async () => {
+    setFadeBegin(true);
     setProShow(false);
     setIsImageVisible(false);
     setTimeout(() => {
@@ -34,6 +34,7 @@ export default function Home() {
   };
 
   const navigateToProfessional = async () => {
+    setFadeBegin(true);
     setDashShow(false);
     setIsImageVisible(false);
     setTimeout(() => {
