@@ -18,11 +18,11 @@ export default function Home() {
   const [fadeBegin, setFadeBegin] = useState(false);
 
   useEffect(() => {
-    setLoading(false);
     setFadeBegin(true);
     setIsImageVisible(true); // Show after loading
     setDashShow(true); // Show after loading
     setProShow(true); // Show after loading
+    setLoading(false);
   }, []);
 
   const navigateToDashboard = async () => {
