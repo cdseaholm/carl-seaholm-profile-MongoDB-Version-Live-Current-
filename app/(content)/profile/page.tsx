@@ -44,7 +44,7 @@ export default async function Page() {
 
         const userInfo = data.data as IUser
         const hobbies = data.hobbies as IHobby[];
-        const recipes = data.recipes as IRecipe[];
+        const recipes = [] as IRecipe[];
 
         return (
             <MainPageBody>

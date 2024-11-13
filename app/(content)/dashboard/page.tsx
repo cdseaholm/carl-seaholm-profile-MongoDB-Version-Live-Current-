@@ -35,8 +35,8 @@ export default async function Page() {
   const userObjects = timeData.userObjects as IUserObject[]
   const sessionsFound = timeData.sessionsFound as IEntry[]
   const colorMap = timeData.colorMap as ColorMapType[];
-  const fieldObjects = timeData.fieldObjects as IFieldObject[]
-  const sortedSessions = sessionsFound.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const fieldObjects = timeData.fieldObjects as IFieldObject[];
+  const sortedSessions = sessionsFound ? sessionsFound.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) : [] as IEntry[];
 
 
   return (
