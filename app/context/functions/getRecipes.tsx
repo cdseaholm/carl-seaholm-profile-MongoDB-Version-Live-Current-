@@ -4,10 +4,10 @@ import { getBaseUrl } from "@/utils/helpers/helpers";
 export async function getRecipes() {
 
     const userID = process.env.ADMIN_USERNAME as string;
-    const url = await getBaseUrl()
+    const url = await getBaseUrl();
 
     try {
-        const recipesFetched = await fetch(`${url}/api/${userID}/getrecipes`, {
+        const recipesFetched = await fetch(`/api/${userID}/getrecipes`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
