@@ -1,5 +1,4 @@
 import { getHobbies } from "@/app/context/functions/getHobbies";
-import { getRecipes } from "@/app/context/functions/getRecipes";
 import ProfilePage from "@/components/pagecomponents/profile/profileHub";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { IHobby } from "@/models/types/hobby";
@@ -12,10 +11,9 @@ import { Metadata } from "next";
 async function initData() {
     const data = await GetData();
     const hobbies = await getHobbies();
-    const recipes = await getRecipes();
     const returnUserData = data.data as IUser;
     const returnHobbies = hobbies.hobbies as IHobby[];
-    const returnRecipes = recipes.recipes as IRecipe[];
+    const returnRecipes = [] as IRecipe[];
     const returnData = { data: returnUserData, hobbies: returnHobbies, recipes: returnRecipes };
     return returnData;
 }
