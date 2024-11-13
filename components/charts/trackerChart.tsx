@@ -3,12 +3,12 @@ import dynamic from 'next/dynamic';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
-export function TrackerUsage({ objectTitle, daysWithHobbies, monthLength }: { objectTitle: string, daysWithHobbies: number[], monthLength: number }) {
+export function TrackerUsage({daysWithHobbies, monthLength }: { daysWithHobbies: number[], monthLength: number }) {
 
     if (daysWithHobbies === undefined || daysWithHobbies.length === 0) {
         return (
             <div>
-                {`No ${objectTitle} completed yet this month`}
+                {`No hobbies completed yet this month`}
             </div>
         )
     }

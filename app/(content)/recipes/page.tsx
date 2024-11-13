@@ -1,4 +1,4 @@
-import Recipes from "@/components/pagecomponents/recipes/recipesPage";
+
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { GetData } from "@/utils/data/get";
 import { Metadata } from "next";
@@ -20,11 +20,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-    const userInfo = await initData();
+    {/**const userInfo = await initData(); */}
 
     return (
         <MainPageBody>
-            <Recipes userInfo={userInfo} />
+            {/**<Recipes userInfo={userInfo} /> */}
+            <p>Recipes Page Placeholder - Construction Zone</p>
         </MainPageBody>
     );
 }

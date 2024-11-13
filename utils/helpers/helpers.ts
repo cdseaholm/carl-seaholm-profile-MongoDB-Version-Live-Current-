@@ -1,9 +1,10 @@
-export const getBaseUrl = () => {
+export async function getBaseUrl() {
     if (process.env.NODE_ENV === "development") {
-        return process.env.NEXT_PUBLIC_BASE_URL;
+        let devBase = process.env.BASE_URL as string;
+        return devBase;
     }
-
-    return process.env.NEXT_PUBLIC_BASE_LIVEURL;
+    let liveBase = process.env.BASE_LIVEURL as string;
+    return liveBase;
 }
 
 export async function getMongoDBUri() {

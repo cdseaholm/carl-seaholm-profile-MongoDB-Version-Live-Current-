@@ -1,6 +1,7 @@
 import { getCsrfToken, getSession } from "next-auth/react";
 
-export async function DeleteUser({userID, urlToUse}: {userID: string, urlToUse: string}) {
+export async function DeleteUser() {
+    const userID = process.env.ADMIN_USERNAME as string;
     try {
         const auth = await getSession();
         if (!auth) {
@@ -12,7 +13,7 @@ export async function DeleteUser({userID, urlToUse}: {userID: string, urlToUse: 
             console.log('No token');
             return false
         }
-        const response = await fetch(urlToUse + '/api/' + userID + '/deleteUser', {
+        const response = await fetch(`/api/${userID}/deleteUser`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

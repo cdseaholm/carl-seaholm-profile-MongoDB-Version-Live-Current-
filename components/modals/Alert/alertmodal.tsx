@@ -25,8 +25,7 @@ export default function AlertModal() {
     const handleFirstButton = () => {
         if (alertParent === 'calendar') {
             setDashToShow('calendar');
-            setShowCalendar(true);
-            setModalOpen('');
+            setModalOpen('logsession');
         }
         resetAlert();
     }
@@ -53,7 +52,7 @@ export default function AlertModal() {
                     <div className="flex items-center justify-between p-4 md:p-5 rounded-t dark:border-gray-600">
                         {alertParent === 'calendar' ?
                         (<button>
-                            <FiArrowLeft className="text-white" onClick={() => {resetAlert(); setModalOpen('calendar')}}/>
+                            <FiArrowLeft className="text-white" onClick={() => {resetAlert(); setShowCalendar(true)}}/>
                         </button>) : null}
                         <button type="button" className="text-white bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal" onClick={() => setShowAlert(false)}>
                             <svg className="w-3 h-3" aria-hidden={!showAlert} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">

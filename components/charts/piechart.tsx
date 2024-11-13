@@ -21,7 +21,7 @@ export function PieChartView({ data }: { data: dataType[] }) {
     return (
         <div className='flex flex-col justify-start items-start w-full h-full text-sm' style={{ minHeight: '40dvh' }}>
             <h2 className={`font-bold underline`}>
-                % of Total Time on Each Hobby
+                % of Total Time on Each Hobby for the past 5 months
             </h2>
             <div className='flex flex-row justify-start items-start w-full h-4/5'>
 

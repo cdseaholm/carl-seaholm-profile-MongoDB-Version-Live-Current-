@@ -1,6 +1,8 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IUser } from "./types/user";
 import { userObjectSchema } from "./userObject";
+import { entrySchema } from "./entry";
+import { fieldObjectSchema } from "./fieldObject";
 
 const userSchema = new Schema(
     {
@@ -28,11 +30,21 @@ const userSchema = new Schema(
             type: [userObjectSchema],
             required: false
         },
+        entries: {
+            type: [entrySchema],
+            required: false
+        },
+        fieldObjects: {
+            type: [fieldObjectSchema],
+            required: false
+        },
         resetPasswordToken: {
-            type: String
+            type: String,
+            default: ''
         },
         resetPasswordExpires: {
-            type: String
+            type: String,
+            default: ''
         }
     },
     {

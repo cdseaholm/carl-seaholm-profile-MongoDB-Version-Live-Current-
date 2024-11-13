@@ -1,7 +1,12 @@
 'use client'
 
 import { FiMinusCircle } from "react-icons/fi";
-import { fieldCreationTypes } from "../AddNewObject/addNewObject";
+export type fieldCreationTypes = {
+    id: number;
+    name: string;
+    type: string;
+    value: string;
+}
 
 export function FieldCreation({ field, index, objectReq, entryReq, handleSetField, handleRemoveField }: { field: fieldCreationTypes, index: number, objectReq: boolean, entryReq: boolean, handleSetField: (newField: fieldCreationTypes) => void, handleRemoveField: (id: number) => void }) {
 

@@ -1,3 +1,5 @@
+import { IEntry } from "./entry";
+import { IFieldObject } from "./field";
 import { IUserObject } from "./userObject";
 
 
@@ -9,6 +11,8 @@ export interface IUser {
     password: string;
     blogsub: boolean;
     userObjects: IUserObject[];
+    entries: IEntry[];
+    fieldObjects: IFieldObject[]
     _id: string;
     createdAt: string;
     updatedAt: string;

@@ -4,16 +4,14 @@ import { FiArrowLeft } from "react-icons/fi";
 import ModalLogin from "../modalContent/Login/loginModal";
 import SignupModal from "../modalContent/signup/signupModal";
 import ModalSubscribe from "../modalContent/subscribe/subscribeModal";
-import LogSessionModal from "../modalContent/LogSession/logsession";
 import ModalHobby from "../modalContent/AddHobbyTracker/hobbymodal";
 import ActionsModal from "../modalContent/Actions/actionsmodal";
 import EditUser from "../modalContent/EditUser/editUser";
 import AddRecipes from "../modalContent/Recipes/Add";
 import { useModalStore } from "@/context/modalStore";
-import AddNewObject from "../modalContent/AddNewObject/addNewObject";
-import AddNewEntryToObject from "../modalContent/AddNewEntryToObject/addNewEntryToObject";
 import ForgotPassword from "../modalContent/forgotpassword/forgotPassword";
 import ChangePassword from "../modalContent/changePassword/changePassword";
+import LogSessionDataInit from "../modalContent/LogSession/logsessiondatainit";
 
 
 export default function MainModal() {
@@ -81,13 +79,13 @@ export default function MainModal() {
                         {modalOpen === 'login' && <ModalLogin />}
                         {modalOpen === 'signup' && <SignupModal />}
                         {modalOpen === 'subscribe' && <ModalSubscribe />}
-                        {modalOpen === 'logsession' && <LogSessionModal daySelected={daySelected} />}
+                        {modalOpen === 'logsession' && <LogSessionDataInit daySelected={daySelected} />}
                         {modalOpen === 'addhobby' && <ModalHobby />}
                         {modalOpen === 'actions' && <ActionsModal />}
                         {modalOpen === 'edituser' && <EditUser />}
                         {modalOpen === 'addrecipe' && <AddRecipes />}
-                        {modalOpen === 'addNewObject' && <AddNewObject />}
-                        {modalOpen === 'addNewEntryToObject' && <AddNewEntryToObject />}
+                        {/**{modalOpen === 'addNewObject' && <AddNewObject />} */}
+                        {/**{modalOpen === 'addNewEntryToObject' && <AddNewEntryToObject />} */}
                         {modalOpen === 'forgotpassword' && <ForgotPassword />}
                         {modalOpen === 'changepassword' && <ChangePassword />}
                         </>

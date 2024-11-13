@@ -1,11 +1,10 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { IEntry } from "./types/objectEntry";
-import { fieldSchema } from "./field";
+import { IEntry } from "./types/entry";
 
 export const entrySchema = new Schema(
     {
-        fields: {
-            type: [fieldSchema],
+        value: {
+            type: Schema.Types.Mixed,
             required: true
         },
         date: {

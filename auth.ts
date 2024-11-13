@@ -1,35 +1,39 @@
 import NextAuth from 'next-auth';
 //import Google from 'next-auth/providers/google';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import Credentials from 'next-auth/providers/credentials';
 import connectDB from './lib/mongodb';
 import User from './models/user';
+import { VerifyPassword } from './utils/userHelpers/verifyPassword';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
 
     providers: [
         //Google,
-        CredentialsProvider({
+        Credentials({
             credentials: {
-                email: { label: 'Email', type: 'email' },
-                password: { label: 'Password', type: 'password' },
+                email: {},
+                password: {},
             },
 
-            async authorize(credentials) {
-                const { email, password } = credentials as Record<string, string>;
-                if (!email || !password) {
-                    return null;
-                }
-
+            authorize: async (credentials) => {
+                
                 try {
+                    
+                    let user = null;
+
+                    const { email, password } = credentials as Record<string, string>;
+
+                    if (!email || !password) {
+                        return null;
+                    }
 
                     await connectDB();
-                    const user = await User.findOne({ email });
+                    user = await User.findOne({ email });
                     if (!user) {
                         return null;
                     }
-                    {/**const validPassword = await argon2id.verify(user.password, password); */}
-
-                    const validPassword = user.password === password;
+                    
+                    const validPassword = await VerifyPassword(password, user.password);
 
                     if (!validPassword) {
                         return null;

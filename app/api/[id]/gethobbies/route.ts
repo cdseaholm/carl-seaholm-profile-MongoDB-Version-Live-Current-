@@ -37,7 +37,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           updatedAt: hobby.updatedAt
         }
       }) as IHobby[];
-
       const response = NextResponse.json({status: 200, hobbies: hobbies as IHobby[]});
       response.headers.set('Access-Control-Allow-Origin', '*');
       return response;

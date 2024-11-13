@@ -1,11 +1,8 @@
-import { IEntry } from "./objectEntry";
-import { IField } from "./field";
-
+import { IUserObjectIndexed } from "./userObjectIndexed";
 
 export type IUserObject = {
     title: string;
-    fields: IField[];
-    entries: IEntry[];
+    indexes: IUserObjectIndexed[];
     _id: string;
     createdAt: string;
     updatedAt: string;

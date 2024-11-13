@@ -1,10 +1,17 @@
 export interface IField {
     name: string;
-    value: any;
+    values: string[];
     type: string;
     trackable: boolean;
     mapPiece: boolean;
-    uniqueFieldTracker: string[];
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface IFieldObject {
+    fields: IField[];
+    entryIndexes: number[];
     _id: string;
     createdAt: string;
     updatedAt: string;

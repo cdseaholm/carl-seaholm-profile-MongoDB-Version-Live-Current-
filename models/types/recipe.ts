@@ -1,5 +1,5 @@
 export type IRecipe = {
-    id: string;
+    _id: string;
     name: string;
     date: string;
     rating: number;

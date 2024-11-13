@@ -1,9 +1,9 @@
-'use client'
+{/**'use client'
 
 import { useModalStore } from "@/context/modalStore";
 import { toast } from "sonner";
 import { useStore } from "@/context/dataStore";
-import { IEntry } from "@/models/types/objectEntry";
+import { IEntry } from "@/models/types/entry";
 import { CreateCustomEntry } from "@/utils/customFields/create";
 import { IField } from "@/models/types/field";
 import { Spinner } from "@/components/misc/Spinner";
@@ -30,7 +30,7 @@ export default function AddNewEntryToObject() {
     useEffect(() => {
         if (modalParent !== '') {
             console.log('modalParent', modalParent);
-            const newFieldMap = userObjects.find((object) => object.title === modalParent)?.fields.map((field) => {
+            const newFieldMap = userObjects.find((object) => object.title === modalParent)?.indexes.map((field) => {
                 let idCreate = -1;
                 do {
                     idCreate = Math.random() as number;
@@ -209,4 +209,4 @@ export default function AddNewEntryToObject() {
         )
     );
 
-};
+}; */}

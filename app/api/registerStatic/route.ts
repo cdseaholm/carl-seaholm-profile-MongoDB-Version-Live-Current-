@@ -4,10 +4,9 @@ import { NextResponse } from 'next/server';
 import User from '@/models/user';
 import { createErrorResponse } from '@/lib/utils';
 import { IUserObject } from '@/models/types/userObject';
-
-function isValidEmail(email: string): boolean {
-    return /.+@.+/.test(email);
-}
+import { SaltAndHashPassword } from '@/utils/userHelpers/saltAndHashPassword';
+import { IEntry } from '@/models/types/entry';
+import { IFieldObject } from '@/models/types/field';
 
 export async function POST(request: Request) {
 
@@ -15,10 +14,10 @@ export async function POST(request: Request) {
         const body = await request.json();
         await connectDB();
 
-        if (!body.registerEmail || typeof body.registerEmail !== "string" || !isValidEmail(body.registerEmail)) {
+        if (!body.registerEmail) {
             return createErrorResponse("Invalid email", 402);
         }
-        if (!body.registerPassword || typeof body.registerPassword !== "string" || body.registerPassword.length < 6) {
+        if (!body.registerPassword) {
             return createErrorResponse("Invalid password", 403);
         }
 
@@ -28,13 +27,7 @@ export async function POST(request: Request) {
             return createErrorResponse("User already exists", 404);
         }
 
-        if (!body.registerPassword) {
-            return createErrorResponse("Password is required", 405);
-        }
-
-        {/**const hashedPassword = await Argon2id.hash(body.registerPassword); */}
-
-        const hashedPassword = body.registerPassword;
+        const hashedPassword = await SaltAndHashPassword(body.registerPassword);
 
         try {
             const user = await User.create({
@@ -42,13 +35,15 @@ export async function POST(request: Request) {
                 email: body.registerEmail, 
                 blogsub: body.registerBlogsub ? true : false, 
                 password: hashedPassword,
-                customFields: [] as IUserObject[]
+                userObjects: [] as IUserObject[],
+                entries: [] as IEntry[],
+                fieldObjects: [] as IFieldObject[],
+                resetPasswordToken: '',
+                resetPasswordExpires: ''
             });
 
             if (!user) {
-
                 return createErrorResponse("User not created", 406);
-                
             }
 
             return NextResponse.json({status: 200, user});

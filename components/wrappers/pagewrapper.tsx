@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useStateStore } from "@/context/stateStore";
 import ToastWrapper from "./toastWrapper";
 import { widthContext } from "@/context/context";
+import { getBaseUrl } from "@/utils/helpers/helpers";
 
 
 export default function PageWrapper({ children }: Readonly<{ children: React.ReactNode; }>) {
@@ -34,24 +35,22 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
   }, [setWidthQuery]);
 
   useEffect(() => {
-    const currentUrl = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_BASE_URL !== undefined && process.env.NEXT_PUBLIC_BASE_URL !== '' && process.env.NEXT_PUBLIC_BASE_URL !== null ? process.env.NEXT_PUBLIC_BASE_URL
-      :
-      process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_BASE_LIVEURL !== null && process.env.NEXT_PUBLIC_BASE_LIVEURL !== '' && process.env.NEXT_PUBLIC_BASE_LIVEURL !== undefined ? process.env.NEXT_PUBLIC_BASE_LIVEURL
-        : '';
-    setUrlToUse(currentUrl);
+    const url = async () => {
+      const currentUrl = await getBaseUrl();
+      setUrlToUse(currentUrl);
+    }
+    url();
   }, [setUrlToUse]);
 
   return (
-    <div ref={targetRef} className="bg-white/50 h-dvh overflow-hidden">
+    <div ref={targetRef} className="h-dvh overflow-hidden">
       <ToastWrapper>
         <Providers>
-          <div className="bg-slate-900/50 fade-in fade-out">
-            <widthContext.Provider value={width}>
-              <main className={'flex flex-col h-dvh'}>
-                {children}
-              </main>
-            </widthContext.Provider>
-          </div>
+          <widthContext.Provider value={width}>
+            <main className={'flex flex-col h-dvh bg-white/50 '}>
+              {children}
+            </main>
+          </widthContext.Provider>
         </Providers>
       </ToastWrapper>
     </div>

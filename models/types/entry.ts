@@ -1,7 +1,6 @@
-import { IField } from "./field";
 
 export type IEntry = {
-    fields: IField[];
+    value: any;
     date: string;
     _id: string;
     createdAt: string;

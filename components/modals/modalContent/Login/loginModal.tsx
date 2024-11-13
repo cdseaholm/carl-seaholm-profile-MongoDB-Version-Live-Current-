@@ -17,8 +17,6 @@ export default function ModalLogin() {
     const [signInError, setSignInError] = useState<string>('');
 
     //variables
-    {/**const id = session?.user?.email;
-    const adminIDBool = status === 'authenticated' && session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false; */}
     const pathName = usePathname();
     const router = useRouter();
 
@@ -29,7 +27,6 @@ export default function ModalLogin() {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log('handleSubmit function called');
         try {
             
             if (session?.user !== null && session?.user !== undefined) {

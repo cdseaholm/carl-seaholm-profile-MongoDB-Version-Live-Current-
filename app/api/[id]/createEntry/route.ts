@@ -1,8 +1,7 @@
 import connectDB from "@/lib/mongodb";
-import { IUserObject } from "@/models/types/userObject";
 import User from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
-import { IEntry } from "@/models/types/objectEntry";
+import { IEntry } from "@/models/types/entry";
 
 const checkObjectName = (objectName: string) => {
     const lowerName = objectName.toLowerCase();
@@ -23,7 +22,7 @@ export async function POST(req: NextRequest) {
         const entry = data.entry as IEntry;
         const objectTitle = data.objectTitle as string;
 
-        if (!entry?.fields[0]?.value) {
+        if (!entry?.value.value) {
             return NextResponse.json({ status: 400, message: 'Invalid custom field' });
         }
 
@@ -43,11 +42,11 @@ export async function POST(req: NextRequest) {
         if (user.userObjects.length > 0 && user.userObjects) {
             const existingObjectIndex = user.userObjects.findIndex((object) => object.title === checkedName);
             if (existingObjectIndex !== -1 && user.userObjects[existingObjectIndex]) {
-                const existingObject = user.userObjects[existingObjectIndex] as IUserObject;
+                {/** const existingObject = user.userObjects[existingObjectIndex] as IUserObject;
                 const updatedEntry = [...existingObject.entries, entry] as IEntry[];
                 if (updatedEntry) {
-                    existingObject.entries = updatedEntry as IEntry[];
-                }
+                    existingObject. = updatedEntry as IEntry[];
+                } */}
             }
         } else {
             return NextResponse.json({ status: 404, message: 'Create Object, then add entry' });

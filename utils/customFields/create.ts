@@ -2,7 +2,7 @@
 import { IUserObject } from "@/models/types/userObject";
 import { getCsrfToken, getSession } from "next-auth/react";
 import { getBaseUrl } from "../helpers/helpers";
-import { IEntry } from "@/models/types/objectEntry";
+import { IEntry } from "@/models/types/entry";
 
 export async function CreateCustomEntry({ entry, objectTitle }: { entry: IEntry, objectTitle: string }) {
 

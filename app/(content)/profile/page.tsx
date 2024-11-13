@@ -1,36 +1,36 @@
+import { getHobbies } from "@/app/context/functions/getHobbies";
+import { getRecipes } from "@/app/context/functions/getRecipes";
 import ProfilePage from "@/components/pagecomponents/profile/profileHub";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
+import { IHobby } from "@/models/types/hobby";
+import { IRecipe } from "@/models/types/recipe";
+import { IUser } from "@/models/types/user";
 import { GetData } from "@/utils/data/get";
-import { getUrl } from "@/utils/helpers/config";
+
 import { Metadata } from "next";
 
 async function initData() {
-    const urlToUse = await getUrl();
-    const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME as string;
-    try {
-        const data = await GetData();
-        const hobbies = await fetch(urlToUse + '/api/' + userID + '/gethobbies').then((res) => res.json());
-        const tasks = await fetch(urlToUse + '/api/' + userID + '/getTasks').then((res) => res.json());
-        const recipes = await fetch(urlToUse + '/api/' + userID + '/getrecipes').then((res) => res.json());
-        const returnData = { data: data, hobbies: hobbies, tasks: tasks, recipes: recipes , urlToUse: urlToUse, userID: userID};
-        return returnData;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        throw new Error("Failed to fetch data");
-    }
+    const data = await GetData();
+    const hobbies = await getHobbies();
+    const recipes = await getRecipes();
+    const returnUserData = data.data as IUser;
+    const returnHobbies = hobbies.hobbies as IHobby[];
+    const returnRecipes = recipes.recipes as IRecipe[];
+    const returnData = { data: returnUserData, hobbies: returnHobbies, recipes: returnRecipes };
+    return returnData;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
     try {
         const data = await initData();
-        const userName = data.data.data.name;
+        const userData = data.data as IUser
+        const user = userData.name ? userData.name : "User";
 
         return {
-            title: `${userName} Profile Page`,
-            description: `A page dedicated to controlling the profile of ${userName}`,
+            title: `${user} Profile Page`,
+            description: `A page dedicated to controlling the profile of ${user}`,
         };
     } catch (error) {
-        console.error("Error generating metadata:", error);
         return {
             title: "Profile Page",
             description: "A page dedicated to controlling the profile",
@@ -42,13 +42,16 @@ export default async function Page() {
     try {
         const data = await initData();
 
+        const userInfo = data.data as IUser
+        const hobbies = data.hobbies as IHobby[];
+        const recipes = data.recipes as IRecipe[];
+
         return (
             <MainPageBody>
-                <ProfilePage hobbies={data.hobbies} tasks={data.tasks} recipes={data.recipes} urlToUse={data.urlToUse} userID={data.userID}/>
+                <ProfilePage hobbies={hobbies} recipes={recipes} userInfo={userInfo} />
             </MainPageBody>
         );
     } catch (error) {
-        console.error("Error rendering page:", error);
         return (
             <MainPageBody>
                 <div>Error loading profile page</div>

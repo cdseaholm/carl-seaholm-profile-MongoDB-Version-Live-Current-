@@ -1,20 +1,15 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IUserObject } from "./types/userObject";
-import { entrySchema } from "./objectEntry";
-import { fieldSchema } from "./field";
+import { userObjectIndexedSchema } from "./userObjectIndexed";
 
 export const userObjectSchema = new Schema(
     {
         title: {
             type: String,
-            required: true
-        },
-        fields: {
-            type: [fieldSchema],
             required: false
         },
-        entries: {
-            type: [entrySchema],
+        indexes: {
+            type: [userObjectIndexedSchema],
             required: false
         },
     },

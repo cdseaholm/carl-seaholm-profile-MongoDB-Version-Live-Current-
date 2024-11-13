@@ -5,8 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const adminID = req.url.split('/')[4];
-  console.log('adminID', adminID);
-
+  console.log(adminID)
   if (!adminID) {
     return NextResponse.json({ status: 400, message: 'Missing adminID' });
   }
@@ -26,6 +25,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       email: info.email,
       blogsub: info.blogsub,
       userObjects: info.userObjects,
+      entries: info.entries,
+      fieldObjects: info.fieldObjects,
       createdAt: info.createdAt,
       updatedAt: info.updatedAt,
     })) as IUser[];
