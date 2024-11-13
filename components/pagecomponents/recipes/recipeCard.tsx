@@ -1,4 +1,4 @@
-'use client'
+{/**'use client'
 
 import { useStateStore } from "@/context/stateStore";
 import { IUserObject } from "@/models/types/userObject";
@@ -32,4 +32,4 @@ export const RecipeCard = ({ recipesSorted }: { recipesSorted: IUserObject[] }) 
             )
         })
     );
-}
+} */}

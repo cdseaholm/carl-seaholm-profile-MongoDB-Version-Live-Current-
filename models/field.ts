@@ -7,8 +7,8 @@ export const fieldSchema = new Schema(
             type: String,
             required: true
         },
-        value: {
-            type: String,
+        values: {
+            type: [String],
             required: true
         },
         type: {
@@ -23,10 +23,6 @@ export const fieldSchema = new Schema(
             type: Boolean,
             required: false,
             default: false
-        },
-        uniqueFieldTracker: {
-            type: [String],
-            required: false
         }
         //be aware this will need to have stringent validation if true
     },

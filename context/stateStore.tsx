@@ -1,5 +1,5 @@
 
-import { IEntry } from '@/models/types/objectEntry';
+import { IEntry } from '@/models/types/entry';
 import { create } from 'zustand';
 
 

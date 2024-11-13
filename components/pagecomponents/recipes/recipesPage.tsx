@@ -1,19 +1,20 @@
-'use client'
+{/**'use client'
 
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { useModalStore } from "@/context/modalStore";
-import { IEntry } from "@/models/types/objectEntry";
+import { IEntry } from "@/models/types/entry";
 import { IUserObject } from "@/models/types/userObject";
 import { Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { RecipeCard } from "./recipeCard";
 import { IUser } from "@/models/types/user";
+import { CheckAdminBool } from "@/utils/helpers/adminBool";
 
 export default function Recipes({ userInfo }: { userInfo: IUser }) {
 
     //context
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const [recipes, setRecipes] = useState<IUserObject[]>([]);
     const [recipeFilter, setRecipeFilter] = useState<string>('');
     const setModalOpen = useModalStore((state) => state.setModalOpen);
@@ -21,9 +22,11 @@ export default function Recipes({ userInfo }: { userInfo: IUser }) {
     //state
     const [recipesSorted, setRecipesSorted] = useState<IUserObject[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [adminBool, setAdminBool] = useState<boolean>(false);
 
     //variables
-    const adminIDBool = status === 'authenticated' && session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false;
+    const user = session?.user ? session.user : null;
+    const userEmail = user?.email ? user.email : '';
     const recipesToPass = recipeFilter === '' ? recipes : recipesSorted;
 
     useEffect(() => {
@@ -40,6 +43,14 @@ export default function Recipes({ userInfo }: { userInfo: IUser }) {
         initializeRecipes();
         setLoading(false);
     }, [userInfo]);
+
+    useEffect(() => {
+        const getAdminBool = async () => {
+            const bool = await CheckAdminBool(userEmail);
+            setAdminBool(bool);
+        }
+        getAdminBool();
+    }, [userEmail]);
 
 
     //functions
@@ -137,7 +148,7 @@ export default function Recipes({ userInfo }: { userInfo: IUser }) {
         ) : (
             <MainChild>
                 <h1 className="text-center">Recipes</h1>
-                <div className={`flex flex-row px-4 ${adminIDBool ? 'justify-between' : 'justify-start'}`}>
+                <div className={`flex flex-row px-4 ${adminBool ? 'justify-between' : 'justify-start'}`}>
                     <select name="modalSessionHobby" id="modalSessionHobby" className="bg-transparent border border-transparent text-gray-900 text-xs rounded-lg block w-1/3 p-2.5 dark:placeholder-gray-400 cursor-pointer" defaultValue='No filter' required onChange={(e) => {
                         handleFilterRecipes(e);
                     }}>
@@ -152,7 +163,7 @@ export default function Recipes({ userInfo }: { userInfo: IUser }) {
                             <option value="lowRatingFirst">Lowest Rated</option>
                         </optgroup>
                     </select>
-                    {adminIDBool ? (
+                    {adminBool ? (
                         <div className="justify-center items-center cursor-pointer" onClick={() => setModalOpen('addrecipe')}>
                             <button className="text-xl">
                                 +
@@ -168,4 +179,4 @@ export default function Recipes({ userInfo }: { userInfo: IUser }) {
             </MainChild>
         )
     )
-}
+} */}

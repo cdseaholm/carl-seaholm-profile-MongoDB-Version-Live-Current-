@@ -1,8 +1,8 @@
-'use client'
+{/**'use client'
 
 import { useModalStore } from "@/context/modalStore";
 import { IUserObject } from "@/models/types/userObject";
-import { IEntry } from "@/models/types/objectEntry";
+import { IEntry } from "@/models/types/entry";
 import { toast } from "sonner";
 import { IField } from "@/models/types/field";
 import { useState } from "react";
@@ -160,4 +160,4 @@ export default function AddNewObject() {
             </form>
         )
     );
-};
+}; */}

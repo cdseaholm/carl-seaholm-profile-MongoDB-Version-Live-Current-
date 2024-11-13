@@ -1,4 +1,4 @@
-'use client'
+{/**'use client'
 
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -6,19 +6,30 @@ import ToDoComp from "../../../app/actions/dashActions/todocomp";
 import { useStateStore } from "@/context/stateStore";
 import { ITask } from "@/models/types/task";
 import { IUserObject } from "@/models/types/userObject";
-import { IEntry } from "@/models/types/objectEntry";
+import { IEntry } from "@/models/types/entry";
+import { useSession } from "next-auth/react";
+import { getBaseUrl } from "@/utils/helpers/helpers";
+import { AttemptUpdateCheckbox } from "@/utils/data/updateCheckbox";
 
 
 export default function ToDoList({ adminID, setModalOpen, handleDateDecrease, handleDateIncrease, dateToUse, entriesOTD }: { adminID: boolean, setModalOpen: (title: string) => void, handleDateDecrease: () => void, handleDateIncrease: () => void, dateToUse: string, entriesOTD: any }) {
 
-    const urlToUse = useStateStore((state) => state.urlToUse);
+    const [urlToUse, setUrlToUse] = useState<string>('');
     const [filteredTasks, setFilteredTasks] = useState<IEntry[]>([]);
-    const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
     const [loading, setLoading] = useState<boolean>(true);
     const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
     const smallBreakpoint = useStateStore((state) => state.widthQuery) < 580 ? true : false;
     const tasks = entriesOTD.find((field: IUserObject) => field.title === 'tasks');
     const setTaskDetailsToShow = useStateStore((state) => state.setTaskDetailToShow);
+    const {data: session} = useSession();
+
+    useEffect(() => {
+        const getURL = async () => {
+            const url = await getBaseUrl();
+            setUrlToUse(url);
+        }
+        getURL();
+    }, [setUrlToUse]);
 
     useEffect(() => {
         const getTasks = async () => {
@@ -52,28 +63,8 @@ export default function ToDoList({ adminID, setModalOpen, handleDateDecrease, ha
     const handleCheckboxClick = async (passedTask: IEntry) => {
 
         if (!adminID) return;
-        try {
-            const updatedTask = await fetch(`${urlToUse}/api/${userID}/edittask/${passedTask._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    completed: passedTask.fields.find((entry) => entry.name === 'completed')?.value
-                })
-            });
-            if (!updatedTask.ok) {
-                console.log('Failed to update task');
-                return;
-            }
-            if (updatedTask.ok) {
-                const res = await updatedTask.json();
-                console.log('Task updated', res);
-            }
-        } catch (error) {
-            console.error('Error updating task', error);
-            return;
-        }
+        const attemptUpdate = await AttemptUpdateCheckbox({ passedTask: passedTask, session: session, urlToUse: urlToUse });
+        if (!attemptUpdate) return;
         const completedTask = passedTask.fields.find((entry) => entry.name === 'completed')?.value;
         setFilteredTasks(prevTasks =>
             prevTasks.map(task =>
@@ -117,4 +108,4 @@ export default function ToDoList({ adminID, setModalOpen, handleDateDecrease, ha
             }
         </div>
     );
-}
+} */}

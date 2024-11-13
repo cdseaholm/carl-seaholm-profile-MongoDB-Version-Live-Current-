@@ -1,8 +1,8 @@
-'use client'
+{/**'use client'
 
 import { Spinner } from "@/components/misc/Spinner";
 import { IField } from "@/models/types/field";
-import { IEntry } from "@/models/types/objectEntry";
+import { IEntry } from "@/models/types/entry";
 import React from "react";
 import { FiEdit } from "react-icons/fi";
 import { FiTrash2 } from "react-icons/fi";
@@ -19,7 +19,7 @@ export default function ToDoComp({ adminID, loading, filteredTasks, smallBreakpo
             ) : (
                 <div className={`flex flex-col items-center justify-center border-y border-neutral-700 ${smallBreakpoint ? 'py-8 my-2 w-full mx-2' : isBreakpoint ? 'py-8 my-2 w-full mx-2' : 'py-10 my-5 w-4/5'} space-y-2`}>
                     {filteredTasks.map((task: IEntry, i: number) => {
-                        const checkboxToClick = task.fields.find((field: IField) => field.value === 'completed');
+                        const checkboxToClick = task.value.find((field: IField) => field.value === 'completed');
                         return (
                             <div className={`flex flex-row items-center justify-center w-full bg-stone-300 rounded-md`} key={i}>
                                 <div className={`flex flex-grow justify-start items-center p-2 space-x-5`} style={{ width: '48%' }}>
@@ -59,4 +59,4 @@ export default function ToDoComp({ adminID, loading, filteredTasks, smallBreakpo
             )
         )
     );
-}
+} */}

@@ -3,15 +3,15 @@ import { getBaseUrl } from "../helpers/helpers";
 
 export async function GetData() {
 
-    const userID = process.env.NEXT_PUBLIC_ADMIN_USERNAME as string;
-    const urlToUse = getBaseUrl();
+    const userID = process.env.ADMIN_USERNAME as string;
+    const url = await getBaseUrl()
 
     try {
-        const res = await fetch(urlToUse + '/api/' + userID + '/getUserInfo', {
+
+        const res = await fetch(`${url}/api/${userID}/getUserInfo`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
             },
         });
 

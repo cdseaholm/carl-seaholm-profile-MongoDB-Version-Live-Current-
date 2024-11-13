@@ -1,13 +1,12 @@
 'use client'
 
 import { useStateStore } from "@/context/stateStore";
-import { IUserObject } from "@/models/types/userObject";
 
-export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToShow, dashToShow, userObjects, handleUserObjectToShow }: { handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, dashToShow: string, userObjects: IUserObject[], handleUserObjectToShow: (userObjectToShow: string) => void, indexShown: boolean, setIndexShown: (indexShown: boolean) => void, colorMap: { color: string, title: string }[] }) {
+export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToShow, dashToShow }: { handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, dashToShow: string, indexShown: boolean, setIndexShown: (indexShown: boolean) => void, colorMap: { color: string, title: string }[] }) {
     const isSmallestBreakpoint = useStateStore((state) => state.widthQuery) < 400 ? true : false;
     return (
         <div className="flex flex-row justify-start items-center space-x-1 md:space-x-5 pr-2 w-full">
-            <select id='dropDownObjectSelect' name="dropDownObjectSelect" className="text-xs md:text-base hover:bg-gray-400 bg-transparent border-none rounded-md" onChange={(e) => {
+            {/**<select id='dropDownObjectSelect' name="dropDownObjectSelect" className="text-xs md:text-base hover:bg-gray-400 bg-transparent border-none rounded-md" onChange={(e) => {
                 handleUserObjectToShow(e.target.value);
             }} defaultValue={userObjects ? userObjects[0]?.title : ''}>
                 {userObjects ? userObjects.map((field: IUserObject, index: number) => {
@@ -17,7 +16,8 @@ export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToS
                         <option key={index} value={index}>{newTitle}</option>
                     )
                 }) : []}
-            </select>
+            </select> */}
+            <p>Hobbies</p>
             {dashToShow !== 'calendar' ?
                 (
                     <button className="text-base hover:bg-gray-400 rounded-md px-1 text-xs md:text-base" onClick={() => {

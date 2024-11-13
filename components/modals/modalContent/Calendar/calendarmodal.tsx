@@ -8,11 +8,13 @@ import { useCallback, useEffect, useState } from "react";
 import { DateSelectArg, EventClickArg, EventContentArg } from '@fullcalendar/core/index.js';
 import React from 'react';
 import { Spinner } from '@/components/misc/Spinner';
-import { IEntry } from '@/models/types/objectEntry';
+import { IEntry } from '@/models/types/entry';
 import { IUserObject } from '@/models/types/userObject';
 import { Session } from 'next-auth';
 import { useAlertStore } from '@/context/alertStore';
 import { ColorMapType } from '@/models/types/colorMap';
+import { CheckAdminBool } from '@/utils/helpers/adminBool';
+import { dataType } from '@/components/pagecomponents/dashboard/statsView';
 
 interface CalEvent {
     allDay: boolean;
@@ -22,15 +24,18 @@ interface CalEvent {
     color: string;
 }
 
-const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDaySelected, session, colorMap }: { show: boolean, closeCalendar: () => void, adminIDBool: boolean, objectToUse: IUserObject | null, handleDaySelected: (dateSelected: string) => void, session: Session | null, colorMap: ColorMapType[] }) => {
+const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDaySelected, session, colorMap, entries, data }: { show: boolean, closeCalendar: () => void, adminIDBool: boolean, objectToUse: IUserObject | null, handleDaySelected: (dateSelected: string) => void, session: Session | null, colorMap: ColorMapType[], entries: IEntry[], data: dataType[] }) => {
 
     //state
+    const user = session?.user ? session.user : null;
+    const email = user?.email ? user.email : '';
     const [objectsInADay, setObjectsInADay] = useState<CalEvent[]>([]);
     const [indexOpen, setIndexOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
     const setAlertParent = useAlertStore((state) => state.setAlertParent);
     const setAlertOpen = useAlertStore((state) => state.setShowAlert);
+    const [adminBool, setAdminBool] = useState<boolean>(false);
 
     //functions
     const handleDayClick = async (arg: DateClickArg) => {
@@ -59,7 +64,6 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
     const hydrateObjects = useCallback(async () => {
         const uniqueDates = new Set<string>();
         const calEvents = [] as CalEvent[];
-        const entries = objectToUse ? objectToUse.entries : [] as IEntry[];
 
         entries ? entries.map((entry: IEntry) => {
             const dateOfEntry = entry.date;
@@ -71,7 +75,7 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
                     allDay: true,
                     start: dateOfEntry,
                     end: dateOfEntry,
-                    editable: session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_USERNAME ? true : false,
+                    editable: adminBool,
                     color: 'transparent',
                 }
 
@@ -85,7 +89,15 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
         } else {
             setObjectsInADay(calEvents);
         }
-    }, [objectToUse, session]);
+    }, [adminBool, entries]);
+
+    useEffect(() => {
+        const getBool = async () => {
+            const adminBool = await CheckAdminBool(email);
+            setAdminBool(adminBool);
+        }
+        getBool();
+    }, [email, setAdminBool]);
 
     useEffect(() => {
         setLoading(true);
@@ -98,7 +110,7 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
     }, [objectToUse, session, hydrateObjects, setLoading]);
 
     return (
-        <div id="crud-modal" tabIndex={-1} aria-hidden={show ? "false" : "true"} className={`${show ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
+        <div id="crud-modal" tabIndex={-1} aria-hidden={!show} className={`${show ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
             <div className={`relative p-4 max-h-full`} style={{ width: `95%` }}>
                 <div className={`relative bg-white rounded-lg shadow dark:bg-gray-700`}>
                     <div className={`flex items-center justify-between space-x-4 p-2 border-b rounded-t border-gray-400 w-full`}>
@@ -164,18 +176,18 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
                                 }}
                                 dayMaxEventRows={10}
                                 eventContent={(arg) => {
-                                    const entriesThisDay = [] as IEntry[];
-                                    objectToUse?.entries.map((entry: IEntry) => {
-                                        if (entry.date === arg.event.startStr) {
-                                            entriesThisDay.push(entry);
+                                    const entriesThisDay = [] as dataType[];
+                                    data.map((d: dataType) => {
+                                        if (d.date === arg.event.startStr) {
+                                            entriesThisDay.push(d);
                                         }
 
                                     });
                                     return (
                                         <div className={`flex flex-row items-center flex-wrap`}>
-                                            {entriesThisDay.length > 0 && entriesThisDay.slice(0, 6).map((entry: IEntry, index: number) => {
+                                            {entriesThisDay.length > 0 && entriesThisDay.slice(0, 6).map((entry: dataType, index: number) => {
                                                 return (
-                                                    <div key={index} className="h-2 w-2 rounded-full mr-2 mb-1 border border-slate-500" style={{ backgroundColor: entry.fields.find(field => field.name === 'color')?.value }} onClick={() => handleEventClick(arg)} />
+                                                    <div key={index} className="h-2 w-2 rounded-full mr-2 mb-1 border border-slate-500" style={{ backgroundColor: entry.color }} onClick={() => handleEventClick(arg)} />
                                                 )
                                             })}
                                             {entriesThisDay.length > 6 && <p>{entriesThisDay.length.toString()}+</p>}

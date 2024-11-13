@@ -1,9 +1,10 @@
 'use client'
 
 import { useModalStore } from "@/context/modalStore";
+import { CheckAdminBool } from "@/utils/helpers/adminBool";
 import SendTempPW from "@/utils/userHelpers/temppw";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ForgotPassword() {
 
@@ -11,6 +12,9 @@ export default function ForgotPassword() {
     const setModalOpen = useModalStore((state) => state.setModalOpen);
 
     const { data: session } = useSession();
+    const user = session?.user ? session.user : null;
+    const email = user?.email ? user.email : '';
+    const [adminBool, setAdminBool] = useState<boolean>(false);
 
     //state
     const [signInError, setSignInError] = useState<string>('');
@@ -19,6 +23,14 @@ export default function ForgotPassword() {
     const handleOpenSub = () => {
         setModalOpen('subscribe');
     }
+
+    useEffect(() => {
+        const getBool = async () => {
+            const adminBool = await CheckAdminBool(email);
+            setAdminBool(adminBool);
+        }
+        getBool();
+    }, [email, setAdminBool]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -32,7 +44,7 @@ export default function ForgotPassword() {
 
             const email = event.currentTarget['modalChangePEmail'].value;
 
-            if (!email || email !== process.env.NEXT_PUBLIC_ADMIN_USERNAME) {
+            if (!adminBool) {
                 setSignInError('Not authorized');
                 return;
             }
