@@ -29,19 +29,26 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
   const userInfo = await initData();
   const thisMonth = new Date().getMonth() as number;
-  const timeData = await SetDashParams({userInfo: userInfo, month: thisMonth})
-  const totalTimePerMonth = timeData.totalTimePerMonth as number[]
-  const totalCounter = timeData.totalCounter as number[]
-  const userObjects = timeData.userObjects as IUserObject[]
-  const sessionsFound = timeData.sessionsFound as IEntry[]
-  const colorMap = timeData.colorMap as ColorMapType[];
-  const fieldObjects = timeData.fieldObjects as IFieldObject[];
+  const timeData = await SetDashParams({ userInfo: userInfo, month: thisMonth })
+  if (!timeData) {
+    return (
+      <MainPageBody>
+        <p>Error Initializing</p>
+      </MainPageBody>
+    )
+  }
+  const totalTimePerMonth = timeData.totalTimePerMonth ? timeData.totalTimePerMonth : [] as number[]
+  const totalCounter = timeData.totalCounter ? timeData.totalCounter : [] as number[]
+  const userObjects = timeData.userObjects ? timeData.userObjects : [] as IUserObject[]
+  const sessionsFound = timeData.sessionsFound ? timeData.sessionsFound : [] as IEntry[]
+  const colorMap = timeData.colorMap ? timeData.colorMap : [] as ColorMapType[];
+  const fieldObjects = timeData.fieldObjects ? timeData.fieldObjects : [] as IFieldObject[];
   const sortedSessions = sessionsFound ? sessionsFound.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) : [] as IEntry[];
 
 
   return (
     <MainPageBody>
-      <DashProvider userInfo={userInfo} totalTimePerMonth={totalTimePerMonth} totalCount={totalCounter} userObjects={userObjects} month={thisMonth} sessionsFound={sortedSessions} colorMap={colorMap} fieldObjects={fieldObjects}/>
+      <DashProvider userInfo={userInfo} totalTimePerMonth={totalTimePerMonth} totalCount={totalCounter} userObjects={userObjects} month={thisMonth} sessionsFound={sortedSessions} colorMap={colorMap} fieldObjects={fieldObjects} />
     </MainPageBody>
   );
 }
