@@ -6,6 +6,9 @@ export async function TotalMinutesCalc({ entries, thisMonth }: { entries: IEntry
     if (entries === null) {
         return Promise.resolve({ totalTimePerMonth, counterPerMonth });
     }
+    if (!thisMonth) {
+        return Promise.resolve({totalTimePerMonth, counterPerMonth})
+    }
     entries.forEach((entry: IEntry) => {
         const date = new Date(entry.date);
         const month = date.getMonth();
