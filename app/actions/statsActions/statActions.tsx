@@ -1,13 +1,13 @@
 import { MonthProv } from "@/components/helpers/monthprov";
 import { dataType, Tracker } from "@/components/pagecomponents/dashboard/statsView";
-import { IEntry } from "@/models/types/entry";
+import { IIndexedEntry } from "@/models/types/entry";
 import { IField, IFieldObject } from "@/models/types/field";
 import { IUserObject } from "@/models/types/userObject";
 import { IUserObjectIndexed } from "@/models/types/userObjectIndexed";
 
 export type BarData = { date: string, time: number, color: string };
 
-export async function BeginPercentage({ objectToUse, totalTime, entries, fields }: { objectToUse: IUserObject, totalTime: number[], entries: IEntry[], fields: IFieldObject[] }) {
+export async function BeginPercentage({ objectToUse, totalTime, entries, fields }: { objectToUse: IUserObject, totalTime: number[], entries: IIndexedEntry[], fields: IFieldObject[] }) {
     let newData = [] as dataType[];
     const objectIndicies = objectToUse ? objectToUse.indexes as IUserObjectIndexed[] : [] as IUserObjectIndexed[]
     const reducedTime = totalTime.reduce((a: number, b: number) => a + b);
@@ -21,7 +21,7 @@ export async function BeginPercentage({ objectToUse, totalTime, entries, fields 
             const hobbyColor = hobbyColorIndex ? hobbyColorIndex[0] : '';
             const entryIndicies = hobbyFields.entryIndexes as number[];
             entryIndicies.forEach((indicy) => {
-                const entry = entries[indicy] as IEntry
+                const entry = entries[indicy] as IIndexedEntry
                 const entryVal = entry ? entry.value as number : -1;
                 const entryDate = entry ? entry.date as string : null;
                 if (entryVal !== -1 && entryDate !== null) {
@@ -40,7 +40,7 @@ export async function BeginPercentage({ objectToUse, totalTime, entries, fields 
     return newData;
 }
 
-export async function GetDataset({ objectToUse, thisMonth, entries, fields }: { objectToUse: IUserObject, thisMonth: number, entries: IEntry[], fields: IFieldObject[] }) {
+export async function GetDataset({ objectToUse, thisMonth, entries, fields }: { objectToUse: IUserObject, thisMonth: number, entries: IIndexedEntry[], fields: IFieldObject[] }) {
     let returnData = {} as { monthNames: string[], monthColors: string[], newData: BarData[], newDataTwo: BarData[] };
     const years = new Date().getFullYear();
     const months = await SetMonthsFunc(thisMonth);
@@ -75,7 +75,7 @@ export async function GetDataset({ objectToUse, thisMonth, entries, fields }: { 
             const hobbyFields = fields[hobby.index] as IFieldObject;
             const entryIndicies = hobbyFields.entryIndexes as number[];
             entryIndicies.forEach((indicy) => {
-                const entry = entries[indicy] as IEntry;
+                const entry = entries[indicy] as IIndexedEntry;
                 const entryVal = entry ? Number(entry.value) as number : -1;
                 const thisDate = entry ? entry.date as string : null;
                 if (thisDate === null) {
@@ -128,7 +128,7 @@ export async function GetDataset({ objectToUse, thisMonth, entries, fields }: { 
 }
 
 
-export async function FillTracker({ objectToUse, thisMonth, fields, entries }: { objectToUse: IUserObject, thisMonth: number, fields: IFieldObject[], entries: IEntry[] }) {
+export async function FillTracker({ objectToUse, thisMonth, fields, entries }: { objectToUse: IUserObject, thisMonth: number, fields: IFieldObject[], entries: IIndexedEntry[] }) {
 
     if (!objectToUse) {
         return;

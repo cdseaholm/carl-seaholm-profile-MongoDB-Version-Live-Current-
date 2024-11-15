@@ -4,7 +4,7 @@ import { signOut } from "@/auth";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { useModalStore } from "@/context/modalStore";
-import { IEntry } from "@/models/types/entry";
+import { IIndexedEntry } from "@/models/types/entry";
 import { IHobby } from "@/models/types/hobby";
 import { IRecipe } from "@/models/types/recipe";
 import { IUser } from "@/models/types/user";
@@ -86,7 +86,7 @@ export default function ProfilePage({ hobbies, recipes, userInfo }: { hobbies: I
     const testCurrentFunction = async() => {
 
         console.log('user info', userInfo)
-        const {worked, sessionsFound, userObjects} = await HobbiesInit({userInfo: userInfo}) as {worked: boolean, sessionsFound: IEntry[], userObjects: IUserObject[]}
+        const {worked, sessionsFound, userObjects} = await HobbiesInit({userInfo: userInfo}) as {worked: boolean, sessionsFound: IIndexedEntry[], userObjects: IUserObject[]}
 
         console.log('worked: ', worked, 'sessions: ', sessionsFound, 'userObject: ', userObjects)
 

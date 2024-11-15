@@ -6,7 +6,7 @@ import { IUser } from "@/models/types/user";
 import { GetData } from "@/utils/data/get";
 import { SetDashParams } from "@/utils/data/dashInit/stats";
 import { IUserObject } from "@/models/types/userObject";
-import { IEntry } from "@/models/types/entry";
+import { IIndexedEntry } from "@/models/types/entry";
 import { ColorMapType } from "@/models/types/colorMap";
 import { IFieldObject } from "@/models/types/field";
 
@@ -40,15 +40,14 @@ export default async function Page() {
   const totalTimePerMonth = timeData.totalTimePerMonth ? timeData.totalTimePerMonth : [] as number[]
   const totalCounter = timeData.totalCounter ? timeData.totalCounter : [] as number[]
   const userObjects = timeData.userObjects ? timeData.userObjects : [] as IUserObject[]
-  const sessionsFound = timeData.sessionsFound ? timeData.sessionsFound : [] as IEntry[]
+  const sessionsFound = timeData.sessionsFound ? timeData.sessionsFound : [] as IIndexedEntry[]
   const colorMap = timeData.colorMap ? timeData.colorMap : [] as ColorMapType[];
   const fieldObjects = timeData.fieldObjects ? timeData.fieldObjects : [] as IFieldObject[];
-  const sortedSessions = sessionsFound ? sessionsFound.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) : [] as IEntry[];
 
 
   return (
     <MainPageBody>
-      <DashProvider userInfo={userInfo} totalTimePerMonth={totalTimePerMonth} totalCount={totalCounter} userObjects={userObjects} month={thisMonth} sessionsFound={sortedSessions} colorMap={colorMap} fieldObjects={fieldObjects} />
+      <DashProvider userInfo={userInfo} totalTimePerMonth={totalTimePerMonth} totalCount={totalCounter} userObjects={userObjects} month={thisMonth} sessionsFound={sessionsFound} colorMap={colorMap} fieldObjects={fieldObjects} />
     </MainPageBody>
   );
 }

@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { DateSelectArg, EventClickArg, EventContentArg } from '@fullcalendar/core/index.js';
 import React from 'react';
 import { Spinner } from '@/components/misc/Spinner';
-import { IEntry } from '@/models/types/entry';
+import { IIndexedEntry } from '@/models/types/entry';
 import { IUserObject } from '@/models/types/userObject';
 import { Session } from 'next-auth';
 import { useAlertStore } from '@/context/alertStore';
@@ -24,7 +24,7 @@ interface CalEvent {
     color: string;
 }
 
-const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDaySelected, session, colorMap, entries, data }: { show: boolean, closeCalendar: () => void, adminIDBool: boolean, objectToUse: IUserObject | null, handleDaySelected: (dateSelected: string) => void, session: Session | null, colorMap: ColorMapType[], entries: IEntry[], data: dataType[] }) => {
+const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDaySelected, session, colorMap, entries, data }: { show: boolean, closeCalendar: () => void, adminIDBool: boolean, objectToUse: IUserObject | null, handleDaySelected: (dateSelected: string) => void, session: Session | null, colorMap: ColorMapType[], entries: IIndexedEntry[], data: dataType[] }) => {
 
     //state
     const user = session?.user ? session.user : null;
@@ -65,7 +65,7 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
         const uniqueDates = new Set<string>();
         const calEvents = [] as CalEvent[];
 
-        entries ? entries.map((entry: IEntry) => {
+        entries ? entries.map((entry: IIndexedEntry) => {
             const dateOfEntry = entry.date;
             if (!uniqueDates.has(dateOfEntry)) {
 
@@ -82,7 +82,7 @@ const CalendarModal = ({ show, closeCalendar, adminIDBool, objectToUse, handleDa
                 calEvents.push(entryDateToAdd);
             }
 
-        }) : [] as IEntry[];
+        }) : [] as IIndexedEntry[];
 
         if (calEvents.length === 0) {
             return;

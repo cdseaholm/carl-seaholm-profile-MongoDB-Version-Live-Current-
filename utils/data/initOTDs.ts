@@ -1,21 +1,21 @@
-import { IEntry } from "@/models/types/entry";
+import { IIndexedEntry } from "@/models/types/entry";
 import { IFieldObject, IField } from "@/models/types/field";
 import { EntriesOTDType } from "@/models/types/otds";
 import { IUserObject } from "@/models/types/userObject";
 import { IUserObjectIndexed } from "@/models/types/userObjectIndexed";
 
-async function CreateSessions({ sessions, parsedDate }: { sessions: IEntry[], parsedDate: string }) {
-    let seshsForTheDay = [] as { index: number, value: string }[];
-    sessions.forEach((sesh, seshIndex) => {
+async function CreateSessions({ sessions, parsedDate }: { sessions: IIndexedEntry[], parsedDate: string }) {
+    let seshsForTheDay = [] as IIndexedEntry[]
+    sessions.forEach((sesh, _seshIndex) => {
         if (sesh.date === parsedDate) {
-            const newSesh = { index: seshIndex, value: sesh.value };
-            seshsForTheDay = [...seshsForTheDay, newSesh];
+            seshsForTheDay = [...seshsForTheDay, sesh];
         }
     });
     return seshsForTheDay;
 }
 
-export async function OfTheDays({ objectToUse, daySelected, userObjects, fieldObjects, sessionsFound }: { objectToUse: IUserObject, daySelected: string, userObjects: IUserObject[], fieldObjects: IFieldObject[], sessionsFound: IEntry[] }) {
+export async function OfTheDays({ objectToUse, daySelected, userObjects, fieldObjects, sessionsFound }: { objectToUse: IUserObject, daySelected: string, userObjects: IUserObject[], fieldObjects: IFieldObject[], sessionsFound: IIndexedEntry[] }) {
+
     if (!objectToUse) {
         return [] as EntriesOTDType[];
     }
@@ -41,13 +41,13 @@ export async function OfTheDays({ objectToUse, daySelected, userObjects, fieldOb
 
     let ents = [] as EntriesOTDType[];
 
-    const seshsForTheDay = await CreateSessions({ sessions: sessionsFound, parsedDate: parsedDate }) as { index: number, value: string }[];
+    const seshsForTheDay = await CreateSessions({ sessions: sessionsFound, parsedDate: parsedDate }) as IIndexedEntry[];
 
     seshsForTheDay.forEach((sesh, _index) => {
         fieldObjects.forEach((fieldObject, index) => {
             let seshHobby = {} as IUserObjectIndexed;
             const thisField = fieldObject.entryIndexes.find((entryIndex, _index) => {
-                if (entryIndex === sesh.index) {
+                if (entryIndex === sesh.trueIndex) {
                     seshHobby = hobbyObject.indexes.find((hobbyIndex) => hobbyIndex.index === index) ?? {} as IUserObjectIndexed;
                     return true;
                 }

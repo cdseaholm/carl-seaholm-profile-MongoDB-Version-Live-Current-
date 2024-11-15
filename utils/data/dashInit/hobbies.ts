@@ -1,4 +1,4 @@
-import { IEntry } from "@/models/types/entry";
+import { IEntry, IIndexedEntry } from "@/models/types/entry";
 import { IFieldObject } from "@/models/types/field";
 import { IUser } from "@/models/types/user";
 import { IUserObject } from "@/models/types/userObject";
@@ -42,19 +42,19 @@ export async function HobbiesInit({ userInfo }: { userInfo: IUser }) {
         return { worked: false, sessionsFound: null, userObjects: userObjects, colorMapBeginning: null, fieldObjects: null };
     }
 
-    const fieldObjects = userInfo.fieldObjects as IFieldObject[] || [];
-    const entries = userInfo.entries as IEntry[] || [];
+    const fieldObjects = userInfo.fieldObjects as IFieldObject[];
+    const entries = userInfo.entries as IEntry[];
     let entriesIndexed: number[] = [];
-    let sessionsFound: IEntry[] = [];
+    let sessionsFound: IIndexedEntry[] = [];
 
-    if (!fieldObjects.length || !entries.length) {
+    if (!fieldObjects || !entries) {
         console.log('fieldObjects or entries are empty');
         return { worked: false, sessionsFound: null, userObjects: userObjects, colorMapBeginning: null, fieldObjects: null };
     }
 
     hobbyTrueIndicies.forEach((index) => {
         if (index !== -1) {
-            let entryPosition = fieldObjects[index];
+            let entryPosition = fieldObjects[index] as IFieldObject;
             if (entryPosition && entryPosition.entryIndexes) {
                 entriesIndexed = [...entriesIndexed, ...entryPosition.entryIndexes];
             }
@@ -71,11 +71,14 @@ export async function HobbiesInit({ userInfo }: { userInfo: IUser }) {
         return { worked: false, sessionsFound: null, userObjects: userObjects, colorMapBeginning: colorMapBeginning, fieldObjects: fieldObjects };
     }
 
-    entriesIndexed.forEach((index) => {
-        if (index !== -1) {
-            let entryPosition = entries[index];
+    entriesIndexed.forEach((trueIndex: number, _index: number) => {
+        if (trueIndex !== -1) {
+            let entryPosition = entries[trueIndex];
             if (entryPosition) {
-                sessionsFound.push(entryPosition);
+                let newIndexEntry = {value: entryPosition.value, date: entryPosition.date, trueIndex: trueIndex} as IIndexedEntry
+                if (newIndexEntry) {
+                    sessionsFound.push(newIndexEntry);
+                }
             }
         }
     });

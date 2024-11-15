@@ -1,6 +1,7 @@
-import { IEntry } from "@/models/types/entry";
+import { IIndexedEntry } from "@/models/types/entry";
 
-export async function TotalMinutesCalc({ entries, thisMonth }: { entries: IEntry[], thisMonth: number }): Promise<{ totalTimePerMonth: number[], counterPerMonth: number[] }> {
+
+export async function TotalMinutesCalc({ entries, thisMonth }: { entries: IIndexedEntry[], thisMonth: number }): Promise<{ totalTimePerMonth: number[], counterPerMonth: number[] }> {
     let totalTimePerMonth = [0, 0, 0, 0, 0] as number[];
     let counterPerMonth = [0, 0, 0, 0, 0] as number[];
     if (entries === null) {
@@ -9,7 +10,7 @@ export async function TotalMinutesCalc({ entries, thisMonth }: { entries: IEntry
     if (!thisMonth) {
         return Promise.resolve({totalTimePerMonth, counterPerMonth})
     }
-    entries.forEach((entry: IEntry) => {
+    entries.forEach((entry: IIndexedEntry) => {
         const date = new Date(entry.date);
         const month = date.getMonth();
         const fv = entry.value;

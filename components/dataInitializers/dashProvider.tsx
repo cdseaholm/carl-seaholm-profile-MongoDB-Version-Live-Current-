@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { useStore } from "@/context/dataStore";
 import { useSession } from "next-auth/react";
 import { Spinner } from "../misc/Spinner";
-import { IEntry } from "@/models/types/entry";
+import { IIndexedEntry } from "@/models/types/entry";
 import { ColorMapType } from "@/models/types/colorMap";
 import { IFieldObject } from "@/models/types/field";
 import { EntriesOTDType } from "@/models/types/otds";
@@ -22,7 +22,7 @@ import { BeginPercentage, GetDataset, FillTracker } from "@/app/actions/statsAct
 import { useStateStore } from "@/context/stateStore";
 import React from "react";
 
-export default function DashProvider({ userInfo, totalTimePerMonth, totalCount, userObjects, month, sessionsFound, colorMap, fieldObjects }: { userInfo: IUser, totalTimePerMonth: number[], totalCount: number[], userObjects: IUserObject[], month: number, sessionsFound: IEntry[], colorMap: ColorMapType[], fieldObjects: IFieldObject[] }) {
+export default function DashProvider({ userInfo, totalTimePerMonth, totalCount, userObjects, month, sessionsFound, colorMap, fieldObjects }: { userInfo: IUser, totalTimePerMonth: number[], totalCount: number[], userObjects: IUserObject[], month: number, sessionsFound: IIndexedEntry[], colorMap: ColorMapType[], fieldObjects: IFieldObject[] }) {
 
     const dashToShow = useModalStore((state) => state.dashToShow);
     const setDashToShow = useModalStore((state) => state.setDashToShow);
