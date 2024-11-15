@@ -6,3 +6,9 @@ export type IEntry = {
     createdAt: string;
     updatedAt: string;
 }
+
+export type IIndexedEntry = {
+    value: any;
+    date: string;
+    trueIndex: number
+}

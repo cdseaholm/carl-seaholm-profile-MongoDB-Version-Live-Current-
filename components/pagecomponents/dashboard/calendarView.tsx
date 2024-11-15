@@ -8,19 +8,17 @@ import { useEffect, useState } from "react";
 function ConvertTime(object: string) {
     let timeToShow = '' as string;
     if (object) {
-        var timeTot = 0;
+        let parsedT = Number(object);
 
-        timeTot += Number(object);
+        if (parsedT > 60) {
 
-        if (timeTot > 60) {
-            const nums = (timeTot / 60).toFixed(2);
-            timeToShow = `${nums} hours`
-        } else {
-            const nums = timeTot.toFixed(2);
-            timeToShow = `${nums} minutes`
+            let newTHours = Math.floor(parsedT / 60);
+            let newTMins = parsedT % 60;
+            timeToShow = `${newTHours} hours, ${newTMins} minutes`;
+
         }
     } else {
-        timeToShow = '';
+        timeToShow = `${object} minutes`
     }
     return timeToShow;
 }
@@ -86,27 +84,42 @@ export default function CalendarView({ adminID, handleDateDecrease, handleDateIn
                                 if (entry.descriptions) {
                                     description = descriptions[0] as string
                                 }
+                                let val = '0';
+                                if (entry.value) {
+                                    let parsedVal = Number(entry.value);
+                                    if (parsedVal && parsedVal > 59) {
+                                        let newHours = Math.floor(parsedVal / 60);
+                                        let newMins = parsedVal % 60;
+                                        val = `${newHours} hours, ${newMins} minutes`;
+                                    } else {
+                                        val = `${entry.value} minutes`
+                                    }
+                                }
+
                                 const title = entry.hobbyTitle as string
                                 return (
-                                    <div key={index} className="flex flex-col justify-between items-start w-4/5">
+                                    <div key={index} className="flex flex-col justify-between items-start h-full w-full md:w-3/5 lg:1/2">
                                         <div className="flex flex-row justify-start items-start w-full">
                                             <h1 className={`text-sm md:text-base font-semibold text-center underline`}>
                                                 {title || 'No title available'}
                                             </h1>
                                         </div>
                                         <div className="flex flex-row justify-start items-start w-full pl-5 text-xs md:text-sm">
-                                            <div className="flex flex-col justify-start items-start w-1/2">
+                                            <div className="flex flex-col justify-start items-start w-full">
                                                 <p>
-                                                    Categories: {category && category !== 'null' ? category : 'No categories available'}
+                                                    <span className="font-semibold underline">Categories:</span> {category && category !== 'null' ? category : 'No categories available'}
                                                 </p>
                                                 <p className={`text-center`}>
-                                                    Description: {description && description !== 'null' ? description : 'No description available'}
+                                                    <span className="font-semibold underline">Description:</span> {description && description !== 'null' ? description : 'No description available'}
                                                 </p>
                                                 <p>
-                                                    Total time: {timeToShow}
+                                                    <span className="font-semibold underline">This session:</span> {val}
                                                 </p>
                                                 <p>
-                                                    Goal: {goal ? goal : 'No goal available'}
+                                                    <span className="font-semibold underline">Total time:</span> {timeToShow}
+                                                </p>
+                                                <p>
+                                                    <span className="font-semibold underline">Goal:</span> {goal ? goal : 'No goal available'}
                                                 </p>
                                             </div>
                                         </div>
