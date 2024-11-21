@@ -7,37 +7,62 @@ import { IUserObjectIndexed } from "@/models/types/userObjectIndexed";
 
 export type BarData = { date: string, time: number, color: string };
 
-export async function BeginPercentage({ objectToUse, totalTime, entries, fields }: { objectToUse: IUserObject, totalTime: number[], entries: IIndexedEntry[], fields: IFieldObject[] }) {
+export async function BeginPercentage({ objectToUse, totalTime, fields, sessions }: { objectToUse: IUserObject, totalTime: number[], fields: IFieldObject[], sessions: IIndexedEntry[] }) {
     let newData = [] as dataType[];
-    const objectIndicies = objectToUse ? objectToUse.indexes as IUserObjectIndexed[] : [] as IUserObjectIndexed[]
-    const reducedTime = totalTime.reduce((a: number, b: number) => a + b);
+    let calData = [] as dataType[];
+    const objectIndicies = objectToUse.indexes as IUserObjectIndexed[];
+    if (!objectIndicies) {
+        return newData;
+    }
+    const reducedTime = totalTime.reduce((a: number, b: number) => a + b, 0);
     if (objectIndicies && reducedTime > 0) {
-
-        objectIndicies.forEach((hobby: IUserObjectIndexed) => {
+        objectIndicies.forEach((hobby: IUserObjectIndexed, _index) => {
             let title = hobby.title ? hobby.title : '';
-            const hobbyFields = fields[hobby.index] as IFieldObject;
-            let hobbyColorMap = hobbyFields.fields as IField[]
-            const hobbyColorIndex = hobbyColorMap.find((field) => field.name === 'color')?.values as string[];
-            const hobbyColor = hobbyColorIndex ? hobbyColorIndex[0] : '';
-            const entryIndicies = hobbyFields.entryIndexes as number[];
-            entryIndicies.forEach((indicy) => {
-                const entry = entries[indicy] as IIndexedEntry
-                const entryVal = entry ? entry.value as number : -1;
-                const entryDate = entry ? entry.date as string : null;
-                if (entryVal !== -1 && entryDate !== null) {
+            let realIndex = hobby.index as number;
+            if (realIndex !== undefined && realIndex < fields.length) {
+                const hobbyFields = fields[realIndex] as IFieldObject;
+                let specificHobbyMap = hobbyFields.fields as IField[];
+                if (specificHobbyMap) {
+                    const hobbyColorIndex = specificHobbyMap.find((field) => field.name === 'color')?.values as string[];
+                    let hobbyColor = '';
+                    if (hobbyColorIndex && hobbyColorIndex[0]) {
+                        hobbyColor = hobbyColorIndex[0];
+                    }
+                    let hobbyTotalMinVal = specificHobbyMap.find((field) => field.name === 'totalMinutes')?.values as string[];
+                    let val = hobbyTotalMinVal ? Number(hobbyTotalMinVal[0]) : 0;
                     const entryPoint = {
                         name: title,
-                        value: entryVal / reducedTime * 100,
-                        color: hobbyColor,
-                        date: entryDate
+                        value: val / reducedTime * 100,
+                        color: hobbyColor
                     } as dataType;
-                    newData = [...newData, entryPoint] as dataType[]
+                    if (entryPoint) {
+                        newData.push(entryPoint)
+                    }
+                    let sessionIndexes = hobbyFields.entryIndexes as number[];
+                    if (sessionIndexes) {
+                        sessionIndexes.forEach((session, _index) => {
+                            let found = sessions.find((sesh, _index) => sesh.trueIndex === session)?.date;
+                            if (found) {
+                                const calPoint = {
+                                    name: title,
+                                    value: val / reducedTime * 100,
+                                    color: hobbyColor,
+                                    date: found
+                                }
+                                if (calPoint) {
+                                    calData.push(calPoint)
+                                }
+                            }
+                        })
+                    }
                 }
-            })
-        })
+            } else {
+                console.log(`Invalid realIndex: ${realIndex} for hobby: ${title}`);
+            }
+        });
     }
 
-    return newData;
+    return {newData: newData, calData: calData};
 }
 
 export async function GetDataset({ objectToUse, thisMonth, entries, fields }: { objectToUse: IUserObject, thisMonth: number, entries: IIndexedEntry[], fields: IFieldObject[] }) {

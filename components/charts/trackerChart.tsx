@@ -1,9 +1,8 @@
-
 import dynamic from 'next/dynamic';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
-export function TrackerUsage({daysWithHobbies, monthLength }: { daysWithHobbies: number[], monthLength: number }) {
+export function TrackerUsage({ daysWithHobbies }: { daysWithHobbies: number[] }) {
 
     if (daysWithHobbies === undefined || daysWithHobbies.length === 0) {
         return (
@@ -13,6 +12,9 @@ export function TrackerUsage({daysWithHobbies, monthLength }: { daysWithHobbies:
         )
     }
 
+    // Get the current day of the month
+    const currentDay = new Date().getDate();
+
     const data = [
         {
             domain: { x: [0, 1], y: [0, 1] },
@@ -20,12 +22,12 @@ export function TrackerUsage({daysWithHobbies, monthLength }: { daysWithHobbies:
             type: 'indicator' as const,
             mode: 'gauge+number' as const,
             gauge: {
-                axis: { range: [0, monthLength] },
-                bar: { color: 'black' },
+                axis: { range: [0, currentDay] },
+                bar: { color: '#333333' }, // Dark Gray
                 steps: [
-                    { range: [0, monthLength / 2], color: 'red' },
-                    { range: [monthLength / 2, monthLength * .75], color: 'yellow' },
-                    { range: [monthLength * .75, monthLength], color: 'green' }
+                    { range: [0, currentDay / 2], color: '#FF6666' }, // Softer Red
+                    { range: [currentDay / 2, currentDay * .75], color: '#FFFF66' }, // Softer Yellow
+                    { range: [currentDay * .75, currentDay], color: '#66FF66' } // Softer Green
                 ]
             }
         }
