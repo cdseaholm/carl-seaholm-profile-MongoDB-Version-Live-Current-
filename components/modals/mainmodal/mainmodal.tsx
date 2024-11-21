@@ -4,7 +4,6 @@ import { FiArrowLeft } from "react-icons/fi";
 import ModalLogin from "../modalContent/Login/loginModal";
 import SignupModal from "../modalContent/signup/signupModal";
 import ModalSubscribe from "../modalContent/subscribe/subscribeModal";
-import ModalHobby from "../modalContent/AddHobbyTracker/hobbymodal";
 import ActionsModal from "../modalContent/Actions/actionsmodal";
 import EditUser from "../modalContent/EditUser/editUser";
 import AddRecipes from "../modalContent/Recipes/Add";
@@ -12,6 +11,7 @@ import { useModalStore } from "@/context/modalStore";
 import ForgotPassword from "../modalContent/forgotpassword/forgotPassword";
 import ChangePassword from "../modalContent/changePassword/changePassword";
 import LogSessionDataInit from "../modalContent/LogSession/logsessiondatainit";
+import HobbyModalDataInit from "../modalContent/AddHobbyTracker/hobbymodaldatainit";
 
 
 export default function MainModal() {
@@ -80,7 +80,7 @@ export default function MainModal() {
                         {modalOpen === 'signup' && <SignupModal />}
                         {modalOpen === 'subscribe' && <ModalSubscribe />}
                         {modalOpen === 'logsession' && <LogSessionDataInit daySelected={daySelected} />}
-                        {modalOpen === 'addhobby' && <ModalHobby />}
+                        {modalOpen === 'addhobby' && <HobbyModalDataInit />}
                         {modalOpen === 'actions' && <ActionsModal />}
                         {modalOpen === 'edituser' && <EditUser />}
                         {modalOpen === 'addrecipe' && <AddRecipes />}

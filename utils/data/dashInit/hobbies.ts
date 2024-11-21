@@ -14,7 +14,7 @@ export async function HobbiesInit({ userInfo }: { userInfo: IUser }) {
 
     if (!userObjects) {
         console.log('No user objects')
-        return {worked: false, sessionsFound: null, userObjects: null, colorMapBeginning: null, fieldObjects: null }
+        return { worked: false, sessionsFound: null, userObjects: null, colorMapBeginning: null, fieldObjects: null }
     }
 
     let hobbies = userObjects[0] as IUserObject;
@@ -28,13 +28,13 @@ export async function HobbiesInit({ userInfo }: { userInfo: IUser }) {
 
     const indicies = hobbies.indexes as IUserObjectIndexed[]
 
-    let colorMapBeginning = [] as {title: string, color: string}[]
+    let colorMapBeginning = [] as { title: string, color: string, trueIndex: number }[]
 
     indicies.map((indexedHobby) => {
         const i = indexedHobby.index
-        hobbyTrueIndicies = [...hobbyTrueIndicies, i];
-        const thisColorMapped = {title: indexedHobby.title, color: ''} as {title: string, color: string};
-        colorMapBeginning = [...colorMapBeginning, thisColorMapped] as {title: string, color: string}[]
+        hobbyTrueIndicies.push(i);
+        const thisColorMapped = { title: indexedHobby.title, color: '', trueIndex: i };
+        colorMapBeginning.push(thisColorMapped);
     })
 
     if (hobbyTrueIndicies.length <= 0) {
@@ -52,16 +52,16 @@ export async function HobbiesInit({ userInfo }: { userInfo: IUser }) {
         return { worked: false, sessionsFound: null, userObjects: userObjects, colorMapBeginning: null, fieldObjects: null };
     }
 
-    hobbyTrueIndicies.forEach((index) => {
-        if (index !== -1) {
-            let entryPosition = fieldObjects[index] as IFieldObject;
+    hobbyTrueIndicies.forEach((trueI: number, _index: number) => {
+        if (trueI !== -1) {
+            let entryPosition = fieldObjects[trueI] as IFieldObject;
             if (entryPosition && entryPosition.entryIndexes) {
                 entriesIndexed = [...entriesIndexed, ...entryPosition.entryIndexes];
             }
-            let colorToAdd = colorMapBeginning[index]?.color as string;
+            let colorPlacement = colorMapBeginning.find((colorMapped) => colorMapped.trueIndex === trueI);
             let color = entryPosition?.fields.find((field) => field.name === 'color')?.values as string[];
-            if (color && colorToAdd) {
-                colorToAdd = color[0] as string;
+            if (color && colorPlacement) {
+                colorPlacement.color = color[0] as string;
             }
         }
     });
@@ -75,7 +75,7 @@ export async function HobbiesInit({ userInfo }: { userInfo: IUser }) {
         if (trueIndex !== -1) {
             let entryPosition = entries[trueIndex];
             if (entryPosition) {
-                let newIndexEntry = {value: entryPosition.value, date: entryPosition.date, trueIndex: trueIndex} as IIndexedEntry
+                let newIndexEntry = { value: entryPosition.value, date: entryPosition.date, trueIndex: trueIndex } as IIndexedEntry
                 if (newIndexEntry) {
                     sessionsFound.push(newIndexEntry);
                 }
