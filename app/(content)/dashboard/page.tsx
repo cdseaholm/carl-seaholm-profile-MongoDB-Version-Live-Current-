@@ -43,11 +43,12 @@ export default async function Page() {
   const sessionsFound = timeData.sessionsFound ? timeData.sessionsFound : [] as IIndexedEntry[]
   const colorMap = timeData.colorMap ? timeData.colorMap : [] as ColorMapType[];
   const fieldObjects = timeData.fieldObjects ? timeData.fieldObjects : [] as IFieldObject[];
+  const firstObjectToUse = timeData.firstObject ? timeData.firstObject : {} as IUserObject
 
 
   return (
     <MainPageBody>
-      <DashProvider userInfo={userInfo} totalTimePerMonth={totalTimePerMonth} totalCount={totalCounter} userObjects={userObjects} month={thisMonth} sessionsFound={sessionsFound} colorMap={colorMap} fieldObjects={fieldObjects} />
+      <DashProvider userInfo={userInfo} totalTimePerMonth={totalTimePerMonth} totalCount={totalCounter} userObjects={userObjects} month={thisMonth} sessionsFound={sessionsFound} colorMap={colorMap} fieldObjects={fieldObjects} firstObjectToUse={firstObjectToUse}/>
     </MainPageBody>
   );
 }

@@ -13,7 +13,7 @@ export function PieChartView({ data }: { data: dataType[] }) {
         values: data.map((d: dataType) => d.value),
         labels: data.map((d: dataType) => d.name),
         type: 'pie' as const,
-        markers: {
+        marker: {
             colors: data.map((d: dataType) => d.color)
         },
     }];
@@ -38,12 +38,10 @@ export function PieChartView({ data }: { data: dataType[] }) {
                     config={{
                         displayModeBar: false,
                         responsive: true,
-
                     }}
                     className='w-full h-full'
                 />
             </div>
         </div>
-
     );
 }
