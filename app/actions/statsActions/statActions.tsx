@@ -10,8 +10,24 @@ export type BarData = { date: string, time: number, color: string };
 export async function BeginPercentage({ objectToUse, totalTime, fields, sessions }: { objectToUse: IUserObject, totalTime: number[], fields: IFieldObject[], sessions: IIndexedEntry[] }) {
     let newData = [] as dataType[];
     let calData = [] as dataType[];
+
+    if (!objectToUse) {
+        return newData;
+    }
+
     const objectIndicies = objectToUse.indexes as IUserObjectIndexed[];
     if (!objectIndicies) {
+        return newData;
+    }
+    if (!fields) {
+        return newData;
+    }
+
+    let fieldsLength = fields.length;
+    if (!fieldsLength) {
+        return newData;
+    }
+    if (!totalTime) {
         return newData;
     }
     const reducedTime = totalTime.reduce((a: number, b: number) => a + b, 0);
@@ -19,41 +35,43 @@ export async function BeginPercentage({ objectToUse, totalTime, fields, sessions
         objectIndicies.forEach((hobby: IUserObjectIndexed, _index) => {
             let title = hobby.title ? hobby.title : '';
             let realIndex = hobby.index as number;
-            if (realIndex !== undefined && realIndex < fields.length) {
+            if (realIndex !== undefined && realIndex >= 0 && realIndex < fieldsLength) {
                 const hobbyFields = fields[realIndex] as IFieldObject;
-                let specificHobbyMap = hobbyFields.fields as IField[];
-                if (specificHobbyMap) {
-                    const hobbyColorIndex = specificHobbyMap.find((field) => field.name === 'color')?.values as string[];
-                    let hobbyColor = '';
-                    if (hobbyColorIndex && hobbyColorIndex[0]) {
-                        hobbyColor = hobbyColorIndex[0];
-                    }
-                    let hobbyTotalMinVal = specificHobbyMap.find((field) => field.name === 'totalMinutes')?.values as string[];
-                    let val = hobbyTotalMinVal ? Number(hobbyTotalMinVal[0]) : 0;
-                    const entryPoint = {
-                        name: title,
-                        value: val / reducedTime * 100,
-                        color: hobbyColor
-                    } as dataType;
-                    if (entryPoint) {
-                        newData.push(entryPoint)
-                    }
-                    let sessionIndexes = hobbyFields.entryIndexes as number[];
-                    if (sessionIndexes) {
-                        sessionIndexes.forEach((session, _index) => {
-                            let found = sessions.find((sesh, _index) => sesh.trueIndex === session)?.date;
-                            if (found) {
-                                const calPoint = {
-                                    name: title,
-                                    value: val / reducedTime * 100,
-                                    color: hobbyColor,
-                                    date: found
+                if (hobbyFields) {
+                    let specificHobbyMap = hobbyFields.fields as IField[];
+                    if (specificHobbyMap) {
+                        const hobbyColorIndex = specificHobbyMap.find((field) => field.name === 'color')?.values as string[];
+                        let hobbyColor = '';
+                        if (hobbyColorIndex && hobbyColorIndex[0]) {
+                            hobbyColor = hobbyColorIndex[0];
+                        }
+                        let hobbyTotalMinVal = specificHobbyMap.find((field) => field.name === 'totalMinutes')?.values as string[];
+                        let val = hobbyTotalMinVal ? Number(hobbyTotalMinVal[0]) : 0;
+                        const entryPoint = {
+                            name: title,
+                            value: val / reducedTime * 100,
+                            color: hobbyColor
+                        } as dataType;
+                        if (entryPoint) {
+                            newData.push(entryPoint)
+                        }
+                        let sessionIndexes = hobbyFields.entryIndexes as number[];
+                        if (sessionIndexes) {
+                            sessionIndexes.forEach((session, _index) => {
+                                let found = sessions.find((sesh, _index) => sesh.trueIndex === session)?.date;
+                                if (found) {
+                                    const calPoint = {
+                                        name: title,
+                                        value: val / reducedTime * 100,
+                                        color: hobbyColor,
+                                        date: found
+                                    }
+                                    if (calPoint) {
+                                        calData.push(calPoint)
+                                    }
                                 }
-                                if (calPoint) {
-                                    calData.push(calPoint)
-                                }
-                            }
-                        })
+                            })
+                        }
                     }
                 }
             } else {

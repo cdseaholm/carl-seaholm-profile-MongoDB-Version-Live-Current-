@@ -5,7 +5,7 @@ export async function AttemptCreateSession({ userID, newEntry, hobbyTitle }: { u
 
     if (!userID) {
         toast.error("You are not authorized to do this!")
-        return false;
+        return {worked: false, newIndex: -1};
     }
 
     try {
@@ -26,13 +26,18 @@ export async function AttemptCreateSession({ userID, newEntry, hobbyTitle }: { u
         console.log('data: ', data);
         if (data.status !== 200) {
             console.log('Error creating session');
-            return false;
+            return {worked: false, newIndex: -1};
         }
 
-        return true;
+        let newIndex = data.newIndex as number;
+        if (!newIndex) {
+            return {worked: false, newIndex: -1}
+        }
+        
+        return {worked: true, newIndex: newIndex};
 
     } catch (error) {
         console.error('Error updating session', error);
-        return false;
+        return {worked: false, newIndex: -1};
     }
 }

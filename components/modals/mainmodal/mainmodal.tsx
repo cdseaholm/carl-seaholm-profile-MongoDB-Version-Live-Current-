@@ -10,7 +10,6 @@ import AddRecipes from "../modalContent/Recipes/Add";
 import { useModalStore } from "@/context/modalStore";
 import ForgotPassword from "../modalContent/forgotpassword/forgotPassword";
 import ChangePassword from "../modalContent/changePassword/changePassword";
-import LogSessionDataInit from "../modalContent/LogSession/logsessiondatainit";
 import HobbyModalDataInit from "../modalContent/AddHobbyTracker/hobbymodaldatainit";
 
 
@@ -21,7 +20,6 @@ export default function MainModal() {
     const modalOpen = useModalStore((state) => state.modalOpen);
     const modalParent = useModalStore((state) => state.modalParent);
     const setModalParent = useModalStore((state) => state.setModalParent);
-    const daySelected = useModalStore((state) => state.daySelected);
 
     //variables
     const secondActionNeeded = modalParent === 'actions' ? true : false;
@@ -30,7 +28,6 @@ export default function MainModal() {
         modalOpen === 'login' ? 'Login' : 
         modalOpen === 'signup' ? 'Sign Up' : 
         modalOpen === 'subscribe' ? 'Subscribe' : 
-        modalOpen === 'logsession' ? 'Log Session' : 
         modalOpen === 'addhobby' ? 'Add Hobby Tracker' : 
         modalOpen === 'actions' ? 'Actions' : 
         modalOpen === 'dashdropdown' ? 'Menu' : 
@@ -79,7 +76,6 @@ export default function MainModal() {
                         {modalOpen === 'login' && <ModalLogin />}
                         {modalOpen === 'signup' && <SignupModal />}
                         {modalOpen === 'subscribe' && <ModalSubscribe />}
-                        {modalOpen === 'logsession' && <LogSessionDataInit daySelected={daySelected} />}
                         {modalOpen === 'addhobby' && <HobbyModalDataInit />}
                         {modalOpen === 'actions' && <ActionsModal />}
                         {modalOpen === 'edituser' && <EditUser />}
