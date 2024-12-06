@@ -8,7 +8,7 @@ async function CreateSessions({ sessions, parsedDate }: { sessions: IIndexedEntr
     let seshsForTheDay = [] as IIndexedEntry[]
     sessions.forEach((sesh, _seshIndex) => {
         if (sesh.date === parsedDate) {
-            seshsForTheDay = [...seshsForTheDay, sesh];
+            seshsForTheDay.push(sesh);
         }
     });
     return seshsForTheDay;
@@ -43,15 +43,23 @@ export async function OfTheDays({ objectToUse, daySelected, userObjects, fieldOb
 
     const seshsForTheDay = await CreateSessions({ sessions: sessionsFound, parsedDate: parsedDate }) as IIndexedEntry[];
 
+    if (!seshsForTheDay) {
+        return [] as EntriesOTDType[];
+    }
+
     seshsForTheDay.forEach((sesh, _index) => {
         fieldObjects.forEach((fieldObject, index) => {
             let seshHobby = {} as IUserObjectIndexed;
             const thisField = fieldObject.entryIndexes.find((entryIndex, _index) => {
                 if (entryIndex === sesh.trueIndex) {
-                    seshHobby = hobbyObject.indexes.find((hobbyIndex) => hobbyIndex.index === index) ?? {} as IUserObjectIndexed;
+                    const newHob = hobbyObject.indexes.find((hobbyIndex) => hobbyIndex.index === index) as IUserObjectIndexed;
+                    if (newHob) {
+                        seshHobby = newHob;
+                    }
                     return true;
+                } else {
+                    return false;
                 }
-                return false;
             });
             if (thisField && seshHobby) {
                 const hobTitle = seshHobby.title;
@@ -73,7 +81,7 @@ export async function OfTheDays({ objectToUse, daySelected, userObjects, fieldOb
                     date: daySelected,
                     value: sesh.value
                 } as EntriesOTDType;
-                ents = [...ents, newEntry] as EntriesOTDType[];
+                ents.push(newEntry);
             }
         });
     });

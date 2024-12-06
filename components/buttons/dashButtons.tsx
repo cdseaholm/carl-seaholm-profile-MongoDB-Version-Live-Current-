@@ -2,7 +2,7 @@
 
 import { useStateStore } from "@/context/stateStore";
 
-export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToShow, dashToShow }: { handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, dashToShow: string, indexShown: boolean, setIndexShown: (indexShown: boolean) => void, colorMap: { color: string, title: string }[] }) {
+export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToShow, dashToShow, handleDaySelected, daySelected }: { handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, dashToShow: string, indexShown: boolean, setIndexShown: (indexShown: boolean) => void, colorMap: { color: string, title: string }[], handleDaySelected: (date: string) => void, daySelected: string }) {
     const isSmallestBreakpoint = useStateStore((state) => state.widthQuery) < 400 ? true : false;
     return (
         <div className="flex flex-row justify-start items-center space-x-1 md:space-x-5 pr-2 w-full">
@@ -21,6 +21,7 @@ export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToS
             {dashToShow !== 'calendar' ?
                 (
                     <button className="text-base hover:bg-gray-400 rounded-md px-1 text-xs md:text-base" onClick={() => {
+                        handleDaySelected(daySelected ?? daySelected);
                         handleDashToShow('calendar', 'calendar');
                     }}>
                         {'Calendar'}

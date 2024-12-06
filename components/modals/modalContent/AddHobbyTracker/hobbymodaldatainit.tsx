@@ -8,9 +8,10 @@ import ntc from "ntcjs";
 import { useState, useEffect } from "react";
 import ModalHobby from "./hobbymodal";
 import { toast } from "sonner";
-import { IFieldObject } from "@/models/types/field";
 import { AttemptToCreateNewHobby } from "@/utils/data/attemptToCreateNewHobby";
 import { User } from "next-auth";
+import { useStore } from "@/context/dataStore";
+import { IFieldObject } from "@/models/types/field";
 
 export default function HobbyModalDataInit() {
     const { data: session } = useSession();
@@ -19,7 +20,8 @@ export default function HobbyModalDataInit() {
     const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
     const categories = useHobbyStore((state) => state.categories) as string[];
     const titles = useHobbyStore((state) => state.titles) as string[]
-    const fieldObjectsStored = useHobbyStore((store) => store.fieldObjectsStored) as IFieldObject[]
+    const dashProps = useStore(state => state.dashProps);
+    const fieldObjectsStored = dashProps ? dashProps.fieldObjects as IFieldObject[] : [] as IFieldObject[]
     const [colorChoice, setColorChoice] = useState('');
     const [goalChild, setGoalChild] = useState('Goal Value');
     const [goalType, setGoalType] = useState('text');

@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { IHobby } from '../models/types/hobby';
-import { IFieldObject } from '@/models/types/field';
 
 interface HobbyStore {
     filterItem: string;
@@ -19,8 +18,6 @@ interface HobbyStore {
     setTitles: (titles: string[]) => void;
     dashToShow: string;
     setDashToShow: (dashToShow: string) => void;
-    fieldObjectsStored: IFieldObject[];
-    setFieldObjectsStored: (fieldObjectsStored: IFieldObject[]) => void
 }
 
 export const useHobbyStore = create<HobbyStore>((set) => ({
@@ -40,6 +37,4 @@ export const useHobbyStore = create<HobbyStore>((set) => ({
     setTitles: (titles) => set({ titles }),
     dashToShow: 'stats',
     setDashToShow: (dashToShow) => set({dashToShow}),
-    fieldObjectsStored: [] as IFieldObject[],
-    setFieldObjectsStored: (fieldObjectsStored) => set({fieldObjectsStored})
 }));

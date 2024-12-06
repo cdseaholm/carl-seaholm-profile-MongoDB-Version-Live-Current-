@@ -5,6 +5,7 @@ import React from 'react';
 import { useAlertStore } from '@/context/alertStore';
 import { useModalStore } from '@/context/modalStore';
 import { FiArrowLeft } from "react-icons/fi";
+import { useStore } from '@/context/dataStore';
 
 export default function AlertModal() {
   
@@ -15,7 +16,7 @@ export default function AlertModal() {
     const alertMessage = useAlertStore((state) => state.alertMessage);
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const resetAlert = useAlertStore((state) => state.resetAlert);
-    const selectedDay = useModalStore((state) => state.daySelected);
+    const selectedDay = useStore((state) => state.daySelected);
     const setShowCalendar = useModalStore((state) => state.setShowCalendar);
     const setDashToShow = useModalStore((state) => state.setDashToShow);
 

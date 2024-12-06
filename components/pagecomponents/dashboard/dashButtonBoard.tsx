@@ -11,9 +11,11 @@ interface DashBoardProps {
   setIndexShown: (indexShown: boolean) => void;
   adminID: boolean;
   colorMap: ColorMapType[];
+  handleDaySelected: (date: string) => void;
+  daySelected: string;
 }
 
-export default function DashButtonBoard({ dashToShow, handleDashToShow, indexShown, setIndexShown, adminID, colorMap }: DashBoardProps) {
+export default function DashButtonBoard({ dashToShow, handleDashToShow, indexShown, setIndexShown, adminID, colorMap, handleDaySelected, daySelected }: DashBoardProps) {
 
   const setModalOpen = useModalStore((state) => state.setModalOpen);
 
@@ -23,7 +25,7 @@ export default function DashButtonBoard({ dashToShow, handleDashToShow, indexSho
 
   return (
     <div className="flex flex-row items-center justify-between w-full pr-1 md:px-6">
-      <DashButtons dashToShow={dashToShow} handleDashToShow={handleDashToShow} indexShown={indexShown} setIndexShown={setIndexShown} colorMap={colorMap} />
+      <DashButtons dashToShow={dashToShow} handleDashToShow={handleDashToShow} indexShown={indexShown} setIndexShown={setIndexShown} colorMap={colorMap} handleDaySelected={handleDaySelected} daySelected={daySelected}/>
       {adminID ? (
         <button className="text-xl" onClick={handleClick}>
           +
