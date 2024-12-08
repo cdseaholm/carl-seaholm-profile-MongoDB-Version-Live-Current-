@@ -1,12 +1,16 @@
-import type { Config } from "tailwindcss";
 import {nextui} from "@nextui-org/react";
+import { withUt } from "uploadthing/tw";
 
-const config: Config = {
+export default withUt({
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.js",
+    "./node_modules/flowbite-react/lib/**/*.js",
+    "./public/**/*.html",
+    "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {
@@ -18,6 +22,31 @@ const config: Config = {
     },
   },
   darkMode: "class",
-  plugins: [nextui()],
-};
-export default config;
+  plugins: [
+    nextui(),
+    require('flowbite/plugin'),
+    function ({addUtilities}: {addUtilities: any}) {
+      const newUtilities = {
+        ".scrollbar-thin": {
+          scrollbarWidth: 'thin',
+          scrollbarColor: "rgba(0, 0, 0, 0.5) transparent",
+        },
+        ".scrollbar-webkit": {
+          "&::-webkit-scrollbar": {
+            width: "8px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            borderRadius: "20px",
+            border: "1px solid transparent"
+          },
+        }
+      }
+
+      addUtilities(newUtilities, ['responsive', 'hover'])
+    }
+  ],
+});

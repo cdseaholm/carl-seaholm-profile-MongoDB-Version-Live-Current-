@@ -1,25 +1,31 @@
-'use client'
+import React from 'react';
+import { GetData } from '@/utils/data/get';
+import { Metadata } from 'next';
+import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
+import DevelopmentPage from '@/components/pagecomponents/about/developmentpage';
 
-import React, { useState } from 'react';
-import useMediaQuery from '@/components/listeners/WidthSettings';
-import DevelopmentDesktop from './desktop';
-import DevelopmentMobile from './mobile';
+async function initData() {
+  const data = await GetData();
+  const returnData = data.data;
+  return returnData;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await initData();
+  const userName = data.name;
+
+  return {
+    title: `${userName} Development Page`,
+    description: `A page dedicated to the Development work of ${userName}`,
+  };
+}
 
 
-export default function Development() {
-  const isBreakpoint = useMediaQuery(768);
+export default async function Page() {
 
   return (
-    <main>
-      <div className="childFirst min-w-screen min-h-screen my-10 mx-10">
-        {!isBreakpoint &&
-        <DevelopmentDesktop />
-        }
-        {isBreakpoint &&
-        <DevelopmentMobile />
-        }
-
-      </div>
-    </main>
+    <MainPageBody>
+        <DevelopmentPage />
+    </MainPageBody>
   );
 }

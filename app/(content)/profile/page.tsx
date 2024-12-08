@@ -1,53 +1,59 @@
-'use client'
+import { getHobbies } from "@/app/context/functions/getHobbies";
+import ProfilePage from "@/components/pagecomponents/profile/profileHub";
+import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
+import { IHobby } from "@/models/types/hobby";
+import { IRecipe } from "@/models/types/recipe";
+import { IUser } from "@/models/types/user";
+import { GetData } from "@/utils/data/get";
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import logoutAuth from '@/app/api/auth/logout';
-import { useSession } from '@/app/SessionContext';
-import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
-import MainChild from '@/components/pagetemplates/mainchild/mainchild';
+import { Metadata } from "next";
 
-const LogoutPage = () => {
-    const router = useRouter();
+async function initData() {
+    const data = await GetData();
+    const hobbies = await getHobbies();
+    const returnUserData = data.data as IUser;
+    const returnHobbies = hobbies.hobbies as IHobby[];
+    const returnRecipes = [] as IRecipe[];
+    const returnData = { data: returnUserData, hobbies: returnHobbies, recipes: returnRecipes };
+    return returnData;
+}
 
-    const { logout, session } = useSession();
+export async function generateMetadata(): Promise<Metadata> {
+    try {
+        const data = await initData();
+        const userData = data.data as IUser
+        const user = userData.name ? userData.name : "User";
 
-    const handleLogout = async () => {
-        if (!session) {
-            alert('You must be logged in to view this page.');
-            return;
-        } else {
-        const loggingOut = await logoutAuth({session});
-        if (loggingOut === 'Logged out successfully') {
-            logout();
-            router.push('/login');
-        } else {
-            alert('Already logged out');
-            console.log(loggingOut);
-        }
+        return {
+            title: `${user} Profile Page`,
+            description: `A page dedicated to controlling the profile of ${user}`,
+        };
+    } catch (error) {
+        return {
+            title: "Profile Page",
+            description: "A page dedicated to controlling the profile",
+        };
     }
-    };
+}
 
-    return (
-        <>
-        <InnerHeader>
-            <h1 className="text-lg underline">Profile</h1>
-        </InnerHeader>
-        <MainChild>
-            <div className="flex flex-col justify-center space-y-4">
-                <button>
-                    Edit Profile
-                </button>
-                <button>
-                    Change Password
-                </button>
-                <button onClick={handleLogout}>
-                    Logout
-                </button>
-            </div>
-        </MainChild>
-        </>
-    );
-};
+export default async function Page() {
+    try {
+        const data = await initData();
 
-export default LogoutPage;
+        const userInfo = data.data as IUser
+        const hobbies = data.hobbies as IHobby[];
+        const recipes = [] as IRecipe[];
+
+        return (
+            <MainPageBody>
+                <ProfilePage hobbies={hobbies} recipes={recipes} userInfo={userInfo} />
+            </MainPageBody>
+        );
+    } catch (error) {
+        return (
+            <MainPageBody>
+                <div>Error loading profile page</div>
+            </MainPageBody>
+        );
+    }
+}

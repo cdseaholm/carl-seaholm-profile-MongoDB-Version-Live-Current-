@@ -22,9 +22,19 @@
   }
 }
 
+@keyframes fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+@keyframes fadeOut {
+  0% {opacity: 1;}
+  100% {opacity: 0;}
+}
+
 /* body-pieces */
 
-body {
+html, body {
   background-image: url('../public/images/carmelbackground.jpg');
   background-size: cover;
 }
@@ -33,29 +43,23 @@ button:hover {
   cursor: pointer;
 }
 
-div.first {
-  background-color: rgba(255, 255, 255, 0.5);
+.childFirstColor {
+  background-color: rgba(51, 65, 85, 0.5);
 }
 
 div.childFirst {
-  background-color: rgba(51, 65, 85, 0.5);
-  border-radius: 10px;
-  box-shadow: 0 0 10px 10px rgba(51, 65, 85, 0.5);
+  flex-grow: 1;
+  overflow: hidden;
 }
 
 /* transitions */
 
-.landing-page {
-  transition: transform 1s ease-in-out;
+.fade-in {
+  animation: fadeIn 2s ease-out;
 }
 
-.slide-up {
-  transform: translateY(-100%);
-}
-
-.scale-150 {
-  transition: transform 0.3s;
-  transform: scale(1.5);
+.fade-out {
+  animation: fadeOut 1s ease-out;
 }
 
 /* images */

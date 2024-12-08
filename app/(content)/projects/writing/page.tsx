@@ -1,40 +1,63 @@
-'use client'
+import { DetailsAccordianPage } from '@/components/dropdowns/DetailsAccordian';
+import MainChild from '@/components/pagetemplates/mainchild/mainchild';
+import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
+import { GetData } from '@/utils/data/get';
+import { Metadata } from 'next';
+import React from 'react';
 
-import React, { useState } from 'react';
+async function initData() {
+    const data = await GetData();
+    const returnData = data.data;
+    return returnData;
+}
 
-const WritingPage = () => {
-    const [writingDropdown, setWritingDropdown] = useState(false);
+export async function generateMetadata(): Promise<Metadata> {
+    const data = await initData();
+    const userName = data.name;
 
-    const writingprojects = [
-        {name: "Written Within", description: "Brief Synopsis"},
-        {name: "Horn Halo Series (working title)", description: "Will have details at a later date"}
+    return {
+        title: `${userName} Writing Page`,
+        description: `A page dedicated to the writing works of ${userName}`,
+    };
+}
+
+export default async function Page() {
+
+    const writingOne = [
+        "A young man loses his memory from an accident he had in Italy. From it, his grip on himself, reality, and what truth means to him changes. As he pieces his memory together, he struggles with addiction, loss, reality or the lack thereof, and others' perceptions. The story allows for a variety of readers and interpretations. Ultimately, it focuses on isolation, the lies and truths that surround us and are within us, and how they fray our meaning of what is true and what isn't.", 'Alegorical Fiction', "Seeking Agent/Publication"
+    ];
+
+    const writingTwo = [
+        "Will have details at a later date", "9 Chapters Completed", ""
     ];
 
     return (
-        <div className='flex justify-evenly flex-col items-center space-y-4'>
-            <div className="flex justify-center">
-                <h1 className="text-2xl">Writing Projects</h1>
-            </div>
-            <div className="py-10">
-            <div onClick={() => {
-                    if (writingDropdown === false) {
-                        setWritingDropdown(true)
-                    } else {
-                        setWritingDropdown(false)
-                    }
-                }}>
-                    <h2 className="text-2xl underline hover:text-slate-300">Writing Projects</h2>
+        <MainPageBody>
+            <MainChild>
+                <div className='flex justify-evenly flex-col items-center space-y-4'>
+                    <div className="flex justify-center">
+                        <h1 className="text-2xl">Writing Projects</h1>
+                    </div>
+                    <div className="py-10 space-y-5">
+                        <div className='bg-slate-300 rounded-md px-5 pt-3'>
+                            <div className='flex flex-row justify-between'>
+                                <h1 className='font-bold text-base'>Written Within</h1>
+                                <a href={"/pdfs/WrittenWithinSampleChapterOne.pdf"} target="_blank" rel="noreferrer" className='text-blue-700 hover:text-gray-400 cursor-pointer text-sm'>
+                                    Link to Sample
+                                </a>
+                            </div>
+                            <DetailsAccordianPage details={writingOne} detailsIndex={0} />
+                        </div>
+                        <div className='bg-slate-300 rounded-md px-5 pt-3'>
+                            <div className='flex flex-row justify-between'>
+                                <h1 className='font-bold text-base'>{"Horn Halo Series (working title)"}</h1>
+                                <div />
+                            </div>
+                            <DetailsAccordianPage details={writingTwo} detailsIndex={1} />
+                        </div>
+                    </div>
                 </div>
-                {writingDropdown && writingprojects.map((app, index) => (
-                <div key={index}>
-                    <li>{app.name}</li>
-                    <p className="pl-10 pb-10">{app.description}</p>
-            </div>  
-
-            ))}
-            </div>
-        </div>
+            </MainChild>
+        </MainPageBody>
     );
 };
-
-export default WritingPage;
