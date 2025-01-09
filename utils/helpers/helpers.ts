@@ -1,9 +1,5 @@
 export async function getBaseUrl() {
-    if (process.env.NODE_ENV === "development") {
-        let devBase = process.env.BASE_URL as string;
-        return devBase;
-    }
-    let liveBase = process.env.BASE_LIVEURL as string;
+    let liveBase = process.env.URL ? process.env.URL as string : '';
     return liveBase;
 }
 

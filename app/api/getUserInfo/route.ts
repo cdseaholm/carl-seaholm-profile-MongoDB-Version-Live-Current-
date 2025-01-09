@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 export async function GET(): Promise<NextResponse> {
 
   const adminID = process.env.ADMIN_USERNAME ? process.env.ADMIN_USERNAME : ''
-
+  
   if (!adminID || adminID === '') {
     return NextResponse.json({ status: 400, userInfo: {} as IUser });
   }
