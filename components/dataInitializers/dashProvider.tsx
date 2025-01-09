@@ -7,7 +7,7 @@ import DashButtonBoard from "../pagecomponents/dashboard/dashButtonBoard";
 import InnerTemplate from "../pagetemplates/innerTemplate/innerTemplate";
 import MainChild from "../pagetemplates/mainchild/mainchild";
 import StatsView, { dataType } from "../pagecomponents/dashboard/statsView";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import LogSessionDataInit, { newSesh } from "../modals/modalContent/LogSession/logsessiondatainit";
 import { ColorMapType } from "@/models/types/colorMap";
 import { BarData } from "@/app/actions/statsActions/statActions";
@@ -15,8 +15,9 @@ import { PercentageData } from "@/models/types/percentage";
 import { TrackerData } from "@/models/types/tracker";
 import { DataSets } from "@/models/types/dataSets";
 import CalendarModalInit from "../modals/modalContent/Calendar/calendarModalInit";
+import { Spinner } from "../misc/Spinner";
 
-export default function DashProvider({ colorMap, daySelected, handleDashParams, showCalendar, closeCalendar, adminBoolTruth, handleDaySelected, sessionsFound, dashToShow, handleDashToShow, indexShown, setIndexShown, handleDateIncrease, handleDateDecrease, entriesOTD, handleCats, handleDescriptions, handleGoals, handleTotalTime, showCats, showDescriptions, showGoals, showTotTime, isBreakpoint, loading, handleLoading, keyChange, handleKeyChange, perc, tracker, dataSet }: {
+export default function DashProvider({ colorMap, daySelected, handleDashParams, showCalendar, closeCalendar, adminBoolTruth, handleDaySelected, sessionsFound, dashToShow, handleDashToShow, indexShown, setIndexShown, handleDateIncrease, handleDateDecrease, entriesOTD, handleCats, handleDescriptions, handleGoals, handleTotalTime, showCats, showDescriptions, showGoals, showTotTime, isBreakpoint, loading, handleLoading, perc, tracker, dataSet }: {
     colorMap: ColorMapType[],
     daySelected: string,
     handleDashParams: (newSessions: newSesh[]) => Promise<void>,
@@ -42,32 +43,24 @@ export default function DashProvider({ colorMap, daySelected, handleDashParams, 
     isBreakpoint: boolean,
     loading: boolean,
     handleLoading: () => void,
-    keyChange: boolean,
-    handleKeyChange: () => void,
     perc: PercentageData,
     tracker: TrackerData,
     dataSet: DataSets
 }) {
 
-    const [key, setKey] = useState<number>(Math.random());
     const otdLength = entriesOTD as EntriesOTDType[] ? entriesOTD.length as number : 0;
-    let newData = perc as PercentageData ? [...perc.newData] as dataType[] : [] as dataType[];
-    let calData = perc as PercentageData ? [...perc.calData] as dataType[] : [] as dataType[];
-    let daysWithHobbies = tracker as TrackerData ? [...tracker.daysWithHobbies] : [] as number[];
-    let monthsNames = dataSet as DataSets ? [...dataSet.monthNames] as string[] : [] as string[];
-    let monthColors = dataSet as DataSets ? [...dataSet.monthColors] as string[] : [] as string[];
-    let newBarData = dataSet as DataSets ? [...dataSet.newData] as BarData[] : [] as BarData[];
-    let newBarDataTwo = dataSet as DataSets ? [...dataSet.newDataTwo] as BarData[] : [] as BarData[];
-
-    useEffect(() => {
-        if (keyChange) {
-            setKey(Math.random())
-        };
-        handleKeyChange();
-    }, [keyChange, handleKeyChange]);
+    let newData = perc ? perc.newData as dataType[] : [] as dataType[];
+    let calData = perc ? perc.calData as dataType[] : [] as dataType[];
+    let daysWithHobbies = tracker ? tracker.daysWithHobbies : [] as number[];
+    let monthsNames = dataSet ? dataSet.monthNames as string[] : [] as string[];
+    let monthColors = dataSet ? dataSet.monthColors as string[] : [] as string[];
+    let newBarData = dataSet ? dataSet.newData as BarData[] : [] as BarData[];
+    let newBarDataTwo = dataSet ? dataSet.newDataTwo as BarData[] : [] as BarData[];
 
     return (
-        <div className="w-full h-full" key={key}>
+        loading ? (
+            <Spinner />
+        ) : (
             <MainChild>
                 <LogSessionDataInit daySelected={daySelected} handleDashParams={handleDashParams} handleLoading={handleLoading} loading={loading} />
                 <CalendarModalInit show={showCalendar} closeCalendar={closeCalendar} adminIDBool={adminBoolTruth} handleDaySelected={handleDaySelected} colorMap={colorMap} entries={sessionsFound} data={calData} handleLoading={handleLoading} loading={loading} />
@@ -84,7 +77,7 @@ export default function DashProvider({ colorMap, daySelected, handleDashParams, 
                             <ToDoList adminID={adminBoolTruth} setModalOpen={setModalOpen} handleDateDecrease={handleDateDecrease} handleDateIncrease={handleDateIncrease} dateToUse={daySelected} entriesOTD={entriesOTD} /> */
                     }
                 </InnerTemplate>
-            </MainChild>
-        </div>
+            </MainChild >
+        )
     );
 }

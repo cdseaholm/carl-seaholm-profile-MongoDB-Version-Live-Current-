@@ -10,13 +10,12 @@ export type BarData = { date: string, time: number, color: string };
 export async function BeginPercentage({ objectToUse, totalTime, fields, sessions }: { objectToUse: IUserObject, totalTime: number[], fields: IFieldObject[], sessions: IIndexedEntry[] }) {
     let newData = [] as dataType[];
     let calData = [] as dataType[];
-
-    if (!objectToUse) {
+    if (!objectToUse) {  
         return newData;
     }
 
     const objectIndicies = objectToUse.indexes as IUserObjectIndexed[];
-    if (!objectIndicies) {
+    if (!objectIndicies) {  
         return newData;
     }
     if (!fields) {
@@ -27,10 +26,11 @@ export async function BeginPercentage({ objectToUse, totalTime, fields, sessions
     if (!fieldsLength) {
         return newData;
     }
-    if (!totalTime) {
+    if (!totalTime) { 
         return newData;
     }
     const reducedTime = totalTime.reduce((a: number, b: number) => a + b, 0);
+
     if (objectIndicies && reducedTime > 0) {
         objectIndicies.forEach((hobby: IUserObjectIndexed, _index) => {
             let title = hobby.title ? hobby.title : '';
@@ -80,7 +80,7 @@ export async function BeginPercentage({ objectToUse, totalTime, fields, sessions
         });
     }
 
-    return {newData: newData, calData: calData};
+    return { newData: newData, calData: calData };
 }
 
 export async function GetDataset({ objectToUse, thisMonth, entries, fields }: { objectToUse: IUserObject, thisMonth: number, entries: IIndexedEntry[], fields: IFieldObject[] }) {
@@ -92,7 +92,7 @@ export async function GetDataset({ objectToUse, thisMonth, entries, fields }: { 
         return returnData;
     }
 
-    const { monthNames, monthColors } = await MonthProv(months, years) as unknown as { monthNames: string[], monthColors: string[] };
+    const { monthNames, monthColors } = await MonthProv(months, years) as unknown as { monthNames: string[], monthColors: string[], message: string };
 
     if (!monthColors || !monthNames) {
         return returnData;
@@ -126,7 +126,7 @@ export async function GetDataset({ objectToUse, thisMonth, entries, fields }: { 
                 }
                 const dateMonth = new Date(thisDate).getMonth();
                 months.forEach((month: number, index: number) => {
-                    if (entryVal !== -1 && month === dateMonth) {
+                    if (entryVal !== -1 && ((month + 12)) % 12 === dateMonth) {
                         if (totalTimeFixedPerMonth[index] !== undefined) {
                             totalTimeFixedPerMonth[index] += entryVal;
                         }
@@ -233,6 +233,13 @@ export async function FillTracker({ objectToUse, thisMonth, fields, entries }: {
 }
 
 export async function SetMonthsFunc(thisMonth: number): Promise<number[]> {
-    const months = [thisMonth - 4, thisMonth - 3, thisMonth - 2, thisMonth - 1, thisMonth] as number[];
+    const months = [];
+    for (let i = 4; i >= 0; i--) {
+        let month = thisMonth - i;
+        if (month < 0) {
+            month += 12;
+        }
+        months.push(month % 12);
+    }
     return months;
 }

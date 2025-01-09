@@ -6,7 +6,7 @@ import "@/app/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>

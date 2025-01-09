@@ -40,28 +40,24 @@ const getSortedPosts = (): post[] => {
 };
 
 export const getCategorisedPosts = (): Record<string, post[]> => {
-    const sortedPosts = getSortedPosts()
-    const categorisedPosts: Record<string, post[]> = {};
+  const sortedPosts = getSortedPosts()
+  const categorisedPosts: Record<string, post[]> = {};
 
-    sortedPosts.forEach((post) => {
-        if (!categorisedPosts[post.category]) {
-            categorisedPosts[post.category] = [];
-        }
-        categorisedPosts[post.category]?.push(post);
-    });
+  sortedPosts.forEach((post) => {
+    if (!categorisedPosts[post.category]) {
+      categorisedPosts[post.category] = [];
+    }
+    categorisedPosts[post.category]?.push(post);
+  });
 
-    return categorisedPosts;
+  return categorisedPosts;
 };
 
 export const getPostData = async (id: string) => {
   const fullPath = path.join(postsDirectory, `${id}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf-8");
 
-  console.log("File Contents:", fileContents);
-
   const matterResult = matter(fileContents);
-
-  console.log("Matter Result:", matterResult);
 
   const processedContent = await remark()
     .use(html)
@@ -69,13 +65,16 @@ export const getPostData = async (id: string) => {
 
   const contentHtml = processedContent.toString();
 
-  console.log("Processed Content HTML:", contentHtml);
+  const content = contentHtml ? contentHtml : 'Content';
+  const title = matterResult ? matterResult.data.title : 'Title';
+  const cat = matterResult ? matterResult.data.category : 'Category';
+  const date = matterResult ? moment(matterResult.data.date, "DD-MM-YYYY").format("MMMM Do, YYYY") : 'Date';
 
   return {
     id,
-    contentHtml,
-    title: matterResult.data.title,
-    category: matterResult.data.category,
-    date: moment(matterResult.data.date, "DD-MM-YYYY").format("MMMM Do, YYYY"),
+    content,
+    title: title,
+    category: cat,
+    date: date,
   };
 };

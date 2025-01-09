@@ -1,25 +1,12 @@
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { Metadata } from "next";
-import { IUserObject } from "@/models/types/userObject";
-import { IIndexedEntry } from "@/models/types/entry";
-import { ColorMapType } from "@/models/types/colorMap";
-import { IFieldObject } from "@/models/types/field";
 import DashMiddle from "@/components/dataInitializers/dashMiddle";
 import { initData } from "@/utils/data/dashInit/initUserData";
-
-export type InitType = {
-  totalTimePerMonth: number[] | null,
-  totalCounter: number[] | null,
-  userObjects: IUserObject[] | null,
-  sessionsFound: IIndexedEntry[] | null,
-  colorMap: ColorMapType[] | null,
-  fieldObjects: IFieldObject[] | null,
-  firstObject: IUserObject | null
-}
+import { IUser } from "@/models/types/user";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await initData();
-  const userName = data.name;
+  const data = await initData() as IUser;
+  const userName = data ? data.name : 'Users';
 
   return {
     title: `Dashboard for ${userName}`,
@@ -28,19 +15,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  let userInfo = await initData();
-
-  if (!userInfo) {
-    return (
-      <MainPageBody>
-        <p>Error Initializing</p>
-      </MainPageBody>
-    );
-  }
+  const userInfo = await initData() as IUser;
+  const infoToPass = userInfo ? userInfo : {} as IUser;
 
   return (
     <MainPageBody>
-      <DashMiddle userInfo={userInfo}/>
+      <DashMiddle userInfo={infoToPass} />
     </MainPageBody>
   );
 }

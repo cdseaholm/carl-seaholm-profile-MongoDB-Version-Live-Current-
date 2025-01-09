@@ -1,13 +1,12 @@
 'use client'
 
 import React, { useEffect } from "react";
-import dynamic from 'next/dynamic';
 import { Spinner } from "@nextui-org/react";
+import dynamic from 'next/dynamic';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 export function BarChartView({ colorsToChart, monthsToChart, barChartData, title, loading, handleIds }: { colorsToChart: string[], monthsToChart: string[], barChartData: any[], title: string, loading: boolean, handleIds: () => void }) {
-
 
     useEffect(() => {
         handleIds;
@@ -60,6 +59,6 @@ export function BarChartView({ colorsToChart, monthsToChart, barChartData, title
                 )}
             </div>
         </div>
-    
+
     );
 }

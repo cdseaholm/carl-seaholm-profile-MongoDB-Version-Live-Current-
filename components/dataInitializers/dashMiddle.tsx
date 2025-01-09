@@ -10,7 +10,6 @@ import { newSesh } from "../modals/modalContent/LogSession/logsessiondatainit";
 import DashProvider from "./dashProvider";
 import { CombineNewAndOld } from "@/utils/data/dashInit/combineData";
 import DashZustandInit, { InitializedData } from "@/utils/data/dashInit/dashZustandInit";
-import { InitType } from "@/app/(content)/dashboard/page";
 import { useHobbyStore } from "@/context/hobbyStore";
 import { ColorMapType } from "@/models/types/colorMap";
 import { IIndexedEntry } from "@/models/types/entry";
@@ -22,6 +21,7 @@ import { EntriesOTDType } from "@/models/types/otds";
 import { PercentageData } from "@/models/types/percentage";
 import { DataSets } from "@/models/types/dataSets";
 import { TrackerData } from "@/models/types/tracker";
+import { InitType } from "@/models/types/inittype";
 
 export default function DashMiddle({ userInfo }: { userInfo: IUser }) {
 
@@ -35,16 +35,15 @@ export default function DashMiddle({ userInfo }: { userInfo: IUser }) {
     const [showCats, setShowCats] = useState<boolean>(false);
     const [showDescriptions, setShowDescriptions] = useState<boolean>(false);
     const [showTotTime, setShowTotTime] = useState<boolean>(false);
-    const [keyChange, setKeyChange] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [indexShown, setIndexShown] = useState<boolean>(false);
     const [updateData, setUpdateData] = useState<boolean>(false);
+    const [transformedDashProps, setTransformedDashProps] = useState<TransformedDashProps>({} as TransformedDashProps)
 
     //global stored variables
     const dashToShow = useModalStore((state) => state.dashToShow);
     const showCalendar = useModalStore((state) => state.showCalendar);
     const dashProps = useStore((state) => state.dashProps);
-    const transformedDashProps = useStore(state => state.transformedDashProps);
     const thisMonth = useStore(state => state.thisMonth);
     const daySelected = useStore(state => state.daySelected);
 
@@ -52,7 +51,6 @@ export default function DashMiddle({ userInfo }: { userInfo: IUser }) {
     const setDashToShow = useModalStore((state) => state.setDashToShow);
     const setShowCalendar = useModalStore((state) => state.setShowCalendar);
     const setDashProps = useStore(state => state.setDashProps);
-    const setTransformedDashProps = useStore(state => state.setTransformedDashProps);
     const setTitles = useHobbyStore(state => state.setTitles);
     const setCategories = useHobbyStore(state => state.setCategories);
     const setDaySelected = useStore(state => state.setDaySelected);
@@ -80,7 +78,7 @@ export default function DashMiddle({ userInfo }: { userInfo: IUser }) {
             const objectToUse = timeData.firstObject ? timeData.firstObject : {} as IUserObject;
             newDashProps = { userInfo: userInfo, thisMonth: thisMonth, daySelected: daySelected, totalTimePerMonth: totalTimePerMonth, userObjects: userObjects, sessionsFound: sessionsFound, colorMap: colorMap, fieldObjects: fieldObjects, objectToUse: objectToUse } as DashProps;
 
-            let transformedDashProps = {} as TransformedDashProps;
+            let props = {} as TransformedDashProps;
             let initEnts = [] as EntriesOTDType[];
             let initPerc = {} as PercentageData;
             let initDataSet = {} as DataSets;
@@ -89,22 +87,25 @@ export default function DashMiddle({ userInfo }: { userInfo: IUser }) {
             let initCats = [] as string[];
 
             let initialized = await DashZustandInit({ userInfo, thisMonth, daySelected, totalTimePerMonth, userObjects, sessionsFound, colorMap, fieldObjects, objectToUse }) as InitializedData;
+            let newSet = initialized ? initialized.setModalData as { categories: string[]; titles: string[]; } : {} as { categories: string[]; titles: string[]; }
+            let newTitles = newSet ? newSet.titles : [] as string[];
+            let newCats = newSet ? newSet.categories : [] as string[];
 
             if (initialized) {
-                initEnts = [...initialized.ents] as EntriesOTDType[];
-                initPerc = { ...initialized.perc } as PercentageData;
-                initDataSet = { ...initialized.dataSet } as DataSets;
-                initTracker = { ...initialized.tracker } as TrackerData;
-                initTitles = [...initialized.setModalData.titles] as string[];
-                initCats = [...initialized.setModalData.categories] as string[];
+                initEnts = initialized.ents as EntriesOTDType[];
+                initPerc = initialized.perc as PercentageData;
+                initDataSet = initialized.dataSet as DataSets;
+                initTracker = initialized.tracker as TrackerData;
+                initTitles = newTitles as string[];
+                initCats = newCats as string[];
 
-                transformedDashProps = { entriesOTD: initEnts, percentage: initPerc, dataSet: initDataSet, trackerData: initTracker } as TransformedDashProps;
-                setTransformedDashProps({ ...transformedDashProps });
-                setTitles([...initTitles]);
-                setCategories([...initCats]);
+                props = { entriesOTD: initEnts, percentage: initPerc, dataSet: initDataSet, trackerData: initTracker } as TransformedDashProps;
+                setTransformedDashProps(props);
+                setTitles(initTitles);
+                setCategories(initCats);
             }
         }
-        setDashProps({ ...newDashProps });
+        setDashProps(newDashProps);
         return;
     }, [userInfo, daySelected, thisMonth, setDaySelected, setThisMonth, setTransformedDashProps, setTitles, setCategories, setDashProps]);
 
@@ -159,10 +160,6 @@ export default function DashMiddle({ userInfo }: { userInfo: IUser }) {
         setLoading(!loading);
     }
 
-    const handleKeyChange = () => {
-        setKeyChange(false)
-    }
-
     const handleGoals = () => {
         setShowGoals(!showGoals);
     }
@@ -188,7 +185,7 @@ export default function DashMiddle({ userInfo }: { userInfo: IUser }) {
         }
     }
 
-    const handleDaySelected = async (date: string) => {
+    const handleDaySelected = (date: string) => {
         setLoading(true);
         setDaySelected(date);
         setLoading(false)
@@ -209,22 +206,6 @@ export default function DashMiddle({ userInfo }: { userInfo: IUser }) {
         date.setDate(date.getDate() - 1);
         handleDaySelected(date.toLocaleDateString());
     }
-
-    [/**
-        
-    const handleUserObjectToShow = async (userObjectToShow: string) => {
-        const object = userObjects[Number(userObjectToShow)];
-        if (!object) {
-            return;
-        }
-        handleSetObjectToUse(object);
-    }; 
-    
-    const handleSetObjectToUse = (objectToUse: IUserObject) => {
-        setObjectToUse(objectToUse);
-    }
-    
-    */]
 
     const handleDashParams = async (newSessions: newSesh[]) => {
         const combined = await CombineNewAndOld({ fieldObjects: dashProps.fieldObjects, sessionsFound: dashProps.sessionsFound, seshCheck: newSessions })
@@ -253,7 +234,6 @@ export default function DashMiddle({ userInfo }: { userInfo: IUser }) {
             showTotTime={showTotTime}
             isBreakpoint={isBreakpoint}
             loading={loading}
-            keyChange={keyChange}
             colorMap={dashProps.colorMap}
             daySelected={daySelected}
             sessionsFound={dashProps.sessionsFound}
@@ -273,7 +253,6 @@ export default function DashMiddle({ userInfo }: { userInfo: IUser }) {
             handleGoals={handleGoals}
             handleTotalTime={handleTotalTime}
             handleLoading={handleLoading}
-            handleKeyChange={handleKeyChange}
         />
 
     );

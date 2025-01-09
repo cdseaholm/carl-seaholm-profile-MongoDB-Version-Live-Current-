@@ -39,39 +39,20 @@ export default async function DashZustandInit({ thisMonth, daySelected, totalTim
     let setModalData = {} as { categories: string[]; titles: string[]; }
 
     try {
-        const newEnts = await OfTheDays({ objectToUse: objectToUse, sessionsFound: sessionsFound, userObjects: userObjects, daySelected: daySelected, fieldObjects: fieldObjects }) as EntriesOTDType[];
+        ents = await OfTheDays({ objectToUse: objectToUse, sessionsFound: sessionsFound, userObjects: userObjects, daySelected: daySelected, fieldObjects: fieldObjects }) as EntriesOTDType[];
 
-        if (newEnts) {
-            ents = [...newEnts] as EntriesOTDType[];
-        }
+        perc = await BeginPercentage({ objectToUse: objectToUse, totalTime: totalTimePerMonth, fields: fieldObjects, sessions: sessionsFound }) as PercentageData;
 
-        const newPerc = await BeginPercentage({ objectToUse: objectToUse, totalTime: totalTimePerMonth, fields: fieldObjects, sessions: sessionsFound }) as { newData: dataType[], calData: dataType[] };
+        dataSet = await GetDataset({ objectToUse: objectToUse, thisMonth: thisMonth, fields: fieldObjects, entries: sessionsFound }) as DataSets;
 
-        if (newPerc) {
-            perc = {...newPerc} as PercentageData;
-        }
+        tracker = await FillTracker({ objectToUse: objectToUse, thisMonth: thisMonth, entries: sessionsFound, fields: fieldObjects }) as TrackerData;
 
-        const newDataSet = await GetDataset({ objectToUse: objectToUse, thisMonth: thisMonth, fields: fieldObjects, entries: sessionsFound }) as { monthNames: string[]; monthColors: string[]; newData: BarData[]; newDataTwo: BarData[]; };
+        setModalData = await InitCategories({ objectToUse: objectToUse, fieldObjects: fieldObjects }) as { categories: string[]; titles: string[]; }
 
-        if (newDataSet) {
-            dataSet = {...newDataSet} as DataSets;
-        }
-
-        const newTracker = await FillTracker({ objectToUse: objectToUse, thisMonth: thisMonth, entries: sessionsFound, fields: fieldObjects }) as { newTrackerData: Tracker[]; daysWithHobbies: number[]; monthLength: number; };
-
-        if (newTracker) {
-            tracker = {...newTracker} as TrackerData;
-        }
-
-        const newSetModalData = await InitCategories({ objectToUse: objectToUse, fieldObjects: fieldObjects }) as { categories: string[]; titles: string[]; }
-
-        if (newSetModalData) {
-            setModalData = {...newSetModalData};
-        }
     } catch (error: any) {
         console.log(error);
-        return {ents: ents, perc: perc, dataSet: dataSet, tracker: tracker, setModalData: setModalData} as InitializedData;
+        return { ents: ents, perc: perc, dataSet: dataSet, tracker: tracker, setModalData: setModalData } as InitializedData;
     }
 
-    return {ents: ents, perc: perc, dataSet: dataSet, tracker: tracker, setModalData: setModalData} as InitializedData;
+    return { ents: ents, perc: perc, dataSet: dataSet, tracker: tracker, setModalData: setModalData } as InitializedData;
 }
