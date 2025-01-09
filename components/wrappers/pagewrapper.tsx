@@ -1,6 +1,6 @@
 'use client'
 
-import { Providers } from "@/app/providers";
+import { Providers } from "@/app/context/providers";
 import { useEffect, useRef, useState } from "react";
 import { useStateStore } from "@/context/stateStore";
 import ToastWrapper from "./toastWrapper";

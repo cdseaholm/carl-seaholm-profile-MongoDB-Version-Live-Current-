@@ -29,7 +29,7 @@ export async function AttemptToCreateNewHobby({ titleToUse, colorToUse, category
         });
 
         const data = await res.json();
-        console.log('data: ', data);
+
         if (data.status !== 200) {
             console.log('Error creating session');
             return false;

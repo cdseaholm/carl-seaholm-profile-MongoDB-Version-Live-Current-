@@ -2,72 +2,72 @@ export async function MonthProv(monthsGiven: number[], yearGiven: number) {
     let monthsReturned = [] as string[];
     let colorsReturned = [] as string[];
     if (monthsGiven === null || yearGiven === null) {
-        return console.log("Month or year not provided");
+        return { monthNames: [] as string[], monthColors: [] as string[], message: "Month or year not provided" }
     } else {
         for (let i = 0; i < monthsGiven.length; i++) {
             let thisMonth = monthsGiven[i] as number;
-            if (thisMonth < 0 || thisMonth > 11 || !thisMonth) {
-                return console.log("Month must be between 0 and 11");
+            if (thisMonth < 0 || thisMonth > 11) {
+                return { monthNames: [] as string[], monthColors: [] as string[], message: "Month must be between 0 and 11" }
             } else if (monthsGiven === undefined || yearGiven === undefined) {
-                return console.log("Month or year not provided");
+                return { monthNames: [] as string[], monthColors: [] as string[], message: "Month or year not provided" }
             } else {
-                let thisMonth = '';
-                let thisColor = '';
+                let monthName = '';
+                let monthColor = '';
                 let yearToUse = yearGiven.toString().slice(2, 4);
-                switch (monthsGiven[i]) {
+                switch (thisMonth) {
                     case 0:
-                        thisMonth = `Jan, ${yearToUse}`;
-                        thisColor = `#ADD8E6`; // Light Blue
+                        monthName = `Jan, ${yearToUse}`;
+                        monthColor = '#2F5C8F'; // Deep winter blue
                         break;
                     case 1:
-                        thisMonth = `Feb, ${yearToUse}`;
-                        thisColor = `#FF69B4`; // Light Pink
+                        monthName = `Feb, ${yearToUse}`;
+                        monthColor = '#C41E3A'; // Valentine's red
                         break;
                     case 2:
-                        thisMonth = `Mar, ${yearToUse}`;
-                        thisColor = `#90EE90`; // Light Green
+                        monthName = `Mar, ${yearToUse}`;
+                        monthColor = '#3B7A57'; // Spring forest green
                         break;
                     case 3:
-                        thisMonth = `Apr, ${yearToUse}`;
-                        thisColor = `#FFFACD`; // Light Yellow
+                        monthName = `Apr, ${yearToUse}`;
+                        monthColor = '#E6B800'; // Daffodil yellow
                         break;
                     case 4:
-                        thisMonth = `May, ${yearToUse}`;
-                        thisColor = `#9370DB`; // Light Purple
+                        monthName = `May, ${yearToUse}`;
+                        monthColor = '#FF7B9C'; // Spring blossom pink
                         break;
                     case 5:
-                        thisMonth = `June, ${yearToUse}`;
-                        thisColor = `#FF7F50`; // Coral
+                        monthName = `Jun, ${yearToUse}`;
+                        monthColor = '#4F86F7'; // Summer sky blue
                         break;
                     case 6:
-                        thisMonth = `July, ${yearToUse}`;
-                        thisColor = `#87CEEB`; // Sky Blue
+                        monthName = `Jul, ${yearToUse}`;
+                        monthColor = '#DE3831'; // Patriotic red
                         break;
                     case 7:
-                        thisMonth = `Aug, ${yearToUse}`;
-                        thisColor = `#FFDAB9`; // Peach
+                        monthName = `Aug, ${yearToUse}`;
+                        monthColor = '#F28C28'; // Late summer orange
                         break;
                     case 8:
-                        thisMonth = `Sept, ${yearToUse}`;
-                        thisColor = `#FFD700`; // Gold
+                        monthName = `Sep, ${yearToUse}`;
+                        monthColor = '#B76E79'; // Muted rose (back to school)
                         break;
                     case 9:
-                        thisMonth = `Oct, ${yearToUse}`;
-                        thisColor = `#FFA500`; // Orange
+                        monthName = `Oct, ${yearToUse}`;
+                        monthColor = '#CF5300'; // Halloween orange
                         break;
                     case 10:
-                        thisMonth = `Nov, ${yearToUse}`;
-                        thisColor = `#800000`; // Maroon
+                        monthName = `Nov, ${yearToUse}`;
+                        monthColor = '#8B4513'; // Autumn brown
                         break;
                     case 11:
-                        thisMonth = `Dec, ${yearToUse}`;
-                        thisColor = `#FF4500`; // Red
+                        monthName = `Dec, ${yearToUse}`;
+                        monthColor = '#154734'; // Holiday green
                         break;
                 }
-                monthsReturned.push(thisMonth);
-                colorsReturned.push(thisColor);
+                monthsReturned.push(monthName);
+                colorsReturned.push(monthColor);
             }
         }
-        return { monthNames: monthsReturned, monthColors: colorsReturned };
     }
+    return { monthNames: monthsReturned, monthColors: colorsReturned, message: 'Success' } as { monthNames: string[], monthColors: string[], message: string };
 }

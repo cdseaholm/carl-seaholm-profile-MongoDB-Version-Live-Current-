@@ -6,8 +6,8 @@ import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
 export async function generateMetadata(): Promise<Metadata> {
 
   return {
-      title: `Carl's Portfolio`,
-      description: `A site dedicated to the Peronsal and Professional Portfolio of Carl`,
+    title: `Carl's Portfolio`,
+    description: `A site dedicated to the Peronsal and Professional Portfolio of Carl`,
   };
 }
 

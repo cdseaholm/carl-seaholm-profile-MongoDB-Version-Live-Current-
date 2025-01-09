@@ -28,7 +28,11 @@
           "pattern": "- Local:.+(https?://.+)",
           "uriFormat": "%s",
           "webRoot": "${workspaceFolder}"
-        }
+        },
+        "resolveSourceMapLocations": [
+          "${workspaceFolder}/**",
+          "!**/node_modules/**"
+        ]
       }
     ]
   }

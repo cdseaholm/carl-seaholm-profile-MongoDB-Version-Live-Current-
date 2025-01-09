@@ -1,8 +1,8 @@
 'use client';
 
 import { Spinner } from '@nextui-org/react';
-import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 

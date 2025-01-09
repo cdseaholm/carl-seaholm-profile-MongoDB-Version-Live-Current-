@@ -23,7 +23,7 @@ export async function AttemptCreateSession({ userID, newEntry, hobbyTitle }: { u
 
         });
         const data = await res.json();
-        console.log('data: ', data);
+
         if (data.status !== 200) {
             console.log('Error creating session');
             return {worked: false, newIndex: -1};

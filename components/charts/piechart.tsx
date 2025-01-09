@@ -1,10 +1,10 @@
 'use client'
 
 import { useStateStore } from '@/context/stateStore';
-import dynamic from 'next/dynamic';
 import React, { useEffect } from 'react';
 import { dataType } from '../pagecomponents/dashboard/statsView';
 import { Spinner } from '../misc/Spinner';
+import dynamic from 'next/dynamic';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 

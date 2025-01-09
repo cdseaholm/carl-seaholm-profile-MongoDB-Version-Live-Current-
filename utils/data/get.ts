@@ -3,12 +3,15 @@ import { getBaseUrl } from "../helpers/helpers";
 
 export async function GetData() {
 
-    const userID = process.env.ADMIN_USERNAME as string;
-    const url = await getBaseUrl()
+    const url = await getBaseUrl();
+
+    if (!url) {
+        return { message: 'Error getting url', data: {} as IUser }
+    }
 
     try {
 
-        const res = await fetch(`${url}/api/${userID}/getUserInfo`, {
+        const res = await fetch(`${url}/api/getUserInfo`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

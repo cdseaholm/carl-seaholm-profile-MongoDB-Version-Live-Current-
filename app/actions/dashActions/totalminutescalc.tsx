@@ -7,8 +7,8 @@ export async function TotalMinutesCalc({ entries, thisMonth }: { entries: IIndex
     if (entries === null) {
         return Promise.resolve({ totalTimePerMonth, counterPerMonth });
     }
-    if (!thisMonth) {
-        return Promise.resolve({totalTimePerMonth, counterPerMonth})
+    if (thisMonth < 0 || thisMonth === null || thisMonth === undefined) {
+        return Promise.resolve({ totalTimePerMonth, counterPerMonth })
     }
     entries.forEach((entry: IIndexedEntry) => {
         const date = new Date(entry.date);
@@ -22,22 +22,22 @@ export async function TotalMinutesCalc({ entries, thisMonth }: { entries: IIndex
             console.error(`Invalid minutes value: ${fv}`);
             return;
         }
-        if (month === thisMonth - 4) {
+        if (month === (((thisMonth + 12) - 4)) % 12) {
             totalTimePerMonth[0] = (totalTimePerMonth[0] ? totalTimePerMonth[0] : 0) + parsedMinutes;
             counterPerMonth[0] = (counterPerMonth[0] ? counterPerMonth[0] : 0) + 1;
-        } else if (month === thisMonth - 3) {
+        } else if (month === (((thisMonth + 12) - 3)) % 12) {
             totalTimePerMonth[1] = (totalTimePerMonth[1] ? totalTimePerMonth[1] : 0) + parsedMinutes;
             counterPerMonth[0] = (counterPerMonth[0] ? counterPerMonth[0] : 0) + 1;
         }
-        if (month === thisMonth - 2) {
+        if (month === (((thisMonth + 12) - 2)) % 12) {
             totalTimePerMonth[2] = (totalTimePerMonth[2] ? totalTimePerMonth[2] : 0) + parsedMinutes;
             counterPerMonth[0] = (counterPerMonth[0] ? counterPerMonth[0] : 0) + 1;
         }
-        if (month === thisMonth - 1) {
+        if (month === (((thisMonth + 12) - 1)) % 12) {
             totalTimePerMonth[3] = (totalTimePerMonth[3] ? totalTimePerMonth[3] : 0) + parsedMinutes;
             counterPerMonth[0] = (counterPerMonth[0] ? counterPerMonth[0] : 0) + 1;
         }
-        if (month === thisMonth) {
+        if (month === ((thisMonth + 12)) % 12) {
             totalTimePerMonth[4] = (totalTimePerMonth[4] ? totalTimePerMonth[4] : 0) + parsedMinutes;
             counterPerMonth[0] = (counterPerMonth[0] ? counterPerMonth[0] : 0) + 1;
         }
