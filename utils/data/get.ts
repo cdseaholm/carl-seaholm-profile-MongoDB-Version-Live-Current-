@@ -4,7 +4,7 @@ import { getBaseUrl } from "../helpers/helpers";
 export async function GetData() {
 
     const url = await getBaseUrl();
-
+    console.log(url)
     if (!url) {
         return { message: 'Error getting url', data: {} as IUser }
     }
