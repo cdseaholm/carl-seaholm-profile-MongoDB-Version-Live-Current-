@@ -1,19 +1,14 @@
 import BlogDropdown from "@/components/dropdowns/blogdropdown";
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
+import { useUserStore } from "@/context/userStore";
 import { getCategorisedPosts } from "@/lib/posts/posts";
 import { post } from "@/models/types/post";
-import { GetData } from "@/utils/data/get";
+import { IUser } from "@/models/types/user";
 import { Metadata } from "next";
 
-async function initData() {
-    const data = await GetData();
-    const returnData = data.data;
-    return returnData;
-}
-
 export async function generateMetadata(): Promise<Metadata> {
-    const data = await initData();
-    const userName = data.name;
+    const userInfo = useUserStore.getState().userInfo as IUser;
+    const userName = userInfo ? userInfo.email : '';
 
     return {
         title: `${userName}'s Blog`,

@@ -1,58 +1,97 @@
 'use client'
 
-import { Providers } from "@/app/context/providers";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useStateStore } from "@/context/stateStore";
-import ToastWrapper from "./toastWrapper";
-import { widthContext } from "@/context/context";
 import { getBaseUrl } from "@/utils/helpers/helpers";
+import { initData } from "@/utils/apihelpers/get/initUserData";
+import { toast } from "sonner";
+import { OfTheDays } from "@/utils/apihelpers/get/initOTDs";
+import { DashProps, useStore } from "@/context/dataStore";
+import { EntriesOTDType } from "@/models/types/otds";
 
 
 export default function PageWrapper({ children }: Readonly<{ children: React.ReactNode; }>) {
 
-  const targetRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(0);
+  const widthRef = useRef<number | null>(null);
+  const heightRef = useRef<number | null>(null);
   const setWidthQuery = useStateStore((state) => state.setWidthQuery);
-  const setUrlToUse = useStateStore((state) => state.setUrlToUse);
+  const setHeightQuery = useStateStore((state) => state.setHeightQuery);
+  const daySelected = useStore(state => state.daySelected);
+  const dashProps = useStore(state => state.dashProps);
+  const setDaySelected = useStore(state => state.setDaySelected);
+
+  const initializeWidths = useCallback((newWidth: number, newHeight: number) => {
+    setWidthQuery(newWidth);
+    setHeightQuery(newHeight);
+  }, [setWidthQuery, setHeightQuery]);
+
+  const updateMedia = useCallback(() => {
+    const newWidth = window.innerWidth;
+    const newHeight = window.innerHeight;
+    if (!newWidth || !newHeight) {
+      return;
+    }
+    widthRef.current = newWidth;
+    heightRef.current = newHeight;
+
+    setWidthQuery(newWidth);
+    setHeightQuery(newHeight);
+  }, [setWidthQuery, setHeightQuery]);
 
   useEffect(() => {
-    if (targetRef.current === null) {
+    const newWidth = window.innerWidth;
+    const newHeight = window.innerHeight;
+    if (!newWidth || !newHeight) {
       return;
-    } else {
-      const newWidth = targetRef.current.offsetWidth;
-      setWidthQuery(newWidth);
-      setWidth(newWidth);
     }
-
-    const updateMedia = () => {
-      const innerWidth = window.innerWidth;
-      setWidthQuery(innerWidth);
-      setWidth(innerWidth);
-    }
+    widthRef.current = newWidth;
+    heightRef.current = newHeight;
+    initializeWidths(newWidth, newHeight);
 
     window.addEventListener('resize', updateMedia);
     return () => window.removeEventListener('resize', updateMedia);
-  }, [setWidthQuery]);
+  }, [updateMedia, initializeWidths]);
 
   useEffect(() => {
-    const url = async () => {
-      const currentUrl = await getBaseUrl();
-      setUrlToUse(currentUrl);
+    const fetchUrl = async () => {
+      try {
+        await getBaseUrl();
+      } catch (error) {
+        console.error("Failed to fetch base URL:", error);
+      }
+    };
+    fetchUrl();
+    const initUserData = async () => {
+      const initialized = await initData() as { status: boolean, message: string };
+      if (!initialized) {
+        toast.info('Initalized failed')
+      }
+      if (initialized.status !== true) {
+        toast.info(initialized.message)
+      }
+    };
+    initUserData();
+  }, []);
+
+  useEffect(() => {
+    const thisDay = new Date().toLocaleDateString() as string;
+    const initOTDs = async (dayToUse: string, dashPropsToUse: DashProps) => {
+      await OfTheDays({ objectToUse: dashPropsToUse.objectToUse, sessionsFound: dashPropsToUse.sessionsFound, userObjects: dashPropsToUse.userObjects, daySelected: dayToUse, fieldObjects: dashPropsToUse.fieldObjects }) as EntriesOTDType[];
     }
-    url();
-  }, [setUrlToUse]);
+    if (dashProps === null) {
+      return;
+    }
+    if (daySelected === null) {
+      setDaySelected(thisDay);
+      initOTDs(thisDay, dashProps);
+    } else {
+      initOTDs(daySelected, dashProps);
+    }
+  }, [daySelected, dashProps, OfTheDays, setDaySelected])
 
   return (
-    <div ref={targetRef} className="h-dvh overflow-hidden">
-      <ToastWrapper>
-        <Providers>
-          <widthContext.Provider value={width}>
-            <main className={'flex flex-col h-dvh bg-white/50 '}>
-              {children}
-            </main>
-          </widthContext.Provider>
-        </Providers>
-      </ToastWrapper>
-    </div>
+    <main className="w-screen h-screen scrollbar-thin scrollbar-webkit bg-white/50" style={{ overflowX: 'hidden', overflowY: 'auto' }}>
+      {children}
+    </main>
   )
 }

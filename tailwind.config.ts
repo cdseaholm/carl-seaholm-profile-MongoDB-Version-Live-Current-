@@ -1,5 +1,5 @@
-import {nextui} from "@nextui-org/react";
 import { withUt } from "uploadthing/tw";
+import type { Config } from "tailwindcss";
 
 export default withUt({
   content: [
@@ -21,11 +21,9 @@ export default withUt({
       },
     },
   },
-  darkMode: "class",
+  darkMode: 'class',
   plugins: [
-    nextui(),
-    require('flowbite/plugin'),
-    function ({addUtilities}: {addUtilities: any}) {
+    function ({ addUtilities }: { addUtilities: any }) {
       const newUtilities = {
         ".scrollbar-thin": {
           scrollbarWidth: 'thin',
@@ -49,4 +47,4 @@ export default withUt({
       addUtilities(newUtilities, ['responsive', 'hover'])
     }
   ],
-});
+} satisfies Config);

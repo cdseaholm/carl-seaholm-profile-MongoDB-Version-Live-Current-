@@ -1,6 +1,6 @@
 'use client'
 
-import { FiArrowLeft } from "react-icons/fi";
+import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import AddLifeAspect from "./AddLifeAspect/addcustom";
 import { useLifeAspectStore } from "@/context/lifeAspectStore";
 
@@ -28,7 +28,7 @@ export default function LifeAspectModal() {
                     <div className={`flex items-center justify-between space-x-4 p-2 border-b rounded-t border-gray-400 w-full`}>
                         {secondActionNeeded &&
                             <button onClick={() => handleBack()} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                                <FiArrowLeft className="w-5 h-5" />
+                                <ChevronLeftIcon className="w-5 h-5" />
                             </button>
                         }
                         <h3 className={`text-lg font-semibold text-gray-900 dark:text-white`}>

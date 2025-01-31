@@ -5,11 +5,14 @@ import { useCallback, useEffect, useState } from "react";
 import { DateSelectArg, EventClickArg, EventContentArg } from '@fullcalendar/core/index.js';
 import React from 'react';
 import { IIndexedEntry } from '@/models/types/entry';
-import { useAlertStore } from '@/context/alertStore';
 import { ColorMapType } from '@/models/types/colorMap';
 import { dataType } from '@/components/pagecomponents/dashboard/statsView';
 import CalendarModal from './calendarmodal';
-import { Spinner } from '@nextui-org/react';
+import { Spinner } from '@/components/misc/Spinner';
+import { modals } from '@mantine/modals';
+import { Text } from '@mantine/core';
+import { toast } from 'sonner';
+import { useModalStore } from '@/context/modalStore';
 
 export interface CalEvent {
     allDay: boolean;
@@ -24,17 +27,27 @@ export default function CalendarModalInit({ show, closeCalendar, adminIDBool, ha
     //state
     const [objectsInADay, setObjectsInADay] = useState<CalEvent[]>([]);
     const [indexOpen, setIndexOpen] = useState<boolean>(false);
-    const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
-    const setAlertParent = useAlertStore((state) => state.setAlertParent);
-    const setAlertOpen = useAlertStore((state) => state.setShowAlert);
+    const setModalOpen = useModalStore((state) => state.setModalOpen);
+    const setDashToShow = useModalStore((state) => state.setDashToShow);
 
     //functions
     const handleDayClick = (arg: DateClickArg) => {
         const date = new Date(arg.dateStr + 'T00:00');
         handleDaySelected(date.toLocaleDateString());
-        setAlertMessage('Add a new entry for this day? Or view existing objects on this day?');
-        setAlertParent('calendar');
-        setAlertOpen(true);
+        modals.openConfirmModal({
+            title: 'Please confirm',
+            children: (
+                <Text size="sm">
+                    Do you want to add sessions to this date or just view sessions done on this day?
+                </Text>
+            ),
+            labels: { confirm: 'Add a session', cancel: 'View day' },
+            onCancel: () => toast.info('Viewing date'),
+            onConfirm: () => {
+                setDashToShow('calendar');
+                setModalOpen('logsession');
+            },
+        });
         closeCalendar();
     };
 

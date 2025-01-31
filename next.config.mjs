@@ -1,5 +1,4 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+export default {
   async headers() {
     return [
       {
@@ -13,16 +12,11 @@ const nextConfig = {
       },
     ];
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        module: false,
-        net: false,
-        tls: false,
-      };
+  webpack: (config, { dev }) => {
+    if (!dev) {
+      config.devtool = 'source-map';
     }
+
     return config;
   },
   images: {
@@ -31,7 +25,9 @@ const nextConfig = {
         hostname: 'utfs.io'
       }
     ]
-  }
+  },
+  experimental: {
+    optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
+  },
+  productionBrowserSourceMaps: true,
 };
-
-export default nextConfig;

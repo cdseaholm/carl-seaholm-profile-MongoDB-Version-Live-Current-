@@ -1,11 +1,10 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { TrackerUsage } from '../../charts/trackerChart';
+import React, { useEffect } from 'react'
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
-import { Color } from 'plotly.js';
 import { Spinner } from '@/components/misc/Spinner';
+import { PieChartCell } from '@mantine/charts';
 
 export type dataType = {
     name: string;
@@ -15,29 +14,42 @@ export type dataType = {
 }
 
 export interface Tracker {
-    color: Color;
+    color: string;
     tooltip: string;
 }
 
-export default function StatsView({ isBreakpoint, data, colorsToChart, monthsToChart, barChartData, barChartDataTwo, daysWithHobbies, loading, handleLoading }: { isBreakpoint: boolean, data: dataType[], colorsToChart: string[], monthsToChart: string[], barChartData: { date: string, time: number, color: string }[], barChartDataTwo: { date: string, time: number, color: string }[], daysWithHobbies: number[], loading: boolean, handleLoading: () => void }) {
+export default function StatsView({ data, barChartData, barChartDataTwo, daysWithHobbies, loading, handleLoading }: { data: dataType[], barChartData: { date: string, time: number, color: string }[], barChartDataTwo: { date: string, time: number, color: string }[], daysWithHobbies: number[], loading: boolean, handleLoading: () => void }) {
 
-    const [ids, setIds] = useState<number>(0)
-    const pieData = data ? data : [] as dataType[];
-    const monthsToUse = monthsToChart ? monthsToChart : [] as string[];
     const barOne = barChartData ? barChartData : [] as { date: string, time: number, color: string }[];
     const barTwo = barChartDataTwo ? barChartDataTwo : [] as { date: string, time: number, color: string }[];
-    const colorsToUse = colorsToChart ? colorsToChart : [] as string[]
+    const currentDay = new Date().getDate();
+    const pieDataOne = data.map((d) => {
+        return {
+            value: parseFloat(d.value.toFixed(2)),
+            name: d.name,
+            color: d.color
+        } as PieChartCell
+    }) as PieChartCell[]
 
-
-    const handleIds = () => {
-        setIds(ids + 1);
-    }
+    const pieDataTwo = [
+        {
+            value: currentDay - daysWithHobbies.length,
+            color: 'red',
+            name: 'Days without',
+        },
+        {
+            value: daysWithHobbies.length,
+            color: 'green',
+            name: 'Days with',
+        }
+    ] as PieChartCell[];
 
     useEffect(() => {
-        if (ids === 4) {
-            handleLoading()
+        if (loading) {
+            handleLoading();
         }
-    }, [ids, handleLoading]);
+    }, [loading, handleLoading])
+
 
     return (
         loading ? (
@@ -45,13 +57,14 @@ export default function StatsView({ isBreakpoint, data, colorsToChart, monthsToC
                 <Spinner />
             </div>
         ) : (
-            <div className={`${!isBreakpoint ? 'grid gap-1 grid-cols-2 grid-rows-2' : 'grid gap-1 grid-cols-1 grid-rows-4'} w-full h-full p-2`}>
-                <PieChartView data={pieData} handleIds={handleIds} loading={loading} />
-                <BarChartView colorsToChart={colorsToUse} monthsToChart={monthsToUse} barChartData={barOne} title={`Total Minutes Spent on Hobbies per Month`} handleIds={handleIds} loading={loading} />
-                <TrackerUsage daysWithHobbies={daysWithHobbies} handleIds={handleIds} loading={loading} />
-                <BarChartView colorsToChart={colorsToUse} monthsToChart={monthsToUse} barChartData={barTwo} title={`Average Minutes a Session:`} handleIds={handleIds} loading={loading} />
+            <div className={`grid gap-4 md:grid-cols-2 md:grid-rows-2 grid-cols-1 grid-rows-4 w-full h-full p-2`
+            }>
+                <PieChartView dataPassed={pieDataOne} title='Hours on Each Hobby for the past 5 months' />
+                <BarChartView data={barOne} title={`Total Minutes Spent on Hobbies per Month`} />
+                {/* <TrackerUsage daysWithHobbies={daysWithHobbies} /> */}
+                <PieChartView dataPassed={pieDataTwo} title='Number of Days this Month with a session' />
+                <BarChartView data={barTwo} title={`Average Minutes a Session:`} />
             </div>
         )
-
     )
 }

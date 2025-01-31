@@ -11,19 +11,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         const password = body.password;
 
         if (!email || !password) {
-            return NextResponse.json({ error: 'Email and password are required' });
+            return NextResponse.json({ message: 'Email and password are required' });
         }
         await connectDB();
         const user = await User.findOne({ email });
         if (!user) {
-            return NextResponse.json({ error: 'User not found' });
+            return NextResponse.json({ message: 'User not found' });
         }
 
         const validPassword = password === user.password;
 
         {/**const validPassword = await argon2id.verify(passwordToCheck, password); */ }
         if (!validPassword) {
-            return NextResponse.json({ error: 'Invalid password' });
+            return NextResponse.json({ message: 'Invalid password' });
         }
 
         return NextResponse.json({
@@ -32,7 +32,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             email: user.email,
         });
     } catch (error) {
-        console.error('error: ', error);
-        return NextResponse.json({ error: 'Internal server error' });
+        return NextResponse.json({ message: 'Internal server error' });
     }
 }

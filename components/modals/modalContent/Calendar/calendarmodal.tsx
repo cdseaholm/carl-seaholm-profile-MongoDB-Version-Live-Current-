@@ -13,7 +13,7 @@ export default function CalendarModal({ adminIDBool, colorMap, data, handleIndex
 
     return (
 
-        <div className="h-full w-full p-2" style={{ overflow: 'hidden' }}>
+        <div className="h-full w-full p-2 bg-white" style={{ overflow: 'hidden' }}>
             <FullCalendar
 
                 plugins={[interactionPlugin, dayGridPlugin]}
