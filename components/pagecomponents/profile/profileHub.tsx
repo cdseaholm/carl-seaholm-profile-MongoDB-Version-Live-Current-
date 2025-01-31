@@ -1,37 +1,40 @@
 'use client'
 
-import { signOut } from "@/auth";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { useModalStore } from "@/context/modalStore";
 import { IIndexedEntry } from "@/models/types/entry";
-import { IHobby } from "@/models/types/hobby";
-import { IRecipe } from "@/models/types/recipe";
-import { IUser } from "@/models/types/user";
 import { IUserObject } from "@/models/types/userObject";
-import { AttemptToDeleteHobbies } from "@/utils/data/attemptToDeleteHobbies";
-import { AttemptToDeleteRecipes } from "@/utils/data/attemptToDeleteRecipes";
-import { AttemptToUpdateOldModel } from "@/utils/data/attemptToUpdateOldModel";
-import { HobbiesInit } from "@/utils/data/dashInit/hobbies";
-import { DeleteUser } from "@/utils/userHelpers/delete";
-import { useSession } from "next-auth/react";
+import { HobbiesInit } from "@/utils/apihelpers/get/hobbies";
+import { DeleteUser } from "@/utils/apihelpers/delete/delete";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "sonner";
+import { AttemptToDeleteHobbies } from "@/utils/apihelpers/delete/attemptToDeleteHobbies";
+import { AttemptToDeleteRecipes } from "@/utils/apihelpers/delete/attemptToDeleteRecipes";
+import { AttemptToUpdateOldModel } from "@/utils/apihelpers/edit/attemptToUpdateOldModel";
+import { useUserStore } from "@/context/userStore";
+import { IRecipe } from "@/models/types/recipe";
+import { IHobby } from "@/models/types/hobby";
 
-export default function ProfilePage({ hobbies, recipes, userInfo }: { hobbies: IHobby[], recipes: IRecipe[], userInfo: IUser }) {
+export default function ProfilePage() {
 
     const router = useRouter();
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const handleLogout = () => {
         console.log('logout');
     }
-    const {data: session } = useSession();
+    const { data: session } = useSession();
     const user = session?.user ? session.user : null;
     const userID = user?.email ? user.email : '';
+    const headers = { 'Authorization': `Bearer ${userID}` };
+    const hobbies = useUserStore(state => state.userHobbies) as IHobby[];
+    const recipes = [] as IRecipe[]
+    const userInfo = useUserStore(state => state.userInfo);
 
     const handleUpdateHobbiesLocal = async () => {
-        const attemptToUpdate = await AttemptToUpdateOldModel({ hobbies: hobbies, recipes: recipes, userID: userID });
+        const attemptToUpdate = await AttemptToUpdateOldModel({ hobbies: hobbies, recipes: recipes, userID: userID }, headers);
         if (attemptToUpdate === true) {
             toast.success('Updated hobbies');
         } else {
@@ -40,8 +43,8 @@ export default function ProfilePage({ hobbies, recipes, userInfo }: { hobbies: I
     };
 
     const handleDeleteUser = async () => {
-
-        const deleteUser = await DeleteUser();
+        const headers = { 'Authorization': `Bearer ${userID}` };
+        const deleteUser = await DeleteUser(headers);
         if (deleteUser) {
             signOut();
             router.push('/');
@@ -51,42 +54,41 @@ export default function ProfilePage({ hobbies, recipes, userInfo }: { hobbies: I
         }
     };
 
-    const handleDeleteHobbies = async() => {
+    const handleDeleteHobbies = async () => {
 
         const confirm = window.confirm("Are you sure you want to delete ALL hobbies?");
         if (!confirm) {
             return;
         }
 
-        const deleteHobbies = await AttemptToDeleteHobbies()
+        const deleteHobbies = await AttemptToDeleteHobbies(headers)
 
         if (!deleteHobbies) {
             toast.error("Error deleting hobbies");
         }
-        
+
         toast.success("Hobbies deleted!")
     }
 
-    const handleDeleteRecipes = async() => {
+    const handleDeleteRecipes = async () => {
 
         const confirm = window.confirm("Are you sure you want to delete ALL recipes?");
         if (!confirm) {
             return;
         }
 
-        const deleteRecipes = await AttemptToDeleteRecipes()
+        const deleteRecipes = await AttemptToDeleteRecipes(headers)
 
         if (!deleteRecipes) {
             toast.error("Error deleting recipes");
         }
-        
+
         toast.success("Recipes deleted!")
     }
 
-    const testCurrentFunction = async() => {
+    const testCurrentFunction = async () => {
 
-        console.log('user info', userInfo)
-        const {worked, sessionsFound, userObjects} = await HobbiesInit({userInfo: userInfo}) as {worked: boolean, sessionsFound: IIndexedEntry[], userObjects: IUserObject[]}
+        const { worked, sessionsFound, userObjects } = await HobbiesInit({ userInfo: userInfo }) as { worked: boolean, sessionsFound: IIndexedEntry[], userObjects: IUserObject[] }
 
         console.log('worked: ', worked, 'sessions: ', sessionsFound, 'userObject: ', userObjects)
 

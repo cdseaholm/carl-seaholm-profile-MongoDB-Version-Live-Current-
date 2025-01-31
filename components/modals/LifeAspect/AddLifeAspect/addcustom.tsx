@@ -1,11 +1,11 @@
 'use client'
 
 import { useSession } from "next-auth/react";
-import { FiTrash2 } from "react-icons/fi";
 import { useStateStore } from "@/context/stateStore";
 import { Detail } from "@/models/types/detail";
 import AddDetails from "./helpers/addDetails";
 import { useLifeAspectStore } from "@/context/lifeAspectStore";
+import { TrashIcon } from "@heroicons/react/20/solid";
 
 export default function AddLifeAspect() {
 
@@ -96,7 +96,7 @@ export default function AddLifeAspect() {
                                         const newDetails = lifeAspectDetails.filter((_, i) => i !== index);
                                         setLifeAspectDetails(newDetails);
                                     }}>
-                                        <FiTrash2 color="black" />
+                                        <TrashIcon color="black" />
                                     </button>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@ export default function AddLifeAspect() {
                                         const newDetails = lifeAspectDetails.filter((_, i) => i !== index);
                                         setLifeAspectDetails(newDetails);
                                     }}>
-                                        <FiTrash2 color="black" />
+                                        <TrashIcon color="black" />
                                     </button>
                                 </div>
                                 <div className="text-xs">

@@ -1,6 +1,13 @@
+import { useStateStore } from "@/context/stateStore";
+
 export async function getBaseUrl() {
-    let liveBase = process.env.URL ? process.env.URL as string : '';
+    let liveBase = process.env.NEXT_PUBLIC_BASE_URL ? process.env.NEXT_PUBLIC_BASE_URL as string : '';
     return liveBase;
+}
+
+export async function initBaseUrl() {
+    const devBase = process.env.NEXT_PUBLIC_BASE_URL ? process.env.NEXT_PUBLIC_BASE_URL as string : 'null';
+    useStateStore.getState().setUrlToUse(devBase);
 }
 
 export async function getMongoDBUri() {

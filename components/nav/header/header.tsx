@@ -6,8 +6,8 @@ import React from "react";
 import Sidenav from "../sideNav/SideNav";
 import { SideMenuAccordian } from "../../dropdowns/SideMenuAccordian";
 import SocialButton from "@/components/buttons/socialButton";
-import { FiMenu } from "react-icons/fi";
 import { useStateStore } from "@/context/stateStore";
+import { FiMenu } from "react-icons/fi";
 
 
 const SideNavHeader = () => {

@@ -2,8 +2,8 @@
 
 import { useModalStore } from "@/context/modalStore";
 import { EntriesOTDType } from "@/models/types/otds";
-import { Switch } from "@nextui-org/react";
 import { FiAlignLeft, FiClock, FiCrosshair, FiList, FiWatch } from "react-icons/fi";
+import { Switch } from '@mantine/core';
 
 function ConvertTime(object: string) {
     let timeToShow = '' as string;
@@ -50,21 +50,14 @@ export default function CalendarView({ adminID, handleDateDecrease, handleDateIn
             ) : (
                 <div className="flex flex-col justify-start items-center w-full space-y-12 scrollbar-webkit h-full" style={{ overflow: 'auto' }}>
                     <div className="grid grid-cols-2 md:grid-cols-4 justify-items-center align-items-center gap-4 border-b border-neutral-600 py-4">
-                        <Switch onClick={handleCats} size="sm" name="catsSwitch" id="catsSwitch">
-                            <p className="text-sm">Show Categories</p>
-                        </Switch>
-                        <Switch onClick={handleDescriptions} size="sm" name="descriptionsSwitch" id="descriptionsSwitch">
-                            <p className="text-sm">Show Descriptions</p>
-                        </Switch>
-                        <Switch onClick={handleGoals} size="sm" name="goalsSwitch" id="goalsSwitch">
-                            <p className="text-sm">Show Goals</p>
-                        </Switch>
-                        <Switch onClick={handleTotalTime} size="sm" name="totalTimeSwitch" id="totalTimeSwitch">
-                            <p className="text-sm">Show Total Hobby Time</p>
-                        </Switch>
+                        <Switch onClick={handleCats} size="sm" name="catsSwitch" id="catsSwitch" label="Show Categories" />
+                        <Switch onClick={handleDescriptions} size="sm" name="descriptionsSwitch" id="descriptionsSwitch" label="Show Descriptions" />
+                        <Switch onClick={handleGoals} size="sm" name="goalsSwitch" id="goalsSwitch" label="Show Goals" />
+                        <Switch onClick={handleTotalTime} size="sm" name="totalTimeSwitch" id="totalTimeSwitch" label="Show Total Hobby Time" />
                     </div>
                     <div className="grid grid-cols-2 justify-center items-center w-full h-full">
                         {entriesOTD && entriesOTD.map((entry: EntriesOTDType, index: number) => {
+                            
                             if (entry) {
                                 const timeToShow = ConvertTime(entry.totalMinutes);
                                 let goal;

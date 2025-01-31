@@ -1,5 +1,4 @@
-
-import { createErrorResponse } from '@/lib/utils';
+import { NextResponse } from "next/server";
 
 {/**
     
@@ -9,7 +8,7 @@ import { createErrorResponse } from '@/lib/utils';
 
 export async function POST() {
 
-    return createErrorResponse("Not implemented", 501);
+    return NextResponse.json({ stats: 500, message: 'Not currently implemented' })
     {/**
         
         try {

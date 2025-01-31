@@ -1,6 +1,6 @@
 'use client'
 
-import { FiTrash2 } from "react-icons/fi";
+import { TrashIcon } from "@heroicons/react/20/solid";
 
 export default function LogSessionModal({ formattedDate, handleCreate, hobbyTitles, handleModalOpen, sessions, addSession, handleSessionChange, handleRemoveItem, handleResetSessions }: { formattedDate: string, handleCreate: (event: React.FormEvent<HTMLFormElement>) => void, hobbyTitles: string[], handleModalOpen: (title: string) => void, sessions: { hobby: string, time: string }[], addSession: () => void, handleSessionChange: (index: number, field: string, value: string) => void, handleRemoveItem: (i: number) => void, handleResetSessions: () => void }) {
 
@@ -18,8 +18,8 @@ export default function LogSessionModal({ formattedDate, handleCreate, hobbyTitl
                                 <p className="text-sm font-medium text-gray-900 dark:text-white my-2">
                                     {index + 1}.
                                 </p>
-                                {index === 0 && <FiTrash2 aria-disabled color="white" />}
-                                {index > 0 && <FiTrash2 className="cursor-pointer" onClick={() => handleRemoveItem(index)} />}
+                                {index === 0 && <TrashIcon aria-disabled color="white" />}
+                                {index > 0 && <TrashIcon className="cursor-pointer" onClick={() => handleRemoveItem(index)} />}
                             </div>
                             <div className="w-full h-full bg-neutral-200 rounded-md mx-4 border border-neutral-300">
                                 <div>

@@ -1,12 +1,12 @@
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { Metadata } from "next";
 import DashMiddle from "@/components/dataInitializers/dashMiddle";
-import { initData } from "@/utils/data/dashInit/initUserData";
-import { IUser } from "@/models/types/user";
+import { useUserStore } from "@/context/userStore";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await initData() as IUser;
-  const userName = data ? data.name : 'Users';
+
+  const userInfo = useUserStore.getState().userInfo;
+  const userName = userInfo ? userInfo.name : 'Guest'
 
   return {
     title: `Dashboard for ${userName}`,
@@ -15,12 +15,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const userInfo = await initData() as IUser;
-  const infoToPass = userInfo ? userInfo : {} as IUser;
 
   return (
     <MainPageBody>
-      <DashMiddle userInfo={infoToPass} />
+      <DashMiddle />
     </MainPageBody>
   );
 }

@@ -8,10 +8,10 @@ import ntc from "ntcjs";
 import { useState, useEffect } from "react";
 import ModalHobby from "./hobbymodal";
 import { toast } from "sonner";
-import { AttemptToCreateNewHobby } from "@/utils/data/attemptToCreateNewHobby";
 import { User } from "next-auth";
 import { useStore } from "@/context/dataStore";
 import { IFieldObject } from "@/models/types/field";
+import { AttemptToCreateNewHobby } from "@/utils/apihelpers/create/attemptToCreateNewHobby";
 
 export default function HobbyModalDataInit() {
     const { data: session } = useSession();
@@ -100,8 +100,8 @@ export default function HobbyModalDataInit() {
             }
 
             let fieldObjectIndex = fieldObjectsStored.length as number
-
-            const res = await AttemptToCreateNewHobby({titleToUse: titleToUse, fieldObjectIndex: fieldObjectIndex, colorToUse: colorToPass, categoryToUse: categoryToUse, descriptionToUse: descriptionToPass, goalToUse: goalToPass, userID: userEmail})
+            const headers = { 'Authorization': `Bearer ${userEmail}` };
+            const res = await AttemptToCreateNewHobby({ titleToUse: titleToUse, fieldObjectIndex: fieldObjectIndex, colorToUse: colorToPass, categoryToUse: categoryToUse, descriptionToUse: descriptionToPass, goalToUse: goalToPass, userID: userEmail }, headers)
 
             if (res) {
                 console.log('Hobby created');
@@ -150,9 +150,9 @@ export default function HobbyModalDataInit() {
 
     return (
         loading ? (
-            <Spinner/>
+            <Spinner />
         ) : (
-            <ModalHobby categoryPassed={categoryPassed} categories={categories} goalChild={goalChild} goalPlaceHolder={goalPlaceHolder} handleColorUpdate={handleColorUpdate} HandleCreateHobby={HandleCreateHobby} handleCategoryCreate={handleCategoryCreate} changeGoalChild={changeGoalChild} colorName={colorName} catCreate={catCreate} handleModalOpen={handleModalOpen}/>
+            <ModalHobby categoryPassed={categoryPassed} categories={categories} goalChild={goalChild} goalPlaceHolder={goalPlaceHolder} handleColorUpdate={handleColorUpdate} HandleCreateHobby={HandleCreateHobby} handleCategoryCreate={handleCategoryCreate} changeGoalChild={changeGoalChild} colorName={colorName} catCreate={catCreate} handleModalOpen={handleModalOpen} />
         )
     )
 }

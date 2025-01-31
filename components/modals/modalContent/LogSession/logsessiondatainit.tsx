@@ -1,16 +1,19 @@
 'use client'
 
-import { Spinner } from "@/components/misc/Spinner";
 import { useStore } from "@/context/dataStore";
 import { useHobbyStore } from "@/context/hobbyStore";
 import { useModalStore } from "@/context/modalStore";
 import { IUserObject } from "@/models/types/userObject";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LogSessionModal from "./logsession";
-import { AttemptCreateSession } from "@/utils/data/attemptToCreateSession";
+import { AttemptCreateSession } from "@/utils/apihelpers/create/attemptToCreateSession";
 import { IEntry } from "@/models/types/entry";
 import { IUserObjectIndexed } from "@/models/types/userObjectIndexed";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import { User } from "next-auth";
+import { CombineNewAndOld } from "@/utils/data/combineData";
+import DashZustandInit from "@/utils/data/dashZustandInit";
 
 function formatDate(dateString: string) {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
@@ -25,11 +28,11 @@ export type newSesh = {
     hobbyTitleIndex: number
 }
 
-export default function LogSessionDataInit({ daySelected, handleDashParams, loading, handleLoading }: { daySelected: string, handleDashParams: (sessionsToAdd: newSesh[]) => void, loading: boolean, handleLoading: () => void }) {
+export default function LogSessionDataInit() {
 
-    // const { data: session } = useSession();
-    // const user = session?.user ? session.user : null;
-    // const id = user?.email ? user.email : null;
+    const { data: session, update } = useSession();
+    const user = session ? session.user as User : {} as User;
+    const email = user ? user.email : '';
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
     const userInfo = useStore((state) => state.dashProps);
@@ -38,6 +41,9 @@ export default function LogSessionDataInit({ daySelected, handleDashParams, load
     const modalOpen = useModalStore((state) => state.modalOpen);
     const titles = useHobbyStore(state => state.titles);
     const [sessions, setSessions] = useState([{ hobby: '', time: '' }]);
+    const dashProps = useStore(state => state.dashProps);
+    const thisMonth = useStore(state => state.thisMonth);
+    const daySelected = useStore(state => state.daySelected);
 
     const addSession = () => {
         setSessions([...sessions, { hobby: '', time: '' }]);
@@ -70,12 +76,6 @@ export default function LogSessionDataInit({ daySelected, handleDashParams, load
         }
     };
 
-    useEffect(() => {
-        if (loading) {
-            handleLoading
-        }
-    }, [loading, handleLoading]);
-
     const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {
         console.log('handleLogSession function called');
         event.preventDefault();
@@ -94,6 +94,11 @@ export default function LogSessionDataInit({ daySelected, handleDashParams, load
 
         if (!userObjects) {
             toast.warning('Create a Hobby before logging a session');
+            return;
+        }
+
+        if (!dashProps) {
+            toast.warning('Error with dash props');
             return;
         }
 
@@ -131,7 +136,8 @@ export default function LogSessionDataInit({ daySelected, handleDashParams, load
 
         for (const session of sessionEntries) {
             const newSession = { value: session.time, date: date } as IEntry;
-            const create = await AttemptCreateSession({ userID: 'cdseaholm@gmail.com', newEntry: newSession, hobbyTitle: session.hobbyTitle });
+            const headers = { 'Authorization': `Bearer ${email}` };
+            const create = await AttemptCreateSession({ newEntry: newSession, hobbyTitle: session.hobbyTitle }, headers);
             if (!create || create.worked === false) {
                 console.log('Error creating session for hobby:', session.hobbyTitle);
                 return;
@@ -148,9 +154,31 @@ export default function LogSessionDataInit({ daySelected, handleDashParams, load
             }
         }
 
-        handleDashParams(sessionsToAdd);
+        const combined = await CombineNewAndOld({ fieldObjects: dashProps.fieldObjects, sessionsFound: dashProps.sessionsFound, seshCheck: sessionsToAdd });
+
+        if (!combined) {
+            console.log('Error combining 162 Log Sesh')
+            return;
+        }
+
+        const reInit = await DashZustandInit({
+            userInfo: dashProps.userInfo,
+            thisMonth: thisMonth,
+            totalTimePerMonth: dashProps.totalTimePerMonth,
+            sessionsFound: dashProps.sessionsFound,
+            fieldObjects: dashProps.fieldObjects,
+            objectToUse: dashProps.objectToUse
+        });
+
+        if (!reInit) {
+            console.log('Error with reInit')
+            return;
+        }
+
+
         handleResetSessions();
         setModalOpen('');
+        await update();
         setRefreshKey(prevKey => prevKey + 1);
     }
 
@@ -175,11 +203,7 @@ export default function LogSessionDataInit({ daySelected, handleDashParams, load
                             <span className="sr-only">Close modal</span>
                         </button>
                     </div>
-                    {loading ? (
-                        <Spinner />
-                    ) : (
-                        <LogSessionModal formattedDate={formattedDate} handleCreate={handleCreate} hobbyTitles={titles} handleModalOpen={handleModalOpen} sessions={sessions} addSession={addSession} handleSessionChange={handleSessionChange} handleRemoveItem={handleRemoveItem} handleResetSessions={handleResetSessions} />
-                    )}
+                    <LogSessionModal formattedDate={formattedDate} handleCreate={handleCreate} hobbyTitles={titles} handleModalOpen={handleModalOpen} sessions={sessions} addSession={addSession} handleSessionChange={handleSessionChange} handleRemoveItem={handleRemoveItem} handleResetSessions={handleResetSessions} />
                 </div>
             </div>
         </div>

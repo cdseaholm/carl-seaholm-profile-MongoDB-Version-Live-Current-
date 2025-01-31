@@ -8,20 +8,20 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
     const email = data.email;
     if (!email) {
-        return NextResponse.json({ error: 'Email is required', status: 400 });
+        return NextResponse.json({ message: 'Email is required', status: 400 });
     }
     const tempPW = Math.random().toString(36).slice(-8);
     try {
         const body = await connectDB();
         if (!body) {
-            return NextResponse.json({ error: 'Database connection error', status: 500 });
+            return NextResponse.json({ message: 'Database connection error', status: 500 });
         }
         const user = await User.findOneAndUpdate({ email }, { password: tempPW }, { new: true });
         if (!user) {
-            return NextResponse.json({ error: 'User not found', status: 404 });
+            return NextResponse.json({ message: 'User not found', status: 404 });
         }
     } catch (error: any) {
-        return NextResponse.json({ error: error.message, status: 500 });
+        return NextResponse.json({ message: error.message, status: 500 });
     }
 
 
@@ -68,6 +68,6 @@ export async function POST(request: NextRequest) {
         response.headers.set('Access-Control-Allow-Origin', '*');
         return response;
     } catch (err) {
-        return NextResponse.json({ error: err, status: 500 });
+        return NextResponse.json({ message: err, status: 500 });
     }
 }

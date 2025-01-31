@@ -1,21 +1,18 @@
- // app/providers.tsx
+// app/providers.tsx
 'use client'
 
-import {NextUIProvider} from '@nextui-org/react';
 import MainModal from '@/components/modals/mainmodal/mainmodal';
 import AlertModal from '@/components/modals/Alert/alertmodal';
 import LifeAspectModal from '@/components/modals/LifeAspect/lifeAspectModal';
+import { ModalsProvider } from "@mantine/modals";
 
-export function Providers({children}: { children: React.ReactNode }) {
+export function Providers() {
 
   return (
-    <>
-    <AlertModal />
-    <MainModal />
-    <LifeAspectModal />
-      <NextUIProvider style={{height: '100%', width: '100%'}}>
-        {children}
-      </NextUIProvider>
-    </>
+    <ModalsProvider>
+      <AlertModal />
+      <MainModal />
+      <LifeAspectModal />
+    </ModalsProvider>
   )
 }

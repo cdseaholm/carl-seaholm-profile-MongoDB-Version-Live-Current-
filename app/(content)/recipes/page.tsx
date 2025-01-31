@@ -1,17 +1,12 @@
 
 import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
-import { GetData } from "@/utils/data/get";
+import { useUserStore } from "@/context/userStore";
+import { IUser } from "@/models/types/user";
 import { Metadata } from "next";
 
-async function initData() {
-    const data = await GetData();
-    const returnData = data.data;
-    return returnData;
-}
-
 export async function generateMetadata(): Promise<Metadata> {
-    const data = await initData();
-    const userName = data.name;
+    const userData = useUserStore.getState().userInfo as IUser
+    const userName = userData ? userData.name : 'Guest';
 
     return {
         title: `${userName}'s Recipes Ratings Page`,
@@ -20,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-    {/**const userInfo = await initData(); */}
+    {/**const userInfo = await initData(); */ }
 
     return (
         <MainPageBody>

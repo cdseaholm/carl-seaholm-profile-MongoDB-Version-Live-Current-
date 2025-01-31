@@ -1,8 +1,7 @@
 'use client'
 
-import { signIn } from "@/auth";
 import { useModalStore } from "@/context/modalStore";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { useState } from "react";

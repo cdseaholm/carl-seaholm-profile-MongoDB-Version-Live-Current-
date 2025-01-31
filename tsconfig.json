@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2017",
     "lib": [
       "dom",
       "dom.iterable",
@@ -9,30 +9,19 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
     "removeComments": true,
-    "noUncheckedIndexedAccess": true,
-    "strictNullChecks": true,
-    "alwaysStrict": true,
-    "preserveConstEnums": true,
-    "checkJs": true,
-    "outDir": "out",
-    "sourceMap": true,
-    "noFallthroughCasesInSwitch": true,
     "allowUnreachableCode": false,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
+    "noFallthroughCasesInSwitch": true,
     "plugins": [
       {
         "name": "next"
@@ -52,10 +41,5 @@
   ],
   "exclude": [
     "node_modules"
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS"
-    }
-  }
+  ]
 }

@@ -34,7 +34,7 @@
 
 /* body-pieces */
 
-html, body {
+body {
   background-image: url('../public/images/carmelbackground.jpg');
   background-size: cover;
 }
@@ -61,5 +61,3 @@ div.childFirst {
 .fade-out {
   animation: fadeOut 1s ease-out;
 }
-
-/* images */
