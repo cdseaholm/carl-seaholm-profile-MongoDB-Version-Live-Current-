@@ -33,11 +33,11 @@ export default function Home({ navigateToDashboard, navigateToProfessional, size
                 </div>
                 <div className='flex flex-row w-full h-full px-8 items-center justify-evenly space-x-5 md:space-x-1'>
                     <div className='flex flex-col h-full w-full justify-center items-center space-y-4'>
-                        <button className={`text-2xl md:text-4xl p-3 bg-transparent text-white rounded-lg hover:underline hover:text-slate-300 font-semibold`} onClick={navigateToDashboard}>
-                            <p className={`text-center ${dashShow ? '' : 'fade-out'}`}>{`Personal Dashboard`}</p>
+                        <button className={`p-3 bg-transparent text-white rounded-lg hover:underline hover:text-slate-300 font-semibold`} onClick={navigateToDashboard}>
+                            <p className={`text-2xl md:text-4xl text-center ${dashShow ? '' : 'fade-out'}`}>{`Personal Dashboard`}</p>
                         </button>
-                        <button className={`text-2xl md:text-4xl p-3 bg-transparent text-white rounded-lg hover:underline hover:text-slate-300 font-semibold`} onClick={navigateToProfessional}>
-                            <p className={`text-center ${proShow ? '' : 'fade-out'}`}>{`Professional Hub`}</p>
+                        <button className={`p-3 bg-transparent text-white rounded-lg hover:underline hover:text-slate-300 font-semibold`} onClick={navigateToProfessional}>
+                            <p className={`text-2xl md:text-4xl text-center ${proShow ? '' : 'fade-out'}`}>{`Professional Hub`}</p>
                         </button>
                     </div>
                 </div>

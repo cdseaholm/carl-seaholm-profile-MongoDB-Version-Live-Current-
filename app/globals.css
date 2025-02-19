@@ -1,11 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 254, 201;
   --background-end-rgb: 255, 254, 201;
+  --chart-labels-color: 0, 0, 0
 }
 
 @media (prefers-color-scheme: light) {
@@ -20,7 +19,25 @@
   .text-balance {
     text-wrap: balance;
   }
+  .scrollbar-thin::-webkit-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
+  }
+  .scrollbar-webkit {
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--mainBack);
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 20px;
+      border: 1px solid transparent;
+    }
+  }
 }
+
 
 @keyframes fadeIn {
   0% {opacity: 0;}
