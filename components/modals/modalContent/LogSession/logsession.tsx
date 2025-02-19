@@ -1,27 +1,39 @@
 'use client'
 
-import { TrashIcon } from "@heroicons/react/20/solid";
+import { FiTrash } from "react-icons/fi";
 
 export default function LogSessionModal({ formattedDate, handleCreate, hobbyTitles, handleModalOpen, sessions, addSession, handleSessionChange, handleRemoveItem, handleResetSessions }: { formattedDate: string, handleCreate: (event: React.FormEvent<HTMLFormElement>) => void, hobbyTitles: string[], handleModalOpen: (title: string) => void, sessions: { hobby: string, time: string }[], addSession: () => void, handleSessionChange: (index: number, field: string, value: string) => void, handleRemoveItem: (i: number) => void, handleResetSessions: () => void }) {
+
+    const defaultTimes = [
+        '5',
+        '10',
+        '15',
+        '20',
+        '30',
+        '45',
+        '60',
+        '120',
+        '180'
+    ]
 
     return (
         <div style={{ maxHeight: '80dvh', overflowY: 'auto' }}>
             <form className="p-4 md:p-5" onSubmit={handleCreate}>
-                <div className="grid gap-4 mb-4 grid-cols-1">
+                <div className="grid gap-2 mb-4 grid-cols-1">
                     <div>
                         <label htmlFor="modalSessionDate" className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Session Date</label>
                         <input type="date" name="modalSessionDate" id="modalSessionDate" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder='01/01/2024' required defaultValue={formattedDate ? formattedDate : ''} />
                     </div>
                     {sessions && sessions.map((session, index) => (
-                        <div key={index} className="flex flex-row items-start justify-center space-x-2">
-                            <div className="flex flex-col justify-start space-y-12 items-start">
-                                <p className="text-sm font-medium text-gray-900 dark:text-white my-2">
+                        <div key={index} className="flex flex-row items-start justify-center space-x-2 border-2 box-content border-white/30 p-4 rounded-md">
+                            <div className="flex flex-col justify-start space-y-12 items-center">
+                                <p className="text-sm font-medium text-gray-900 dark:text-white my-2 pb-12">
                                     {index + 1}.
                                 </p>
-                                {index === 0 && <TrashIcon aria-disabled color="white" />}
-                                {index > 0 && <TrashIcon className="cursor-pointer" onClick={() => handleRemoveItem(index)} />}
+                                {index === 0 && <FiTrash aria-disabled size={20} color="gray" />}
+                                {index > 0 && <FiTrash className="cursor-pointer" size={20} color="white" onClick={() => handleRemoveItem(index)} />}
                             </div>
-                            <div className="w-full h-full bg-neutral-200 rounded-md mx-4 border border-neutral-300">
+                            <div className="w-full h-full bg-neutral-200 dark:bg-transparent p-2 rounded-md mx-4 border border-neutral-300">
                                 <div>
                                     <label htmlFor={`modalSessionHobby-${index}`} className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Hobby Session</label>
                                     <select name={`modalSessionHobby-${index}`} id={`modalSessionHobby-${index}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" defaultValue={session.hobby || 'No Session Chosen'} required onChange={(e) => handleSessionChange(index, 'hobby', e.target.value)}>
@@ -39,7 +51,16 @@ export default function LogSessionModal({ formattedDate, handleCreate, hobbyTitl
                                     </select>
                                 </div>
                                 <div>
-                                    <label htmlFor={`modalSessionTime-${index}`} className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Total Session Time</label>
+                                    <div className="flex flex-row justify-between items-center w-full h-content">
+                                        <label htmlFor={`modalSessionTime-${index}`} className="block my-2 text-sm font-medium text-gray-900 dark:text-white">Total Session Time</label>
+                                        {defaultTimes.map((time, keyIndex) => {
+                                            return (
+                                                <button type="button" className="cursor-pointer hover:underline text-sm text-black dark:text-white" onClick={() => handleSessionChange(index, 'time', time)} key={keyIndex}>
+                                                    {time}
+                                                </button>
+                                            )
+                                        })}
+                                    </div>
                                     <input type='number' name={`modalSessionTime-${index}`} id={`modalSessionTime-${index}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="90 minutes" required value={session.time} onChange={(e) => handleSessionChange(index, 'time', e.target.value)} />
                                 </div>
                             </div>
@@ -58,7 +79,7 @@ export default function LogSessionModal({ formattedDate, handleCreate, hobbyTitl
                             </button>
                         </div>
                         <div>
-                            <button type="button" className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white pr-5`} data-modal-toggle="crud-modal" onClick={() => {handleModalOpen('addhobby'); handleResetSessions()}}>
+                            <button type="button" className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white pr-5`} data-modal-toggle="crud-modal" onClick={() => { handleModalOpen('addhobby'); handleResetSessions() }}>
                                 Create new Tracker
                             </button>
                         </div>

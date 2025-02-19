@@ -13,7 +13,7 @@ export function PieChartView({ dataPassed, title }: { dataPassed: dataType[] | P
                 {title}
             </h2>
             <ResponsiveContainer width="90%" height="90%">
-                <PieChart data={dataPassed} size={160} withLabels labelsPosition='outside' labelColor='black' withLabelsLine labelsType='value' withTooltip color='black'/>
+                <PieChart data={dataPassed} size={160} withLabels labelsPosition='outside' withLabelsLine labelsType='value' withTooltip color='black' />
             </ResponsiveContainer>
         </div>
 

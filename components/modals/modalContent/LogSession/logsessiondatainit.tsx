@@ -190,7 +190,7 @@ export default function LogSessionDataInit() {
 
     return (
         <div id="crud-modal" tabIndex={-1} aria-hidden={modalOpen === 'logsession' ? "true" : "false"} className={`${modalOpen === 'logsession' ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
-            <div className={`relative p-4 w-full max-w-md max-h-full`}>
+            <div className={`relative p-4 w-[90vw] sm:w-80[vw] max-h-full`}>
                 <div className={`relative bg-white rounded-lg shadow dark:bg-gray-700`}>
                     <div className={`flex items-center justify-between space-x-4 p-2 border-b rounded-t border-gray-400 w-full`}>
                         <h3 className={`text-lg font-semibold text-gray-900 dark:text-white`}>
