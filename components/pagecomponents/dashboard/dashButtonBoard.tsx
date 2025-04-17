@@ -11,8 +11,8 @@ interface DashBoardProps {
   setIndexShown: (indexShown: boolean) => void;
   adminID: boolean;
   colorMap: ColorMapType[];
-  handleDaySelected: (date: string) => void;
-  daySelected: string;
+  handleDaySelected: (date: Date) => void;
+  daySelected: Date;
 }
 
 export default function DashButtonBoard({ dashToShow, handleDashToShow, indexShown, setIndexShown, adminID, colorMap, handleDaySelected, daySelected }: DashBoardProps) {

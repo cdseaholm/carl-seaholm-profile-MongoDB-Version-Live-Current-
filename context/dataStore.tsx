@@ -30,8 +30,8 @@ type Store = {
   setDashProps: (dashProps: DashProps) => void;
   thisMonth: number;
   setThisMonth: (thisMonth: number) => void;
-  daySelected: string | null;
-  setDaySelected: (daySelected: string) => void;
+  daySelected: Date;
+  setDaySelected: (daySelected: Date) => void;
   transformedDashProps: TransformedDashProps;
   setTransformedDashProps: (transformedDashProps: TransformedDashProps) => void;
   entriesOTD: EntriesOTDType[]
@@ -43,7 +43,7 @@ export const useStore = create<Store>((set) => ({
   setDashProps: (dashProps) => set({ dashProps }),
   thisMonth: new Date().getMonth() as number,
   setThisMonth: (thisMonth) => set({ thisMonth }),
-  daySelected: null,
+  daySelected: new Date(),
   setDaySelected: (daySelected) => set({ daySelected }),
   transformedDashProps: {} as TransformedDashProps,
   setTransformedDashProps: (transformedDashProps) => set({ transformedDashProps }),

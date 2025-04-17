@@ -10,7 +10,7 @@ export type dataType = {
     name: string;
     value: number;
     color: string;
-    date: string;
+    date: Date;
 }
 
 export interface Tracker {

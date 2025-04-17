@@ -1,9 +1,13 @@
 'use client'
 
+import { useModalStore } from "@/context/modalStore";
 import { useStateStore } from "@/context/stateStore";
 
-export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToShow, dashToShow, handleDaySelected, daySelected }: { handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, dashToShow: string, indexShown: boolean, setIndexShown: (indexShown: boolean) => void, colorMap: { color: string, title: string }[], handleDaySelected: (date: string) => void, daySelected: string }) {
+export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToShow, dashToShow, handleDaySelected, daySelected }: { handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, dashToShow: string, indexShown: boolean, setIndexShown: (indexShown: boolean) => void, colorMap: { color: string, title: string }[], handleDaySelected: (date: Date) => void, daySelected: Date }) {
     const isSmallestBreakpoint = useStateStore((state) => state.widthQuery) < 400 ? true : false;
+
+    const setShowCalendar = useModalStore(state => state.setShowCalendar);
+
     return (
         <div className="flex flex-row justify-start items-center space-x-1 md:space-x-5 pr-2 w-full">
             {/**<select id='dropDownObjectSelect' name="dropDownObjectSelect" className="text-xs md:text-base hover:bg-gray-400 bg-transparent border-none rounded-md" onChange={(e) => {
@@ -21,14 +25,14 @@ export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToS
             {dashToShow !== 'calendar' ?
                 (
                     <button className="text-base hover:bg-gray-400 rounded-md px-1 text-xs md:text-base" onClick={() => {
-                        handleDaySelected(daySelected ?? daySelected);
-                        handleDashToShow('calendar', 'calendar');
+                        handleDaySelected(daySelected);
+                        setShowCalendar(true);
                     }}>
                         {'Calendar'}
                     </button>
                 ) : (
                     <button className="text-base hover:bg-gray-400 rounded-md px-1 text-xs md:text-base" onClick={() => {
-                        handleDashToShow('calendar', 'calendar');
+                        setShowCalendar(true);
                     }}>
                         {'Select Day'}
                     </button>

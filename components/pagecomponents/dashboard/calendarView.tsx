@@ -23,7 +23,7 @@ function ConvertTime(object: string) {
     return timeToShow;
 }
 
-export default function CalendarView({ adminID, handleDateDecrease, handleDateIncrease, entriesOTD, daySelected, handleDaySelected, otdLength, handleCats, handleDescriptions, handleGoals, handleTotalTime, showCats, showDescriptions, showGoals, showTotTime }: { adminID: boolean, handleDateDecrease: () => void, handleDateIncrease: () => void, entriesOTD: EntriesOTDType[], daySelected: string, handleDaySelected: (daySelected: string) => void, otdLength: number, handleCats: () => void, handleDescriptions: () => void, handleGoals: () => void, handleTotalTime: () => void, showCats: boolean, showDescriptions: boolean, showGoals: boolean, showTotTime: boolean }) {
+export default function CalendarView({ adminID, handleDateDecrease, handleDateIncrease, entriesOTD, daySelected, handleDaySelected, otdLength, handleCats, handleDescriptions, handleGoals, handleTotalTime, showCats, showDescriptions, showGoals, showTotTime }: { adminID: boolean, handleDateDecrease: () => void, handleDateIncrease: () => void, entriesOTD: EntriesOTDType[], daySelected: Date, handleDaySelected: (daySelected: Date) => void, otdLength: number, handleCats: () => void, handleDescriptions: () => void, handleGoals: () => void, handleTotalTime: () => void, showCats: boolean, showDescriptions: boolean, showGoals: boolean, showTotTime: boolean }) {
 
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const setModalParent = useModalStore((state) => state.setModalParent);
@@ -35,7 +35,7 @@ export default function CalendarView({ adminID, handleDateDecrease, handleDateIn
                     <p className="hover:bg-gray-400">{'<'}</p>
                 </button>
                 <h1 className={`text-sm md:text-base font-semibold text-center w-2/3 border-b border-black pb-5`}>
-                    {daySelected && daySelected}
+                    {daySelected.toLocaleDateString()}
                 </h1>
                 <button className="text-base" onClick={handleDateIncrease}>
                     <p className="hover:bg-gray-400">{'>'}</p>

@@ -1,18 +1,14 @@
 'use client'
 
-import { DateClickArg } from '@fullcalendar/interaction';
-import { useCallback, useEffect, useState } from "react";
-import { DateSelectArg, EventClickArg, EventContentArg } from '@fullcalendar/core/index.js';
+import { useCallback, useEffect, useRef, useState } from "react";
 import React from 'react';
 import { IIndexedEntry } from '@/models/types/entry';
-import { ColorMapType } from '@/models/types/colorMap';
 import { dataType } from '@/components/pagecomponents/dashboard/statsView';
 import CalendarModal from './calendarmodal';
-import { Spinner } from '@/components/misc/Spinner';
-import { modals } from '@mantine/modals';
-import { Text } from '@mantine/core';
-import { toast } from 'sonner';
+import { Modal } from '@mantine/core';
 import { useModalStore } from '@/context/modalStore';
+import { useStore } from '@/context/dataStore';
+import { useHobbyStore } from "@/context/hobbyStore";
 
 export interface CalEvent {
     allDay: boolean;
@@ -22,124 +18,134 @@ export interface CalEvent {
     color: string;
 }
 
-export default function CalendarModalInit({ show, closeCalendar, adminIDBool, handleDaySelected, colorMap, entries, data, loading, handleLoading }: { show: boolean, closeCalendar: () => void, adminIDBool: boolean, handleDaySelected: (dateSelected: string) => void, colorMap: ColorMapType[], entries: IIndexedEntry[], data: dataType[], loading: boolean, handleLoading: () => void }) {
+type numericalColorMap = {
+    numOfSessions: number,
+    color: string
+}
+
+export default function CalendarModalInit() {
 
     //state
-    const [objectsInADay, setObjectsInADay] = useState<CalEvent[]>([]);
     const [indexOpen, setIndexOpen] = useState<boolean>(false);
-    const setModalOpen = useModalStore((state) => state.setModalOpen);
-    const setDashToShow = useModalStore((state) => state.setDashToShow);
+    const loadedData = useRef(false);
+    const nummericalColorMap = [
+        {
+            numOfSessions: 1,
+            color: 'red'
+        },
+        {
+            numOfSessions: 2,
+            color: 'orange'
+        },
+        {
+            numOfSessions: 3,
+            color: 'yellow'
+        },
+        {
+            numOfSessions: 4,
+            color: 'blue'
+        },
+        {
+            numOfSessions: 5,
+            color: 'green'
+        }
+    ] as numericalColorMap[]
+    //context
+    const handleDaySelected = useStore(state => state.setDaySelected);
+    const setShowCalendar = useModalStore(state => state.setShowCalendar);
+    const setDayData = useHobbyStore(state => state.setDayData);
+    const setDashToShow = useModalStore(state => state.setDashToShow);
+    const setModalOpen = useModalStore(state => state.setModalOpen);
+    const showCalendar = useModalStore(state => state.showCalendar);
+    const dashProps = useStore((state) => state.dashProps);
+
+    const sessionsFound = dashProps ? dashProps.sessionsFound : [] as IIndexedEntry[];
+    const transformedDashProps = useStore(state => state.transformedDashProps);
+    const perc = transformedDashProps.percentage;
+    let calData = perc ? perc.calData as dataType[] : [] as dataType[];
 
     //functions
-    const handleDayClick = (arg: DateClickArg) => {
-        const date = new Date(arg.dateStr + 'T00:00');
-        handleDaySelected(date.toLocaleDateString());
-        modals.openConfirmModal({
-            title: 'Please confirm',
-            children: (
-                <Text size="sm">
-                    Do you want to add sessions to this date or just view sessions done on this day?
-                </Text>
-            ),
-            labels: { confirm: 'Add a session', cancel: 'View day' },
-            onCancel: () => toast.info('Viewing date'),
-            onConfirm: () => {
-                setDashToShow('calendar');
-                setModalOpen('logsession');
-            },
+
+    const handleDaySelect = (arg: Date) => {
+        const sessionsOnThisDay = sessionsFound.filter((session) => {
+            const sessionDate = new Date(session.date);
+            return (
+                sessionDate.getFullYear() === arg.getFullYear() &&
+                sessionDate.getMonth() === arg.getMonth() &&
+                sessionDate.getDate() === arg.getDate()
+            );
         });
-        closeCalendar();
-    };
 
-    const handleDaySelect = (arg: DateSelectArg) => {
-        const date = new Date(arg.startStr + 'T00:00');
-        handleDaySelected(date.toLocaleDateString());
-        closeCalendar();
-    };
-
-    const handleEventClick = (arg: EventClickArg | EventContentArg) => {
-        if (adminIDBool) {
-            const date = new Date(arg.event.startStr + 'T00:00');
-            handleDaySelected(date.toLocaleDateString());
-            closeCalendar();
+        handleDaySelected(arg);
+        setDashToShow('calendar');
+        if (sessionsOnThisDay.length < 1) {
+            setModalOpen('logsession');
         }
-    }
+        setShowCalendar(false);
+    };
 
     const hydrateObjects = useCallback(async () => {
-        const uniqueDates = new Set<string>();
-        const calEvents = [] as CalEvent[];
 
-        if (!entries) {
-            return;
-        }
+        setDayData(calData)
 
-        entries.map((entry: IIndexedEntry) => {
-            if (entry) {
-                const dateOfEntry = entry.date;
-                if (!uniqueDates.has(dateOfEntry) && dateOfEntry) {
-
-                    uniqueDates.add(dateOfEntry);
-
-                    const entryDateToAdd = {
-                        allDay: true,
-                        start: dateOfEntry,
-                        end: dateOfEntry,
-                        editable: adminIDBool,
-                        color: 'transparent',
-                    }
-
-                    calEvents.push(entryDateToAdd);
-                }
-            }
-        });
-
-        if (!calEvents) {
-            return;
-        }
-
-        setObjectsInADay(calEvents);
-
-    }, [entries, adminIDBool]);
+    }, [calData, setDayData]);
 
     const handleIndexOpen = () => {
         setIndexOpen(!indexOpen);
     }
 
     useEffect(() => {
-        const initObjects = async () => {
-            await hydrateObjects();
+        if (showCalendar) {
+            if (loadedData.current === false) {
+                const initObjects = async () => {
+                    await hydrateObjects();
+                }
+                initObjects();
+                loadedData.current = true;
+            }
         }
-
-        initObjects();
-        if (loading) {
-            handleLoading();
-        }
-    }, [loading, handleLoading, hydrateObjects]);
+    }, [hydrateObjects, showCalendar]);
 
     return (
-        <div id="crud-modal" tabIndex={-1} aria-hidden={!show} className={`${show ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
-            <div className={`relative p-4 max-h-full`} style={{ width: `95%` }}>
-                <div className={`relative bg-white rounded-lg shadow dark:bg-gray-700`}>
-                    <div className={`flex items-center justify-between space-x-4 p-2 border-b rounded-t border-gray-400 w-full`}>
+        <Modal.Root opened={showCalendar} onClose={() => setShowCalendar(false)} centered>
+            <Modal.Overlay backgroundOpacity={.55} blur={3} className="drop-shadow-xl" />
+            <Modal.Content>
+                <Modal.Header>
+                    <div className="flex flex-row justify-between items-center justify-evenly h-content w-full">
+                        <Modal.Title>
+                            <p className="font-semibold text-lg underline">
+                                Pick a day
+                            </p>
+                        </Modal.Title>
 
-                        <h3 className={`text-lg font-semibold text-gray-900 dark:text-white`}>
-                            Calendar
-                        </h3>
-                        <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal" onClick={() => { closeCalendar() }}>
-                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                            </svg>
-                            <span className="sr-only">Close modal</span>
-                        </button>
+                        <Modal.CloseButton />
                     </div>
-                    {loading ? (
-                        <Spinner />
-                    ) : (
-                        <CalendarModal adminIDBool={adminIDBool} colorMap={colorMap} data={data} handleIndexOpen={handleIndexOpen} handleDaySelect={handleDaySelect} handleEventClick={handleEventClick} handleDayClick={handleDayClick} indexOpen={indexOpen} objectsInADay={objectsInADay} />
-                    )}
+                </Modal.Header>
+                <div className='flex flex-col justify-start items-center'>
+                    <CalendarModal handleDaySelect={handleDaySelect} />
+                    <div className='flex flex-row h-content w-full border-t border-black px-2 justify-between items-start'>
+                        <button type="button" onClick={handleIndexOpen} className="py-1 text-blue-500 hover:text-blue-200">
+                            {indexOpen ? 'Close Color Index' : 'Open Color Index'}
+                        </button>
+                        {indexOpen &&
+                            <div className={`grid grid-cols-2 grid-rows-2 p-2 scrollbar-thin scrollbar-webkit space-y-1`} style={{ overflow: 'auto' }}>
+                                {nummericalColorMap.map((map: numericalColorMap, index: number) => {
+                                    const color = map.color;
+                                    const numOfSessions = map.numOfSessions;
+                                    return (
+                                        <React.Fragment key={index}>
+                                            <div key={index} className='flex flex-row items-center'>
+                                                <div className="h-2 w-2 rounded-full mr-2 border border-black" style={{ backgroundColor: color }} />
+                                                <p>{numOfSessions === 5 ? `5+ sessions` : `${numOfSessions} sessions`}</p>
+                                            </div>
+                                        </React.Fragment>
+                                    );
+                                })}
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
-        </div>
+            </Modal.Content>
+        </Modal.Root>
     )
-
 }

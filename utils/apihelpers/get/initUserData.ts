@@ -79,16 +79,12 @@ export async function initData() {
     userStore.setUserInfo(userInfo);
 
     const thisMonth = useStore.getState().thisMonth;
-    const daySelected = useStore.getState().daySelected;
-
-    if (!daySelected) {
-      useStore.getState().setDaySelected(new Date().toLocaleDateString())
-    }
 
     if (!thisMonth) {
       useStore.getState().setThisMonth(new Date().getMonth());
     }
 
+    const thisYear = new Date().getFullYear();
     const timeData = await SetDashParams({ userInfo: userInfo, month: thisMonth }) as InitType;
 
     if (!timeData) {
@@ -108,7 +104,7 @@ export async function initData() {
       return { status: false, message: 'Error initializing newDashProps' };
     }
 
-    const initialized = await DashZustandInit({ userInfo, thisMonth, totalTimePerMonth, sessionsFound, fieldObjects, objectToUse }) as { status: boolean, message: string };
+    const initialized = await DashZustandInit({ userInfo, thisMonth, totalTimePerMonth, sessionsFound, fieldObjects, objectToUse, thisYear }) as { status: boolean, message: string };
 
     if (!initialized) {
       return { status: false, message: 'Error initializing initialized' };

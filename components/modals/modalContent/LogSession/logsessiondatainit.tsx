@@ -4,7 +4,7 @@ import { useStore } from "@/context/dataStore";
 import { useHobbyStore } from "@/context/hobbyStore";
 import { useModalStore } from "@/context/modalStore";
 import { IUserObject } from "@/models/types/userObject";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LogSessionModal from "./logsession";
 import { AttemptCreateSession } from "@/utils/apihelpers/create/attemptToCreateSession";
 import { IEntry } from "@/models/types/entry";
@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { User } from "next-auth";
 import { CombineNewAndOld } from "@/utils/data/combineData";
 import DashZustandInit from "@/utils/data/dashZustandInit";
+import { useForm, UseFormReturnType } from "@mantine/form";
 
 function formatDate(dateString: string) {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
@@ -26,6 +27,14 @@ export type newSesh = {
     hobbyTitle: string,
     newIndex: number,
     hobbyTitleIndex: number
+}
+
+export type logSessionType = {
+    hobbyKeyId: number, session: string; time: string;
+}
+
+export type LogSessionFormType = {
+    newSessions: logSessionType[]
 }
 
 export default function LogSessionDataInit() {
@@ -43,54 +52,36 @@ export default function LogSessionDataInit() {
     const [sessions, setSessions] = useState([{ hobby: '', time: '' }]);
     const dashProps = useStore(state => state.dashProps);
     const thisMonth = useStore(state => state.thisMonth);
+    const thisYear = new Date().getFullYear();
     const daySelected = useStore(state => state.daySelected);
+    const setDaySelected = useStore(state => state.setDaySelected);
+    const [formReadyHobbies, setFormReadyHobbies] = useState<logSessionType[]>([]);
 
-    const addSession = () => {
-        setSessions([...sessions, { hobby: '', time: '' }]);
-    };
+    const logSessionForm = useForm({
+        mode: 'uncontrolled',
+        initialValues: {
+            newSessions: [] as { hobbyKeyId: number, session: string, time: string }[]
+        },
+        validate: {
+            newSessions: (value) => value.length < 0 ? 'Sessions cannot be empty!' : null
+        }
+    });
+
+    const handleDaySelected = (arg: Date) => {
+        setDaySelected(arg);
+    }
 
     const handleResetSessions = () => {
         setSessions([{ hobby: '', time: '' }]);
     }
 
-    const handleSessionChange = (index: number, field: string, value: string) => {
-        const newSessions = [...sessions];
-        if (newSessions[index]) {
-            if (field === 'hobby' || field === 'time') {
-                newSessions[index][field] = value;
-            }
-        }
-        setSessions(newSessions);
-    };
-
-    const handleRemoveItem = (i: number) => {
-        const newSeshs = sessions.filter((_sesh, index) => index !== i);
-        let seshIterator = [] as { hobby: string, time: string }[]
-        newSeshs.forEach(sesh => {
-            if (sesh) {
-                seshIterator.push(sesh)
-            }
-        })
-        if (seshIterator) {
-            setSessions(seshIterator);
-        }
-    };
-
-    const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleCreate = async ({ logSessionForm }: { logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) => {
         console.log('handleLogSession function called');
-        event.preventDefault();
-        const form = new FormData(event.currentTarget);
 
         // if (!id) {
         //     console.log('You must be logged in to log a session');
         //     return;
         // }
-
-        const date = form.get('modalSessionDate');
-        if (date === null || date === undefined || date === '') {
-            console.log('Date is required');
-            return;
-        }
 
         if (!userObjects) {
             toast.warning('Create a Hobby before logging a session');
@@ -112,11 +103,14 @@ export default function LogSessionDataInit() {
 
         const sessionEntries = [];
         for (let i = 0; ; i++) {
-            const hobbyTitle = form.get(`modalSessionHobby-${i}`) as string;
+            const thisSession = logSessionForm.getValues().newSessions[i];
 
+            if (!thisSession) {
+                break;
+            }
 
-
-            const time = form.get(`modalSessionTime-${i}`) as string;
+            const hobbyTitle = thisSession.session;
+            const time = thisSession.time;
 
             if (hobbyTitle === null || hobbyTitle === undefined || hobbyTitle === '' || time === null || time === undefined || time === '') {
                 break;
@@ -132,8 +126,9 @@ export default function LogSessionDataInit() {
             return;
         }
 
-        let sessionsToAdd = [] as newSesh[]
+        let sessionsToAdd = [] as newSesh[];
 
+        const date = formatDate(daySelected.toLocaleDateString())
         for (const session of sessionEntries) {
             const newSession = { value: session.time, date: date } as IEntry;
             const headers = { 'Authorization': `Bearer ${email}` };
@@ -167,7 +162,8 @@ export default function LogSessionDataInit() {
             totalTimePerMonth: dashProps.totalTimePerMonth,
             sessionsFound: dashProps.sessionsFound,
             fieldObjects: dashProps.fieldObjects,
-            objectToUse: dashProps.objectToUse
+            objectToUse: dashProps.objectToUse,
+            thisYear: thisYear
         });
 
         if (!reInit) {
@@ -186,7 +182,15 @@ export default function LogSessionDataInit() {
         setModalOpen(title);
     }
 
-    const formattedDate = formatDate(daySelected ? daySelected : '');
+    useEffect(() => {
+        let newFormReady = [] as logSessionType[]
+        titles.forEach((title, index) => {
+            const mapping = { hobbyKeyId: index, session: title, time: '0' } as logSessionType;
+            const newMapp = [...newFormReady, mapping];
+            newFormReady = newMapp;
+        });
+        setFormReadyHobbies(newFormReady)
+    }, [titles])
 
     return (
         <div id="crud-modal" tabIndex={-1} aria-hidden={modalOpen === 'logsession' ? "true" : "false"} className={`${modalOpen === 'logsession' ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
@@ -196,14 +200,14 @@ export default function LogSessionDataInit() {
                         <h3 className={`text-lg font-semibold text-gray-900 dark:text-white`}>
                             Log Session
                         </h3>
-                        <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal" onClick={() => { setModalOpen(''); setModalParent(''); handleResetSessions(); }}>
+                        <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal" onClick={() => { setModalOpen(''); setModalParent(''); handleResetSessions(); logSessionForm.clearErrors(); logSessionForm.reset() }}>
                             <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                             </svg>
                             <span className="sr-only">Close modal</span>
                         </button>
                     </div>
-                    <LogSessionModal formattedDate={formattedDate} handleCreate={handleCreate} hobbyTitles={titles} handleModalOpen={handleModalOpen} sessions={sessions} addSession={addSession} handleSessionChange={handleSessionChange} handleRemoveItem={handleRemoveItem} handleResetSessions={handleResetSessions} />
+                    <LogSessionModal handleCreate={handleCreate} handleModalOpen={handleModalOpen} sessions={sessions} handleResetSessions={handleResetSessions} daySelected={daySelected} handleDaySelected={handleDaySelected} logSessionForm={logSessionForm} hobbyTitles={formReadyHobbies} />
                 </div>
             </div>
         </div>
