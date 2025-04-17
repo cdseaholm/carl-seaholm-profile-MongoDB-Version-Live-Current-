@@ -1,6 +1,6 @@
 export interface EntriesOTDType {
     hobbyTitle: string;
-    date: string;
+    date: Date;
     value: string;
     descriptions: string[];
     goals: string[];

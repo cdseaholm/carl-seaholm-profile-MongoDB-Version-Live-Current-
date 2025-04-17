@@ -20,13 +20,14 @@ export type InitializedData = {
     setModalData: { categories: string[]; titles: string[]; };
 }
 
-export default async function DashZustandInit({ thisMonth, totalTimePerMonth, sessionsFound, fieldObjects, objectToUse }: {
+export default async function DashZustandInit({ thisMonth, totalTimePerMonth, sessionsFound, fieldObjects, objectToUse, thisYear }: {
     userInfo: IUser,
     thisMonth: number,
     totalTimePerMonth: number[],
     sessionsFound: IIndexedEntry[],
     fieldObjects: IFieldObject[],
-    objectToUse: IUserObject
+    objectToUse: IUserObject,
+    thisYear: number
 }) {
 
     try {
@@ -36,8 +37,8 @@ export default async function DashZustandInit({ thisMonth, totalTimePerMonth, se
         if (!perc) {
             return { status: false, message: 'perc error' }
         }
-
-        const dataSet = await GetDataset({ objectToUse: objectToUse, thisMonth: thisMonth, fields: fieldObjects, entries: sessionsFound }) as DataSets;
+        
+        const dataSet = await GetDataset({ objectToUse: objectToUse, thisMonth: thisMonth, thisYear: thisYear, fields: fieldObjects, entries: sessionsFound }) as DataSets;
 
         if (!dataSet) {
             return { status: false, message: 'dataSet error' }

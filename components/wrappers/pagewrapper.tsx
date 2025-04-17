@@ -74,8 +74,8 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
   }, []);
 
   useEffect(() => {
-    const thisDay = new Date().toLocaleDateString() as string;
-    const initOTDs = async (dayToUse: string, dashPropsToUse: DashProps) => {
+    const thisDay = new Date();
+    const initOTDs = async (dayToUse: Date, dashPropsToUse: DashProps) => {
       await OfTheDays({ objectToUse: dashPropsToUse.objectToUse, sessionsFound: dashPropsToUse.sessionsFound, userObjects: dashPropsToUse.userObjects, daySelected: dayToUse, fieldObjects: dashPropsToUse.fieldObjects }) as EntriesOTDType[];
     }
     if (dashProps === null) {
@@ -87,7 +87,7 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
     } else {
       initOTDs(daySelected, dashProps);
     }
-  }, [daySelected, dashProps, OfTheDays, setDaySelected])
+  }, [daySelected, dashProps, setDaySelected])
 
   return (
     <main className="w-screen h-screen scrollbar-thin scrollbar-webkit bg-white/50" style={{ overflowX: 'hidden', overflowY: 'auto' }}>

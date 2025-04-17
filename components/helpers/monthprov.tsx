@@ -1,19 +1,19 @@
-export async function MonthProv(monthsGiven: number[], yearGiven: number) {
+export async function MonthProv(monthsGiven: { month: number, year: number }[]) {
     let monthsReturned = [] as string[];
     let colorsReturned = [] as string[];
-    if (monthsGiven === null || yearGiven === null) {
+    if (monthsGiven === null) {
         return { monthNames: [] as string[], monthColors: [] as string[], message: "Month or year not provided" }
     } else {
         for (let i = 0; i < monthsGiven.length; i++) {
-            let thisMonth = monthsGiven[i] as number;
+            let thisMonth = monthsGiven[i].month as number;
             if (thisMonth < 0 || thisMonth > 11) {
                 return { monthNames: [] as string[], monthColors: [] as string[], message: "Month must be between 0 and 11" }
-            } else if (monthsGiven === undefined || yearGiven === undefined) {
+            } else if (monthsGiven === undefined) {
                 return { monthNames: [] as string[], monthColors: [] as string[], message: "Month or year not provided" }
             } else {
                 let monthName = '';
                 let monthColor = '';
-                let yearToUse = yearGiven.toString().slice(2, 4);
+                let yearToUse = monthsGiven[i].year.toString().slice(2, 4);
                 switch (thisMonth) {
                     case 0:
                         monthName = `Jan, ${yearToUse}`;

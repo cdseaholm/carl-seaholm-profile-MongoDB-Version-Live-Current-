@@ -4,18 +4,19 @@ import { IIndexedEntry } from "@/models/types/entry";
 import { IField, IFieldObject } from "@/models/types/field";
 import { IUserObject } from "@/models/types/userObject";
 import { IUserObjectIndexed } from "@/models/types/userObjectIndexed";
+import { isSameYear, isThisYear, subYears } from "date-fns";
 
 export type BarData = { date: string, time: number, color: string };
 
 export async function BeginPercentage({ objectToUse, totalTime, fields, sessions }: { objectToUse: IUserObject, totalTime: number[], fields: IFieldObject[], sessions: IIndexedEntry[] }) {
     let newData = [] as dataType[];
     let calData = [] as dataType[];
-    if (!objectToUse) {  
+    if (!objectToUse) {
         return newData;
     }
 
     const objectIndicies = objectToUse.indexes as IUserObjectIndexed[];
-    if (!objectIndicies) {  
+    if (!objectIndicies) {
         return newData;
     }
     if (!fields) {
@@ -26,7 +27,7 @@ export async function BeginPercentage({ objectToUse, totalTime, fields, sessions
     if (!fieldsLength) {
         return newData;
     }
-    if (!totalTime) { 
+    if (!totalTime) {
         return newData;
     }
     const reducedTime = totalTime.reduce((a: number, b: number) => a + b, 0);
@@ -60,11 +61,12 @@ export async function BeginPercentage({ objectToUse, totalTime, fields, sessions
                             sessionIndexes.forEach((session, _index) => {
                                 let found = sessions.find((sesh, _index) => sesh.trueIndex === session)?.date;
                                 if (found) {
+                                    const newDate = new Date(found);
                                     const calPoint = {
                                         name: title,
                                         value: val / reducedTime * 100,
                                         color: hobbyColor,
-                                        date: found
+                                        date: newDate
                                     }
                                     if (calPoint) {
                                         calData.push(calPoint)
@@ -83,16 +85,15 @@ export async function BeginPercentage({ objectToUse, totalTime, fields, sessions
     return { newData: newData, calData: calData };
 }
 
-export async function GetDataset({ objectToUse, thisMonth, entries, fields }: { objectToUse: IUserObject, thisMonth: number, entries: IIndexedEntry[], fields: IFieldObject[] }) {
+export async function GetDataset({ objectToUse, thisMonth, thisYear, entries, fields }: { objectToUse: IUserObject, thisMonth: number, thisYear: number, entries: IIndexedEntry[], fields: IFieldObject[] }) {
     let returnData = {} as { monthNames: string[], monthColors: string[], newData: BarData[], newDataTwo: BarData[] };
-    const years = new Date().getFullYear();
-    const months = await SetMonthsFunc(thisMonth);
+    const months = await SetMonthsFunc(thisMonth, thisYear);
 
     if (!objectToUse) {
         return returnData;
     }
 
-    const { monthNames, monthColors } = await MonthProv(months, years) as unknown as { monthNames: string[], monthColors: string[], message: string };
+    const { monthNames, monthColors } = await MonthProv(months) as unknown as { monthNames: string[], monthColors: string[], message: string };
 
     if (!monthColors || !monthNames) {
         return returnData;
@@ -124,17 +125,19 @@ export async function GetDataset({ objectToUse, thisMonth, entries, fields }: { 
                 if (thisDate === null) {
                     return;
                 }
-                const dateMonth = new Date(thisDate).getMonth();
-                months.forEach((month: number, index: number) => {
-                    if (entryVal !== -1 && ((month + 12)) % 12 === dateMonth) {
-                        if (totalTimeFixedPerMonth[index] !== undefined) {
-                            totalTimeFixedPerMonth[index] += entryVal;
+                if (isThisYear(thisDate) || isSameYear(thisDate, subYears(new Date(), 1))) {
+                    const dateMonth = new Date(thisDate).getMonth();
+                    months.forEach((month: { month: number, year: number }, index: number) => {
+                        if (entryVal !== -1 && ((month.month + 12)) % 12 === dateMonth) {
+                            if (totalTimeFixedPerMonth[index] !== undefined) {
+                                totalTimeFixedPerMonth[index] += entryVal;
+                            }
+                            if (sessionsPerMonth[index] !== undefined) {
+                                sessionsPerMonth[index] += 1;
+                            }
                         }
-                        if (sessionsPerMonth[index] !== undefined) {
-                            sessionsPerMonth[index] += 1;
-                        }
-                    }
-                });
+                    });
+                }
             });
         });
     }
@@ -209,12 +212,14 @@ export async function FillTracker({ objectToUse, thisMonth, fields, entries }: {
             const dateToUse = entries[currIndex]?.date as string;
             if (dateToUse) {
                 const date = new Date(dateToUse);
-                const currMonth = date.getMonth();
-                if (currMonth === thisMonth) {
+                if (isThisYear(date)) {
+                    const currMonth = date.getMonth();
+                    if (currMonth === thisMonth) {
 
-                    const day = date.getDate();
-                    if (!daysWithHobbies.includes(day)) {
-                        daysWithHobbies.push(day);
+                        const day = date.getDate();
+                        if (!daysWithHobbies.includes(day)) {
+                            daysWithHobbies.push(day);
+                        }
                     }
                 }
             }
@@ -232,14 +237,16 @@ export async function FillTracker({ objectToUse, thisMonth, fields, entries }: {
     return { newTrackerData: newTrackerData, daysWithHobbies: daysWithHobbies, monthLength: monthLength };
 }
 
-export async function SetMonthsFunc(thisMonth: number): Promise<number[]> {
-    const months = [];
+export async function SetMonthsFunc(thisMonth: number, thisYear: number): Promise<{ month: number, year: number }[]> {
+    const months = [] as { month: number, year: number }[];
     for (let i = 4; i >= 0; i--) {
         let month = thisMonth - i;
+        let yearToUse = thisYear;
         if (month < 0) {
             month += 12;
+            yearToUse = thisYear - 1;
         }
-        months.push(month % 12);
+        months.push({ month: month % 12, year: yearToUse });
     }
     return months;
 }

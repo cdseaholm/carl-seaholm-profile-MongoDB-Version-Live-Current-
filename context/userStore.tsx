@@ -9,7 +9,9 @@ interface UserStore {
     userRecipes: IRecipe[],
     setUserRecipes: (userRecipes: IRecipe[]) => void
     userHobbies: IHobby[],
-    setUserHobbies: (userHobbies: IHobby[]) => void
+    setUserHobbies: (userHobbies: IHobby[]) => void,
+    adminIDBool: boolean,
+    setAdminIDBool: (adminIDBool: boolean) => void
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -18,5 +20,7 @@ export const useUserStore = create<UserStore>((set) => ({
     userRecipes: [] as IRecipe[],
     setUserRecipes: (info) => set({ userRecipes: info }),
     userHobbies: [] as IHobby[],
-    setUserHobbies: (info) => set({ userHobbies: info })
+    setUserHobbies: (info) => set({ userHobbies: info }),
+    adminIDBool: false,
+    setAdminIDBool: (bool) => set({adminIDBool: bool})
 }));

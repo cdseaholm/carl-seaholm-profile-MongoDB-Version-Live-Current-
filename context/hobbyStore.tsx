@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { IHobby } from '../models/types/hobby';
+import { dataType } from '@/components/pagecomponents/dashboard/statsView';
 
 interface HobbyStore {
     filterItem: string;
@@ -18,6 +19,8 @@ interface HobbyStore {
     setTitles: (titles: string[]) => void;
     dashToShow: string;
     setDashToShow: (dashToShow: string) => void;
+    dayData: dataType[],
+    setDayData: (dayData: dataType[]) => void;
 }
 
 export const useHobbyStore = create<HobbyStore>((set) => ({
@@ -36,5 +39,7 @@ export const useHobbyStore = create<HobbyStore>((set) => ({
     titles: [] as string[],
     setTitles: (titles) => set({ titles }),
     dashToShow: 'stats',
-    setDashToShow: (dashToShow) => set({dashToShow}),
+    setDashToShow: (dashToShow) => set({ dashToShow }),
+    dayData: [] as dataType[],
+    setDayData: (data: dataType[]) => set({ dayData: data })
 }));

@@ -15,7 +15,7 @@ async function CreateSessions({ sessions, parsedDate }: { sessions: IIndexedEntr
     return seshsForTheDay;
 }
 
-export async function OfTheDays({ objectToUse, daySelected, userObjects, fieldObjects, sessionsFound }: { objectToUse: IUserObject, daySelected: string, userObjects: IUserObject[], fieldObjects: IFieldObject[], sessionsFound: IIndexedEntry[] }) {
+export async function OfTheDays({ objectToUse, daySelected, userObjects, fieldObjects, sessionsFound }: { objectToUse: IUserObject, daySelected: Date, userObjects: IUserObject[], fieldObjects: IFieldObject[], sessionsFound: IIndexedEntry[] }) {
 
     if (!objectToUse) {
         return [] as EntriesOTDType[];
