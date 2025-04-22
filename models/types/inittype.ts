@@ -4,11 +4,11 @@ import { IFieldObject } from "./field"
 import { IUserObject } from "./userObject"
 
 export type InitType = {
-    totalTimePerMonth: number[] | null,
-    totalCounter: number[] | null,
-    userObjects: IUserObject[] | null,
-    sessionsFound: IIndexedEntry[] | null,
-    colorMap: ColorMapType[] | null,
-    fieldObjects: IFieldObject[] | null,
-    firstObject: IUserObject | null
+    totalTimePerPastFiveMonths: number[],
+    counterPerPastFiveMonths: number[],
+    userObjects: IUserObject[],
+    sessionsFound: IIndexedEntry[],
+    colorMap: ColorMapType[],
+    fieldObjects: IFieldObject[],
+    firstObject: IUserObject
 }

@@ -1,5 +1,6 @@
 import { MonthProv } from "@/components/helpers/monthprov";
 import { dataType, Tracker } from "@/components/pagecomponents/dashboard/statsView";
+import { useHobbyStore } from "@/context/hobbyStore";
 import { IIndexedEntry } from "@/models/types/entry";
 import { IField, IFieldObject } from "@/models/types/field";
 import { IUserObject } from "@/models/types/userObject";
@@ -30,6 +31,7 @@ export async function BeginPercentage({ objectToUse, totalTime, fields, sessions
     if (!totalTime) {
         return newData;
     }
+
     const reducedTime = totalTime.reduce((a: number, b: number) => a + b, 0);
 
     if (objectIndicies && reducedTime > 0) {
@@ -61,12 +63,13 @@ export async function BeginPercentage({ objectToUse, totalTime, fields, sessions
                             sessionIndexes.forEach((session, _index) => {
                                 let found = sessions.find((sesh, _index) => sesh.trueIndex === session)?.date;
                                 if (found) {
-                                    const newDate = new Date(found);
+                                    const [year, month, day] = found.split('-').map(Number);
+                                    const date = new Date(year, month - 1, day);
                                     const calPoint = {
                                         name: title,
                                         value: val / reducedTime * 100,
                                         color: hobbyColor,
-                                        date: newDate
+                                        date: date
                                     }
                                     if (calPoint) {
                                         calData.push(calPoint)
@@ -121,7 +124,8 @@ export async function GetDataset({ objectToUse, thisMonth, thisYear, entries, fi
             entryIndicies.forEach((indicy) => {
                 const entry = entries[indicy] as IIndexedEntry;
                 const entryVal = entry ? Number(entry.value) as number : -1;
-                const thisDate = entry ? entry.date as string : null;
+                const [year, month, day] = entry.date.split('-').map(Number);
+                const thisDate = new Date(year, month - 1, day);
                 if (thisDate === null) {
                     return;
                 }
@@ -174,18 +178,12 @@ export async function GetDataset({ objectToUse, thisMonth, thisYear, entries, fi
 }
 
 
-export async function FillTracker({ objectToUse, thisMonth, fields, entries }: { objectToUse: IUserObject, thisMonth: number, fields: IFieldObject[], entries: IIndexedEntry[] }) {
+export async function FillTracker({ thisMonth, fields, entries }: { thisMonth: number, fields: IFieldObject[], entries: IIndexedEntry[] }) {
 
-    if (!objectToUse) {
-        return;
-    }
-    let objectIndicies = objectToUse.indexes as IUserObjectIndexed[]
-    if (!objectIndicies) {
-        return;
-    }
+    const objectIndicies = useHobbyStore.getState().userObjectsIndexed;
 
-    let daysWithHobbies = [] as number[];
     const monthLength = new Date(new Date().getFullYear(), thisMonth + 1, 0).getDate();
+    let daysWithHobbies = new Array(monthLength).fill(false);
     let indicies = [] as number[]
     for (let i = 0; i < objectIndicies.length; i++) {
         let spec = objectIndicies[i] as IUserObjectIndexed
@@ -198,43 +196,42 @@ export async function FillTracker({ objectToUse, thisMonth, fields, entries }: {
             if (specificField) {
                 let entryIndicies = specificField.entryIndexes;
                 if (entryIndicies) {
-                    entryIndicies.map((indicy: number, _index: number) => {
-                        indicies = [...indicies, indicy]
-                    })
+                    entryIndicies.forEach((indicy: number) => {
+                        indicies.push(indicy);
+                    });
                 }
             }
         }
     }
 
+    const today = new Date();
     for (let i = 0; i < indicies.length; i++) {
         let currIndex = indicies[i] as number;
         if (currIndex !== undefined) {
-            const dateToUse = entries[currIndex]?.date as string;
+            const dateToUse = entries[currIndex]?.date;
             if (dateToUse) {
-                const date = new Date(dateToUse);
-                if (isThisYear(date)) {
-                    const currMonth = date.getMonth();
-                    if (currMonth === thisMonth) {
-
-                        const day = date.getDate();
-                        if (!daysWithHobbies.includes(day)) {
-                            daysWithHobbies.push(day);
-                        }
-                    }
+                const [year, month, day] = dateToUse.split('-').map(Number);
+                const date = new Date(year, month - 1, day);
+                if (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth()) {
+                    const dayOfMonth = date.getDate();
+                    daysWithHobbies[dayOfMonth - 1] = true;
                 }
+            } else {
+                console.log("Invalid date for index:", currIndex);
             }
         }
     }
     const newTrackerData = [] as Tracker[];
-    for (let i = 1; i <= monthLength; i++) {
-        if (daysWithHobbies?.includes(i)) {
+    daysWithHobbies.slice(0, today.getDate()).forEach((day) => {
+        if (day === true) {
             newTrackerData.push({ color: 'green', tooltip: 'Hobby completed' });
         } else {
             newTrackerData.push({ color: 'red', tooltip: 'No hobby completed' });
         }
-    }
+    });
 
-    return { newTrackerData: newTrackerData, daysWithHobbies: daysWithHobbies, monthLength: monthLength };
+
+    return { newTrackerData: newTrackerData, monthLength: monthLength };
 }
 
 export async function SetMonthsFunc(thisMonth: number, thisYear: number): Promise<{ month: number, year: number }[]> {

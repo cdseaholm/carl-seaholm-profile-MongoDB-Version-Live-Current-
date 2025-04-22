@@ -33,5 +33,4 @@ export const useLifeAspectStore = create<LifeAspectStore>((set) => ({
     setLifeDetailType: (lifeDetailType) => set({ lifeDetailType }),
     addLifeAspectDetailBool: false,
     setAddLifeAspectDetailBool: (addLifeAspectDetailBool) => set({ addLifeAspectDetailBool })
-
 }));

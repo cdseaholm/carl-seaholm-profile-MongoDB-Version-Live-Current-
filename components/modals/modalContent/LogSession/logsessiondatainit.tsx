@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
 import { CombineNewAndOld } from "@/utils/data/combineData";
-import DashZustandInit from "@/utils/data/dashZustandInit";
+import DashZustandInit from "@/utils/data/dashChartsInit";
 import { useForm, UseFormReturnType } from "@mantine/form";
 
 function formatDate(dateString: string) {
