@@ -57,7 +57,6 @@ export default function CalendarView({ adminID, handleDateDecrease, handleDateIn
                     </div>
                     <div className="grid grid-cols-2 justify-center items-center w-full h-full">
                         {entriesOTD && entriesOTD.map((entry: EntriesOTDType, index: number) => {
-                            
                             if (entry) {
                                 const timeToShow = ConvertTime(entry.totalMinutes);
                                 let goal;

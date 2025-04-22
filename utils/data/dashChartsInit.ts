@@ -5,9 +5,9 @@ import { IFieldObject } from "@/models/types/field";
 import { IUser } from "@/models/types/user";
 import { IUserObject } from "@/models/types/userObject";
 import { EntriesOTDType } from "@/models/types/otds";
-import { PercentageData } from "@/models/types/percentage";
-import { DataSets } from "@/models/types/dataSets";
-import { TrackerData } from "@/models/types/tracker";
+import { PercentageByHobbiesData } from "@/models/types/percentage";
+import { BarDataSets } from "@/models/types/dataSets";
+import { MonthlyTrackerData } from "@/models/types/tracker";
 import { TransformedDashProps, useStore } from "@/context/dataStore";
 import { useHobbyStore } from "@/context/hobbyStore";
 import { InitCategories } from "../apihelpers/get/initCategories";
@@ -20,7 +20,7 @@ export type InitializedData = {
     setModalData: { categories: string[]; titles: string[]; };
 }
 
-export default async function DashZustandInit({ thisMonth, totalTimePerMonth, sessionsFound, fieldObjects, objectToUse, thisYear }: {
+export default async function DashChartsInit({ thisMonth, totalTimePerMonth, sessionsFound, fieldObjects, objectToUse, thisYear }: {
     userInfo: IUser,
     thisMonth: number,
     totalTimePerMonth: number[],
@@ -32,26 +32,26 @@ export default async function DashZustandInit({ thisMonth, totalTimePerMonth, se
 
     try {
 
-        const perc = await BeginPercentage({ objectToUse: objectToUse, totalTime: totalTimePerMonth, fields: fieldObjects, sessions: sessionsFound }) as PercentageData;
+        const percentageByHobbies = await BeginPercentage({ objectToUse: objectToUse, totalTime: totalTimePerMonth, fields: fieldObjects, sessions: sessionsFound }) as PercentageByHobbiesData;
 
-        if (!perc) {
+        if (!percentageByHobbies) {
             return { status: false, message: 'perc error' }
         }
-        
-        const dataSet = await GetDataset({ objectToUse: objectToUse, thisMonth: thisMonth, thisYear: thisYear, fields: fieldObjects, entries: sessionsFound }) as DataSets;
 
-        if (!dataSet) {
+        const barDataSets = await GetDataset({ objectToUse: objectToUse, thisMonth: thisMonth, thisYear: thisYear, fields: fieldObjects, entries: sessionsFound }) as BarDataSets;
+
+        if (!barDataSets) {
             return { status: false, message: 'dataSet error' }
         }
 
-        const tracker = await FillTracker({ objectToUse: objectToUse, thisMonth: thisMonth, entries: sessionsFound, fields: fieldObjects }) as TrackerData;
+        const monthlyTracker = await FillTracker({ thisMonth: thisMonth, entries: sessionsFound, fields: fieldObjects }) as MonthlyTrackerData;
 
-        if (!tracker) {
+        if (!monthlyTracker) {
             return { status: false, message: 'tracker error' }
         }
 
-        let reTransformedDashProps = { percentage: perc, dataSet: dataSet, trackerData: tracker } as TransformedDashProps;
-        
+        let reTransformedDashProps = { percentageByHobbies: percentageByHobbies, barDataSets: barDataSets, monthlyTracker: monthlyTracker } as TransformedDashProps;
+
         useStore.getState().setTransformedDashProps(reTransformedDashProps);
 
         const setModalData = await InitCategories({ objectToUse: objectToUse, fieldObjects: fieldObjects }) as { categories: string[]; titles: string[]; }
@@ -59,7 +59,7 @@ export default async function DashZustandInit({ thisMonth, totalTimePerMonth, se
         if (!setModalData) {
             return { status: false, message: 'setModalData error' }
         }
-        
+
         useHobbyStore.getState().setTitles(setModalData.titles);
         useHobbyStore.getState().setCategories(setModalData.categories);
 

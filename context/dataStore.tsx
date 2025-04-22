@@ -4,9 +4,9 @@ import { IUserObject } from '@/models/types/userObject';
 import { IIndexedEntry } from '@/models/types/entry';
 import { ColorMapType } from '@/models/types/colorMap';
 import { IFieldObject } from '@/models/types/field';
-import { DataSets } from '@/models/types/dataSets';
-import { TrackerData } from '@/models/types/tracker';
-import { PercentageData } from '@/models/types/percentage';
+import { BarDataSets } from '@/models/types/dataSets';
+import { MonthlyTrackerData } from '@/models/types/tracker';
+import { PercentageByHobbiesData } from '@/models/types/percentage';
 import { EntriesOTDType } from '@/models/types/otds';
 
 export type DashProps = {
@@ -20,9 +20,9 @@ export type DashProps = {
 }
 
 export type TransformedDashProps = {
-  percentage: PercentageData;
-  trackerData: TrackerData;
-  dataSet: DataSets;
+  percentageByHobbies: PercentageByHobbiesData;
+  monthlyTracker: MonthlyTrackerData;
+  barDataSets: BarDataSets;
 }
 
 type Store = {

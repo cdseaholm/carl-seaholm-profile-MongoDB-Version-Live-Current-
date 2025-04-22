@@ -61,7 +61,7 @@ export default function CalendarModalInit() {
 
     const sessionsFound = dashProps ? dashProps.sessionsFound : [] as IIndexedEntry[];
     const transformedDashProps = useStore(state => state.transformedDashProps);
-    const perc = transformedDashProps.percentage;
+    const perc = transformedDashProps.percentageByHobbies;
     let calData = perc ? perc.calData as dataType[] : [] as dataType[];
 
     //functions

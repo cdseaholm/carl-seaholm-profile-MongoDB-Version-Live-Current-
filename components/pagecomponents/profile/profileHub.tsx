@@ -17,6 +17,7 @@ import { AttemptToUpdateOldModel } from "@/utils/apihelpers/edit/attemptToUpdate
 import { useUserStore } from "@/context/userStore";
 import { IRecipe } from "@/models/types/recipe";
 import { IHobby } from "@/models/types/hobby";
+import { useHobbyStore } from "@/context/hobbyStore";
 
 export default function ProfilePage() {
 
@@ -29,7 +30,7 @@ export default function ProfilePage() {
     const user = session?.user ? session.user : null;
     const userID = user?.email ? user.email : '';
     const headers = { 'Authorization': `Bearer ${userID}` };
-    const hobbies = useUserStore(state => state.userHobbies) as IHobby[];
+    const hobbies = useHobbyStore(state => state.userHobbies) as IHobby[];
     const recipes = [] as IRecipe[]
     const userInfo = useUserStore(state => state.userInfo);
 

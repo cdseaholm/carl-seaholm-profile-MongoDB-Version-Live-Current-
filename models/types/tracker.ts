@@ -1,7 +1,6 @@
 import { Tracker } from "@/components/pagecomponents/dashboard/statsView";
 
-export type TrackerData = {
+export type MonthlyTrackerData = {
     newTrackerData: Tracker[]; 
-    daysWithHobbies: number[]; 
     monthLength: number;
 }

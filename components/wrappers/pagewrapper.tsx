@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useStateStore } from "@/context/stateStore";
 import { getBaseUrl } from "@/utils/helpers/helpers";
-import { initData } from "@/utils/apihelpers/get/initUserData";
+import { initData } from "@/utils/apihelpers/get/initData/initData";
 import { toast } from "sonner";
 import { OfTheDays } from "@/utils/apihelpers/get/initOTDs";
 import { DashProps, useStore } from "@/context/dataStore";

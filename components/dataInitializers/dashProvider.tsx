@@ -5,7 +5,7 @@ import CalendarView from "../pagecomponents/dashboard/calendarView";
 import DashButtonBoard from "../pagecomponents/dashboard/dashButtonBoard";
 import InnerTemplate from "../pagetemplates/innerTemplate/innerTemplate";
 import MainChild from "../pagetemplates/mainchild/mainchild";
-import StatsView, { dataType } from "../pagecomponents/dashboard/statsView";
+import StatsView, { dataType, Tracker } from "../pagecomponents/dashboard/statsView";
 import React, { useEffect, useState } from "react";
 import LogSessionDataInit from "../modals/modalContent/LogSession/logsessiondatainit";
 import { BarData } from "@/app/actions/statsActions/statActions";
@@ -96,13 +96,13 @@ export default function DashProvider() {
     if (!transformedDashProps) {
         console.log('Error with transformed Props')
     }
-    const tracker = transformedDashProps.trackerData;
-    const perc = transformedDashProps.percentage;
-    const dataSet = transformedDashProps.dataSet;
+    const tracker = transformedDashProps.monthlyTracker;
+    const perc = transformedDashProps.percentageByHobbies;
+    const dataSet = transformedDashProps.barDataSets;
 
     const otdLength = entriesOTD as EntriesOTDType[] ? entriesOTD.length as number : 0;
     let newData = perc ? perc.newData as dataType[] : [] as dataType[];
-    let daysWithHobbies = tracker ? tracker.daysWithHobbies : [] as number[];
+    let daysWithHobbies = tracker ? tracker.newTrackerData : [] as Tracker[];
     let newBarData = dataSet ? dataSet.newData as BarData[] : [] as BarData[];
     let newBarDataTwo = dataSet ? dataSet.newDataTwo as BarData[] : [] as BarData[];
 

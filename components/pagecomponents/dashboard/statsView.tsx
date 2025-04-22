@@ -18,27 +18,26 @@ export interface Tracker {
     tooltip: string;
 }
 
-export default function StatsView({ data, barChartData, barChartDataTwo, daysWithHobbies, loading, handleLoading }: { data: dataType[], barChartData: { date: string, time: number, color: string }[], barChartDataTwo: { date: string, time: number, color: string }[], daysWithHobbies: number[], loading: boolean, handleLoading: () => void }) {
+export default function StatsView({ data, barChartData, barChartDataTwo, daysWithHobbies, loading, handleLoading }: { data: dataType[], barChartData: { date: string, time: number, color: string }[], barChartDataTwo: { date: string, time: number, color: string }[], daysWithHobbies: Tracker[], loading: boolean, handleLoading: () => void }) {
 
     const barOne = barChartData ? barChartData : [] as { date: string, time: number, color: string }[];
     const barTwo = barChartDataTwo ? barChartDataTwo : [] as { date: string, time: number, color: string }[];
-    const currentDay = new Date().getDate();
     const pieDataOne = data.map((d) => {
         return {
             value: parseFloat(d.value.toFixed(2)),
             name: d.name,
             color: d.color
         } as PieChartCell
-    }) as PieChartCell[]
+    }) as PieChartCell[];
 
     const pieDataTwo = [
         {
-            value: currentDay - daysWithHobbies.length,
+            value: daysWithHobbies.filter((day) => day.color === 'red').length,
             color: 'red',
             name: 'Days without',
         },
         {
-            value: daysWithHobbies.length,
+            value: daysWithHobbies.filter((day) => day.color === 'green').length,
             color: 'green',
             name: 'Days with',
         }

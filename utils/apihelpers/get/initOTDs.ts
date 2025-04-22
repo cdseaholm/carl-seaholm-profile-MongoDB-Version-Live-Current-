@@ -5,10 +5,12 @@ import { EntriesOTDType } from "@/models/types/otds";
 import { IUserObject } from "@/models/types/userObject";
 import { IUserObjectIndexed } from "@/models/types/userObjectIndexed";
 
-async function CreateSessions({ sessions, parsedDate }: { sessions: IIndexedEntry[], parsedDate: string }) {
-    let seshsForTheDay = [] as IIndexedEntry[]
+async function CreateSessions({ sessions, daySelected }: { sessions: IIndexedEntry[], daySelected: Date }) {
+    let seshsForTheDay = [] as IIndexedEntry[];
     sessions.forEach((sesh, _seshIndex) => {
-        if (sesh.date === parsedDate) {
+        const [year, month, day] = sesh.date.split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        if (date.toDateString() === daySelected.toDateString()) {
             seshsForTheDay.push(sesh);
         }
     });
@@ -20,9 +22,6 @@ export async function OfTheDays({ objectToUse, daySelected, userObjects, fieldOb
     if (!objectToUse) {
         return [] as EntriesOTDType[];
     }
-
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
-    let parsedDate = new Date(daySelected).toLocaleDateString('en-GB', options).split('/').reverse().join('-');
 
     if (!userObjects) {
         return [] as EntriesOTDType[];
@@ -43,8 +42,8 @@ export async function OfTheDays({ objectToUse, daySelected, userObjects, fieldOb
 
     let ents = [] as EntriesOTDType[];
 
-    const seshsForTheDay = await CreateSessions({ sessions: sessionsFound, parsedDate: parsedDate }) as IIndexedEntry[];
-    
+    const seshsForTheDay = await CreateSessions({ sessions: sessionsFound, daySelected: daySelected }) as IIndexedEntry[];
+
     if (!seshsForTheDay) {
         return [] as EntriesOTDType[];
     }

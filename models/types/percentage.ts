@@ -1,6 +1,6 @@
 import { dataType } from "@/components/pagecomponents/dashboard/statsView"
 
-export type PercentageData = {
+export type PercentageByHobbiesData = {
     newData: dataType[],
     calData: dataType[]
 }
