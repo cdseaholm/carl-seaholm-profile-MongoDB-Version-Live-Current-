@@ -59,7 +59,7 @@ export default function LandingPage() {
     const size = isBreakpoint ? 50 : 100;
     return (
 
-        <section className={`w-screen h-screen flex flex-col justify-between items-center p-2 py-12 sm:py-8 md:py-6 md:py-5 md:p-5`}>
+        <section className={`w-screen h-screen flex flex-col justify-start items-center p-2 py-6 md:py-5 md:p-5`}>
             <div className='flex flex-row justify-between items-center p-1 md:p-2 w-full h-content'>
                 <div className='flex flex-col justify-start items-start w-full h-content'>
                     <h1 className={`text-2xl md:text-5xl font-semibold text-slate-100 ${fadeOutBegin ? 'fade-out' : fadeInBegin ? 'fade-in' : ''} w-content h-content`}>
@@ -97,7 +97,7 @@ export default function LandingPage() {
                     }
                 </div>
             </div>
-            <div className='flex flex-row w-full h-content px-2 sm:px-8 items-center justify-evenly space-x-5 md:space-x-1'>
+            <div className='flex flex-row w-full h-full px-2 sm:px-8 items-center justify-evenly space-x-5 md:space-x-1'>
                 <div className='flex flex-col h-full w-full justify-center items-center space-y-4'>
                     <button className={`${buttonClass}`} onClick={navigateToDashboard}>
                         <p className={`${textClass} ${!dashShow && fadeOutBegin ? 'fade-out' : !fadeOutBegin && fadeInBegin ? `fade-in bg-cyan-900/20 hover:bg-cyan-900/40` : ''}`}>{`${!fadeInBegin && !fadeOutBegin ? '' : `${dashText[0]}`}`}</p>
@@ -105,10 +105,8 @@ export default function LandingPage() {
                     <button className={`${buttonClass}`} onClick={navigateToProfessional}>
                         <p className={`${textClass} ${!proShow && fadeOutBegin ? 'fade-out' : !fadeOutBegin && fadeInBegin ? `fade-in bg-cyan-900/20 hover:bg-cyan-900/40` : ''}`}>{`${!fadeInBegin && !fadeOutBegin ? '' : `${proText[0]}`}`}</p>
                     </button>
+                    {!fadeOutBegin && fadeInBegin ? <SocialBar fadeOutBegin={fadeOutBegin} fadeInBegin={fadeInBegin} /> : null}
                 </div>
-            </div>
-            <div className={`flex flex-row justify-end w-full h-content items-center p-2 ${fadeOutBegin ? 'fade-out' : fadeInBegin ? 'fade-in' : ''}`}>
-                {!fadeOutBegin && fadeInBegin ? <SocialBar /> : null}
             </div>
         </section>
 
