@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
-import LandingMiddle from '@/components/pagecomponents/landingPage/landingMiddle';
 import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
+import LandingPage from '@/components/pagecomponents/landingPage/landingPage';
 
 export async function generateMetadata(): Promise<Metadata> {
 
@@ -15,7 +15,7 @@ export default async function Page() {
 
   return (
     <MainPageBody>
-      <LandingMiddle />
+      <LandingPage />
     </MainPageBody>
   );
 }
