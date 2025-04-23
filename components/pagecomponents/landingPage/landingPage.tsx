@@ -18,7 +18,7 @@ export default function LandingPage() {
 
     const buttonClass = `w-full lg:w-2/3 text-center`;
 
-    const textClass = `hover:underline hover:text-slate-300 font-bold text-white font-sans text-4xl md:text-5xl p-3 rounded-md`
+    const textClass = `hover:underline hover:text-slate-300 font-bold text-white font-sans text-lg sm:text-2xl md:text-4xl p-3 rounded-md`
 
     const [dashText, setDashText] = useState(['Personal Dashboard']);
     const [proText, setProText] = useState(['Professional Hub']);
@@ -59,13 +59,13 @@ export default function LandingPage() {
     const size = isBreakpoint ? 50 : 100;
     return (
 
-        <section className={`w-full h-full flex flex-col space-y-4 p-5`}>
-            <div className='flex flex-row justify-between items-center p-1 md:p-2 space-x-2'>
-                <div className='flex flex-col justify-start items-start w-2/3'>
-                    <h1 className={`text-xl md:text-5xl font-semibold text-slate-100 ${fadeOutBegin ? 'fade-out' : fadeInBegin ? 'fade-in' : ''}`}>
+        <section className={`w-full h-full flex flex-col space-y-4 p-2 py-4 md:py-5 md:p-5`}>
+            <div className='flex flex-row justify-between items-center p-1 md:p-2 w-full'>
+                <div className='flex flex-col justify-start items-start w-full h-content'>
+                    <h1 className={`text-2xl md:text-5xl font-semibold text-slate-100 ${fadeOutBegin ? 'fade-out' : fadeInBegin ? 'fade-in' : ''} w-content h-content`}>
                         {!fadeOutBegin && fadeInBegin ? 'Carl Seaholm' : ''}
                     </h1>
-                    <h2 className={`text-sm md:text-2xl font-semibold text-slate-300 ${fadeOutBegin ? 'fade-out' : fadeInBegin ? 'fade-in' : ''}`}>
+                    <h2 className={`text-base md:text-2xl font-semibold text-slate-300 ${fadeOutBegin ? 'fade-out' : fadeInBegin ? 'fade-in' : ''} w-content h-content`}>
                         {!fadeOutBegin && fadeInBegin ? 'A Personal and Professional Portfolio' : ''}
                     </h2>
                 </div>
@@ -97,7 +97,7 @@ export default function LandingPage() {
                     }
                 </div>
             </div>
-            <div className='flex flex-row w-full h-full px-8 items-center justify-evenly space-x-5 md:space-x-1'>
+            <div className='flex flex-row w-full h-full px-2 sm:px-8 items-center justify-evenly space-x-5 md:space-x-1'>
                 <div className='flex flex-col h-full w-full justify-center items-center space-y-4'>
                     <button className={`${buttonClass}`} onClick={navigateToDashboard}>
                         <p className={`${textClass} ${!dashShow && fadeOutBegin ? 'fade-out' : !fadeOutBegin && fadeInBegin ? `fade-in bg-cyan-900/20 hover:bg-cyan-900/40` : ''}`}>{`${!fadeInBegin && !fadeOutBegin ? '' : `${dashText[0]}`}`}</p>
