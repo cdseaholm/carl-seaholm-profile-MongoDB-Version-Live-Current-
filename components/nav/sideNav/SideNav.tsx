@@ -86,9 +86,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
         </Link>
         {children}
         <div className='flex flex-col mx-3 py-5 items-center justify-center border-b border-gray-100/20 h-[15%]'>
-          <div className={`max-md:text-sm`}>
-            Socials
-          </div>
+          <p className={`max-md:text-sm`}>Socials</p>
           <div className={`justify-evenly mx-3 ${isBreakpoint ? 'pt-5' : 'pt-2'} max-md:text-sm flex flex-row items-center space-x-4 text-sm`}>
             <SocialButton networkName='github' parent={false} />
             <p>|</p>
