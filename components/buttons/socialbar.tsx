@@ -31,7 +31,7 @@ export default function SocialBar({ fadeOutBegin, fadeInBegin }: { fadeOutBegin:
     };
 
     return (
-        <div className={`flex flex-row justify-evenly items-center w-full px-2 md:w-2/3 pt-4 ${fadeOutBegin ? 'fade-out' : fadeInBegin ? 'fade-in' : ''}`}>
+        <div className={`flex flex-row justify-evenly items-center w-full px-2 md:w-2/3 ${fadeOutBegin ? 'fade-out' : fadeInBegin ? 'fade-in' : ''}`}>
             <div className='cursor-pointer' onClick={() => openInNewTab('http://www.github.com/cdseaholm')}>
                 <SocialIcon style={widthQuery > 639 ? style.icon : style.small} network={'github'} title={`Carl's LinkedIn`} />
             </div>

@@ -24,7 +24,7 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className="h-screen w-screen overflow-hidden bg-mainBack">
+      <body className="h-[100dvh] w-[100dvw] overflow-hidden bg-mainBack">
         <MantineProvider>
           <AuthWrapper>
             <PageWrapper>
