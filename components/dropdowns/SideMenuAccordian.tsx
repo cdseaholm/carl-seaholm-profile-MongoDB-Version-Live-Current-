@@ -26,10 +26,10 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
   return (
     <div className='flex flex-col justify-between h-content w-full items-center border-b border-gray-200/20 py-6 space-y-12'>
       <Link onClick={toggle} href={"/dashboard"} className={`${pathname === "/dashboard" ? "underline" : ""} ${basicTextClass}`}>
-        Dashboard
+        <p className={`max-md:text-sm`}>Dashboard</p>
       </Link>
       <Link onClick={toggle} href={"/blog"} className={`${pathname === "/blog" ? "underline" : ""} ${basicTextClass}`}>
-        Blog
+        <p className={`max-md:text-sm`}>Blog</p>
       </Link>
       <Accordion defaultPanel={defaultPanel}>
         {/**
@@ -109,7 +109,7 @@ export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
         </div>
       </Accordion>
       <Link onClick={toggle} href={"/contact"} className={`${pathname === "/contact" ? "underline" : ""} ${basicTextClass}`}>
-        Contact
+        <p className={`max-md:text-sm`}>Contact</p>
       </Link>
     </div>
   );
@@ -151,7 +151,7 @@ function AccordionItem({ toggle, children }: { toggle: string; children: React.R
       onClick={toggleItem(toggle)}
       className={`${style.item}`}
     >
-      <p>{children}</p>
+      <p className={`max-md:text-sm`}>{children}</p>
       {selected === toggle ? <FiChevronUp size={18} /> : <FiChevronDown size={18} />}
     </button>
   );
@@ -165,7 +165,7 @@ function AccordionPanel({ children, id }: { children: React.ReactNode; id: strin
 
   return (
     <div ref={ref} id={id} className={`${style.panel} ${selected === id ? 'my-2' : ''}`} style={inlineStyle}>
-      {children}
+      <p className={`max-md:text-sm`}>{children}</p>
     </div>
   );
 }

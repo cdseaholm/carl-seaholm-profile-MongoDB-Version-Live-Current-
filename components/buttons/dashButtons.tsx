@@ -8,8 +8,11 @@ export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToS
 
     const setShowCalendar = useModalStore(state => state.setShowCalendar);
 
+    const buttonClass = `hover:bg-gray-300 rounded-md px-1 rounded-md bg-gray-400/40 border w-1/3`;
+    const textClass = `text-sm sm:text-base hover:text-gray-800`
+
     return (
-        <div className="flex flex-row justify-start items-center space-x-1 md:space-x-5 pr-2 w-full">
+        <div className="flex flex-row justify-start items-center space-x-1 md:space-x-5 pr-2 w-full sm:w-1/2 p-2">
             {/**<select id='dropDownObjectSelect' name="dropDownObjectSelect" className="text-xs md:text-base hover:bg-gray-400 bg-transparent border-none rounded-md" onChange={(e) => {
                 handleUserObjectToShow(e.target.value);
             }} defaultValue={userObjects ? userObjects[0]?.title : ''}>
@@ -21,30 +24,29 @@ export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToS
                     )
                 }) : []}
             </select> */}
-            <p>Hobbies</p>
             {dashToShow !== 'calendar' ?
                 (
-                    <button className="text-base hover:bg-gray-400 rounded-md px-1 text-xs md:text-base" onClick={() => {
+                    <button className={`${buttonClass}`} onClick={() => {
                         handleDaySelected(daySelected);
                         setShowCalendar(true);
                     }}>
-                        {'Calendar'}
+                        <p className={`${textClass}`}>{'Calendar'}</p>
                     </button>
                 ) : (
-                    <button className="text-base hover:bg-gray-400 rounded-md px-1 text-xs md:text-base" onClick={() => {
+                    <button className={`${buttonClass}`} onClick={() => {
                         setShowCalendar(true);
                     }}>
-                        {'Select Day'}
+                        <p className={`${textClass}`}>{'Select Day'}</p>
                     </button>
                 )
             }
-            <button className="text-base hover:bg-gray-400 rounded-md px-1 text-xs md:text-base" onClick={() => {
+            <button className={`${buttonClass}`} onClick={() => {
                 handleDashToShow('stats', null);
             }}>
-                {"Stats"}
+                <p className={`${textClass}`}>{"Stats"}</p>
             </button>
-            <button className='text-end text-xs md:text-base text-blue-800 hover:text-gray-500 cursor-pointer px-2' onClick={() => setIndexShown(!indexShown)}>
-                Color Index
+            <button className={`${buttonClass}`} onClick={() => setIndexShown(!indexShown)}>
+                <p className={`${textClass}`}>Color Index</p>
                 {indexShown && (
                     <div className={`absolute z-30 flex flex-col justify-start bg-gray-300 border border-black ${isSmallestBreakpoint ? 'right-4' : ''}`}>
                         {colorMap?.map((map: { color: string, title: string }, index: number) => {

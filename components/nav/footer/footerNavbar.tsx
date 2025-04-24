@@ -8,7 +8,7 @@ const FooterNavBar = () => {
     const pathname = usePathname();
 
     return (
-        <footer className={`flex flex-row justify-center items-center py-4 mt-2`}>
+        <footer className={`flex flex-row justify-center items-center border-t border-gray-400 py-10 mt-10`}>
             {pathname !== '/' &&
             [
                 ["Contact", "/contact"],
