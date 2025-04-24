@@ -90,7 +90,7 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
   }, [daySelected, dashProps, setDaySelected])
 
   return (
-    <main className="w-[100dvw] h-[100dvh] bg-white/50 overflow-hidden">
+    <main className="w-screen h-dvh bg-white/50 overflow-hidden">
       {children}
     </main>
   )

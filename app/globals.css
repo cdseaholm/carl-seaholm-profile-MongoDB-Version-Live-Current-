@@ -64,11 +64,6 @@ button:hover {
   background-color: rgba(51, 65, 85, 0.5);
 }
 
-div.childFirst {
-  flex-grow: 1;
-  overflow: hidden;
-}
-
 /* transitions */
 
 .fade-in {
