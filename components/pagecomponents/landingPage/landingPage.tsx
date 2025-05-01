@@ -40,7 +40,7 @@ export default function LandingPage() {
         }, 750);
 
         return () => clearTimeout(timer);
-    }, [dashShow, proShow]);
+    }, [dashShow, proShow, fadeOutBegin]);
 
     useEffect(() => {
         setFadeInBegin(true);

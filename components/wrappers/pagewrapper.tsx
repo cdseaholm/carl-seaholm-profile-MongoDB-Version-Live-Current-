@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { OfTheDays } from "@/utils/apihelpers/get/initOTDs";
 import { DashProps, useStore } from "@/context/dataStore";
 import { EntriesOTDType } from "@/models/types/otds";
+import { usePathname } from "next/navigation";
+
 
 
 export default function PageWrapper({ children }: Readonly<{ children: React.ReactNode; }>) {
@@ -19,6 +21,7 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
   const daySelected = useStore(state => state.daySelected);
   const dashProps = useStore(state => state.dashProps);
   const setDaySelected = useStore(state => state.setDaySelected);
+  const pathname = usePathname();
 
   const initializeWidths = useCallback((newWidth: number, newHeight: number) => {
     setWidthQuery(newWidth);
@@ -87,11 +90,22 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
     } else {
       initOTDs(daySelected, dashProps);
     }
-  }, [daySelected, dashProps, setDaySelected])
+  }, [daySelected, dashProps, setDaySelected]);
 
-  return (
-    <main className="w-screen h-dvh bg-white/50 overflow-hidden">
-      {children}
-    </main>
-  )
+  if (pathname.includes('/projects/school/infoVis-DatasetProject')) {
+    return (
+      <main className="h-screen w-screen overflow-hidden bg-white">
+        <div className="h-screen w-screen overflow-hidden infoVis">
+          <div className="flex h-screen flex-col items-center justify-start w-screen overflow-hidden bg-linear-to-b from-slate-900/90 to-slate-400/30">{children}</div>
+        </div>
+      </main>
+    )
+  } else {
+
+    return (
+      <main className="w-screen h-dvh bg-white/50 overflow-hidden">
+        {children}
+      </main>
+    )
+  }
 }
