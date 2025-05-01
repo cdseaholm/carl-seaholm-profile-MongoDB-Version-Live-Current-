@@ -56,6 +56,11 @@ body {
   background-size: cover;
 }
 
+.infoVis {
+  background-image: url('../public/vineyard.jpg');
+  background-size: cover;
+}
+
 button:hover {
   cursor: pointer;
 }
