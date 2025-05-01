@@ -3,7 +3,7 @@
 import { LoadingOverlay, Pagination } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import NameForm from "../components/forms/nameForm";
 import { AlertModal } from "../components/modals/alertModal";
 import Header from "../components/nav/header";
@@ -22,6 +22,7 @@ export default function Page() {
     const [userName, setUserName] = useState('Esteban');
     const [loading, setLoading] = useState(true);
     const [csvData, setCsvData] = useState<FormattedData[]>([]);
+    const initName = useRef(false);
 
     const nameForm = useForm({
         mode: 'uncontrolled',
@@ -65,18 +66,22 @@ export default function Page() {
             AlertModal({ message: errors.errors })
         } else {
             setUserName(nameForm.getValues().name);
+            initName.current = true;
             setLoading(false)
             modals.closeAll();
         }
     }
 
     const handleCancel = () => {
+        initName.current = true;
         setLoading(false);
         modals.closeAll();
     }
 
     useEffect(() => {
-        nameOrNoName();
+        if (initName.current === false) {
+            nameOrNoName();
+        }
         const fetchData = async () => {
             const data = await FormatData() as { data: FormattedData[], message: string }
             if (!data) {
