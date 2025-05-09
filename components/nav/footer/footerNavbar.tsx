@@ -2,27 +2,24 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import useMediaQuery from '../../listeners/WidthSettings';
 
 const FooterNavBar = () => {
+
     const pathname = usePathname();
-    const breakpoint = useMediaQuery(768);
 
     return (
-        <>
-        <nav className={`flex flex-row justify-center items-center`} style={{height: '6vh'}}>
-            {!breakpoint && pathname !== '/' &&
+        <footer className={`flex flex-row justify-center items-center border-t border-gray-400 py-10 mt-10`}>
+            {pathname !== '/' &&
             [
                 ["Contact", "/contact"],
             ].map(([name, route], index) => (
                 <div key={index}>
-                    <Link href={route} className={`px-10 rounded-lg py-2 font-medium hover:text-slate-700 ${pathname === route ? "underline" : ""}`}>
+                    <Link href={route ? route : ''} className={`px-10 rounded-lg py-2 font-medium hover:text-slate-700 ${pathname === route ? "underline" : ""}`}>
                             {name}
                     </Link>
                 </div>
             ))}
-        </nav>
-        </>
+        </footer>
     );
 }
 

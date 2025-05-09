@@ -1,11 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 254, 201;
   --background-end-rgb: 255, 254, 201;
+  --chart-labels-color: 0, 0, 0
 }
 
 @media (prefers-color-scheme: light) {
@@ -20,6 +19,34 @@
   .text-balance {
     text-wrap: balance;
   }
+  .scrollbar-thin::-webkit-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
+  }
+  .scrollbar-webkit {
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--mainBack);
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 20px;
+      border: 1px solid transparent;
+    }
+  }
+}
+
+
+@keyframes fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+@keyframes fadeOut {
+  0% {opacity: 1;}
+  100% {opacity: 0;}
 }
 
 /* body-pieces */
@@ -29,33 +56,25 @@ body {
   background-size: cover;
 }
 
+.infoVis {
+  background-image: url('../public/vineyard.jpg');
+  background-size: cover;
+}
+
 button:hover {
   cursor: pointer;
 }
 
-div.first {
-  background-color: rgba(255, 255, 255, 0.5);
-}
-
-div.childFirst {
+.childFirstColor {
   background-color: rgba(51, 65, 85, 0.5);
-  border-radius: 10px;
-  box-shadow: 0 0 10px 10px rgba(51, 65, 85, 0.5);
 }
 
 /* transitions */
 
-.landing-page {
-  transition: transform 1s ease-in-out;
+.fade-in {
+  animation: fadeIn 2s ease-out;
 }
 
-.slide-up {
-  transform: translateY(-100%);
+.fade-out {
+  animation: fadeOut 1s ease-out;
 }
-
-.scale-150 {
-  transition: transform 0.3s;
-  transform: scale(1.5);
-}
-
-/* images */
