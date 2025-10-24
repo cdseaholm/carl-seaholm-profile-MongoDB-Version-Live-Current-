@@ -1,6 +1,7 @@
-import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
+
 import { Metadata } from "next";
 import DashProvider from "@/components/dataInitializers/dashProvider";
+import Loader from "@/components/misc/loader";
 
 export async function generateMetadata(): Promise<Metadata> {
   // const session = await getServerSession();
@@ -15,8 +16,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
 
   return (
-    <MainPageBody>
-      <DashProvider />
-    </MainPageBody>
+    <Loader>
+      <DashProvider/>
+    </Loader>
   );
 }

@@ -1,9 +1,9 @@
+import { IEntry } from "@/models/old/types/entry";
+import { IUserObject } from "@/models/old/types/userObject";
+import { IUserObjectIndexed } from "@/models/old/types/userObjectIndexed";
 import { IField, IFieldObject } from "@/models/types/field";
 import { IHobby } from "@/models/types/hobby";
-import { IEntry } from "@/models/types/entry";
 import { IRecipe } from "@/models/types/recipe";
-import { IUserObject } from "@/models/types/userObject";
-import { IUserObjectIndexed } from "@/models/types/userObjectIndexed";
 import { getBaseUrl } from "@/utils/helpers/helpers";
 
 async function CreateHobbyFields({ titles, hobbies }: { titles: Set<string>, hobbies: IHobby[] }) {

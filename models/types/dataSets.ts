@@ -1,4 +1,5 @@
-import { BarData } from "@/app/actions/statsActions/statActions"
+import { BarData } from "./barData"
+
 
 export type BarDataSets = {
     monthNames: string[],

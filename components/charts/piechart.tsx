@@ -1,11 +1,10 @@
 'use client'
 
 import React from 'react';
-import { dataType } from '../pagecomponents/dashboard/statsView';
 import { PieChart, PieChartCell } from '@mantine/charts';
 import { ResponsiveContainer } from 'recharts';
 
-export function PieChartView({ dataPassed, title }: { dataPassed: dataType[] | PieChartCell[], title: string }) {
+export function PieChartView({ dataPassed, title }: { dataPassed: PieChartCell[], title: string }) {
 
     return (
         <div className='flex flex-col justify-center items-start text-sm w-full min-h-[300px] space-y-4'>

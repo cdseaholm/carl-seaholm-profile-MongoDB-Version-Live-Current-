@@ -4,15 +4,16 @@
 import MainModal from '@/components/modals/mainmodal/mainmodal';
 import AlertModal from '@/components/modals/Alert/alertmodal';
 import LifeAspectModal from '@/components/modals/LifeAspect/lifeAspectModal';
-import { ModalsProvider } from "@mantine/modals";
+import CalendarModalInit from '@/components/modals/modalContent/Calendar/calendarModalInit';
 
 export function Providers() {
 
   return (
-    <ModalsProvider>
+    <>
       <AlertModal />
       <MainModal />
       <LifeAspectModal />
-    </ModalsProvider>
+      <CalendarModalInit />
+    </>
   )
 }

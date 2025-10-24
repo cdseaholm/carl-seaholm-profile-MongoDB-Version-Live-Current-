@@ -11,6 +11,9 @@ interface ModalStore {
     setShowCalendar: (showCalendar: boolean) => void;
     dashToShow: string;
     setDashToShow: (dashToShow: string) => void;
+
+    logSessionModalOpen: boolean;
+    setLogSessionModalOpen: (logSessionModalOpen: boolean) => void;
 }
 
 export const useModalStore = create<ModalStore>((set) => ({
@@ -24,4 +27,6 @@ export const useModalStore = create<ModalStore>((set) => ({
     setShowCalendar: (showCalendar) => set({ showCalendar }),
     dashToShow: 'stats',
     setDashToShow: (dashToShow) => set({ dashToShow }),
+    logSessionModalOpen: false,
+    setLogSessionModalOpen: (logSessionModalOpen) => set({ logSessionModalOpen })
 }));

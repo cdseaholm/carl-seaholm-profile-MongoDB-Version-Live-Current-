@@ -2,8 +2,9 @@
 
 import { useModalStore } from "@/context/modalStore";
 import { useStateStore } from "@/context/stateStore";
+import { HobbyColorMapType } from "@/models/types/colorMap";
 
-export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToShow, dashToShow, handleDaySelected, daySelected }: { handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, dashToShow: string, indexShown: boolean, setIndexShown: (indexShown: boolean) => void, colorMap: { color: string, title: string }[], handleDaySelected: (date: Date) => void, daySelected: Date }) {
+export function DashButtons({ indexShown, setIndexShown, hobbyColorMap, handleDashToShow, dashToShow, handleDaySelected, daySelected }: { handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, dashToShow: string, indexShown: boolean, setIndexShown: (indexShown: boolean) => void, hobbyColorMap: HobbyColorMapType[], handleDaySelected: (date: string) => void, daySelected: string }) {
     const isSmallestBreakpoint = useStateStore((state) => state.widthQuery) < 400 ? true : false;
 
     const setShowCalendar = useModalStore(state => state.setShowCalendar);
@@ -49,7 +50,7 @@ export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToS
                 <p className={`${textClass}`}>Color Index</p>
                 {indexShown && (
                     <div className={`absolute z-30 flex flex-col justify-start bg-gray-300 border border-black ${isSmallestBreakpoint ? 'right-4' : ''}`}>
-                        {colorMap?.map((map: { color: string, title: string }, index: number) => {
+                        {hobbyColorMap?.map((map: { color: string, title: string }, index: number) => {
                             const color = map.color;
                             const title = map.title;
                             return (

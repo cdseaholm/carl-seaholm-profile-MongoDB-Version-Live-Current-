@@ -1,32 +1,38 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useStateStore } from "@/context/stateStore";
-import { getBaseUrl } from "@/utils/helpers/helpers";
 import { initData } from "@/utils/apihelpers/get/initData/initData";
-import { toast } from "sonner";
-import { OfTheDays } from "@/utils/apihelpers/get/initOTDs";
-import { DashProps, useStore } from "@/context/dataStore";
-import { EntriesOTDType } from "@/models/types/otds";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
+import LoadingSpinner from "@/app/(content)/projects/school/infoVis-DatasetProject/components/components/misc/loadingSpinner";
+import { Providers } from "@/app/context/providers";
+import { Overlay } from "@mantine/core";
+import NavWrapper from "./navWrapper";
+import MainWrapper from "./mainWrapper";
 
 
 
 export default function PageWrapper({ children }: Readonly<{ children: React.ReactNode; }>) {
 
+  const [loading, setLoading] = useState(false);
+  const { data: _session, status } = useSession();
+  const globalLoading = useStateStore((state) => state.globalLoading);
   const widthRef = useRef<number | null>(null);
   const heightRef = useRef<number | null>(null);
   const setWidthQuery = useStateStore((state) => state.setWidthQuery);
   const setHeightQuery = useStateStore((state) => state.setHeightQuery);
-  const daySelected = useStore(state => state.daySelected);
-  const dashProps = useStore(state => state.dashProps);
-  const setDaySelected = useStore(state => state.setDaySelected);
+  const urlToUse = process.env.NEXT_PUBLIC_BASE_URL ? process.env.NEXT_PUBLIC_BASE_URL : '';
   const pathname = usePathname();
 
   const initializeWidths = useCallback((newWidth: number, newHeight: number) => {
     setWidthQuery(newWidth);
     setHeightQuery(newHeight);
   }, [setWidthQuery, setHeightQuery]);
+
+  // const handleUpdate = async () => {
+  //   await update();
+  // };
 
   const updateMedia = useCallback(() => {
     const newWidth = window.innerWidth;
@@ -56,41 +62,12 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
   }, [updateMedia, initializeWidths]);
 
   useEffect(() => {
-    const fetchUrl = async () => {
-      try {
-        await getBaseUrl();
-      } catch (error) {
-        console.error("Failed to fetch base URL:", error);
-      }
-    };
-    fetchUrl();
     const initUserData = async () => {
-      const initialized = await initData() as { status: boolean, message: string };
-      if (!initialized) {
-        toast.info('Initalized failed')
-      }
-      if (initialized.status !== true) {
-        toast.info(initialized.message)
-      }
-    };
+      await initData({ urlToUse: urlToUse }) as { status: boolean, message: string };
+    }
     initUserData();
-  }, []);
-
-  useEffect(() => {
-    const thisDay = new Date();
-    const initOTDs = async (dayToUse: Date, dashPropsToUse: DashProps) => {
-      await OfTheDays({ objectToUse: dashPropsToUse.objectToUse, sessionsFound: dashPropsToUse.sessionsFound, userObjects: dashPropsToUse.userObjects, daySelected: dayToUse, fieldObjects: dashPropsToUse.fieldObjects }) as EntriesOTDType[];
-    }
-    if (dashProps === null) {
-      return;
-    }
-    if (daySelected === null) {
-      setDaySelected(thisDay);
-      initOTDs(thisDay, dashProps);
-    } else {
-      initOTDs(daySelected, dashProps);
-    }
-  }, [daySelected, dashProps, setDaySelected]);
+    setLoading(false);
+  }, [urlToUse]);
 
   if (pathname.includes('/projects/school/infoVis-DatasetProject')) {
     return (
@@ -103,9 +80,38 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
   } else {
 
     return (
-      <main className="w-screen h-dvh bg-white/50 overflow-hidden">
-        {children}
-      </main>
+
+
+      <div className="flex flex-col justify-start items-center w-screen h-screen bg-white/50 overflow-hidden">
+        <div className="flex flex-col justify-start items-center w-screen h-screen bg-slate-900/50 overflow-hidden">
+          {status === 'loading' ? (
+            <LoadingSpinner />
+          ) : (
+            <>
+              <NavWrapper />
+              {/* <Providers handleUpdate={handleUpdate} session={session} /> */}
+              <Providers />
+              <MainWrapper>
+                {loading ? (
+                  <LoadingSpinner />
+                ) : (
+                  <>
+                    {children}
+                  </>
+                )}
+              </MainWrapper>
+              {globalLoading && (
+                <Overlay
+                  gradient="linear-gradient(145deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 100%)"
+                  opacity={0.85}
+                >
+                  <LoadingSpinner />
+                </Overlay>
+              )}
+            </>
+          )}
+        </div>
+      </div>
     )
   }
 }

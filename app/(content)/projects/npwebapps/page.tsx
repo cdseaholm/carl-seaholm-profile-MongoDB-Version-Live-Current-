@@ -1,5 +1,5 @@
+import Loader from '@/components/misc/loader';
 import NPWebApps from '@/components/pagecomponents/np/npwebapps/npwebapps';
-import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
 import { Metadata } from 'next';
 import React from 'react';
 
@@ -18,8 +18,8 @@ export default async function Page() {
     ];
 
     return (
-        <MainPageBody>
+        <Loader>
             <NPWebApps webDropdown={webDropdown} webapps={webapps}/>
-        </MainPageBody>
+        </Loader>
     );
 };

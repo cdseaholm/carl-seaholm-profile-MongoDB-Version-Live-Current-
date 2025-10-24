@@ -1,24 +1,28 @@
 'use client'
 
-import { SessionProvider, useSession } from "next-auth/react";
-import { ReactNode } from "react";
-
+import LoadingSpinner from "@/app/(content)/projects/school/infoVis-DatasetProject/components/components/misc/loadingSpinner";
+import { SessionProvider } from "next-auth/react"
+import { useEffect, useState } from "react";
 
 export default function AuthWrapper({ children }: { children: React.ReactNode }) {
-    
-    return (
-        <SessionProvider>
-            <AuthContent>{children}</AuthContent>
-        </SessionProvider>
-    );
-}
 
-function AuthContent({ children }: { children: ReactNode }) {
-    const { data: _session } = useSession();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setLoading(false);
+    }, []);
 
     return (
-        <>
-            {children}
-        </>
-    );
+        loading ? (
+            <div className="flex flex-col justify-start items-center w-screen h-screen bg-white/50 overflow-hidden">
+                <div className="flex flex-col justify-start items-center w-screen h-screen bg-slate-900/50 overflow-hidden">
+                    <LoadingSpinner />
+                </div>
+            </div>
+        ) : (
+            <SessionProvider>
+                {children}
+            </SessionProvider>
+        )
+    )
 }

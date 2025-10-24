@@ -1,6 +1,6 @@
 
+import Loader from "@/components/misc/loader";
 import ProfessionalPage from "@/components/pagecomponents/about/professionalpage";
-import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { useUserStore } from "@/context/userStore";
 import { IUser } from "@/models/types/user";
 import { Metadata } from "next";
@@ -17,8 +17,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Page() {
   return (
-    <MainPageBody>
+    <Loader>
       <ProfessionalPage />
-    </MainPageBody>
+    </Loader>
   );
 }

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { IUser } from "@/models/types/user";
 import { getServerSession, User } from "next-auth";
 import { getToken } from "next-auth/jwt";
-import { IUserObject } from "@/models/types/userObject";
+import { IUserObject } from "@/models/old/types/userObject";
 
 export async function POST(req: NextRequest) {
 

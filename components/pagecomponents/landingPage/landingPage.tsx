@@ -64,6 +64,7 @@ export default function LandingPage() {
 
     const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
     const size = isBreakpoint ? 50 : 100;
+    
     return (
 
         <SectionWrapper varHeight="h-[90%]" extraProps="flex flex-col justify-between items-center p-2 py-6 md:py-5 md:p-5">

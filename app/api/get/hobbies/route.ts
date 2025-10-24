@@ -2,8 +2,8 @@ import connectDB from "@/lib/mongodb";
 import { IUser } from "@/models/types/user";
 import MongoUser from "@/models/user";
 import { NextResponse } from "next/server";
-import Hobby from "@/models/hobby";
 import { IHobby } from "@/models/types/hobby";
+import Hobby from "@/models/old/hobby";
 
 export async function GET() {
 
