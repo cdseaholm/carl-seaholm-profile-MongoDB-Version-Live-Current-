@@ -2,11 +2,11 @@
 import connectDB from '@/lib/mongodb';
 import { NextResponse } from 'next/server';
 import User from '@/models/user';
-import { IUserObject } from '@/models/types/userObject';
 import { SaltAndHashPassword } from '@/utils/userHelpers/saltAndHashPassword';
-import { IEntry } from '@/models/types/entry';
 import { IFieldObject } from '@/models/types/field';
 import { IUser } from '@/models/types/user';
+import { IEntry } from '@/models/old/types/entry';
+import { IUserObject } from '@/models/old/types/userObject';
 
 export async function POST(request: Request) {
 

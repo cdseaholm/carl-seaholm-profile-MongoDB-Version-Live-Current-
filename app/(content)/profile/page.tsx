@@ -1,5 +1,5 @@
+import Loader from "@/components/misc/loader";
 import ProfilePage from "@/components/pagecomponents/profile/profileHub";
-import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { useUserStore } from "@/context/userStore";
 import { IUser } from "@/models/types/user";
 
@@ -25,9 +25,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
 
     return (
-        <MainPageBody>
+        <Loader>
             <ProfilePage />
-        </MainPageBody>
+        </Loader>
     );
 
 }

@@ -1,10 +1,10 @@
 import { useHobbyStore } from "@/context/hobbyStore";
-import { ColorMapType } from "@/models/types/colorMap";
-import { IEntry, IIndexedEntry } from "@/models/types/entry";
+import { IEntry, IIndexedEntry } from "@/models/old/types/entry";
+import { IUserObject } from "@/models/old/types/userObject";
+import { IUserObjectIndexed } from "@/models/old/types/userObjectIndexed";
+import { HobbyColorMapType } from "@/models/types/colorMap";
 import { IFieldObject } from "@/models/types/field";
 import { IUser } from "@/models/types/user";
-import { IUserObject } from "@/models/types/userObject";
-import { IUserObjectIndexed } from "@/models/types/userObjectIndexed";
 
 export async function HobbiesInit({ userInfo }: { userInfo: IUser }) {
 
@@ -103,7 +103,7 @@ export async function HobbiesInit({ userInfo }: { userInfo: IUser }) {
     const colorMap = hobbyInfoMapping ? Array.from(new Set(hobbyInfoMapping.map((hobby) => {
 
         return JSON.stringify({ color: hobby.color, title: hobby.title });
-    }).filter(color => color !== null).map(color => JSON.parse(color)))) as ColorMapType[] : [];
+    }).filter(color => color !== null).map(color => JSON.parse(color)))) as HobbyColorMapType[] : [];
 
     hobbyStore.setColorMap(colorMap)
 

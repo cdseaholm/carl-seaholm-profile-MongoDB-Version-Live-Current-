@@ -2,7 +2,7 @@
 
 // import { useModalStore } from "@/context/modalStore";
 // import { useState, useEffect } from "react";
-// import { useStore } from "@/context/dataStore";
+// import { useDataStore } from "@/context/dataStore";
 // import { useSession } from "next-auth/react";
 // import React from "react";
 // import DashProvider from "./dashProvider";
@@ -25,14 +25,14 @@
 //     //global stored variables
 //     const dashToShow = useModalStore((state) => state.dashToShow);
 //     const showCalendar = useModalStore((state) => state.showCalendar);
-//     const dashProps = useStore((state) => state.dashProps);
-//     const daySelected = useStore(state => state.daySelected);
-//     const entriesOTD = useStore(state => state.entriesOTD);
+//     const dashProps = useDataStore((state) => state.dashProps);
+//     const daySelected = useDataStore(state => state.daySelected);
+//     const entriesOTD = useDataStore(state => state.entriesOTD);
 
 //     //global set states
 //     const setDashToShow = useModalStore((state) => state.setDashToShow);
 //     const setShowCalendar = useModalStore((state) => state.setShowCalendar);
-//     const setDaySelected = useStore(state => state.setDaySelected);
+//     const setDaySelected = useDataStore(state => state.setDaySelected);
 
 //     useEffect(() => {
 //         setLoading(false);

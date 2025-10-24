@@ -1,6 +1,6 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { IFieldObject } from "./types/field";
 import { fieldSchema } from "./field";
+import { IFieldObject } from "../types/field";
 
 export const fieldObjectSchema = new Schema(
     {

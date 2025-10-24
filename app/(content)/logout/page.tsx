@@ -2,7 +2,7 @@ import React from 'react';
 import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import { Metadata } from 'next';
-import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
+import Loader from '@/components/misc/loader';
 
 export const metadata: Metadata = {
     title: 'Logout Page',
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default async function Page() {
 
     return (
-        <MainPageBody>
+        <Loader>
             <InnerHeader>
                 <h1 className="text-lg underline">Logout</h1>
             </InnerHeader>
@@ -23,6 +23,6 @@ export default async function Page() {
                     </button>
                 </div>
             </MainChild>
-        </MainPageBody>
+        </Loader>
     );
 };

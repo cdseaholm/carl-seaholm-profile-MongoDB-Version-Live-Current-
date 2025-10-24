@@ -1,6 +1,6 @@
 import { DetailsAccordianPage } from '@/components/dropdowns/DetailsAccordian';
+import Loader from '@/components/misc/loader';
 import MainChild from '@/components/pagetemplates/mainchild/mainchild';
-import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
 import { useUserStore } from '@/context/userStore';
 import { IUser } from '@/models/types/user';
 import { Metadata } from 'next';
@@ -27,7 +27,7 @@ export default async function Page() {
     ];
 
     return (
-        <MainPageBody>
+        <Loader>
             <MainChild>
                 <div className='flex justify-evenly flex-col items-center space-y-4'>
                     <div className="flex justify-center">
@@ -53,6 +53,6 @@ export default async function Page() {
                     </div>
                 </div>
             </MainChild>
-        </MainPageBody>
+        </Loader>
     );
 };

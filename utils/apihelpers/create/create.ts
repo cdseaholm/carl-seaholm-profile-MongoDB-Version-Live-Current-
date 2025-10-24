@@ -1,6 +1,7 @@
-import { IUserObject } from "@/models/types/userObject";
-import { getBaseUrl } from "../../helpers/helpers";
-import { IEntry } from "@/models/types/entry";
+import { IEntry } from "@/models/old/types/entry";
+import { IUserObject } from "@/models/old/types/userObject";
+import { getBaseUrl } from "@/utils/helpers/helpers";
+
 
 export async function CreateCustomEntry({ entry, objectTitle }: { entry: IEntry, objectTitle: string }, headers: HeadersInit) {
 

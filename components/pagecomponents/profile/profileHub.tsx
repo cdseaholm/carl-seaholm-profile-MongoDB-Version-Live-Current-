@@ -3,8 +3,6 @@
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
 import { useModalStore } from "@/context/modalStore";
-import { IIndexedEntry } from "@/models/types/entry";
-import { IUserObject } from "@/models/types/userObject";
 import { HobbiesInit } from "@/utils/apihelpers/get/hobbies";
 import { DeleteUser } from "@/utils/apihelpers/delete/delete";
 import { signOut, useSession } from "next-auth/react";
@@ -13,14 +11,18 @@ import React from "react";
 import { toast } from "sonner";
 import { AttemptToDeleteHobbies } from "@/utils/apihelpers/delete/attemptToDeleteHobbies";
 import { AttemptToDeleteRecipes } from "@/utils/apihelpers/delete/attemptToDeleteRecipes";
-import { AttemptToUpdateOldModel } from "@/utils/apihelpers/edit/attemptToUpdateOldModel";
 import { useUserStore } from "@/context/userStore";
 import { IRecipe } from "@/models/types/recipe";
 import { IHobby } from "@/models/types/hobby";
 import { useHobbyStore } from "@/context/hobbyStore";
+import LoadingSpinner from "@/app/(content)/projects/school/infoVis-DatasetProject/components/components/misc/loadingSpinner";
+import { AttemptToUpdateOldModel } from "@/utils/apihelpers/edit/attemptToUpdateOldModel";
+import { IIndexedEntry } from "@/models/old/types/entry";
+import { IUserObject } from "@/models/old/types/userObject";
 
 export default function ProfilePage() {
 
+    const [loading, setIsLoading] = React.useState(false);
     const router = useRouter();
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const handleLogout = () => {
@@ -99,52 +101,114 @@ export default function ProfilePage() {
         toast.success('Test toast');
     };
 
+    const handleMigrateToMonthly = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('/api/migrate/monthly', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                console.log('Migration successful:', result.stats);
+                // Handle success
+            } else {
+                console.error('Migration failed:', result.error);
+                // Handle error
+            }
+        } catch (error) {
+            console.error('Migration request failed:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const handleMinutesFix = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('/api/migrate/minutes-fix', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                console.log('Migration successful:', result.stats);
+                // Handle success
+            } else {
+                console.error('Migration failed:', result.error);
+                // Handle error
+            }
+        } catch (error) {
+            console.error('Migration request failed:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     return (
-        <>
-            <InnerHeader>
-                <h1 className="text-lg underline">Profile</h1>
-            </InnerHeader>
-            <MainChild>
-                <div className="flex flex-col justify-center space-y-4 p-4">
-                    <button onClick={() => setModalOpen('edituser')}>
-                        Edit Profile
-                    </button>
-                    <button onClick={() => {
-                        handleUpdateHobbiesLocal();
-                    }}>
-                        Update Hobbies Local
-                    </button>
-                    <button onClick={() => {
-                        testCurrentFunction();
-                    }}>
-                        Test Current Function
-                    </button>
-                    <button onClick={() => setModalOpen('addNewObject')}>
-                        Add New Object
-                    </button>
-                    <button onClick={() => setModalOpen('addNewEntryToObject')}>
-                        Add New Entry to Object
-                    </button>
-                    <button onClick={() => testToast()}>
-                        Test Toast
-                    </button>
-                    <button onClick={() => handleDeleteHobbies()}>
-                        Delete ALL Hobbies
-                    </button>
-                    <button onClick={() => handleDeleteRecipes()}>
-                        Delete ALL Recipes
-                    </button>
-                    <button onClick={() => handleDeleteUser()}>
-                        Delete Account
-                    </button>
-                    <button onClick={() => setModalOpen('changepassword')}>
-                        Change Password
-                    </button>
-                    <button onClick={handleLogout}>
-                        Logout
-                    </button>
-                </div>
-            </MainChild>
-        </>
+        loading ? (
+            <LoadingSpinner />
+        ) : (
+            <>
+                <InnerHeader>
+                    <h1 className="text-lg underline">Profile</h1>
+                </InnerHeader>
+                <MainChild>
+                    <div className="flex flex-col justify-center space-y-4 p-4">
+                        <button onClick={() => setModalOpen('edituser')}>
+                            Edit Profile
+                        </button>
+                        <button onClick={() => {
+                            handleUpdateHobbiesLocal();
+                        }}>
+                            Update Hobbies Local
+                        </button>
+                        <button onClick={() => {
+                            testCurrentFunction();
+                        }}>
+                            Test Current Function
+                        </button>
+                        <button onClick={() => setModalOpen('addNewObject')}>
+                            Add New Object
+                        </button>
+                        <button onClick={() => setModalOpen('addNewEntryToObject')}>
+                            Add New Entry to Object
+                        </button>
+                        <button onClick={() => testToast()}>
+                            Test Toast
+                        </button>
+                        <button onClick={() => handleMigrateToMonthly()}>
+                            Migrate to Monthly Structure
+                        </button>
+                        <button onClick={() => handleMinutesFix()}>
+                            Fix Session Minutes
+                        </button>
+                        <button onClick={() => handleDeleteHobbies()}>
+                            Delete ALL Hobbies
+                        </button>
+                        <button onClick={() => handleDeleteRecipes()}>
+                            Delete ALL Recipes
+                        </button>
+                        <button onClick={() => handleDeleteUser()}>
+                            Delete Account
+                        </button>
+                        <button onClick={() => setModalOpen('changepassword')}>
+                            Change Password
+                        </button>
+                        <button onClick={handleLogout}>
+                            Logout
+                        </button>
+                    </div>
+                </MainChild>
+            </>
+        )
     );
 };

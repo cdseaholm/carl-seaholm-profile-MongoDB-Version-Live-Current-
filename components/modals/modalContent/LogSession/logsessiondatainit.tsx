@@ -1,25 +1,21 @@
 'use client'
 
-import { useStore } from "@/context/dataStore";
-import { useHobbyStore } from "@/context/hobbyStore";
+import { useDataStore } from "@/context/dataStore";
 import { useModalStore } from "@/context/modalStore";
-import { IUserObject } from "@/models/types/userObject";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LogSessionModal from "./logsession";
-import { AttemptCreateSession } from "@/utils/apihelpers/create/attemptToCreateSession";
-import { IEntry } from "@/models/types/entry";
-import { IUserObjectIndexed } from "@/models/types/userObjectIndexed";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
-import { User } from "next-auth";
-import { CombineNewAndOld } from "@/utils/data/combineData";
-import DashZustandInit from "@/utils/data/dashChartsInit";
+//import { useSession } from "next-auth/react";
+//import { User } from "next-auth";
 import { useForm, UseFormReturnType } from "@mantine/form";
-
-function formatDate(dateString: string) {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
-    return new Date(dateString).toLocaleDateString('en-GB', options).split('/').reverse().join('-');
-}
+import { Modal } from "@mantine/core";
+import { useSession } from "next-auth/react";
+import { useHobbyStore } from "@/context/hobbyStore";
+import { HobbySessionInfo } from "@/utils/apihelpers/get/initData/initDashboardParams";
+import { ISession } from "@/models/types/session";
+import { AttemptCreateSession } from "@/utils/apihelpers/create/attemptToCreateSession";
+import { InitGraphs } from "@/utils/apihelpers/get/initData/init-graphs";
+import LoadingSpinner from "@/app/(content)/projects/school/infoVis-DatasetProject/components/components/misc/loadingSpinner";
 
 export type newSesh = {
     value: string,
@@ -30,187 +26,219 @@ export type newSesh = {
 }
 
 export type logSessionType = {
-    hobbyKeyId: number, session: string; time: string;
+    hobbyKeyId: number, session: string; time: string; mostFrequentlyUseTime: number[]
 }
 
 export type LogSessionFormType = {
     newSessions: logSessionType[]
 }
 
-export default function LogSessionDataInit() {
+export default function LogSessionDataInit({ daySelected }: { daySelected: string }) {
 
     const { data: session, update } = useSession();
-    const user = session ? session.user as User : {} as User;
-    const email = user ? user.email : '';
+    const init = useRef(false);
+    const [initDaySelected, setInitDaySelected] = useState<string>(daySelected);
+    const [loading, setLoading] = useState(false);
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
-    const userInfo = useStore((state) => state.dashProps);
-    const userObjects = userInfo ? userInfo.userObjects : [] as IUserObject[]
-    const setModalParent = useModalStore((state) => state.setModalParent);
-    const modalOpen = useModalStore((state) => state.modalOpen);
-    const titles = useHobbyStore(state => state.titles);
-    const [sessions, setSessions] = useState([{ hobby: '', time: '' }]);
-    const dashProps = useStore(state => state.dashProps);
-    const thisMonth = useStore(state => state.thisMonth);
-    const thisYear = new Date().getFullYear();
-    const daySelected = useStore(state => state.daySelected);
-    const setDaySelected = useStore(state => state.setDaySelected);
-    const [formReadyHobbies, setFormReadyHobbies] = useState<logSessionType[]>([]);
+    const hobbySessionsInfo = useDataStore(state => state.hobbySessionInfo) as HobbySessionInfo[];
+    const logSessionModalOpen = useModalStore((state) => state.logSessionModalOpen);
+    const setLogSessionModalOpen = useModalStore((state) => state.setLogSessionModalOpen);
+    const setDaySelected = useDataStore(state => state.setDaySelected);
+    const sessions = useDataStore(state => state.sessions);
 
     const logSessionForm = useForm({
         mode: 'uncontrolled',
         initialValues: {
-            newSessions: [] as { hobbyKeyId: number, session: string, time: string }[]
+            newSessions: [] as logSessionType[],
         },
         validate: {
             newSessions: (value) => value.length < 0 ? 'Sessions cannot be empty!' : null
         }
     });
 
-    const handleDaySelected = (arg: Date) => {
-        setDaySelected(arg);
+    const closeModal = () => {
+        logSessionForm.setValues({ newSessions: [] });
+        logSessionForm.clearErrors();
+        logSessionForm.resetDirty();
+        init.current = false;
+        setLogSessionModalOpen(false);
     }
 
-    const handleResetSessions = () => {
-        setSessions([{ hobby: '', time: '' }]);
+    const initFormHobbies = () => {
+        const formReady = hobbySessionsInfo.map((object, i) => {
+            const sessionsForHobbyForDay = sessions.filter((session) => session.hobbyTitle === object.hobbyData.title && session.date === daySelected);
+            if (sessionsForHobbyForDay.length > 0) {
+                const totalMinutes = sessionsForHobbyForDay.reduce((acc, session) => acc + session.minutes, 0);
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = totalMinutes % 60;
+                const timeString = hours > 0 ? `${hours}:${minutes.toString().padStart(2, '0')}` : `${minutes}`;
+                return { hobbyKeyId: i, session: object.hobbyData.title, time: timeString, mostFrequentlyUseTime: [object.timeFrequencies[0].time, object.timeFrequencies[1].time, object.timeFrequencies[2].time] };
+            } else {
+                return { hobbyKeyId: i, session: object.hobbyData.title, time: '', mostFrequentlyUseTime: [object.timeFrequencies[0].time, object.timeFrequencies[1].time, object.timeFrequencies[2].time] };
+            }
+        });
+        // setFormReadyHobbies(formReady);
+        logSessionForm.setValues({ newSessions: formReady });
+        logSessionForm.resetDirty();
+        logSessionForm.clearErrors();
+        //console.log('Initialized form hobbies:', formReady);
+    }
+
+    const handleDaySelected = (arg: Date) => {
+        setDaySelected(arg.toLocaleDateString());
     }
 
     const handleCreate = async ({ logSessionForm }: { logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) => {
+
+        //for tomorrow, finish up logsession api route fix, make sure we are updating new attributes like timeFrequency
+        //make sure data updates properly on front end
+        setLoading(true);
         console.log('handleLogSession function called');
 
-        // if (!id) {
-        //     console.log('You must be logged in to log a session');
-        //     return;
-        // }
-
-        if (!userObjects) {
-            toast.warning('Create a Hobby before logging a session');
+        const url = process.env.NEXT_PUBLIC_BASE_URL ? process.env.NEXT_PUBLIC_BASE_URL : '';
+        if (url === '') {
+            console.log('Bad url');
+            setLoading(false);
             return;
         }
 
-        if (!dashProps) {
-            toast.warning('Error with dash props');
+        if (!session) {
+            console.log('You must be logged in to log a session');
+            setLoading(false);
+            return;
+        }
+        const user = session.user
+        if (!user) {
+            console.log('No user found in session');
+            setLoading(false);
+            return;
+        }
+        const email = user.email;
+        if (!email) {
+            console.log('No email found for user');
+            setLoading(false);
             return;
         }
 
-        const hobbies = userObjects.find((object: IUserObject) => object.title === 'hobbies');
-        const hobbyIndexes = hobbies ? hobbies.indexes : [] as IUserObjectIndexed[];
-
-        if (!hobbies) {
+        if (!hobbySessionsInfo) {
             console.log('Hobbies object not found');
+            setLoading(false);
             return;
         }
 
         const sessionEntries = [];
-        for (let i = 0; ; i++) {
-            const thisSession = logSessionForm.getValues().newSessions[i];
+        const allSessions = logSessionForm.getValues().newSessions;
+
+        for (let i = 0; i < allSessions.length; i++) {
+            const thisSession = allSessions[i];
 
             if (!thisSession) {
-                break;
+                continue; // Skip if session doesn't exist
             }
 
             const hobbyTitle = thisSession.session;
             const time = thisSession.time;
+            //console.log(`Processing session ${i}: Hobby - ${hobbyTitle}, Time - ${time}`);
 
-            if (hobbyTitle === null || hobbyTitle === undefined || hobbyTitle === '' || time === null || time === undefined || time === '') {
-                break;
+            // Only skip this specific session if it's empty, don't break the entire loop
+            if (hobbyTitle === null || hobbyTitle === undefined || hobbyTitle === '' ||
+                time === null || time === undefined || time === '' || time === '0' || time === '00:00') {
+                //console.log(`Skipping session ${i} due to empty values`);
+                continue; // Continue to next session instead of breaking
             }
 
-            const specificHobby = hobbyIndexes ? hobbyIndexes.find((objectIndex, _index) => objectIndex.title === hobbyTitle)?.index as number : -1;
+            const specificHobby = hobbySessionsInfo ? hobbySessionsInfo.findIndex((objectIndex, _index) => objectIndex.hobbyData.title === hobbyTitle) as number : -1;
 
             sessionEntries.push({ hobbyTitle, time, specificHobby });
         }
 
+        // console.log('Session entries to process:', sessionEntries);
+
         if (sessionEntries.length === 0) {
             console.log('Must pick at least one Hobby and Time to attribute this Sesh to');
+            setLoading(false);
             return;
         }
 
-        let sessionsToAdd = [] as newSesh[];
-
-        const date = formatDate(daySelected.toLocaleDateString())
+        const month = new Date(daySelected).getMonth() + 1;
+        const year = new Date(daySelected).getFullYear();
+        //console.log('Logging sessions for date:', daySelected);
+        //console.log('Selected day:', daySelected);
         for (const session of sessionEntries) {
-            const newSession = { value: session.time, date: date } as IEntry;
+            const newSession = {
+                userId: '',
+                hobbyTitle: session.hobbyTitle,
+                date: daySelected,
+                minutes: parseInt(session.time),
+                month: month,
+                year: year,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            } as ISession;
             const headers = { 'Authorization': `Bearer ${email}` };
-            const create = await AttemptCreateSession({ newEntry: newSession, hobbyTitle: session.hobbyTitle }, headers);
+            console.log('Creating session for hobby:', session.hobbyTitle, 'with time:', session.time);
+            const create = await AttemptCreateSession({ newSession: newSession }, headers);
             if (!create || create.worked === false) {
                 console.log('Error creating session for hobby:', session.hobbyTitle);
+                setLoading(false);
                 return;
             }
-            let newSeshMade = {
-                value: session.time,
-                date: date,
-                hobbyTitle: session.hobbyTitle,
-                newIndex: create.newIndex,
-                hobbyTitleIndex: session.specificHobby,
-            } as newSesh
-            if (newSeshMade) {
-                sessionsToAdd.push(newSeshMade);
-            }
         }
 
-        const combined = await CombineNewAndOld({ fieldObjects: dashProps.fieldObjects, sessionsFound: dashProps.sessionsFound, seshCheck: sessionsToAdd });
+        const updatedSessions = useDataStore.getState().sessions;
+        const updatedSessionCounts = useDataStore.getState().hobbySessionInfo;
+        const updatedMonthCounts = useDataStore.getState().monthlyInfoCounts;
 
-        if (!combined) {
-            console.log('Error combining 162 Log Sesh')
+        const initGraphs = await InitGraphs({ sessions: updatedSessions, monthlyInfoCounts: updatedMonthCounts, hobbySessionsCounts: updatedSessionCounts });
+        if (!initGraphs) {
+            toast.error('Error initializing graphs after creating session');
+            setLoading(false);
             return;
         }
 
-        const reInit = await DashZustandInit({
-            userInfo: dashProps.userInfo,
-            thisMonth: thisMonth,
-            totalTimePerMonth: dashProps.totalTimePerMonth,
-            sessionsFound: dashProps.sessionsFound,
-            fieldObjects: dashProps.fieldObjects,
-            objectToUse: dashProps.objectToUse,
-            thisYear: thisYear
-        });
-
-        if (!reInit) {
-            console.log('Error with reInit')
-            return;
-        }
-
-
-        handleResetSessions();
-        setModalOpen('');
         await update();
+        closeModal();
+        setLoading(false);
         setRefreshKey(prevKey => prevKey + 1);
     }
 
     const handleModalOpen = (title: string) => {
         setModalOpen(title);
+        closeModal();
     }
 
     useEffect(() => {
-        let newFormReady = [] as logSessionType[]
-        titles.forEach((title, index) => {
-            const mapping = { hobbyKeyId: index, session: title, time: '0' } as logSessionType;
-            const newMapp = [...newFormReady, mapping];
-            newFormReady = newMapp;
-        });
-        setFormReadyHobbies(newFormReady)
-    }, [titles])
+
+        if (init.current === false) {
+            initFormHobbies();
+        } else if (initDaySelected !== daySelected) {
+            logSessionForm.setValues({ newSessions: [] });
+            setInitDaySelected(daySelected);
+            initFormHobbies();
+        } else {
+            toast.info('Create a Hobby before logging a session');
+            setLogSessionModalOpen(false);
+        }
+
+    }, [init.current, daySelected]);
 
     return (
-        <div id="crud-modal" tabIndex={-1} aria-hidden={modalOpen === 'logsession' ? "true" : "false"} className={`${modalOpen === 'logsession' ? 'flex' : 'hidden'} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full inset-0 h-full max-h-full backdrop-blur-sm`}>
-            <div className={`relative p-4 w-[90vw] sm:w-80[vw] max-h-full`}>
-                <div className={`relative bg-white rounded-lg shadow dark:bg-gray-700`}>
-                    <div className={`flex items-center justify-between space-x-4 p-2 border-b rounded-t border-gray-400 w-full`}>
-                        <h3 className={`text-lg font-semibold text-gray-900 dark:text-white`}>
-                            Log Session
-                        </h3>
-                        <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal" onClick={() => { setModalOpen(''); setModalParent(''); handleResetSessions(); logSessionForm.clearErrors(); logSessionForm.reset() }}>
-                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                            </svg>
-                            <span className="sr-only">Close modal</span>
-                        </button>
-                    </div>
-                    <LogSessionModal handleCreate={handleCreate} handleModalOpen={handleModalOpen} sessions={sessions} handleResetSessions={handleResetSessions} daySelected={daySelected} handleDaySelected={handleDaySelected} logSessionForm={logSessionForm} hobbyTitles={formReadyHobbies} />
+
+        <Modal opened={logSessionModalOpen} onClose={closeModal} title="Log Session" centered closeOnClickOutside size={'90%'} overlayProps={{
+            backgroundOpacity: 0.55, blur: 3, className: 'drop-shadow-xl overflow-hidden'
+        }} styles={{
+            header: { backgroundColor: '#b9f8cf', color: 'black', borderBottom: '1px solid #334155' },
+            body: { backgroundColor: '#b9f8cf', padding: '10px', paddingTop: '10px', maxHeight: '90vh', maxWidth: '90vw', overflow: 'hidden' }
+        }}>
+            {loading ? (
+                <div className="min-w-[90vw] max-h-[75vh] flex flex-col justify-start items-center bg-green-200 overflow-hidden">
+                    <LoadingSpinner />
                 </div>
-            </div>
-        </div>
+            ) : (
+                <LogSessionModal handleCreate={handleCreate} handleModalOpen={handleModalOpen} daySelected={daySelected} handleDaySelected={handleDaySelected} logSessionForm={logSessionForm} />
+            )}
+        </Modal>
 
     )
 }

@@ -1,52 +1,73 @@
 import { create } from 'zustand';
-import { IUser } from '@/models/types/user';
-import { IUserObject } from '@/models/types/userObject';
-import { IIndexedEntry } from '@/models/types/entry';
-import { ColorMapType } from '@/models/types/colorMap';
-import { IFieldObject } from '@/models/types/field';
-import { BarDataSets } from '@/models/types/dataSets';
-import { MonthlyTrackerData } from '@/models/types/tracker';
-import { PercentageByHobbiesData } from '@/models/types/percentage';
-import { EntriesOTDType } from '@/models/types/otds';
+import { HobbyColorMapType } from '@/models/types/colorMap';
+import { PercentageType } from '@/components/pagecomponents/dashboard/statsView';
+import { MonthSums, YearSums } from '@/app/actions/statsActions/statActions';
+import { PieChartCell } from '@mantine/charts';
+import { ISession } from '@/models/types/session';
+import { HobbySessionInfo, MonthlyInfo } from '@/utils/apihelpers/get/initData/initDashboardParams';
 
-export type DashProps = {
-  userInfo: IUser;
-  colorMap: ColorMapType[];
-  fieldObjects: IFieldObject[];
-  objectToUse: IUserObject;
-  sessionsFound: IIndexedEntry[];
-  totalTimePerMonth: number[];
-  userObjects: IUserObject[];
-}
-
-export type TransformedDashProps = {
-  percentageByHobbies: PercentageByHobbiesData;
-  monthlyTracker: MonthlyTrackerData;
-  barDataSets: BarDataSets;
-}
-
-type Store = {
-  dashProps: DashProps | null;
-  setDashProps: (dashProps: DashProps) => void;
+type DataStore = {
   thisMonth: number;
   setThisMonth: (thisMonth: number) => void;
-  daySelected: Date;
-  setDaySelected: (daySelected: Date) => void;
-  transformedDashProps: TransformedDashProps;
-  setTransformedDashProps: (transformedDashProps: TransformedDashProps) => void;
-  entriesOTD: EntriesOTDType[]
-  setEntriesOTD: (entriesOTD: EntriesOTDType[]) => void;
+  daySelected: string;
+  setDaySelected: (daySelected: string) => void;
+
+  percentagesByHobbies: PercentageType[];
+  setPercentagesByHobbies: (percentagesByHobbies: PercentageType[]) => void;
+  barData: { date: string, time: number, color: string }[]
+  setBarData: (barData: { date: string, time: number, color: string }[]) => void;
+  barDataTwo: { date: string, time: number, color: string }[]
+  setBarDataTwo: (barDataTwo: { date: string, time: number, color: string }[]) => void;
+  daysWithPieChart: PieChartCell[]
+  setDaysWithPieChart: (daysWithPieChart: PieChartCell[]) => void;
+
+  monthlyInfoCounts: MonthlyInfo[];
+  setMonthlyInfo: (monthlyInfoCounts: MonthlyInfo[]) => void;
+  hobbySessionInfo: HobbySessionInfo[]
+  setHobbySessionInfo: (hobbySessionInfo: HobbySessionInfo[]) => void;
+  hobbyColorMap: HobbyColorMapType[];
+  setHobbyColorMap: (colorMap: HobbyColorMapType[]) => void;
+  sessions: ISession[];
+  setSessions: (sessions: ISession[]) => void;
+
+  monthlySummaries: MonthSums[];
+  setMonthlySummaries: (monthlySummaries: MonthSums[]) => void;
+  yearlySummaries: YearSums[];
+  setYearlySummaries: (yearlySummaries: YearSums[]) => void;
+
 };
 
-export const useStore = create<Store>((set) => ({
-  dashProps: null,
-  setDashProps: (dashProps) => set({ dashProps }),
-  thisMonth: new Date().getMonth() as number,
+export const useDataStore = create<DataStore>((set) => ({
+  //calendar and date info
+  thisMonth: new Date().getMonth() + 1 as number,
   setThisMonth: (thisMonth) => set({ thisMonth }),
-  daySelected: new Date(),
+  daySelected: new Date().toLocaleDateString(),
   setDaySelected: (daySelected) => set({ daySelected }),
-  transformedDashProps: {} as TransformedDashProps,
-  setTransformedDashProps: (transformedDashProps) => set({ transformedDashProps }),
-  entriesOTD: [] as EntriesOTDType[],
-  setEntriesOTD: (newEnts) => set({ entriesOTD: newEnts })
+
+  //charts
+  percentagesByHobbies: [] as PercentageType[],
+  setPercentagesByHobbies: (percentagesByHobbies) => set({ percentagesByHobbies }),
+  barData: [] as { date: string, time: number, color: string }[],
+  setBarData: (barData) => set({ barData }),
+  barDataTwo: [] as { date: string, time: number, color: string }[],
+  setBarDataTwo: (barDataTwo) => set({ barDataTwo }),
+  daysWithPieChart: {} as PieChartCell[],
+  setDaysWithPieChart: (daysWithPieChart) => set({ daysWithPieChart }),
+
+  //data
+  monthlyInfoCounts: [] as MonthlyInfo[],
+  setMonthlyInfo: (monthlyInfoCounts) => set({ monthlyInfoCounts }),
+  hobbySessionInfo: [] as HobbySessionInfo[],
+  setHobbySessionInfo: (hobbySessionInfo) => set({ hobbySessionInfo }),
+  hobbyColorMap: [] as HobbyColorMapType[],
+  setHobbyColorMap: (hobbyColorMap) => set({ hobbyColorMap }),
+  sessions: [] as ISession[],
+  setSessions: (sessions) => set({ sessions }),
+
+  //sums
+  monthlySummaries: [] as MonthSums[],
+  setMonthlySummaries: (monthlySummaries) => set({ monthlySummaries }),
+  yearlySummaries: [] as YearSums[],
+  setYearlySummaries: (yearlySummaries) => set({ yearlySummaries }),
+
 }));

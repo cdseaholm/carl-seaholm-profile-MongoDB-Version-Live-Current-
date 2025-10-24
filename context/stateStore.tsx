@@ -1,5 +1,5 @@
 
-import { IEntry } from '@/models/types/entry';
+import { IEntry } from '@/models/old/types/entry';
 import { create } from 'zustand';
 
 
@@ -14,6 +14,8 @@ interface StateStore {
     setHeightQuery: (width: number) => void;
     taskDetailToShow: IEntry;
     setTaskDetailToShow: (taskDetailToShow: IEntry) => void;
+    overlay: boolean;
+    setOverlay: (overlay: boolean) => void;
 }
 
 export const useStateStore = create<StateStore>((set) => ({
@@ -27,4 +29,6 @@ export const useStateStore = create<StateStore>((set) => ({
     setHeightQuery: (height) => set({ heightQuery: height }),
     taskDetailToShow: {} as IEntry,
     setTaskDetailToShow: (taskDetailToShow) => set({ taskDetailToShow }),
+    overlay: false,
+    setOverlay: (overlay) => set({ overlay }),
 }));

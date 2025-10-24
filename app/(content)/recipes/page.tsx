@@ -1,5 +1,5 @@
 
-import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
+import Loader from "@/components/misc/loader";
 import { useUserStore } from "@/context/userStore";
 import { IUser } from "@/models/types/user";
 import { Metadata } from "next";
@@ -18,9 +18,9 @@ export default async function Page() {
     {/**const userInfo = await initData(); */ }
 
     return (
-        <MainPageBody>
+        <Loader>
             {/**<Recipes userInfo={userInfo} /> */}
             <p>Recipes Page Placeholder - Construction Zone</p>
-        </MainPageBody>
+        </Loader>
     );
 }

@@ -1,6 +1,6 @@
 
+import Loader from "@/components/misc/loader";
 import SignUpPage from "@/components/pagecomponents/auth/signuppage";
-import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 export default async function Page() {
     
     return (
-        <MainPageBody>
+        <Loader>
             <SignUpPage />
-        </MainPageBody>
+        </Loader>
     )
 }
