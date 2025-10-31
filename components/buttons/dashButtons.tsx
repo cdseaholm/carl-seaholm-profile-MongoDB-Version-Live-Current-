@@ -7,8 +7,8 @@ export function DashButtons({ handleDashToShow, dashToShow, handleDaySelected, d
 
     const setShowCalendar = useModalStore(state => state.setShowCalendar);
 
-    const buttonClass = `hover:bg-gray-300 rounded-md px-1 rounded-md bg-gray-400/40 border w-1/3`;
-    const textClass = `text-sm sm:text-base hover:text-gray-800`
+    const buttonClass = `hover:bg-gray-300 rounded-md px-2 py-1 rounded-md bg-gray-400/40 border w-content`;
+    const textClass = `text-xs sm:text-sm md:text-base hover:text-gray-800`
 
     return (
         <div className="flex flex-row justify-start items-center space-x-1 md:space-x-5 pr-2 w-full sm:w-1/2 p-2">

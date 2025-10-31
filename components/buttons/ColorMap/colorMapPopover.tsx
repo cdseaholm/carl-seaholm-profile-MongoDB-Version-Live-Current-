@@ -13,7 +13,7 @@ export default function ColorMapPopover({ buttonClass, textClass }: { buttonClas
         <Popover width={250} position="bottom" withArrow shadow="md">
             <Popover.Target>
                 <button className={`${buttonClass}`}>
-                    <p className={`${textClass}`}>Hobby Color Index</p>
+                    <p className={`${textClass}`}>Hobby Colors</p>
                 </button>
             </Popover.Target>
 
