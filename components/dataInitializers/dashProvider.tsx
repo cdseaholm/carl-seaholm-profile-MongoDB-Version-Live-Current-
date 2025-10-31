@@ -26,7 +26,6 @@ export default function DashProvider() {
     const [showDescriptions, setShowDescriptions] = useState<boolean>(false);
     const [showTotTime, setShowTotTime] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
-    const [indexShown, setIndexShown] = useState<boolean>(false);
     const daySelected = useDataStore(state => state.daySelected);
     const sessions = useDataStore(state => state.sessions);
     //global stored variables
@@ -52,7 +51,6 @@ export default function DashProvider() {
     const setDashToShow = useModalStore((state) => state.setDashToShow);
     const setShowCalendar = useModalStore((state) => state.setShowCalendar);
     const setDaySelected = useDataStore(state => state.setDaySelected);
-    const hobbyColorMap = useDataStore(state => state.hobbyColorMap);
 
     useEffect(() => {
         setLoading(false);
@@ -119,7 +117,7 @@ export default function DashProvider() {
         ) : (
             <MainChild>
                 <LogSessionDataInit daySelected={daySelected} />
-                <DashButtonBoard dashToShow={dashToShow} handleDashToShow={handleDashToShow} indexShown={indexShown} setIndexShown={setIndexShown} adminID={adminBoolTruth} hobbyColorMap={hobbyColorMap} handleDaySelected={handleDaySelected} daySelected={daySelected} />
+                <DashButtonBoard dashToShow={dashToShow} handleDashToShow={handleDashToShow} adminID={adminBoolTruth} handleDaySelected={handleDaySelected} daySelected={daySelected} />
                 <InnerTemplate>
                     {
                         dashToShow === 'calendar' ? (

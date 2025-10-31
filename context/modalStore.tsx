@@ -28,5 +28,5 @@ export const useModalStore = create<ModalStore>((set) => ({
     dashToShow: 'stats',
     setDashToShow: (dashToShow) => set({ dashToShow }),
     logSessionModalOpen: false,
-    setLogSessionModalOpen: (logSessionModalOpen) => set({ logSessionModalOpen })
+    setLogSessionModalOpen: (logSessionModalOpen) => set({ logSessionModalOpen }),
 }));

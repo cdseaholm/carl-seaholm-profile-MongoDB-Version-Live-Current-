@@ -82,8 +82,8 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
     return (
 
 
-      <div className="flex flex-col justify-start items-center w-screen h-screen bg-white/50 overflow-hidden">
-        <div className="flex flex-col justify-start items-center w-screen h-screen bg-slate-900/50 overflow-hidden">
+      <div className="flex flex-col justify-start items-center w-screen h-dvh bg-white/50 overflow-hidden">
+        <div className="flex flex-col justify-start items-center w-screen h-dvh bg-slate-900/50 overflow-hidden">
           {status === 'loading' ? (
             <LoadingSpinner />
           ) : (
@@ -95,9 +95,7 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
                 {loading ? (
                   <LoadingSpinner />
                 ) : (
-                  <>
-                    {children}
-                  </>
+                  children
                 )}
               </MainWrapper>
               {globalLoading && (
