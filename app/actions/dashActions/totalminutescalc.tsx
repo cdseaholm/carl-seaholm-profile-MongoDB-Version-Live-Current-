@@ -1,5 +1,5 @@
 import { useHobbyStore } from "@/context/hobbyStore";
-import { IIndexedEntry } from "@/models/types/entry";
+import { IIndexedEntry } from "@/models/old/types/entry";
 import { isSameYear, isThisYear, subYears } from "date-fns";
 
 

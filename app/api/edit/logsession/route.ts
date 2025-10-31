@@ -5,8 +5,8 @@ import { IUser } from "@/models/types/user";
 import { getServerSession, User } from "next-auth";
 import { getToken } from "next-auth/jwt";
 import MongoUser from "@/models/user";
-import { IEntry } from "@/models/types/entry";
 import { IFieldObject } from "@/models/types/field";
+import { IEntry } from "@/models/old/types/entry";
 
 
 export async function PUT(req: NextRequest) {

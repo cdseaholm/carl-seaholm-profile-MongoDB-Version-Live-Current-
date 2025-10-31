@@ -1,6 +1,5 @@
 import { newSesh } from "@/components/modals/modalContent/LogSession/logsessiondatainit";
-import { DashProps, useStore } from "@/context/dataStore";
-import { IIndexedEntry } from "@/models/types/entry";
+import { IIndexedEntry } from "@/models/old/types/entry";
 import { IField, IFieldObject } from "@/models/types/field";
 
 export async function CombineNewAndOld({ fieldObjects, sessionsFound, seshCheck }: { fieldObjects: IFieldObject[], sessionsFound: IIndexedEntry[], seshCheck: newSesh[] }) {
@@ -42,13 +41,13 @@ export async function CombineNewAndOld({ fieldObjects, sessionsFound, seshCheck 
         }
     });
 
-    let newDashProps = {
-        ...useStore.getState().dashProps,
-        fieldObjects: newFieldObjectsArray,
-        sessionsFound: newSessionsArray
-    } as DashProps;
+    // let newDashProps = {
+    //     ...useDataStore.getState().dashProps,
+    //     fieldObjects: newFieldObjectsArray,
+    //     sessionsFound: newSessionsArray
+    // } as DashProps;
 
-    useStore.getState().setDashProps(newDashProps);
+    // useDataStore.getState().setDashProps(newDashProps);
 
     return true;
 }

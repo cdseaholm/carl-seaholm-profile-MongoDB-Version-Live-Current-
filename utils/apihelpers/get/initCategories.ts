@@ -1,6 +1,6 @@
+import { IUserObject } from "@/models/old/types/userObject";
+import { IUserObjectIndexed } from "@/models/old/types/userObjectIndexed";
 import { IField, IFieldObject } from "@/models/types/field";
-import { IUserObject } from "@/models/types/userObject";
-import { IUserObjectIndexed } from "@/models/types/userObjectIndexed";
 
 export async function InitCategories({ objectToUse, fieldObjects }: { objectToUse: IUserObject, fieldObjects: IFieldObject[] }) {
 

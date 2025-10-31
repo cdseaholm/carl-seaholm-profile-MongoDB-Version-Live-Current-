@@ -1,8 +1,8 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IUser } from "./types/user";
-import { userObjectSchema } from "./userObject";
-import { entrySchema } from "./entry";
-import { fieldObjectSchema } from "./fieldObject";
+import { entrySchema } from "./session";
+import { fieldObjectSchema } from "./old/fieldObject";
+import { userObjectSchema } from "./old/userObject";
 
 const userSchema = new Schema(
     {
@@ -26,6 +26,8 @@ const userSchema = new Schema(
             type: Boolean,
             required: true
         },
+        //keep these to migrate to new structure
+        //migrateToNewStructure will remove these after migration
         userObjects: {
             type: [userObjectSchema],
             required: false
@@ -45,7 +47,7 @@ const userSchema = new Schema(
         resetPasswordExpires: {
             type: String,
             default: ''
-        }
+        },
     },
     {
         timestamps: true

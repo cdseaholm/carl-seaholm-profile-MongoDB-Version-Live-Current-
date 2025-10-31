@@ -1,124 +1,61 @@
 'use client'
 
-import { Checkbox, Combobox, Group, Input, InputBase, Pill, PillsInput, useCombobox } from "@mantine/core";
+import { Combobox, InputBase, Tooltip, useCombobox } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { UseFormReturnType } from "@mantine/form";
 import { LogSessionFormType, logSessionType } from "./logsessiondatainit";
 import { useState } from "react";
-import { toast } from "sonner";
+import { FiInfo } from "react-icons/fi";
 
-export default function LogSessionModal({ daySelected, handleCreate, hobbyTitles, handleModalOpen, sessions, handleResetSessions, handleDaySelected, logSessionForm }: { handleCreate: ({ logSessionForm }: { logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) => void, hobbyTitles: logSessionType[], handleModalOpen: (title: string) => void, sessions: { hobby: string, time: string }[], handleResetSessions: () => void, daySelected: Date, handleDaySelected: (arg: Date) => void, logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) {
-
-    const activeHobbies = logSessionForm.getValues().newSessions.map((hob) => hob.session);
-    const combobox = useCombobox({
-        onDropdownClose: () => combobox.resetSelectedOption(),
-        onDropdownOpen: () => combobox.updateSelectedOptionIndex('active'),
-    });
-
-    const handleValueRemove = (index: number) => {
-        logSessionForm.removeListItem('newSessions', index)
-    }
-
-    const handleValueSelect = (val: string) => {
-        const valToUse = hobbyTitles.find((hob) => hob.session === val);
-        if (!valToUse) {
-            toast.info('Error with selection');
-            return
-        }
-        activeHobbies.includes(valToUse.session) ? handleValueRemove(activeHobbies.findIndex((hob) => hob === valToUse.session)) : logSessionForm.insertListItem('newSessions', valToUse)
-    }
-
-    const values = logSessionForm.getValues().newSessions.map((item, index) => (
-        <Pill key={item.session} withRemoveButton onRemove={() => handleValueRemove(index)}>
-            {item.session}
-        </Pill>
-    ));
-
-    const options = hobbyTitles.map((item, index) => {
-        return (
-            <Combobox.Option value={item.session} key={index} active={activeHobbies.includes(item.session)}>
-                <Group gap="sm">
-                    <Checkbox
-                        checked={activeHobbies.includes(item.session)}
-                        onChange={() => { }}
-                        aria-hidden
-                        tabIndex={-1}
-                        style={{ pointerEvents: 'none' }}
-                    />
-                    <span>{item.session}</span>
-                </Group>
-            </Combobox.Option>
-        )
-    });
+export default function LogSessionModal({ daySelected, handleCreate, handleModalOpen, handleDaySelected, logSessionForm }: { handleCreate: ({ logSessionForm }: { logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) => void, handleModalOpen: (title: string) => void, daySelected: string, handleDaySelected: (arg: Date) => void, logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) {
 
     return (
-        <div style={{ maxHeight: '80vh', overflowY: 'hidden', height: '600px' }}>
-            <form className="p-4 md:p-5 flex flex-col justify-start items-center w-full h-full" onSubmit={logSessionForm.onSubmit(() => handleCreate({ logSessionForm }))}>
-                <div className="grid gap-4 mb-4 grid-cols-1 w-full h-content">
-                    <DatePickerInput
-                        label="Pick date"
-                        placeholder="Session Date"
-                        value={daySelected}
-                        onChange={(date) => {
-                            if (date) {
-                                handleDaySelected(date);
-                            }
-                        }}
-                    />
-                    <Combobox store={combobox} withinPortal={false} onOptionSubmit={handleValueSelect}>
-                        <Combobox.DropdownTarget>
-                            <PillsInput pointer onClick={() => combobox.toggleDropdown()}>
-                                <Pill.Group>
-                                    {values.length > 0 ? (
-                                        values
-                                    ) : (
-                                        <Input.Placeholder>{`Choose the hobbies you'd like to record sessions for`}</Input.Placeholder>
-                                    )}
-
-                                    <Combobox.EventsTarget>
-                                        <PillsInput.Field
-                                            type="hidden"
-                                            onBlur={() => combobox.closeDropdown()}
-                                            onKeyDown={(event) => {
-                                                if (event.key === 'Backspace') {
-                                                    event.preventDefault();
-                                                    handleValueRemove(values.length - 1);
-                                                }
-                                            }}
-                                        />
-                                    </Combobox.EventsTarget>
-                                </Pill.Group>
-                            </PillsInput>
-                        </Combobox.DropdownTarget>
-
-                        <Combobox.Dropdown>
-                            <Combobox.Options>{options}</Combobox.Options>
-                        </Combobox.Dropdown>
-                    </Combobox>
-                </div>
-                <div className={`grid md:grid-cols-2 grid-cols-1 gap-2 h-full w-full overflow-y-auto space-y-2 border rounded-t-md border-gray-300 p-2`}>
-                    {logSessionForm.getValues().newSessions.map((session, index) => (
-                        <div className="flex flex-col justify-start items-center border-2 space-x-2 box-content border-white/30 p-4 rounded-md w-content h-full space-y-2 text-white" key={index}>
-                            {`${session.session}'s time to record: `}
-                            <div key={index} className="flex flex-row items-start justify-center space-x-2">
-                                <p className="text-sm font-medium text-gray-900 dark:text-white my-2 pb-12">
-                                    {index + 1}.
-                                </p>
-                                <IndividualTimeSelect session={session} logSessionForm={logSessionForm} passedIndex={index} />
-                            </div>
+        <form className="flex flex-col justify-start items-center max-w-[90vw] max-h-[75vh] bg-green-200 overflow-hidden" onSubmit={logSessionForm.onSubmit(() => handleCreate({ logSessionForm }))}>
+            <div className="flex flex-row justify-between items-center w-full h-content border-b border-gray-400 pb-2 mb-2">
+                <DatePickerInput
+                    label="Pick date"
+                    placeholder="Session Date"
+                    value={new Date(daySelected)}
+                    onChange={(date) => {
+                        if (date) {
+                            handleDaySelected(date);
+                        }
+                    }}
+                />
+                <p className="underline text-[12px] font-semibold">Times to record</p>
+            </div>
+            <section className={`flex flex-col justify-start items-center w-full h-[85%] md:h-[70vh] py-2 px-1 sm:py-3 sm:px-2 bg-slate-100/70 rounded-md shadow-[inset_0_2px_8px_rgba(0,0,0,0.10),inset_0_-2px_8px_rgba(0,0,0,0.10)] border border-gray-300 overflow-auto scrollbar-thin scrollbar-webkit scrollbar-track-rounded-full space-y-2`}>
+                {logSessionForm.getValues().newSessions.map((session, newSeshI) => (
+                    <div className="flex flex-col justify-start items-start sm:flex-row sm:justify-between sm:items-center border-1 space-x-2 border-slate/30 p-2 rounded-md w-full h-fit text-black" key={newSeshI}>
+                        {`${session.session}: `}
+                        <div key={newSeshI} className="flex flex-row sm:justify-end items-center justify-evenly space-x-2 h-fit w-fit sm:w-1/2">
+                            <Tooltip label="Select from most frequently used times or input your own value" withArrow>
+                                <FiInfo className="text-gray-500 hover:text-gray-800 cursor-pointer" />
+                            </Tooltip>
+                            {session.mostFrequentlyUseTime.map((time, timeI) => (
+                                <button type="button" key={timeI} className={`text-black bg-blue-100 border border-gray-400 rounded-md hover:bg-blue-400 w-1/4 sm:w-1/6`} data-modal-toggle="crud-modal" onClick={() => logSessionForm.setFieldValue(`newSessions.${newSeshI}.time`, time ? time.toString() : '')} style={{
+                                    minHeight: '1.5rem',
+                                    height: '1.5rem',
+                                    padding: '0.1rem 0.2rem',
+                                    fontSize: '0.7rem'
+                                }}>
+                                    {`${time}`}
+                                </button>
+                            ))}
+                            <IndividualTimeSelect session={session} logSessionForm={logSessionForm} passedIndex={newSeshI} />
                         </div>
-                    ))}
-                </div>
-                <div className="flex flex-row justify-between space-x-1 items-center border-t border-gray-400 pt-2 w-full h-content">
-                    <button type="submit" className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        {`+ Save ${sessions.length > 1 ? 'Sessions' : 'Session'}`}
-                    </button>
-                    <button type="button" className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white pr-5`} data-modal-toggle="crud-modal" onClick={() => { handleModalOpen('addhobby'); handleResetSessions() }}>
-                        Create new Tracker
-                    </button>
-                </div>
-            </form>
-        </div>
+                    </div>
+                ))}
+            </section>
+            <div className="flex flex-row justify-between space-x-1 items-center border-t border-gray-400 w-full h-content pt-2 mt-2">
+                <button type="submit" className={`text-white text-[8px] sm:text-sm p-1 sm:px-2 sm:py-1.5 text-center w-1/2 sm:w-1/4 font-medium rounded-lg ${logSessionForm.isDirty() ? "bg-blue-400 hover:bg-blue-200 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" : "bg-gray-400 cursor-not-allowed"}`} data-modal-toggle="crud-modal" disabled={!logSessionForm.isDirty()}>
+                    {`+ Save New`}
+                </button>
+                <button type="button" className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-[8px] sm:text-sm p-1 sm:px-2 sm:py-1.5  dark:hover:bg-gray-600 dark:hover:text-white w-1/2 sm:w-1/4`} data-modal-toggle="crud-modal" onClick={() => { handleModalOpen('addhobby') }}>
+                    Create Hobby
+                </button>
+            </div>
+        </form>
     )
 }
 
@@ -142,11 +79,11 @@ function IndividualTimeSelect({ session, logSessionForm, passedIndex }: { sessio
             onOptionSubmit={(val) => {
                 if (val === '$create') {
                     setOptionRows((curr) => [...curr, search]);
-                    const newLog = { session: session.session, hobbyKeyId: session.hobbyKeyId, time: search } as logSessionType
-                    logSessionForm.replaceListItem('newSessions', passedIndex, newLog);
+                    const newLog = { session: session.session, hobbyKeyId: session.hobbyKeyId, time: search, mostFrequentlyUseTime: session.mostFrequentlyUseTime } as logSessionType
+                    logSessionForm.setFieldValue(`newSessions.${passedIndex}`, newLog);
                 } else {
-                    const newLog = { session: session.session, hobbyKeyId: session.hobbyKeyId, time: val } as logSessionType
-                    logSessionForm.replaceListItem('newSessions', passedIndex, newLog);
+                    const newLog = { session: session.session, hobbyKeyId: session.hobbyKeyId, time: val, mostFrequentlyUseTime: session.mostFrequentlyUseTime } as logSessionType
+                    logSessionForm.setFieldValue(`newSessions.${passedIndex}`, newLog);
                 }
                 combobox.closeDropdown();
             }}
@@ -173,8 +110,15 @@ function IndividualTimeSelect({ session, logSessionForm, passedIndex }: { sessio
                         combobox.closeDropdown();
                         setSearch(search || '');
                     }}
-                    placeholder="Search value"
+                    placeholder="Search"
                     rightSectionPointerEvents="none"
+                    size="sm"
+                    styles={{
+                        input: {
+
+                        }
+                    }}
+                    w={'20%'}
                     onKeyDown={(event) => {
                         if (event.key === 'Backspace') {
                             event.preventDefault();
@@ -216,3 +160,76 @@ function IndividualTimeSelect({ session, logSessionForm, passedIndex }: { sessio
         </Combobox>
     );
 }
+
+{/* <Combobox store={combobox} withinPortal={false} onOptionSubmit={handleValueSelect}>
+                    <Combobox.DropdownTarget>
+                        <PillsInput pointer onClick={() => combobox.toggleDropdown()}>
+                            <Pill.Group>
+                                {values.length > 0 ? (
+                                    values
+                                ) : (
+                                    <Input.Placeholder>{`Choose the hobbies you'd like to record sessions for`}</Input.Placeholder>
+                                )}
+
+                                <Combobox.EventsTarget>
+                                    <PillsInput.Field
+                                        type="hidden"
+                                        onBlur={() => combobox.closeDropdown()}
+                                        onKeyDown={(event) => {
+                                            if (event.key === 'Backspace') {
+                                                event.preventDefault();
+                                                handleValueRemove(values.length - 1);
+                                            }
+                                        }}
+                                    />
+                                </Combobox.EventsTarget>
+                            </Pill.Group>
+                        </PillsInput>
+                    </Combobox.DropdownTarget>
+
+                    {/* <Combobox.Dropdown>
+                        <Combobox.Options>{options}</Combobox.Options>
+                    </Combobox.Dropdown> */}
+//</Combobox > */}
+
+//const activeHobbies = logSessionForm.getValues().newSessions.map((hob) => hob.session);
+// const combobox = useCombobox({
+//     onDropdownClose: () => combobox.resetSelectedOption(),
+//     onDropdownOpen: () => combobox.updateSelectedOptionIndex('active'),
+// });
+
+// const handleValueRemove = (index: number) => {
+//     logSessionForm.removeListItem('newSessions', index)
+// }
+
+// const handleValueSelect = (val: string) => {
+//     const valToUse = hobbyTitles.find((hob) => hob.session === val);
+//     if (!valToUse) {
+//         toast.info('Error with selection');
+//         return
+//     }
+//     activeHobbies.includes(valToUse.session) ? handleValueRemove(activeHobbies.findIndex((hob) => hob === valToUse.session)) : logSessionForm.insertListItem('newSessions', valToUse)
+// }
+
+// const values = logSessionForm.getValues().newSessions.map((item, index) => (
+//     <Pill key={item.session} withRemoveButton onRemove={() => handleValueRemove(index)}>
+//         {item.session}
+//     </Pill>
+// ));
+
+// const options = hobbyTitles.map((item, index) => {
+//     return (
+//         <Combobox.Option value={item.session} key={index} active={activeHobbies.includes(item.session)}>
+//             <Group gap="sm">
+//                 <Checkbox
+//                     checked={activeHobbies.includes(item.session)}
+//                     onChange={() => { }}
+//                     aria-hidden
+//                     tabIndex={-1}
+//                     style={{ pointerEvents: 'none' }}
+//                 />
+//                 <span>{item.session}</span>
+//             </Group>
+//         </Combobox.Option>
+//     )
+// });

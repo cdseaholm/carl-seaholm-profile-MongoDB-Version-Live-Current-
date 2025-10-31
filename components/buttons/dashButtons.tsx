@@ -1,10 +1,9 @@
 'use client'
 
 import { useModalStore } from "@/context/modalStore";
-import { useStateStore } from "@/context/stateStore";
+import ColorMapPopover from "./ColorMap/colorMapPopover";
 
-export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToShow, dashToShow, handleDaySelected, daySelected }: { handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, dashToShow: string, indexShown: boolean, setIndexShown: (indexShown: boolean) => void, colorMap: { color: string, title: string }[], handleDaySelected: (date: Date) => void, daySelected: Date }) {
-    const isSmallestBreakpoint = useStateStore((state) => state.widthQuery) < 400 ? true : false;
+export function DashButtons({ handleDashToShow, dashToShow, handleDaySelected, daySelected }: { handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, dashToShow: string, handleDaySelected: (date: string) => void, daySelected: string }) {
 
     const setShowCalendar = useModalStore(state => state.setShowCalendar);
 
@@ -45,23 +44,7 @@ export function DashButtons({ indexShown, setIndexShown, colorMap, handleDashToS
             }}>
                 <p className={`${textClass}`}>{"Stats"}</p>
             </button>
-            <button className={`${buttonClass}`} onClick={() => setIndexShown(!indexShown)}>
-                <p className={`${textClass}`}>Color Index</p>
-                {indexShown && (
-                    <div className={`absolute z-30 flex flex-col justify-start bg-gray-300 border border-black ${isSmallestBreakpoint ? 'right-4' : ''}`}>
-                        {colorMap?.map((map: { color: string, title: string }, index: number) => {
-                            const color = map.color;
-                            const title = map.title;
-                            return (
-                                <li key={index} className='flex flex-row items-center justify-start px-1'>
-                                    <div className="h-2 w-2 rounded-full border border-slate-500" style={{ backgroundColor: color }} />
-                                    <p className='text-xs text-gray-800 px-1'>{title}</p>
-                                </li>
-                            )
-                        })}
-                    </div>
-                )}
-            </button>
+            <ColorMapPopover buttonClass={buttonClass} textClass={textClass} />
         </div>
     )
 }

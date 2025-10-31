@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { IHobby } from '../models/types/hobby';
-import { dataType } from '@/components/pagecomponents/dashboard/statsView';
-import { IUserObjectIndexed } from '@/models/types/userObjectIndexed';
+import { PercentageType } from '@/components/pagecomponents/dashboard/statsView';
+import { IEntry, IIndexedEntry } from '@/models/old/types/entry';
+import { IUserObjectIndexed } from '@/models/old/types/userObjectIndexed';
 import { IFieldObject } from '@/models/types/field';
-import { IEntry, IIndexedEntry } from '@/models/types/entry';
-import { ColorMapType } from '@/models/types/colorMap';
+import { HobbyColorMapType } from '@/models/types/colorMap';
 
 interface HobbyStore {
     filterItem: string;
@@ -19,8 +19,8 @@ interface HobbyStore {
     setHobbyToShow: (hobbyToShow: IHobby[]) => void;
     dashToShow: string;
     setDashToShow: (dashToShow: string) => void;
-    dayData: dataType[],
-    setDayData: (dayData: dataType[]) => void;
+    dayData: PercentageType[],
+    setDayData: (dayData: PercentageType[]) => void;
 
     categories: string[];
     setCategories: (categories: string[]) => void;
@@ -36,8 +36,8 @@ interface HobbyStore {
     setHobbyEntries: (hobbyEntries: IEntry[]) => void,
     sessionsIndexed: IIndexedEntry[],
     setSessionsIndexed: (sessionsIndexed: IIndexedEntry[]) => void,
-    colorMap: ColorMapType[],
-    setColorMap: (colorMap: ColorMapType[]) => void,
+    colorMap: HobbyColorMapType[],
+    setColorMap: (colorMap: HobbyColorMapType[]) => void,
     totalTimePastFiveMonths: number[],
     setTotalTimePastFiveMonths: (totalTimePastFiveMonths: number[]) => void,
     counterPerPastFiveMonths: number[],
@@ -57,8 +57,8 @@ export const useHobbyStore = create<HobbyStore>((set) => ({
     setHobbyToShow: (hobbyToShow) => set({ hobbyToShow }),
     dashToShow: 'stats',
     setDashToShow: (dashToShow) => set({ dashToShow }),
-    dayData: [] as dataType[],
-    setDayData: (data: dataType[]) => set({ dayData: data }),
+    dayData: [] as PercentageType[],
+    setDayData: (data: PercentageType[]) => set({ dayData: data }),
 
     categories: [] as string[],
     setCategories: (categories) => set({ categories }),
@@ -74,8 +74,8 @@ export const useHobbyStore = create<HobbyStore>((set) => ({
     setHobbyEntries: (entries: IEntry[]) => set({ hobbyEntries: entries }),
     sessionsIndexed: [] as IIndexedEntry[],
     setSessionsIndexed: (sessions: IIndexedEntry[]) => set({ sessionsIndexed: sessions }),
-    colorMap: [] as ColorMapType[],
-    setColorMap: (map: ColorMapType[]) => set({ colorMap: map }),
+    colorMap: [] as HobbyColorMapType[],
+    setColorMap: (map: HobbyColorMapType[]) => set({ colorMap: map }),
     totalTimePastFiveMonths: [] as number[],
     setTotalTimePastFiveMonths: (totalTime: number[]) => set({ totalTimePastFiveMonths: totalTime }),
     counterPerPastFiveMonths: [] as number[],

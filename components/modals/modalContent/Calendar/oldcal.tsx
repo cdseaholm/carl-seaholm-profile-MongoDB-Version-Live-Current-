@@ -4,11 +4,11 @@
 // import dayGridPlugin from '@fullcalendar/daygrid';
 // import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 // import React from 'react';
-// import { dataType } from '@/components/pagecomponents/dashboard/statsView';
+// import { PercentageType } from '@/components/pagecomponents/dashboard/statsView';
 // import { DateSelectArg, EventClickArg, EventContentArg } from '@fullcalendar/core/index.js';
 // import { CalEvent } from './calendarModalInit';
 
-// export default function CalendarModal({ adminIDBool, data, handleIndexOpen, handleDaySelect, handleEventClick, handleDayClick, objectsInADay }: { adminIDBool: boolean, data: dataType[], handleIndexOpen: () => void, handleDaySelect: (arg: DateSelectArg) => void, handleEventClick: (arg: EventClickArg | EventContentArg) => void, handleDayClick: (arg: DateClickArg) => void, objectsInADay: CalEvent[] }) {
+// export default function CalendarModal({ adminIDBool, data, handleIndexOpen, handleDaySelect, handleEventClick, handleDayClick, objectsInADay }: { adminIDBool: boolean, data: PercentageType[], handleIndexOpen: () => void, handleDaySelect: (arg: DateSelectArg) => void, handleEventClick: (arg: EventClickArg | EventContentArg) => void, handleDayClick: (arg: DateClickArg) => void, objectsInADay: CalEvent[] }) {
 
 //     return (
 
@@ -58,11 +58,11 @@
 //                 }}
 //                 dayMaxEventRows={10}
 //                 eventContent={(arg) => {
-//                     const entriesThisDay = [] as dataType[];
+//                     const entriesThisDay = [] as PercentageType[];
 //                     if (!data) {
 //                         return;
 //                     }
-//                     data.map((d: dataType) => {
+//                     data.map((d: PercentageType) => {
 //                         if (d.date === arg.event.startStr) {
 //                             entriesThisDay.push(d);
 //                         }
@@ -70,7 +70,7 @@
 //                     });
 //                     return (
 //                         <div className={`flex flex-row items-center flex-wrap`}>
-//                             {entriesThisDay && entriesThisDay.length > 0 && entriesThisDay.slice(0, 6).map((entry: dataType, index: number) => {
+//                             {entriesThisDay && entriesThisDay.length > 0 && entriesThisDay.slice(0, 6).map((entry: PercentageType, index: number) => {
 //                                 return (
 //                                     <div key={index} className="h-2 w-2 rounded-full mr-2 mb-1 border border-slate-500" style={{ backgroundColor: entry.color }} onClick={() => handleEventClick(arg)} />
 //                                 )

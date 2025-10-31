@@ -2,7 +2,7 @@
 
 import { useModalStore } from "@/context/modalStore";
 import { toast } from "sonner";
-import { useStore } from "@/context/dataStore";
+import { useDataStore } from "@/context/dataStore";
 import { IEntry } from "@/models/types/entry";
 import { CreateCustomEntry } from "@/utils/customFields/create";
 import { IField } from "@/models/types/field";
@@ -17,7 +17,7 @@ export default function AddNewEntryToObject() {
     const setModalOpen = useModalStore((state) => state.setModalOpen);
     const setModalParent = useModalStore((state) => state.setModalParent);
     const modalParent = useModalStore((state) => state.modalParent);
-    const userObjects = useStore((state) => state.userObjects);
+    const userObjects = useDataStore((state) => state.userObjects);
     console.log('userObjects', userObjects);
     const [objectToUse, setObjectToUse] = useState<IUserObject | null>(modalParent !== '' ? userObjects.find((object) => object.title === modalParent) as IUserObject : null);
 

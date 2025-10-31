@@ -1,10 +1,11 @@
 import connectDB from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import { IUserObject } from "@/models/types/userObject";
 import User from "@/models/user";
 import { IUser } from "@/models/types/user";
 import { IFieldObject } from "@/models/types/field";
-import { IEntry } from "@/models/types/entry";
+import { IEntry } from "@/models/old/types/entry";
+import { IUserObject } from "@/models/old/types/userObject";
+
 
 export async function PUT(req: NextRequest): Promise<NextResponse> {
 

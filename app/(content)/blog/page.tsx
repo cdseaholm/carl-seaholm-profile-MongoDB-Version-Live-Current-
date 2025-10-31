@@ -1,5 +1,5 @@
 import BlogDropdown from "@/components/dropdowns/blogdropdown";
-import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
+import Loader from "@/components/misc/loader";
 import { useUserStore } from "@/context/userStore";
 import { getCategorisedPosts } from "@/lib/posts/posts";
 import { post } from "@/models/types/post";
@@ -31,8 +31,8 @@ export default async function Page() {
     const catSort = categoriesForDrop.sort((a, b) => a < b ? -1 : 1).filter(category => category !== 'demo');
 
     return (
-        <MainPageBody>
+        <Loader>
             <BlogDropdown categoriesForDrop={catSort} posts={posts} />
-        </MainPageBody>
+        </Loader>
     );
 };

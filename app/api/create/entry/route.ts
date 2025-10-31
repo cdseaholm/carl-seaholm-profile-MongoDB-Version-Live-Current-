@@ -1,10 +1,10 @@
 import connectDB from "@/lib/mongodb";
 import MongoUser from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
-import { IEntry } from "@/models/types/entry";
 import { IUser } from "@/models/types/user";
 import { getServerSession, User } from "next-auth";
 import { getToken } from "next-auth/jwt";
+import { IEntry } from "@/models/old/types/entry";
 
 const checkObjectName = (objectName: string) => {
     const lowerName = objectName.toLowerCase();

@@ -1,6 +1,6 @@
 
+import Loader from '@/components/misc/loader';
 import NPAppsPage from '@/components/pagecomponents/np/npapps/npapps';
-import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
 import { Metadata } from 'next';
 import React from 'react';
 
@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 export default async function Page() {
     return (
-        <MainPageBody>
+        <Loader>
             <NPAppsPage />
-        </MainPageBody>
+        </Loader>
     );
 };

@@ -1,6 +1,6 @@
-import { IEntry } from "./entry";
+import { IEntry } from "../old/types/entry";
+import { IUserObject } from "../old/types/userObject";
 import { IFieldObject } from "./field";
-import { IUserObject } from "./userObject";
 
 
 export interface IUser {

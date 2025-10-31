@@ -1,5 +1,6 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { IHobby } from "./types/hobby";
+import { IHobby } from "../types/hobby";
+
 
 const hobbySchema = new Schema(
     {

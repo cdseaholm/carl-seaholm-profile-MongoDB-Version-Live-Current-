@@ -1,6 +1,6 @@
+import Loader from "@/components/misc/loader";
 import InnerHeader from "@/components/pagetemplates/innerheader/InnerHeader";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
-import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default async function Page() {
 
     return (
-        <MainPageBody>
+        <Loader>
             <InnerHeader>
                 <h1 className="text-lg underline">Sign in</h1>
             </InnerHeader>
@@ -41,6 +41,6 @@ export default async function Page() {
                     </div>
                 </div>
             </MainChild>
-        </MainPageBody>
+        </Loader>
     );
 }

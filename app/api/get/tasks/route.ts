@@ -6,7 +6,7 @@ import { getToken } from "next-auth/jwt";
 import { getServerSession } from "next-auth/next";
 import { User } from "next-auth";
 import TasksByUser from "@/models/tasks/tasksByUser";
-import { ITask } from "@/models/types/task";
+import { ITask } from "@/models/old/types/task";
 
 export async function GET(req: NextRequest) {
 

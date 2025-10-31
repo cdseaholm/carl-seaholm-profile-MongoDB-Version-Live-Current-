@@ -1,19 +1,19 @@
 'use client'
 
-import { EntriesOTDType } from "@/models/types/otds";
 import CalendarView from "../pagecomponents/dashboard/calendarView";
 import DashButtonBoard from "../pagecomponents/dashboard/dashButtonBoard";
 import InnerTemplate from "../pagetemplates/innerTemplate/innerTemplate";
 import MainChild from "../pagetemplates/mainchild/mainchild";
-import StatsView, { dataType, Tracker } from "../pagecomponents/dashboard/statsView";
+import StatsView from "../pagecomponents/dashboard/statsView";
 import React, { useEffect, useState } from "react";
 import LogSessionDataInit from "../modals/modalContent/LogSession/logsessiondatainit";
-import { BarData } from "@/app/actions/statsActions/statActions";
 import { Spinner } from "../misc/Spinner";
-import { useStore } from "@/context/dataStore";
+import { useDataStore } from "@/context/dataStore";
 import { useSession } from "next-auth/react";
 import { useModalStore } from "@/context/modalStore";
-import { ColorMapType } from "@/models/types/colorMap";
+import { PieChartCell } from "@mantine/charts";
+import { ISession } from "@/models/types/session";
+import { HobbySessionInfo } from "@/utils/apihelpers/get/initData/initDashboardParams";
 
 export default function DashProvider() {
 
@@ -26,18 +26,31 @@ export default function DashProvider() {
     const [showDescriptions, setShowDescriptions] = useState<boolean>(false);
     const [showTotTime, setShowTotTime] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
-    const [indexShown, setIndexShown] = useState<boolean>(false);
-
+    const daySelected = useDataStore(state => state.daySelected);
+    const sessions = useDataStore(state => state.sessions);
     //global stored variables
     const dashToShow = useModalStore((state) => state.dashToShow);
-    const daySelected = useStore(state => state.daySelected);
-    const entriesOTD = useStore(state => state.entriesOTD);
+    const hobbySessionsInfo = useDataStore(state => state.hobbySessionInfo) as HobbySessionInfo[];
+    const entriesOTD = [] as HobbySessionInfo[];
+    hobbySessionsInfo.forEach((hobbySessions: HobbySessionInfo) => {
+        const sessionsForDay = sessions.filter((session: ISession) => {
+            const sessionDate = new Date(session.date).toLocaleDateString();
+            return sessionDate === daySelected
+        });
+        const sessionsForHobbyForDay = sessionsForDay.filter((session: ISession) => session.hobbyTitle === hobbySessions.hobbyData.title);
+        if (sessionsForDay.length > 0) {
+            entriesOTD.push({
+                ...hobbySessions,
+                sessions: sessionsForHobbyForDay
+            });
+        }
+    });
+    const otdLength = entriesOTD ? entriesOTD.length : 0;
 
     //global set states
     const setDashToShow = useModalStore((state) => state.setDashToShow);
     const setShowCalendar = useModalStore((state) => state.setShowCalendar);
-    const setDaySelected = useStore(state => state.setDaySelected);
-    const dashProps = useStore(state => state.dashProps);
+    const setDaySelected = useDataStore(state => state.setDaySelected);
 
     useEffect(() => {
         setLoading(false);
@@ -73,7 +86,7 @@ export default function DashProvider() {
         }
     }
 
-    const handleDaySelected = async (date: Date) => {
+    const handleDaySelected = async (date: string) => {
         setLoading(true);
         setDaySelected(date);
         setLoading(false)
@@ -82,37 +95,29 @@ export default function DashProvider() {
     const handleDateIncrease = () => {
         const date = new Date(daySelected);
         date.setDate(date.getDate() + 1);
-        handleDaySelected(date);
+        handleDaySelected(date.toLocaleDateString());
     }
 
     const handleDateDecrease = () => {
         const date = new Date(daySelected);
         date.setDate(date.getDate() - 1);
-        handleDaySelected(date);
+        handleDaySelected(date.toLocaleDateString());
     }
 
-    const transformedDashProps = useStore(state => state.transformedDashProps);
+    const perc = useDataStore(state => state.percentagesByHobbies) as PieChartCell[];
+    const barData = useDataStore(state => state.barData) as { date: string, time: number, color: string }[];
+    const barDataTwo = useDataStore(state => state.barDataTwo) as { date: string, time: number, color: string }[];
+    const tracker = useDataStore(state => state.daysWithPieChart) as PieChartCell[];
 
-    if (!transformedDashProps) {
-        console.log('Error with transformed Props')
-    }
-    const tracker = transformedDashProps.monthlyTracker;
-    const perc = transformedDashProps.percentageByHobbies;
-    const dataSet = transformedDashProps.barDataSets;
 
-    const otdLength = entriesOTD as EntriesOTDType[] ? entriesOTD.length as number : 0;
-    let newData = perc ? perc.newData as dataType[] : [] as dataType[];
-    let daysWithHobbies = tracker ? tracker.newTrackerData : [] as Tracker[];
-    let newBarData = dataSet ? dataSet.newData as BarData[] : [] as BarData[];
-    let newBarDataTwo = dataSet ? dataSet.newDataTwo as BarData[] : [] as BarData[];
 
     return (
         loading ? (
             <Spinner />
         ) : (
             <MainChild>
-                <LogSessionDataInit />
-                <DashButtonBoard dashToShow={dashToShow} handleDashToShow={handleDashToShow} indexShown={indexShown} setIndexShown={setIndexShown} adminID={adminBoolTruth} colorMap={dashProps ? dashProps.colorMap : [] as ColorMapType[]} handleDaySelected={handleDaySelected} daySelected={daySelected} />
+                <LogSessionDataInit daySelected={daySelected} />
+                <DashButtonBoard dashToShow={dashToShow} handleDashToShow={handleDashToShow} adminID={adminBoolTruth} handleDaySelected={handleDaySelected} daySelected={daySelected} />
                 <InnerTemplate>
                     {
                         dashToShow === 'calendar' ? (
@@ -120,12 +125,19 @@ export default function DashProvider() {
                         ) :
                             dashToShow === 'stats' &&
                             //enter a month changer here to hold the month value since I'm elevating the state here
-                            <StatsView data={newData} barChartData={newBarData} barChartDataTwo={newBarDataTwo} daysWithHobbies={daysWithHobbies} handleLoading={handleLoading} loading={loading} />
+                            <StatsView
+                                hobbyPerc={Array.isArray(perc) ? perc : []}
+                                barChartData={Array.isArray(barData) ? barData : []}
+                                barChartDataTwo={Array.isArray(barDataTwo) ? barDataTwo : []}
+                                daysWith={Array.isArray(tracker) ? tracker : []}
+                                handleLoading={handleLoading}
+                                loading={loading}
+                            />
                         /** : dashToShow === 'todo' &&
                             <ToDoList adminID={adminBoolTruth} setModalOpen={setModalOpen} handleDateDecrease={handleDateDecrease} handleDateIncrease={handleDateIncrease} dateToUse={daySelected} entriesOTD={entriesOTD} /> */
                     }
                 </InnerTemplate>
-            </MainChild >
+            </MainChild>
         )
     );
 }

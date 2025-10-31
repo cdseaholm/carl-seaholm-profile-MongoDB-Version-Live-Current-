@@ -1,9 +1,9 @@
 import React from 'react';
-import MainPageBody from '@/components/pagetemplates/mainpagebody/mainpagebody';
 import OverviewPage from '@/components/pagecomponents/about/overview';
 import { Metadata } from 'next';
 import { useUserStore } from '@/context/userStore';
 import { IUser } from '@/models/types/user';
+import Loader from '@/components/misc/loader';
 
 export async function generateMetadata(): Promise<Metadata> {
     const userInfo = useUserStore.getState().userInfo as IUser;
@@ -17,8 +17,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Page() {
   return (
-    <MainPageBody>
+    <Loader>
       <OverviewPage />
-    </MainPageBody>
+    </Loader>
   )
 }

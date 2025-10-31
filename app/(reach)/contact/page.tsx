@@ -1,6 +1,6 @@
+import Loader from "@/components/misc/loader";
 import InnerTemplate from "@/components/pagetemplates/innerTemplate/innerTemplate";
 import MainChild from "@/components/pagetemplates/mainchild/mainchild";
-import MainPageBody from "@/components/pagetemplates/mainpagebody/mainpagebody";
 import { useUserStore } from "@/context/userStore";
 import { IUser } from "@/models/types/user";
 import { Metadata } from "next";
@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Page() {
     return (
-        <MainPageBody>
+        <Loader>
             <MainChild>
                 <InnerTemplate>
                     <div className="flex flex-col justify-center items-center text-center h-full w-full space-y-2" style={{ minHeight: '50dvh' }}>
@@ -26,6 +26,6 @@ export default async function Page() {
                     </div>
                 </InnerTemplate>
             </MainChild>
-        </MainPageBody>
+        </Loader>
     );
 };

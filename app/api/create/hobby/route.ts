@@ -5,7 +5,7 @@ import { IUser } from "@/models/types/user";
 import { getServerSession, User } from "next-auth";
 import { getToken } from "next-auth/jwt";
 import { IFieldObject, IField } from "@/models/types/field";
-import { IUserObjectIndexed } from "@/models/types/userObjectIndexed";
+import { IUserObjectIndexed } from "@/models/old/types/userObjectIndexed";
 
 export async function POST(req: NextRequest) {
 
