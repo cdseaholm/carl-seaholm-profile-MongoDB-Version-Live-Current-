@@ -17,7 +17,7 @@
 /build
 
 # misc
-.DS_Storep
+.DS_Store
 *.pem
 
 # debug
@@ -36,8 +36,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# prisma
-/prisma
-
 /notes
-
+/migrations/

@@ -1,53 +1,33 @@
-'use client'
+import Loader from "@/components/misc/loader";
+import ProfilePage from "@/components/pagecomponents/profile/profileHub";
+import { useUserStore } from "@/context/userStore";
+import { IUser } from "@/models/types/user";
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import logoutAuth from '@/app/api/auth/logout';
-import { useSession } from '@/app/SessionContext';
-import InnerHeader from '@/components/pagetemplates/innerheader/InnerHeader';
-import MainChild from '@/components/pagetemplates/mainchild/mainchild';
+import { Metadata } from "next";
 
-const LogoutPage = () => {
-    const router = useRouter();
+export async function generateMetadata(): Promise<Metadata> {
+    try {
+        const userInfo = useUserStore.getState().userInfo as IUser;
+        const user = userInfo ? userInfo.email : '';
 
-    const { logout, session } = useSession();
-
-    const handleLogout = async () => {
-        if (!session) {
-            alert('You must be logged in to view this page.');
-            return;
-        } else {
-        const loggingOut = await logoutAuth({session});
-        if (loggingOut === 'Logged out successfully') {
-            logout();
-            router.push('/login');
-        } else {
-            alert('Already logged out');
-            console.log(loggingOut);
-        }
+        return {
+            title: `${user} Profile Page`,
+            description: `A page dedicated to controlling the profile of ${user}`,
+        };
+    } catch (error) {
+        return {
+            title: "Profile Page",
+            description: "A page dedicated to controlling the profile",
+        };
     }
-    };
+}
+
+export default async function Page() {
 
     return (
-        <>
-        <InnerHeader>
-            <h1 className="text-lg underline">Profile</h1>
-        </InnerHeader>
-        <MainChild>
-            <div className="flex flex-col justify-center space-y-4">
-                <button>
-                    Edit Profile
-                </button>
-                <button>
-                    Change Password
-                </button>
-                <button onClick={handleLogout}>
-                    Logout
-                </button>
-            </div>
-        </MainChild>
-        </>
+        <Loader>
+            <ProfilePage />
+        </Loader>
     );
-};
 
-export default LogoutPage;
+}
