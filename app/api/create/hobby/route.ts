@@ -4,22 +4,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { IUser } from "@/models/types/user";
 import { getServerSession, User } from "next-auth";
 import { getToken } from "next-auth/jwt";
-import { IFieldObject, IField } from "@/models/types/field";
-import { IUserObjectIndexed } from "@/models/old/types/userObjectIndexed";
+import HobbyData from "@/models/hobbyData";
+import { IHobbyData } from "@/models/types/hobbyData";
 
 export async function POST(req: NextRequest) {
 
     const secret = process.env.NEXTAUTH_SECRET ? process.env.NEXTAUTH_SECRET : '';
 
     if (secret === '') {
-        return NextResponse.json({ status: 401, message: 'Unauthorized' });
+        return NextResponse.json({ status: 401, message: 'Unauthorized', newHobby: {} as IHobbyData });
     }
 
     const session = await getServerSession({ req, secret })
     const token = await getToken({ req, secret });
 
     if (!session || !token) {
-        return NextResponse.json({ status: 401, message: 'Unauthorized' });
+        return NextResponse.json({ status: 401, message: 'Unauthorized', newHobby: {} as IHobbyData });
     }
 
     try {
@@ -28,70 +28,40 @@ export async function POST(req: NextRequest) {
         const userSesh = session?.user as User;
         const email = userSesh ? userSesh.email : '';
 
-        if (!body.title) {
-            return NextResponse.json({ status: 400, message: "Invalid Title" });
+        if (!body.hobbyToCreate) {
+            return NextResponse.json({ status: 400, message: "No new hobby", newHobby: {} as IHobbyData });
         }
 
         if (!body.user_email) {
-            return NextResponse.json({ status: 400, message: "User must be signed in" });
+            return NextResponse.json({ status: 400, message: "User must be signed in", newHobby: {} as IHobbyData });
         }
 
         if (email === '') {
-            return NextResponse.json({ status: 401, message: 'Unauthorized' });
+            return NextResponse.json({ status: 401, message: 'Unauthorized', newHobby: {} as IHobbyData });
         }
 
         const user = await MongoUser.findOne({ email: email }) as IUser;
 
         if (!user) {
-            return NextResponse.json({ status: 404, message: "User not found" });
+            return NextResponse.json({ status: 404, message: "User not found", newHobby: {} as IHobbyData });
         }
 
-        let hobbies = user.userObjects[0];
-        if (!hobbies) {
-            return NextResponse.json({ status: 404, message: "Hobbies not found" });
-        }
+        const newHobby = await HobbyData.create({
+            userId: user._id.toString(),
+            title: body.hobbyToCreate.title,
+            description: body.hobbyToCreate.description,
+            timeFrequency: body.hobbyToCreate.timeFrequency,
+            category: body.hobbyToCreate.category,
+            color: body.hobbyToCreate.color,
+            isActive: body.hobbyToCreate.isActive,
+            goals: body.hobbyToCreate.goals,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }) as IHobbyData;
 
-        const indexes = hobbies.indexes as IUserObjectIndexed[];
-        if (!indexes) {
-            return NextResponse.json({ status: 404, message: "Hobby Indexes not found" });
-        }
-
-        const newIndex = { title: body.title, index: body.fieldObjectIndex } as IUserObjectIndexed;
-        if (!newIndex) {
-            return NextResponse.json({ status: 400, message: 'Error indexing hobby' });
-        }
-
-        hobbies.indexes = [...indexes, newIndex] as IUserObjectIndexed[];
-
-        let fieldObjects = user.fieldObjects as IFieldObject[];
-        if (!fieldObjects) {
-            return NextResponse.json({ status: 404, message: 'Field Objects not found' });
-        }
-
-        if (fieldObjects.length !== body.fieldObjectIndex) {
-            return NextResponse.json({ status: 400, message: 'Index expected and index given did not align' });
-        }
-
-        const newDescriptionField = { name: 'descriptions', values: body.descriptions, type: "string", trackable: false, mapPiece: false } as IField;
-        const newCategoryField = { name: 'category', values: body.categories, type: "string", trackable: false, mapPiece: false } as IField;
-        const newGoalField = { name: 'goal', values: body.goals, type: "string", trackable: false, mapPiece: false } as IField;
-        const newColorField = { name: 'color', values: body.color, type: "string", trackable: false, mapPiece: false } as IField;
-        const newTotalMinutesField = { name: 'totalMinutes', type: "number", values: ['0'], trackable: false, mapPiece: false } as IField;
-
-        const newFieldObject = { fields: [newDescriptionField, newCategoryField, newGoalField, newColorField, newTotalMinutesField] as IField[], entryIndexes: [] as number[] } as IFieldObject;
-
-        fieldObjects = [...fieldObjects, newFieldObject] as IFieldObject[];
-
-        // Assign the updated values back to the user object
-        user.userObjects[0] = hobbies;
-        user.fieldObjects = fieldObjects;
-
-        // Save the user object
-        await user.save();
-
-        return NextResponse.json({ status: 200, message: 'Created!', fieldObjects: fieldObjects, hobbies: hobbies });
+        return NextResponse.json({ status: 200, message: 'Created!', newHobby: newHobby as IHobbyData });
     } catch (error: any) {
         console.error('Error creating hobby', error);
-        return NextResponse.json({ status: 500, message: "Hobby not created - outside catch" });
+        return NextResponse.json({ status: 500, message: "Hobby not created - outside catch", newHobby: {} as IHobbyData });
     }
 }

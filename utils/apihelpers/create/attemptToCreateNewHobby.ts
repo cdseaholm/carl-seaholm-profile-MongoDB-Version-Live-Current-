@@ -1,8 +1,10 @@
 
+import { useDataStore } from "@/context/dataStore";
+import { IHobbyData } from "@/models/types/hobbyData";
 import { getBaseUrl } from "@/utils/helpers/helpers";
 import { toast } from "sonner";
 
-export async function AttemptToCreateNewHobby({ titleToUse, colorToUse, categoryToUse, descriptionToUse, goalToUse, userID, fieldObjectIndex }: { titleToUse: string, colorToUse: string, categoryToUse: string, descriptionToUse: string[], goalToUse: string[], userID: string, fieldObjectIndex: number }, headers: HeadersInit) {
+export async function AttemptToCreateNewHobby({ hobbyToCreate, userEmail }: { hobbyToCreate: IHobbyData, userEmail: string }, headers: HeadersInit) {
 
     const url = await getBaseUrl();
 
@@ -10,8 +12,13 @@ export async function AttemptToCreateNewHobby({ titleToUse, colorToUse, category
         return false;
     }
 
-    if (!userID) {
-        toast.error("You are not authorized to do this!")
+    if (!userEmail) {
+        toast.error("You are not authorized to do this!~no email")
+        return false;
+    }
+
+    if (!hobbyToCreate) {
+        toast.error("No hobby data provided!");
         return false;
     }
 
@@ -19,17 +26,7 @@ export async function AttemptToCreateNewHobby({ titleToUse, colorToUse, category
 
         const res = await fetch(`${url}/api/create/hobby`, {
             method: 'POST',
-            body: JSON.stringify({
-                title: titleToUse,
-                fieldObjectIndex: fieldObjectIndex,
-                color: [colorToUse],
-                categories: [categoryToUse],
-                dates: [],
-                descriptions: descriptionToUse,
-                goals: goalToUse,
-                minutesXsessions: [],
-                user_email: userID
-            }),
+            body: JSON.stringify({ hobbyToCreate: hobbyToCreate, user_email: userEmail }),
             headers: {
                 ...headers,
                 'Content-Type': 'application/json'
@@ -42,6 +39,9 @@ export async function AttemptToCreateNewHobby({ titleToUse, colorToUse, category
             console.log('Error creating session');
             return false;
         }
+        console.log('Hobby created:', data.newHobby);
+        const currHobbyData = useDataStore.getState().hobbyData;
+        useDataStore.getState().setHobbyData([...currHobbyData, data.newHobby]);
 
         return true;
 

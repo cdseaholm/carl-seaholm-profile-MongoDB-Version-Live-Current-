@@ -6,11 +6,34 @@ import { UseFormReturnType } from "@mantine/form";
 import { LogSessionFormType, logSessionType } from "./logsessiondatainit";
 import { useState } from "react";
 import { FiInfo } from "react-icons/fi";
+import { useStateStore } from "@/context/stateStore";
 
-export default function LogSessionModal({ daySelected, handleCreate, handleModalOpen, handleDaySelected, logSessionForm }: { handleCreate: ({ logSessionForm }: { logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) => void, handleModalOpen: (title: string) => void, daySelected: string, handleDaySelected: (arg: Date) => void, logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) {
+export default function LogSessionModal({ daySelected, handleSessionCall, handleModalOpen, handleDaySelected, logSessionForm }: { handleSessionCall: ({ logSessionForm }: { logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) => void, handleModalOpen: (title: string) => void, daySelected: string, handleDaySelected: (arg: Date) => void, logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) {
+
+    const width = useStateStore(state => state.widthQuery);
+
+    const sessionsMapped = logSessionForm.getValues().newSessions.map((session, newSeshI) => (
+        <div className="flex flex-col justify-start items-start sm:flex-row sm:justify-between sm:items-center border-1 border-slate/30 p-2 rounded-md w-full h-content text-black" key={newSeshI}>
+            {`${session.session}: `}
+            <div key={newSeshI} className="flex flex-row sm:justify-end items-center justify-evenly space-x-2 h-content w-content sm:w-3/5 w-full">
+                <Tooltip label="Select from most frequently used times or input your own value" withArrow>
+                    <FiInfo className="text-gray-500 hover:text-gray-800 cursor-pointer" />
+                </Tooltip>
+                {session.mostFrequentlyUseTime.map((time, timeI) => (
+                    width && width <= 640 && timeI >= 2 ? null : (
+                        <button type="button" key={timeI} className={`flex flex-row justify-center items-center text-black bg-blue-100 border border-gray-400 rounded-md hover:bg-blue-400 w-1/4 sm:w-[15%] h-[30px]`} data-modal-toggle="crud-modal" onClick={() => logSessionForm.setFieldValue(`newSessions.${newSeshI}.time`, time ? time.toString() : '')}>
+                            {`${time}`}
+                        </button>)
+                ))}
+                <div className="flex flex-row justify-center items-center w-1/3 sm:w-1/4 h-[30px]">
+                    <IndividualTimeSelect session={session} logSessionForm={logSessionForm} passedIndex={newSeshI} />
+                </div>
+            </div>
+        </div>
+    ));
 
     return (
-        <form className="flex flex-col justify-start items-center max-w-[90vw] max-h-[75vh] bg-green-200 overflow-hidden" onSubmit={logSessionForm.onSubmit(() => handleCreate({ logSessionForm }))}>
+        <form className="flex flex-col justify-start items-center max-w-[90vw] max-h-[75vh] bg-green-200 overflow-hidden" onSubmit={logSessionForm.onSubmit(() => handleSessionCall({ logSessionForm }))}>
             <div className="flex flex-row justify-between items-center w-full h-content border-b border-gray-400 pb-2 mb-2">
                 <DatePickerInput
                     label="Pick date"
@@ -25,31 +48,11 @@ export default function LogSessionModal({ daySelected, handleCreate, handleModal
                 <p className="underline text-[12px] font-semibold">Times to record</p>
             </div>
             <section className={`flex flex-col justify-start items-center w-full h-[85%] md:h-[70vh] py-2 px-1 sm:py-3 sm:px-2 bg-slate-100/70 rounded-md shadow-[inset_0_2px_8px_rgba(0,0,0,0.10),inset_0_-2px_8px_rgba(0,0,0,0.10)] border border-gray-300 overflow-auto scrollbar-thin scrollbar-webkit scrollbar-track-rounded-full space-y-2`}>
-                {logSessionForm.getValues().newSessions.map((session, newSeshI) => (
-                    <div className="flex flex-col justify-start items-start sm:flex-row sm:justify-between sm:items-center border-1 space-x-2 border-slate/30 p-2 rounded-md w-full h-fit text-black" key={newSeshI}>
-                        {`${session.session}: `}
-                        <div key={newSeshI} className="flex flex-row sm:justify-end items-center justify-evenly space-x-2 h-fit w-fit sm:w-1/2">
-                            <Tooltip label="Select from most frequently used times or input your own value" withArrow>
-                                <FiInfo className="text-gray-500 hover:text-gray-800 cursor-pointer" />
-                            </Tooltip>
-                            {session.mostFrequentlyUseTime.map((time, timeI) => (
-                                <button type="button" key={timeI} className={`text-black bg-blue-100 border border-gray-400 rounded-md hover:bg-blue-400 w-1/4 sm:w-1/6`} data-modal-toggle="crud-modal" onClick={() => logSessionForm.setFieldValue(`newSessions.${newSeshI}.time`, time ? time.toString() : '')} style={{
-                                    minHeight: '1.5rem',
-                                    height: '1.5rem',
-                                    padding: '0.1rem 0.2rem',
-                                    fontSize: '0.7rem'
-                                }}>
-                                    {`${time}`}
-                                </button>
-                            ))}
-                            <IndividualTimeSelect session={session} logSessionForm={logSessionForm} passedIndex={newSeshI} />
-                        </div>
-                    </div>
-                ))}
+                {sessionsMapped}
             </section>
             <div className="flex flex-row justify-between space-x-1 items-center border-t border-gray-400 w-full h-content pt-2 mt-2">
                 <button type="submit" className={`text-white text-[8px] sm:text-sm p-1 sm:px-2 sm:py-1.5 text-center w-1/2 sm:w-1/4 font-medium rounded-lg ${logSessionForm.isDirty() ? "bg-blue-400 hover:bg-blue-200 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" : "bg-gray-400 cursor-not-allowed"}`} data-modal-toggle="crud-modal" disabled={!logSessionForm.isDirty()}>
-                    {`+ Save New`}
+                    {`Save`}
                 </button>
                 <button type="button" className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-[8px] sm:text-sm p-1 sm:px-2 sm:py-1.5  dark:hover:bg-gray-600 dark:hover:text-white w-1/2 sm:w-1/4`} data-modal-toggle="crud-modal" onClick={() => { handleModalOpen('addhobby') }}>
                     Create Hobby
@@ -87,7 +90,6 @@ function IndividualTimeSelect({ session, logSessionForm, passedIndex }: { sessio
                 }
                 combobox.closeDropdown();
             }}
-            width={'auto'}
         >
             <Combobox.Target>
                 <InputBase
@@ -100,7 +102,7 @@ function IndividualTimeSelect({ session, logSessionForm, passedIndex }: { sessio
                             setSearch(inputValue);
                             logSessionForm.replaceListItem('newSessions', passedIndex, {
                                 ...session,
-                                time: inputValue, // Keep the value as a string
+                                time: inputValue,
                             });
                         }
                     }}
@@ -112,22 +114,31 @@ function IndividualTimeSelect({ session, logSessionForm, passedIndex }: { sessio
                     }}
                     placeholder="Search"
                     rightSectionPointerEvents="none"
-                    size="sm"
-                    styles={{
-                        input: {
-
-                        }
-                    }}
-                    w={'20%'}
                     onKeyDown={(event) => {
                         if (event.key === 'Backspace') {
                             event.preventDefault();
-                            const newValue = search.slice(0, -1); // Remove the last character
-                            setSearch(newValue); // Update the search state
+                            const newValue = search.slice(0, -1);
+                            setSearch(newValue);
                             logSessionForm.replaceListItem('newSessions', passedIndex, {
                                 ...session,
-                                time: newValue, // Keep the value as a string
+                                time: newValue,
                             });
+                        }
+                    }}
+                    // ✅ Match button dimensions exactly
+                    styles={{
+                        input: {
+                            height: '30px',
+                            minHeight: '30px',
+                            padding: '0 8px',
+                            fontSize: '14px',
+                            lineHeight: '30px',
+                        },
+                        wrapper: {
+                            height: '30px',
+                        },
+                        root: {
+                            height: '30px',
                         }
                     }}
                 />
@@ -137,8 +148,8 @@ function IndividualTimeSelect({ session, logSessionForm, passedIndex }: { sessio
                 <Combobox.Options>
                     <div className="grid grid-cols-5 text-black w-content h-content" style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(5, minmax(50px, 1fr))', // Ensure each column has a minimum width of 50px
-                        gap: '8px', // Spacing between items
+                        gridTemplateColumns: 'repeat(5, minmax(50px, 1fr))',
+                        gap: '8px',
                     }}>
                         {filteredOptions.map((num) => (
                             <Combobox.Option

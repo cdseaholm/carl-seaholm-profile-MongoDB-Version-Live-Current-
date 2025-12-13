@@ -18,7 +18,7 @@ export default function Loader({ children }: { children: React.ReactNode }) {
             init.current = true;
             setGlobalLoading(false);
         }
-    }, [init.current, setGlobalLoading]);
+    }, [setGlobalLoading]);
 
     return (
         <MainPageBody>

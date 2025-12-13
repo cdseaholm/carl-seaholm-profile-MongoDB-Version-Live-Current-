@@ -3,13 +3,11 @@
 import ModalLogin from "../modalContent/Login/loginModal";
 import SignupModal from "../modalContent/signup/signupModal";
 import ModalSubscribe from "../modalContent/subscribe/subscribeModal";
-import ActionsModal from "../modalContent/Actions/actionsmodal";
 import EditUser from "../modalContent/EditUser/editUser";
 import AddRecipes from "../modalContent/Recipes/Add";
 import { useModalStore } from "@/context/modalStore";
 import ForgotPassword from "../modalContent/forgotpassword/forgotPassword";
 import ChangePassword from "../modalContent/changePassword/changePassword";
-import HobbyModalDataInit from "../modalContent/AddHobbyTracker/hobbymodaldatainit";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 
 
@@ -76,8 +74,8 @@ export default function MainModal() {
                                 {modalOpen === 'login' && <ModalLogin />}
                                 {modalOpen === 'signup' && <SignupModal />}
                                 {modalOpen === 'subscribe' && <ModalSubscribe />}
-                                {modalOpen === 'addhobby' && <HobbyModalDataInit />}
-                                {modalOpen === 'actions' && <ActionsModal />}
+                                {/* {modalOpen === 'addhobby' && <HobbyModalDataInit />} */}
+                                {/* {modalOpen === 'actions' && <ActionsModal />} */}
                                 {modalOpen === 'edituser' && <EditUser />}
                                 {modalOpen === 'addrecipe' && <AddRecipes />}
                                 {/**{modalOpen === 'addNewObject' && <AddNewObject />} */}

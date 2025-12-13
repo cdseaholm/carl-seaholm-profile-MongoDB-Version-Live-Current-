@@ -1,11 +1,13 @@
 import { MonthSums, YearSums } from "@/app/actions/statsActions/statActions";
-import { useDataStore } from "@/context/dataStore";
+import { DateRangeType, useDataStore } from "@/context/dataStore";
 import { IUser } from "@/models/types/user";
 import { IHobbyData } from "@/models/types/hobbyData";
 import { IMonthlyData } from "@/models/types/monthlyData";
 import { ISession } from "@/models/types/session";
 import { ITimeFrequency } from "@/models/types/time-frequency";
 import { InitGraphs } from "./init-graphs";
+import { filterSessions } from "./filter-info";
+import { HobbyCheckMarkType } from "@/app/(content)/dashboard/components/button-board/left-board/left-board";
 
 //order of operations for checklist
 //set sessions/userInfo previous
@@ -19,59 +21,83 @@ export type HobbySessionInfo = { hobbyData: IHobbyData, totalMinutes: number, to
 export type MonthlyInfo = { monthInfo: IMonthlyData, totalMinutes: number, totalSessions: number };
 //each year's sessions as it relates to each month as it relates to each hobby
 
-export default async function InitDashboardProps({ userInfo, hobbiesData, monthlyInfo, sessions }: { userInfo: IUser, hobbiesData: IHobbyData[], monthlyInfo: IMonthlyData[], sessions: ISession[] }) {
+export default async function InitDashboardProps({ userInfo, sessions, hobbiesData, monthlyInfo, hobbyFilters, dateFilters }: { userInfo: IUser, sessions: ISession[], hobbiesData: IHobbyData[], monthlyInfo: IMonthlyData[], hobbyFilters: HobbyCheckMarkType[], dateFilters: DateRangeType }) {
 
-    if (!userInfo) {
-        return { status: false, message: 'No user info' }
-    }
-    if (!hobbiesData) {
-        return { status: false, message: 'No hobbies data' }
-    }
-    if (!monthlyInfo) {
-        return { status: false, message: 'No monthly data' }
-    }
-    if (!sessions) {
-        return { status: false, message: 'No sessions data' }
+    // Validation checks...
+    if (!userInfo) return { status: false, message: 'No user info' };
+    if (!hobbiesData) return { status: false, message: 'No hobbies data' };
+    if (!monthlyInfo) return { status: false, message: 'No monthly data' };
+    if (!sessions) return { status: false, message: 'No sessions data' };
+
+    // Call filterSessions with positional arguments (not destructured)
+    const { filteredSessions, filteredHobbies } = await filterSessions(
+        sessions,
+        hobbyFilters,
+        hobbiesData,
+        dateFilters as DateRangeType
+    );
+
+    if (!filteredSessions) {
+        return { status: false, message: 'Error filtering sessions' }
     }
 
+    if (!filteredHobbies) {
+        return { status: false, message: 'Error filtering hobbies' }
+    }
 
+    // Now aggregate data based on filtered sessions
     const hobbySessionsCounts = [] as HobbySessionInfo[];
+
+    filteredHobbies.forEach((hobby) => {
+        const hobbySessions = filteredSessions.filter((session) => session.hobbyTitle === hobby.title);
+
+        if (hobbySessions.length !== 0) {
+
+            const totalMinutes = hobbySessions.reduce((acc, session) => acc + session.minutes, 0);
+            const totalSessions = hobbySessions.length;
+            const timeFrequencies = hobby.timeFrequency ? hobby.timeFrequency : [] as ITimeFrequency[];
+
+            hobbySessionsCounts.push({
+                hobbyData: hobby,
+                totalMinutes,
+                totalSessions,
+                sessions: hobbySessions,
+                timeFrequencies
+            });
+
+        } else {
+            hobbySessionsCounts.push({
+                hobbyData: hobby,
+                totalMinutes: 0,
+                totalSessions: 0,
+                sessions: [] as ISession[],
+                timeFrequencies: hobby.timeFrequency ? hobby.timeFrequency : [] as ITimeFrequency[]
+            });
+        }
+
+
+    });
+
+    // Aggregate monthly data from filtered sessions
     const monthlyInfoCounts = [] as MonthlyInfo[];
 
-    hobbiesData.forEach((hobby) => {
-        //for each hobby, find all the months that have data for it
-        const hobbySessions = sessions.filter((session) => session.hobbyTitle === hobby.title);
-        const totalMinutes = hobbySessions.reduce((acc, session) => acc + session.minutes, 0);
-        const totalSessions = hobbySessions.length;
-        const timeFrequencies = hobby.timeFrequency ? hobby.timeFrequency : [] as ITimeFrequency[];
-        hobbySessionsCounts.push({ hobbyData: hobby, totalMinutes: totalMinutes, totalSessions: totalSessions, sessions: hobbySessions, timeFrequencies: timeFrequencies });
-    });
-
     monthlyInfo.forEach((month) => {
-        //for each month, find all the sessions that happened in that month
-        const monthSessions = sessions.filter((session) => session.month === month.month);
+
+        const monthSessions = filteredSessions.filter((session) =>
+            session.month === month.month
+        );
+
+        if (monthSessions.length === 0) return;
+
         const totalMinutes = monthSessions.reduce((acc, session) => acc + session.minutes, 0);
         const totalSessions = monthSessions.length;
-        const monthNum = month.month as number;
-        const newMonthActivity = { monthInfo: month, totalMinutes: totalMinutes, totalSessions: totalSessions } as MonthlyInfo;
-        const thisMonth = monthlyInfoCounts.find(m => m.monthInfo.month === monthNum);
-        if (!thisMonth) {
-            monthlyInfoCounts.push(newMonthActivity);
-        } else {
-            thisMonth.monthInfo = month;
-            thisMonth.totalMinutes = totalMinutes;
-            thisMonth.totalSessions = totalSessions;
-        }
+
+        monthlyInfoCounts.push({
+            monthInfo: month,
+            totalMinutes,
+            totalSessions
+        });
     });
-
-    // const totalTimePerMonth = timeData.totalTimePerPastFiveMonths ? timeData.totalTimePerPastFiveMonths : [] as number[];
-    // const userObjects = timeData.userObjects ? timeData.userObjects : [] as IUserObject[];
-    // const sessionsFound = timeData.sessionsFound ? timeData.sessionsFound : [] as IIndexedEntry[];
-    // const colorMap = timeData.colorMap ? timeData.colorMap : [] as ColorMapType[];
-    // const fieldObjects = timeData.fieldObjects ? timeData.fieldObjects : [] as IFieldObject[];
-    // const objectToUse = timeData.firstObject ? timeData.firstObject : {} as IUserObject;
-
-    // const newDashProps = { userInfo: userInfo, totalTimePerMonth: totalTimePerMonth, userObjects: userObjects, sessionsFound: sessionsFound, colorMap: colorMap, fieldObjects: fieldObjects, objectToUse: objectToUse } as DashProps;
 
     const allMonthsSums = [] as MonthSums[];
     const allYearsSums = [] as YearSums[];
@@ -104,11 +130,11 @@ export default async function InitDashboardProps({ userInfo, hobbiesData, monthl
     useDataStore.getState().setMonthlyInfo(monthlyInfoCounts);
     useDataStore.getState().setHobbySessionInfo(hobbySessionsCounts);
 
-    const initGraphs = await InitGraphs({ sessions: sessions, monthlyInfoCounts: monthlyInfoCounts, hobbySessionsCounts: hobbySessionsCounts });
+    const initGraphs = await InitGraphs({ sessions: filteredSessions, monthlyInfoCounts: monthlyInfoCounts, hobbySessionsCounts: hobbySessionsCounts, allHobbies: filteredHobbies.length === hobbiesData.length ? true : false, dateFilters: dateFilters });
     if (!initGraphs) {
         return { status: false, message: 'Error initializing graphs' }
     }
-    
+
     return { status: true, message: `Success` }
 
 }

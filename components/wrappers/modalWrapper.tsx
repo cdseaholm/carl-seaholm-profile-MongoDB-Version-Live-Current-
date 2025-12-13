@@ -1,11 +1,11 @@
-'use client'
+// 'use client'
 
-import dynamic from "next/dynamic"
+// import dynamic from "next/dynamic"
 
-const ModalProvider = dynamic(() => import('@/components/providers/modalProvider'), {
-    ssr: false
-});
+// const ModalProvider = dynamic(() => import('@/components/providers/modalProvider'), {
+//     ssr: false
+// });
 
-export default function ModalWrapper() {
-    return <ModalProvider />
-}
+// export default function ModalWrapper() {
+//     return <ModalProvider />
+// }

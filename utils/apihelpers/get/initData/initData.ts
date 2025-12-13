@@ -1,10 +1,11 @@
 import { useDataStore } from "@/context/dataStore";
 import { IUser } from "@/models/types/user";
-import InitDashboardProps from "./initDashboardParams";
 import { useUserStore } from "@/context/userStore";
 import { IHobbyData } from "@/models/types/hobbyData";
 import { IMonthlyData } from "@/models/types/monthlyData";
 import { ISession } from "@/models/types/session";
+import { HobbyCheckMarkType } from "@/app/(content)/dashboard/components/button-board/left-board/left-board";
+import { useHobbyStore } from "@/context/hobbyStore";
 
 export async function fetchData({ endpoint, baseUrl }: { endpoint: string, baseUrl: string }, headers: HeadersInit) {
 
@@ -33,7 +34,7 @@ export async function fetchData({ endpoint, baseUrl }: { endpoint: string, baseU
 export async function initData({ urlToUse }: { urlToUse: string }) {
 
   if (urlToUse === '') {
-    return { status: false, message: 'Bad url' }
+    return { status: false, message: 'Bad url', sessionInfo: [] as ISession[], monthlyInfo: [] as IMonthlyData[], hobbyData: [] as IHobbyData[], userInfo: {} as IUser }
   }
 
   const headers = { 'Authorization': `Bearer ${'cdseaholm@gmail.com'}` };
@@ -50,66 +51,86 @@ export async function initData({ urlToUse }: { urlToUse: string }) {
       // fetchData({ endpoint: '/api/get/tasks' }),
     ]);
 
-    const userStore = useUserStore.getState();
     if (!res) {
       throw new Error('Error fetching data');
     }
     const [userData, monthlyData, hobbyData, sessionData] = await res;
-    if (!userData) {
-      return { status: false, message: 'Error initializing user data' };
+
+    if (!userData || !monthlyData || !hobbyData || !sessionData) {
+      return { status: false, message: 'Incomplete data from server', sessionInfo: [] as ISession[], monthlyInfo: [] as IMonthlyData[], hobbyData: [] as IHobbyData[], userInfo: {} as IUser };
     }
+
     const userInfo = userData.userInfo as IUser;
-    if (!userInfo) {
-      return { status: false, message: 'Error initializing user info' };
-    }
-
-    if (!hobbyData) {
-      return { status: false, message: 'Error initializing hobby info' };
-    }
     const hobbyDataInfo = hobbyData.hobbyData as IHobbyData[];
-    if (!hobbyDataInfo) {
-      return { status: false, message: 'Error initializing hobby data info' };
-    }
-    if (!monthlyData) {
-      return { status: false, message: 'Error initializing monthly activity info' };
-    }
     const monthlyInfo = monthlyData.monthlyInfo as IMonthlyData[];
-    if (!monthlyInfo) {
-      return { status: false, message: 'Error initializing monthly activity data' };
-    }
-    if (!sessionData) {
-      return { status: false, message: 'Error initializing session info' };
-    }
     const sessionInfo = sessionData.sessionInfo as ISession[];
-    if (!sessionInfo) {
-      return { status: false, message: 'Error initializing session data' };
+
+    if (!userInfo || !hobbyDataInfo || !monthlyInfo || !sessionInfo) {
+      return { status: false, message: 'Incomplete data received from server', sessionInfo: [] as ISession[], monthlyInfo: [] as IMonthlyData[], hobbyData: [] as IHobbyData[], userInfo: {} as IUser };
     }
 
-    // console.log('Date test:', new Date().toLocaleTimeString());
-    // console.log('Date test UTC:', new Date().toUTCString());
-    // console.log('Date test ISO:', new Date().toISOString());
-    // console.log('Date test locale:', new Date().toLocaleString());
-    // console.log('Date test locale date:', new Date().toLocaleDateString());
-
-    useDataStore.getState().setSessions(sessionInfo);
-    userStore.setUserInfo(userInfo);
     const thisMonth = useDataStore.getState().thisMonth;
+
+    const currDateFilters = useDataStore.getState().filteredDates;
+    if (!currDateFilters || !currDateFilters.range || (currDateFilters.range[0] === null && currDateFilters.range[1] === null)) {
+      const today = new Date();
+      const minusFiveMonths = thisMonth - 5 < 0 ? 12 + (thisMonth - 5) : thisMonth - 5;
+      useDataStore.getState().setFilteredDates({ type: 'range', range: [new Date(today.getFullYear(), minusFiveMonths, 1), today] });
+    }
+
+    const currHobbyFilters = useDataStore.getState().filteredHobbies;
+    if (currHobbyFilters.length === 0 || !currHobbyFilters || currHobbyFilters === [] as IHobbyData[]) {
+      const hobbyDataInfoInBaseForm = hobbyDataInfo.map(hobby => {
+        return {
+          _id: hobby._id,
+          title: hobby.title
+        } as HobbyCheckMarkType;
+      });
+      useDataStore.getState().setFilteredHobbies([...hobbyDataInfoInBaseForm]);
+    }
+
+    const categoriesToSet = [] as string[];
+    const titlesToSet = [] as string[];
+    hobbyDataInfo.forEach(hobby => {
+      if (hobby.category && !categoriesToSet.includes(hobby.category)) {
+        categoriesToSet.push(hobby.category);
+      }
+      if (hobby.title && !titlesToSet.includes(hobby.title)) {
+        titlesToSet.push(hobby.title);
+      }
+    });
+    useHobbyStore.getState().setCategories(categoriesToSet);
+    useHobbyStore.getState().setTitles(titlesToSet);
 
     if (!thisMonth) {
       useDataStore.getState().setThisMonth(new Date().getMonth());
     }
 
     //begin sorting through these with new data
-    const initializeDashboardProps = await InitDashboardProps({ userInfo: userInfo, hobbiesData: hobbyDataInfo, monthlyInfo: monthlyInfo, sessions: sessionInfo }) as { status: boolean, message: string }
 
-    if (initializeDashboardProps.status === false) {
-      return { status: false, message: 'InitDashboardProps failed' }
-    }
-
-    return { status: true, message: 'Success' }
+    return { status: true, message: 'Success', sessionInfo: sessionInfo, monthlyInfo: monthlyInfo, hobbyData: hobbyDataInfo, userInfo: userInfo };
 
 
   } catch (error: any) {
-    return { status: false, message: 'Error initializing data' };
+    return { status: false, message: 'Error initializing data', sessionInfo: [] as ISession[], monthlyInfo: [] as IMonthlyData[], hobbyData: [] as IHobbyData[], userInfo: {} as IUser };
   }
+}
+
+export async function SetBaseData(sessionInfo: ISession[], hobbyDataInfo: IHobbyData[], monthlyInfo: IMonthlyData[], userInfo: IUser) {
+
+  if (!sessionInfo || !hobbyDataInfo || !monthlyInfo || !userInfo) {
+    return { status: false, message: 'Bad data provided' };
+  }
+
+  try {
+    useDataStore.getState().setSessions(sessionInfo);
+    useDataStore.getState().setHobbyData(hobbyDataInfo);
+    useDataStore.getState().setMonthlyData(monthlyInfo);
+    useUserStore.getState().setUserInfo(userInfo);
+    return { status: true, message: 'Base data set successfully' };
+  } catch (error: any) {
+    console.error('Error setting base data:', error);
+    return { status: false, message: 'Error setting base data' };
+  }
+
 }
