@@ -4,7 +4,7 @@ import React from "react";
 import { BarChart } from '@mantine/charts';
 import { ResponsiveContainer } from "recharts";
 
-export function BarChartView({ title, data }: { title: string, data: { date: string, time: number, color: string }[] }) {
+export function BarChartView({ title, data, barOne }: { title: string, data: { date: string, time: number, color: string }[], barOne: boolean }) {
 
 
 
@@ -18,10 +18,34 @@ export function BarChartView({ title, data }: { title: string, data: { date: str
                     data={data}
                     dataKey="date"
                     tickLine="y"
-                    getBarColor={(_value, series) => {
-                        return series.color || 'defaultColor';
+                    series={[{ name: 'time', color: 'blue.6' }]}
+                    barProps={(...args: any[]) => ({
+                        fill: args[1]?.color
+                    })}
+                    tooltipProps={{
+                        content: ({ payload }) => {
+                            if (!payload || payload.length === 0) return null;
+                            const item = payload[0].payload;
+                            return (
+                                <div style={{
+                                    backgroundColor: 'white',
+                                    padding: '8px',
+                                    border: '1px solid #ccc',
+                                    borderRadius: '4px'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <div style={{
+                                            width: '12px',
+                                            height: '12px',
+                                            backgroundColor: item.color,
+                                            borderRadius: '2px'
+                                        }} />
+                                        <span><strong>{item.date}</strong>: {item.time} {barOne ? 'Hours' : 'Minutes'}</span>
+                                    </div>
+                                </div>
+                            );
+                        }
                     }}
-                    series={[{ name: 'time', color: 'color' }]}
                     textColor="black"
                 />
             </ResponsiveContainer>

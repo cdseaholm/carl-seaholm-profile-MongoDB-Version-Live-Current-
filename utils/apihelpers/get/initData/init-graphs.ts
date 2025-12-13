@@ -1,49 +1,112 @@
-import { Tracker, PercentageType } from "@/components/pagecomponents/dashboard/statsView";
-import { useDataStore } from "@/context/dataStore";
+import { Tracker, PercentageType } from "@/app/(content)/dashboard/components/statsView";
+import { DateRangeType, useDataStore } from "@/context/dataStore";
 import { ISession } from "@/models/types/session";
 import { PieChartCell } from "@mantine/charts";
 import { MonthlyInfo, HobbySessionInfo } from "./initDashboardParams";
+import { MonthProv } from "@/components/helpers/monthprov";
+import { GetMonthLength } from "@/utils/data/month-lengths";
 
-export async function InitGraphs({ sessions, monthlyInfoCounts, hobbySessionsCounts }: { sessions: ISession[], monthlyInfoCounts: MonthlyInfo[], hobbySessionsCounts: HobbySessionInfo[] }) {
+function getDayCount(start: Date, end: Date): number {
+    // Normalize to start of day
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+    
+    const diffInMs = endDate.getTime() - startDate.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    
+    return diffInDays + 1; // +1 because we include both start and end dates
+}
 
-    const { barData, barDataTwo, pieData } = await InitBarData(useDataStore.getState().thisMonth, sessions, monthlyInfoCounts, hobbySessionsCounts);
+export async function InitGraphs({ sessions, monthlyInfoCounts, hobbySessionsCounts, allHobbies, dateFilters }: { sessions: ISession[], monthlyInfoCounts: MonthlyInfo[], hobbySessionsCounts: HobbySessionInfo[], allHobbies: boolean, dateFilters: DateRangeType }) {
+
+    const thisMonth = useDataStore.getState().thisMonth;
+    let datesToUse: DateRangeType;
+
+    if (!dateFilters || dateFilters === undefined || dateFilters === null || !dateFilters.range || (dateFilters.range[0] === null && dateFilters.range[1] === null)) {
+        const pastFiveMonths = thisMonth - 5 <= 0 ? 12 + (thisMonth - 5) : thisMonth - 5;
+        const startDate = new Date();
+        startDate.setMonth(pastFiveMonths);
+        datesToUse = { type: 'range', range: [startDate, new Date()] };
+    } else {
+        datesToUse = dateFilters;
+    }
+
+    const { barData, barDataTwo, pieData } = await InitBarData(useDataStore.getState().thisMonth, sessions, monthlyInfoCounts, hobbySessionsCounts, allHobbies, datesToUse);
 
     if (!barData || !barDataTwo || !pieData) {
         return false;
     }
 
-    const thisMonth = useDataStore.getState().thisMonth;
     useDataStore.getState().setBarData(barData);
     useDataStore.getState().setBarDataTwo(barDataTwo);
 
 
-    const monthLength = new Date(new Date().getFullYear(), thisMonth, 0).getDate();
-    const thisYear = new Date().getFullYear();
-    const uniqueDaysWithSessions = sessions.filter((session) => session.month === thisMonth && session.year === thisYear).map(s => new Date(s.date).toISOString().split('T')[0]).filter((v, i, a) => a.indexOf(v) === i);
-    const thisMonthSeshs = uniqueDaysWithSessions.length;
-    const daysInMonthElapsed = new Date().getDate();
-    const numberOfDaysWithout = Math.max(0, daysInMonthElapsed - thisMonthSeshs);
+
+    const daysWithLabel = 'Days with';
+    const daysWithoutLabel = 'Days without';
+
+    let length = 0;
+    let daysWithoutCount = 0;
+
+    const thisRangesSessions = sessions.filter((session) => {
+        const sessionDate = new Date(session.date);
+        if (datesToUse && datesToUse.range[0] && datesToUse.range[1]) {
+            return sessionDate >= datesToUse.range[0] && sessionDate <= datesToUse.range[1];
+        } else if (datesToUse && datesToUse.range[0]) {
+            return sessionDate >= datesToUse.range[0];
+        } else if (datesToUse && datesToUse.range[1]) {
+            return sessionDate <= datesToUse.range[1];
+        }
+        return true;
+    });
+
+    //HAVE TO MAKE SURE THAT WHEN USERS PICK ONE DATE IT SETS THE FIRST IN THE ARRAY
+    if (datesToUse && datesToUse.range[0] && datesToUse.range[1]) {
+        const start = new Date(datesToUse.range[0]);
+        const end = new Date(datesToUse.range[1]);
+
+        // ✅ Fix: Remove Math.ceil (not needed) and adjust calculation
+        // Set both dates to start of day to avoid time-of-day issues
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
+
+        const dayCount = getDayCount(datesToUse.range[0], datesToUse.range[1]);
+
+        const uniqueDaysWithSessions = new Set(thisRangesSessions.map(session => {
+            const sessionDate = new Date(session.date);
+            return sessionDate.toDateString();
+        }));
+
+        daysWithoutCount = dayCount - uniqueDaysWithSessions.size;
+        length = dayCount;
+    }
+
 
 
     const newTracker = {
-        monthLength: monthLength,
-        numberOfDaysWith: thisMonthSeshs,
-        numberOfDaysWithout: numberOfDaysWithout,
+        length: length,
+        numberOfDaysWith: length - daysWithoutCount,
+        numberOfDaysWithout: daysWithoutCount,
         withColor: 'green',
         withoutColor: 'red',
         withTooltip: 'Hobby completed',
         withoutTooltip: 'No hobby completed',
     } as Tracker;
+
     const daysWith = {
-        name: 'Days with a hobby session',
+        name: daysWithLabel,
         value: newTracker.numberOfDaysWith,
         color: 'green'
     } as PieChartCell;
+
     const daysWithout = {
-        name: 'Days without a hobby session',
+        name: daysWithoutLabel,
         value: newTracker.numberOfDaysWithout,
         color: 'red'
     } as PieChartCell;
+
     const daysWithPie = [] as PieChartCell[];
     daysWithPie.push(daysWith);
     daysWithPie.push(daysWithout);
@@ -67,102 +130,131 @@ export async function InitGraphs({ sessions, monthlyInfoCounts, hobbySessionsCou
 }
 
 
-export const InitBarData = async (thisMonth: number, sessions: ISession[], monthlyInfoCounts: MonthlyInfo[], hobbyDataInfo: HobbySessionInfo[]) => {
+export async function InitBarData(thisMonth: number, sessions: ISession[], monthlyInfoCounts: MonthlyInfo[], hobbyDataInfo: HobbySessionInfo[], allHobbies: boolean, datesToUse: DateRangeType) {
 
     const barData = [] as { date: string, time: number, color: string }[];
     const barDataTwo = [] as { date: string, time: number, color: string }[];
     const pieData = [] as PercentageType[];
 
-    // Calculate past 5 months (oldest to newest for chart display)
-    const pastFiveMonths = [] as { month: number, year: number }[];
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = thisMonth; // Already 1-based (1-12)
+    const d = [] as { month: number, year: number }[];
+    const dStartStops = [] as { start: number, stop: number }[];
 
-    // Go back 4 months from current month (so 5 months total including current)
-    for (let i = 4; i >= 0; i--) {
-        let targetMonth = currentMonth - i;
-        let targetYear = currentYear;
+    if (datesToUse && datesToUse.range && datesToUse.range[0] && datesToUse.range[1]) {
+        const start = new Date(datesToUse.range[0]);
+        const end = new Date(datesToUse.range[1]);
+        const tempDate = new Date(start);
 
-        // Handle year rollover
-        if (targetMonth <= 0) {
-            targetMonth += 12;
-            targetYear -= 1;
+        while (tempDate <= end) {
+            d.push({ month: tempDate.getMonth() + 1, year: tempDate.getFullYear() });
+            let thisMonthStart = 1;
+            let thisMonthEnd = 0;
+            const thisMonthLength = await GetMonthLength(tempDate.getMonth() + 1, tempDate.getFullYear());
+
+            if (tempDate.getMonth() === start.getMonth() && tempDate.getFullYear() === start.getFullYear()) {
+                thisMonthStart = start.getDate();
+            }
+            if (tempDate.getMonth() === end.getMonth() && tempDate.getFullYear() === end.getFullYear()) {
+                thisMonthEnd = end.getDate();
+            } else {
+                thisMonthEnd = thisMonthLength;
+            }
+
+            dStartStops.push({ start: thisMonthStart, stop: thisMonthEnd });
+            tempDate.setMonth(tempDate.getMonth() + 1);
         }
-
-        pastFiveMonths.push({ month: targetMonth, year: targetYear });
+    } else if (datesToUse && datesToUse.range[0] && !datesToUse.range[1]) {
+        const singleDay = new Date(datesToUse.range[0]);
+        d.push({ month: singleDay.getMonth() + 1, year: singleDay.getFullYear() });
+        dStartStops.push({ start: singleDay.getDate(), stop: singleDay.getDate() });
+    } else {
+        // Default to past 5 months
+        for (let i = 5; i > 0; i--) {
+            let monthToAdd = thisMonth - i;
+            let yearToAdd = new Date().getFullYear();
+            if (monthToAdd <= 0) {
+                monthToAdd = 12 + monthToAdd;
+                yearToAdd -= 1;
+            }
+            d.push({ month: monthToAdd, year: yearToAdd });
+            const thisMonthLength = await GetMonthLength(monthToAdd, yearToAdd);
+            dStartStops.push({ start: 1, stop: thisMonthLength });
+        }
     }
 
-    //console.log('Past five months:', pastFiveMonths); // Debug log
+    const newMap = d.map(item => ({ month: item.month - 1, year: item.year }));
+    const monthNames = await MonthProv(newMap);
 
-    // Initialize arrays
-    const totalMinutesRunning = [0, 0, 0, 0, 0];
-    const sessionsRunning = [0, 0, 0, 0, 0];
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    d.forEach((monthYear, index) => {
+        // ✅ Filter sessions by month/year AND day range
+        const startDay = dStartStops[index].start;
+        const endDay = dStartStops[index].stop;
 
-    // Process each month
-    pastFiveMonths.forEach((monthYear, index) => {
-        // Find sessions for this specific month/year
-        const monthSessions = sessions.filter(session =>
-            session.month === monthYear.month && session.year === monthYear.year
-        );
+        const monthSessions = sessions.filter(session => {
+            if (session.month !== monthYear.month || session.year !== monthYear.year) {
+                return false;
+            }
+            // Also check day range
+            const sessionDay = new Date(session.date).getDate() || 1;
+            return sessionDay >= startDay && sessionDay <= endDay;
+        });
 
-        // Calculate totals
+        // ✅ Calculate totals from FILTERED sessions only
         const totalMinutes = monthSessions.reduce((sum, session) => sum + session.minutes, 0);
         const sessionCount = monthSessions.length;
 
-        totalMinutesRunning[index] = totalMinutes;
-        sessionsRunning[index] = sessionCount;
+        // Get month color from monthlyInfoCounts
+        const monthInfo = monthlyInfoCounts.find(m =>
+            m.monthInfo.month === monthYear.month
+        );
 
-        // Get month color
-        const monthAct = monthlyInfoCounts.find(m => m.monthInfo.month === monthYear.month);
-        const monthColor = monthAct?.monthInfo.monthColorInfo?.monthColor || '#gray';
+        const initialDate = monthNames && monthNames.monthNamesOnly.length > 0 ? monthNames.monthNamesOnly[index] : '';
+        const sameDay = datesToUse.range[1] === null ||
+            datesToUse.range[1] === undefined ||
+            (datesToUse.range[0] && datesToUse.range[1] &&
+                datesToUse.range[0].toDateString() === datesToUse.range[1].toDateString());
+        const secondaryDate = dStartStops.length > 0 && !sameDay ? ` ${dStartStops[index].start}-${dStartStops[index].stop}` : '';
+        const monthLabel = `${initialDate}${secondaryDate}`;
 
-        // Use month name for better readability
-        const monthName = monthNames[monthYear.month - 1]; // Convert to 0-based for array
-
+        const timeRoundedToTwo = Math.round((totalMinutes / 60) * 100) / 100;
         barData.push({
-            date: monthName,
-            time: totalMinutes,
-            color: monthColor
+            date: monthLabel,
+            time: timeRoundedToTwo,
+            color: monthInfo?.monthInfo.monthColorInfo.monthColor || '#888888'
         });
 
-        // Calculate average minutes per session
-        const avgMinutes = sessionCount > 0 ? Math.round(totalMinutes / sessionCount) : 0;
-
+        const avgMinutes = sessionCount > 0 ? totalMinutes / sessionCount : 0;
         barDataTwo.push({
-            date: monthName,
-            time: avgMinutes,
-            color: monthColor
+            date: monthLabel,
+            time: Math.round(avgMinutes * 100) / 100,
+            color: monthInfo?.monthInfo.monthColorInfo.monthColor || '#888888'
         });
-
-        //console.log(`${monthName} ${monthYear.year}: ${totalMinutes} mins, ${sessionCount} sessions, avg: ${avgMinutes}`); // Debug log
     });
 
-    // Calculate pie chart data for hobby distribution over past 5 months
+    // Calculate pie chart data
     let runningTotal = 0;
+
     hobbyDataInfo.forEach(hobby => {
-        const hobbySessions = hobby.sessions.filter(session => {
-            return pastFiveMonths.some(monthYear =>
-                session.month === monthYear.month && session.year === monthYear.year
-            );
-        });
-        const hobbyTotal = hobbySessions.reduce((sum, session) => sum + session.minutes, 0);
-        if (hobbyTotal > 0) {
+        if (hobby.totalMinutes > 0) {
             pieData.push({
-                name: hobby.hobbyData.title ? hobby.hobbyData.title : 'Unknown',
-                value: hobbyTotal,
-                color: hobby.hobbyData.color ? hobby.hobbyData.color : 'gray'
+                name: hobby.hobbyData.title || 'Unknown',
+                value: hobby.totalMinutes,
+                color: hobby.hobbyData.color || 'gray'
             });
-            runningTotal += hobbyTotal;
+            runningTotal += hobby.totalMinutes;
         }
     });
 
-    // Convert to percentages
-    pieData.forEach(item => {
-        item.value = runningTotal > 0 ? parseFloat(((item.value / runningTotal) * 100).toFixed(2)) : 0;
-    });
+    // Convert to percentages or hours
+    if (allHobbies) {
+        pieData.forEach(item => {
+            const perc = runningTotal > 0 ? (item.value / runningTotal) * 100 : 0;
+            item.value = Math.round(perc * 10) / 10;
+        });
+    } else {
+        pieData.forEach(item => {
+            item.value = Math.round((item.value / 60) * 100) / 100;
+        });
+    }
 
     return { barData, barDataTwo, pieData };
 }

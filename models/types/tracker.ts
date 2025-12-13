@@ -1,4 +1,4 @@
-import { Tracker } from "@/components/pagecomponents/dashboard/statsView";
+import { Tracker } from "@/app/(content)/dashboard/components/statsView";
 
 export type MonthlyTrackerData = {
     newTrackerData: Tracker[]; 

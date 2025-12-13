@@ -1,136 +1,147 @@
 'use client'
 
-import { Spinner } from "@/components/misc/Spinner";
+import { useModalStore } from "@/context/modalStore";
+import { InitialNewHobbyFormValues, NewHobbyFormType, NewHobbyFormValues } from "@/models/types/newHobby";
+import { Modal } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import NewHobbyFormComponents from "./hobbymodal";
+import { useSession } from "next-auth/react";
+import { useHobbyStore } from "@/context/hobbyStore";
+import { AttemptToCreateNewHobby } from "@/utils/apihelpers/create/attemptToCreateNewHobby";
+import { IHobbyData } from "@/models/types/hobbyData";
+import { ITimeFrequency } from "@/models/types/time-frequency";
+import LoadingSpinner from "@/app/(content)/projects/school/infoVis-DatasetProject/components/components/misc/loadingSpinner";
+import { IUser } from "@/models/types/user";
+import { useStateStore } from "@/context/stateStore";
+import { useDataStore } from "@/context/dataStore";
 
-export default function HobbyModalDataInit() {
 
-    //const { data: session } = useSession();
-    // const setModalOpen = useModalStore((state) => state.setModalOpen);
-    // const categoryPassed = useHobbyStore((state) => state.categoryPassed);
-    // const setRefreshKey = useHobbyStore((state) => state.setRefreshKey);
-    // const categories = useHobbyStore((state) => state.categories) as string[];
-    // const titles = useHobbyStore((state) => state.titles) as string[]
-    // const dashProps = useDataStore(state => state.dashProps);
-    // const fieldObjectsStored = dashProps ? dashProps.fieldObjects as IFieldObject[] : [] as IFieldObject[]
-    // const [colorChoice, setColorChoice] = useState('');
-    // const [goalChild, setGoalChild] = useState('Goal Value');
-    // const [goalType, setGoalType] = useState('text');
-    // const [catCreate, setCatCreate] = useState(false);
-    // const [goalPlaceHolder, setGoalPlaceHolder] = useState('Pick a Goal Type First');
-    // const [colorName, setColorName] = useState('Black');
+
+export default function NewHobbyFormModal() {
+
+    const { data: session } = useSession();
+
+    const newHobbyForm = useForm({
+        initialValues: {
+            hobbyTitle: '',
+            hobbyColor: '#000000',
+            hobbyCategory: '',
+            hobbyCreate: '',
+            hobbyGoalType: '',
+            hobbyGoalValue: '',
+            hobbyDescription: ''
+        } as NewHobbyFormValues,
+    }) as NewHobbyFormType;
+
+    const user = session ? session.user as IUser : {} as IUser;
+    const userEmail = user ? (user.email as string) : '';
+    const titles = useHobbyStore(state => state.titles);
+    const setTitles = useHobbyStore(state => state.setTitles);
+    const showAddHobbyModal = useModalStore(state => state.showAddHobbyModal);
+    const setShowAddHobbyModal = useModalStore(state => state.setShowAddHobbyModal);
     const [loading, setLoading] = useState(true);
+    const setGlobalLoading = useStateStore(state => state.setGlobalLoading);
+    const setFilteredHobbies = useDataStore(state => state.setFilteredHobbies);
+    const setFilteredDates = useDataStore(state => state.setFilteredDates);
 
-    // const handleColorUpdate = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     setColorChoice(e.target.value);
-    //     setColorName(ntc.name(e.target.value)[1]);
-    // };
+    const HandleCreateHobby = async (hobbyFormToMake: NewHobbyFormType) => {
+        try {
 
-    // const handleModalOpen = () => {
-    //     setModalOpen('logsession')
-    // }
+            if (user === null || !user || user === {} as IUser) {
+                toast.error('You are unauthorized!~user')
+                return;
+            }
+            if (!userEmail || userEmail === '') {
+                toast.error('You are unauthorized!~email')
+                return;
+            }
 
+            const newHobbyTitle = hobbyFormToMake.getValues().hobbyTitle;
+            if (!newHobbyTitle) {
+                toast.warning('Must include title');
+                return;
+            }
 
-    // const HandleCreateHobby = async (event: React.FormEvent<HTMLFormElement>) => {
-    //     console.log('handleSubmit function called');
-    //     event.preventDefault();
-    //     try {
-    //         const formData = new FormData(event.currentTarget);
-    //         if (!session) {
-    //             toast.error('You are unauthorized!')
-    //             return;
-    //         }
-    //         const user = session.user as User;
-    //         if (!user) {
-    //             toast.error('You are unauthorized!')
-    //             return;
-    //         }
-    //         const userEmail = user.email as string
-    //         if (!userEmail) {
-    //             toast.error('You are unauthorized!')
-    //             return;
-    //         }
+            if (titles.includes(newHobbyTitle)) {
+                toast.warning('This title is already in use!')
+                return;
+            } else {
+                setTitles([...titles, newHobbyTitle]);
+            }
 
-    //         const titleToUse = formData.get('modalHobbyTitle')?.toString();
+            const colorToUse = hobbyFormToMake.getValues().hobbyColor;
+            const categoryToUse = hobbyFormToMake.getValues().hobbyCategory;
 
-    //         if (!titleToUse) {
-    //             toast.warning('Must include title');
-    //             return;
-    //         }
+            if (!categoryToUse) {
+                toast.error('Category needed!')
+                return;
+            }
+            let newHobbyGoalType = hobbyFormToMake.getValues().hobbyGoalType;
 
-    //         if (titles.includes(titleToUse)) {
-    //             toast.warning('This title is already in use!')
-    //             return;
-    //         }
+            const newHobbyGoalValue = hobbyFormToMake.getValues().hobbyGoalValue;
 
-    //         const colorToUse = formData.get('modalHobbyColor')?.toString();
-    //         const colorToPass = colorToUse ? colorToUse as string : '' as string;
+            if (newHobbyGoalValue !== '' && newHobbyGoalType === '') {
+                newHobbyGoalType = 'Custom Goal'
+            }
+            const goalToUse = `${newHobbyGoalType}-${newHobbyGoalValue.toString()}`;
+            const goalToPass = goalToUse ? goalToUse : ''
+            const newHobbyDescription = hobbyFormToMake.getValues().hobbyDescription;
 
-    //         const categoryToUse = catCreate === false ? formData.get('modalHobbyCategory')?.toString() : formData.get('modalHobbyCreate')?.toString();
+            const hobbyToCreate = {
+                userId: '',
+                title: newHobbyTitle,
+                timeFrequency: [] as ITimeFrequency[],
+                description: newHobbyDescription ? newHobbyDescription : '',
+                category: categoryToUse ? categoryToUse : '',
+                color: colorToUse ? colorToUse : '#3b82f6',
+                isActive: true,
+                goals: goalToPass !== '' ? [goalToPass] : []
+            } as IHobbyData
 
-    //         if (!categoryToUse) {
-    //             toast.error('Category needed!')
-    //             return;
-    //         }
+            const headers = { 'Authorization': `Bearer ${userEmail}` };
+            const res = await AttemptToCreateNewHobby({ hobbyToCreate, userEmail }, headers)
 
-    //         const goalToUse = `${goalType}-${formData.get('modalHobbyGoalValue')?.toString()}`;
-    //         const goalToPass = goalToUse ? [goalToUse] as string[] : [] as string[]
-    //         const descriptionToUse = formData.get('modalHobbyDescription')?.toString() as string;
-    //         const descriptionToPass = descriptionToUse ? [descriptionToUse] as string[] : [] as string[];
+            if (res && res === true) {
 
-    //         if (!fieldObjectsStored) {
-    //             toast.error("Interal error with field objects")
-    //             return;
-    //         }
+                toast.success('Hobby created successfully!');
+                hobbyFormToMake.reset();
+                hobbyFormToMake.setValues(InitialNewHobbyFormValues);
+                setFilteredHobbies([]);
+                const today = new Date();
+                const minusFiveMonths = new Date();
+                minusFiveMonths.setMonth(today.getMonth() - 5);
+                setFilteredDates({ type: 'range', range: [minusFiveMonths, today] });
+                setShowAddHobbyModal(false);
+                setGlobalLoading(true);
 
-    //         let fieldObjectIndex = fieldObjectsStored.length as number
-    //         const headers = { 'Authorization': `Bearer ${userEmail}` };
-    //         const res = await AttemptToCreateNewHobby({ titleToUse: titleToUse, fieldObjectIndex: fieldObjectIndex, colorToUse: colorToPass, categoryToUse: categoryToUse, descriptionToUse: descriptionToPass, goalToUse: goalToPass, userID: userEmail }, headers)
+            } else {
+                console.log('Error creating hobby');
+            }
 
-    //         if (res) {
-    //             console.log('Hobby created');
-    //             setRefreshKey(refreshKey => refreshKey + 1);
-    //             setModalOpen('');
-    //         } else {
-    //             console.log('Error creating hobby');
-    //         }
-    //     } catch (error) {
-    //         console.log('Error creating hobby:', error ? error : 'No error');
-    //     }
+        } catch (error) {
+            console.log('Error creating hobby:', error ? error : 'No error');
+        }
 
-    // };
+    };
 
-    // const handleCategoryCreate = () => {
-    //     setCatCreate(!catCreate);
-    // };
+    const resetModal = () => {
 
-    // const changeGoalChild = (goalValueSelected: string) => {
-    //     if (goalValueSelected === '0') {
-    //         setGoalChild('Goal Value');
-    //         setGoalType('text');
-    //         setGoalPlaceHolder('Pick a Goal Type First');
-    //     } else if (goalValueSelected === '1') {
-    //         setGoalChild('Time');
-    //         setGoalType('datetime-local');
-    //         setGoalPlaceHolder('By May-05');
-    //     } else if (goalValueSelected === '2') {
-    //         setGoalChild('Sessions Completed');
-    //         setGoalType('number');
-    //         setGoalPlaceHolder('20 sessions');
-    //     } else if (goalValueSelected === '3') {
-    //         setGoalChild('Distance');
-    //         setGoalType('number');
-    //         setGoalPlaceHolder('200 miles');
-    //     } else if (goalValueSelected === '4') {
-    //         setGoalChild('Financial');
-    //         setGoalType('number');
-    //         setGoalPlaceHolder('$2999');
-    //     } else if (goalValueSelected === '5') {
-    //         setGoalChild('Create your own');
-    //         setGoalType('text');
-    //         setGoalPlaceHolder('Type a Goal Here');
-    //     }
-    // };
+        newHobbyForm.reset();
+        newHobbyForm.setValues(InitialNewHobbyFormValues);
+
+    }
+
+    const toRender = <Modal opened={showAddHobbyModal} onClose={() => { resetModal(); setShowAddHobbyModal(false); }} size={'90%'} withCloseButton={true} centered={true} closeOnClickOutside={true}>
+        {loading ? (
+            <div className="flex items-center justify-center w-full h-full">
+                <LoadingSpinner />
+            </div>
+        ) : (<NewHobbyFormComponents newHobbyForm={newHobbyForm} HandleCreateHobby={HandleCreateHobby} />
+        )}
+    </Modal>;
+
 
     useEffect(() => {
         //if (colorName === '') {
@@ -139,14 +150,5 @@ export default function HobbyModalDataInit() {
         setLoading(false)
     }, []);
 
-    return (
-        loading ? (
-            <Spinner />
-        ) : (
-            // <ModalHobby categoryPassed={categoryPassed} categories={categories} goalChild={goalChild} goalPlaceHolder={goalPlaceHolder} handleColorUpdate={handleColorUpdate} HandleCreateHobby={HandleCreateHobby} handleCategoryCreate={handleCategoryCreate} changeGoalChild={changeGoalChild} colorName={colorName} catCreate={catCreate} handleModalOpen={handleModalOpen} />
-            <div>
-                <p>Under Construction</p>
-            </div>
-        )
-    )
+    return toRender;
 }

@@ -11,22 +11,29 @@ interface ModalStore {
     setShowCalendar: (showCalendar: boolean) => void;
     dashToShow: string;
     setDashToShow: (dashToShow: string) => void;
-
     logSessionModalOpen: boolean;
     setLogSessionModalOpen: (logSessionModalOpen: boolean) => void;
+    showAddHobbyModal: boolean;
+    setShowAddHobbyModal: (showAddHobbyModal: boolean) => void;
 }
 
 export const useModalStore = create<ModalStore>((set) => ({
+
     modalOpen: '',
     setModalOpen: (modalOpen) => set({ modalOpen }),
     colorChoice: '',
     setColorChoice: (colorChoice) => set({ colorChoice }),
+
     modalParent: '',
     setModalParent: (modalParent) => set({ modalParent }),
+
     showCalendar: false,
     setShowCalendar: (showCalendar) => set({ showCalendar }),
+
     dashToShow: 'stats',
     setDashToShow: (dashToShow) => set({ dashToShow }),
     logSessionModalOpen: false,
     setLogSessionModalOpen: (logSessionModalOpen) => set({ logSessionModalOpen }),
+    showAddHobbyModal: false,
+    setShowAddHobbyModal: (showAddHobbyModal) => set({ showAddHobbyModal }),
 }));

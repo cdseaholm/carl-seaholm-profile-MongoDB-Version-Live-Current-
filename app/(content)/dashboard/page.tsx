@@ -1,7 +1,6 @@
 
 import { Metadata } from "next";
-import DashProvider from "@/components/dataInitializers/dashProvider";
-import Loader from "@/components/misc/loader";
+import DashProvider from "./components/dashProvider";
 
 export async function generateMetadata(): Promise<Metadata> {
   // const session = await getServerSession();
@@ -16,8 +15,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
 
   return (
-    <Loader>
-      <DashProvider/>
-    </Loader>
+    <DashProvider />
   );
 }

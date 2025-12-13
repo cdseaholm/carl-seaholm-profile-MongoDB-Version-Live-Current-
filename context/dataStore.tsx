@@ -1,10 +1,24 @@
 import { create } from 'zustand';
 import { HobbyColorMapType } from '@/models/types/colorMap';
-import { PercentageType } from '@/components/pagecomponents/dashboard/statsView';
+import { PercentageType } from '@/app/(content)/dashboard/components/statsView';
 import { MonthSums, YearSums } from '@/app/actions/statsActions/statActions';
 import { PieChartCell } from '@mantine/charts';
 import { ISession } from '@/models/types/session';
 import { HobbySessionInfo, MonthlyInfo } from '@/utils/apihelpers/get/initData/initDashboardParams';
+import { IHobbyData } from '@/models/types/hobbyData';
+import { IMonthlyData } from '@/models/types/monthlyData';
+import { DateValue } from '@mantine/dates';
+import { HobbyCheckMarkType } from '@/app/(content)/dashboard/components/button-board/left-board/left-board';
+import { EditSessionType } from '@/models/types/edit-session';
+
+export type DateRangeType = {
+  type: 'range' | 'day' | 'month' | 'year',
+  range: [DateValue | null, DateValue | null]
+};
+
+const today = new Date();
+const minusFiveMonths = new Date();
+minusFiveMonths.setMonth(today.getMonth() - 5);
 
 type DataStore = {
   thisMonth: number;
@@ -34,6 +48,24 @@ type DataStore = {
   setMonthlySummaries: (monthlySummaries: MonthSums[]) => void;
   yearlySummaries: YearSums[];
   setYearlySummaries: (yearlySummaries: YearSums[]) => void;
+
+  //init data states
+  hobbyData: IHobbyData[]
+  setHobbyData: (hobbyData: IHobbyData[]) => void;
+  monthlyData: IMonthlyData[]
+  setMonthlyData: (monthlyData: IMonthlyData[]) => void;
+
+  //filteringInfo
+  filteredDates: DateRangeType;
+  setFilteredDates: (filteredDates: DateRangeType) => void;
+  filteredHobbies: HobbyCheckMarkType[];
+  setFilteredHobbies: (filteredHobbies: HobbyCheckMarkType[]) => void;
+
+  //editing sessions
+  openEditSessionModal: boolean;
+  setOpenEditSessionModal: (openEditSessionModal: boolean) => void;
+  sessionToEdit: EditSessionType | null;
+  setSessionToEdit: (sessionToEdit: EditSessionType | null) => void;
 
 };
 
@@ -70,4 +102,24 @@ export const useDataStore = create<DataStore>((set) => ({
   yearlySummaries: [] as YearSums[],
   setYearlySummaries: (yearlySummaries) => set({ yearlySummaries }),
 
+  //init data states
+  hobbyData: [] as IHobbyData[],
+  setHobbyData: (hobbyData) => set({ hobbyData }),
+  monthlyData: [] as IMonthlyData[],
+  setMonthlyData: (monthlyData) => set({ monthlyData }),
+
+  //filteringInfo
+
+  filteredDates: { type: 'range', range: [minusFiveMonths, today] } as DateRangeType,
+  setFilteredDates: (filteredDates) => set({ filteredDates }),
+  filteredHobbies: [] as HobbyCheckMarkType[],
+  setFilteredHobbies: (filteredHobbies) => set({ filteredHobbies }),
+
+  //editing sessions
+  openEditSessionModal: false,
+  setOpenEditSessionModal: (openEditSessionModal) => set({ openEditSessionModal }),
+  sessionToEdit: null as EditSessionType | null,
+  setSessionToEdit: (sessionToEdit) => set({ sessionToEdit })
+
 }));
+

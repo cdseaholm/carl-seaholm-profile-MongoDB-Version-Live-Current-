@@ -8,7 +8,24 @@ export function DashButtons({ handleDashToShow, dashToShow, handleDaySelected, d
     const setShowCalendar = useModalStore(state => state.setShowCalendar);
 
     const buttonClass = `hover:bg-gray-300 rounded-md px-2 py-1 rounded-md bg-gray-400/40 border w-content`;
-    const textClass = `text-xs sm:text-sm md:text-base hover:text-gray-800`
+    const textClass = `text-xs sm:text-sm md:text-base hover:text-gray-800`;
+
+    const dashButtonsShown = dashToShow !== 'calendar' ? (
+
+        <button className={`${buttonClass}`} onClick={() => {
+            handleDaySelected(daySelected);
+            setShowCalendar(true);
+        }}>
+            <p className={`${textClass}`}>{'Calendar'}</p>
+        </button>
+    ) : (
+        <button className={`${buttonClass}`} onClick={() => {
+            setShowCalendar(true);
+        }}>
+            <p className={`${textClass}`}>{'Select Day'}</p>
+        </button>
+
+    )
 
     return (
         <div className="flex flex-row justify-start items-center space-x-1 md:space-x-5 pr-2 w-full sm:w-1/2 p-2">
@@ -23,22 +40,7 @@ export function DashButtons({ handleDashToShow, dashToShow, handleDaySelected, d
                     )
                 }) : []}
             </select> */}
-            {dashToShow !== 'calendar' ?
-                (
-                    <button className={`${buttonClass}`} onClick={() => {
-                        handleDaySelected(daySelected);
-                        setShowCalendar(true);
-                    }}>
-                        <p className={`${textClass}`}>{'Calendar'}</p>
-                    </button>
-                ) : (
-                    <button className={`${buttonClass}`} onClick={() => {
-                        setShowCalendar(true);
-                    }}>
-                        <p className={`${textClass}`}>{'Select Day'}</p>
-                    </button>
-                )
-            }
+            {dashButtonsShown}
             <button className={`${buttonClass}`} onClick={() => {
                 handleDashToShow('stats', null);
             }}>

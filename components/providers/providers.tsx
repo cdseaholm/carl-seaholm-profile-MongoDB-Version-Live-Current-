@@ -5,15 +5,20 @@ import MainModal from '@/components/modals/mainmodal/mainmodal';
 import AlertModal from '@/components/modals/Alert/alertmodal';
 import LifeAspectModal from '@/components/modals/LifeAspect/lifeAspectModal';
 import CalendarModalInit from '@/components/modals/modalContent/Calendar/calendarModalInit';
+import NewHobbyFormModal from '@/components/modals/modalContent/AddHobbyTracker/hobbymodaldatainit';
+import LogSessionDataInit from '@/components/modals/modalContent/LogSession/logsessiondatainit';
+import { ModalsProvider } from '@mantine/modals';
 
 export function Providers() {
 
   return (
-    <>
+    <ModalsProvider>
       <AlertModal />
       <MainModal />
       <LifeAspectModal />
       <CalendarModalInit />
-    </>
+      <NewHobbyFormModal />
+      <LogSessionDataInit />
+    </ModalsProvider>
   )
 }

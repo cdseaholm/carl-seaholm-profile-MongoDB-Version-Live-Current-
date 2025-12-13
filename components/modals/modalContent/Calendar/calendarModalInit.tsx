@@ -9,6 +9,7 @@ import { useDataStore } from '@/context/dataStore';
 import { useHobbyStore } from "@/context/hobbyStore";
 import { useStateStore } from "@/context/stateStore";
 import { CalendarColors, JanColors } from "@/models/types/calColorInfo";
+import { useSession } from "next-auth/react";
 
 export interface CalEvent {
     allDay: boolean;
@@ -30,6 +31,10 @@ export default function CalendarModalInit() {
     const [indexOpen, setIndexOpen] = useState<boolean>(false);
     const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
     const handleGlobalLoading = useStateStore(state => state.setGlobalLoading);
+    const { data: session } = useSession();
+    const user = session?.user ? session.user : null;
+    const email = user?.email ? user.email : '';
+    const adminOrNot = email === 'cdseaholm@gmail.com' ? true : false;
     const loadedData = useRef(false);
     const monthInfo = useDataStore(state => state.monthlyInfoCounts);
     const nummericalColorMap = [
@@ -97,7 +102,7 @@ export default function CalendarModalInit() {
         });
         await setNewDay(arg);
         handleGlobalLoading(false);
-        if (sessionsOnThisDay.length < 1) {
+        if (sessionsOnThisDay.length < 1 && adminOrNot) {
             setLogSessionModalOpen(true)
         }
         setShowCalendar(false);
@@ -114,7 +119,7 @@ export default function CalendarModalInit() {
             setThisMonthsColors(color);
         }
 
-    }, [calData, setDayData, currentMonth]);
+    }, [calData, setDayData, currentMonth, monthInfo]);
 
     const handleIndexOpen = () => {
         setIndexOpen(!indexOpen);

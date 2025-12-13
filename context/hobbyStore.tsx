@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { IHobby } from '../models/types/hobby';
-import { PercentageType } from '@/components/pagecomponents/dashboard/statsView';
+import { PercentageType } from '@/app/(content)/dashboard/components/statsView';
 import { IEntry, IIndexedEntry } from '@/models/old/types/entry';
 import { IUserObjectIndexed } from '@/models/old/types/userObjectIndexed';
 import { IFieldObject } from '@/models/types/field';
