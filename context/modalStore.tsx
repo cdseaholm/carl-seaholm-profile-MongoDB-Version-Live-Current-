@@ -15,6 +15,8 @@ interface ModalStore {
     setLogSessionModalOpen: (logSessionModalOpen: boolean) => void;
     showAddHobbyModal: boolean;
     setShowAddHobbyModal: (showAddHobbyModal: boolean) => void;
+    showColorIndexModal: boolean;
+    setShowColorIndexModal: (showColorIndexModal: boolean) => void;
 }
 
 export const useModalStore = create<ModalStore>((set) => ({
@@ -36,4 +38,6 @@ export const useModalStore = create<ModalStore>((set) => ({
     setLogSessionModalOpen: (logSessionModalOpen) => set({ logSessionModalOpen }),
     showAddHobbyModal: false,
     setShowAddHobbyModal: (showAddHobbyModal) => set({ showAddHobbyModal }),
+    showColorIndexModal: false,
+    setShowColorIndexModal: (showColorIndexModal) => set({ showColorIndexModal }),
 }));

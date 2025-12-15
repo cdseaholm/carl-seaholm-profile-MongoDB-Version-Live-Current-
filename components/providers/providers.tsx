@@ -8,6 +8,7 @@ import CalendarModalInit from '@/components/modals/modalContent/Calendar/calenda
 import NewHobbyFormModal from '@/components/modals/modalContent/AddHobbyTracker/hobbymodaldatainit';
 import LogSessionDataInit from '@/components/modals/modalContent/LogSession/logsessiondatainit';
 import { ModalsProvider } from '@mantine/modals';
+import ColorIndexModal from '../modals/modalContent/ColorIndex/color-index-modal';
 
 export function Providers() {
 
@@ -19,6 +20,7 @@ export function Providers() {
       <CalendarModalInit />
       <NewHobbyFormModal />
       <LogSessionDataInit />
+      <ColorIndexModal />
     </ModalsProvider>
   )
 }
