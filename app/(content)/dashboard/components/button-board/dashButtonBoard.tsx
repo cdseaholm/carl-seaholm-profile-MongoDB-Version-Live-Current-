@@ -26,7 +26,7 @@ export default function DashButtonBoard({ dashToShow, handleDashToShow, adminID,
   }
 
   return (
-    <div className="flex flex-row items-center justify-between w-full px-1 md:px-6 border-t border-gray-600 pt-2 mb-2">
+    <div className="flex flex-row items-center justify-between w-full px-2 md:px-6 border-t border-gray-600 pt-2 mb-2">
       <LeftBoard hobbies={hobbies} />
       <RightBoard dashToShow={dashToShow} handleDashToShow={handleDashToShow} handleDaySelected={handleDaySelected} daySelected={daySelected} adminID={adminID} />
     </div>

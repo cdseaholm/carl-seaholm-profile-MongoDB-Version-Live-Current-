@@ -1,3 +1,19 @@
+export const MonthColorNames = [
+    { color: '#2F5C8F', title: 'January' },
+    { color: '#C41E3A', title: 'February' },
+    { color: '#3B7A57', title: 'March' },
+    { color: '#E6B800', title: 'April' },
+    { color: '#FF7B9C', title: 'May' },
+    { color: '#4F86F7', title: 'June' },
+    { color: '#DE3831', title: 'July' },
+    { color: '#F28C28', title: 'August' },
+    { color: '#B76E79', title: 'September' },
+    { color: '#CF5300', title: 'October' },
+    { color: '#8B4513', title: 'November' },
+    { color: '#154734', title: 'December' },
+];
+
+
 export interface CalendarColors {
     monthColor: string;
     textOnMonth: string;

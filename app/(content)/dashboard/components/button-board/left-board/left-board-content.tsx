@@ -7,7 +7,7 @@ import { DatePicker, MonthPicker, YearPicker } from "@mantine/dates"
 export default function LeftBoardContent({ options, dateValues, setDateValues, handleApplyFilters, tabsTypeCopy, setTabsTypeCopy, newFilters, setNewFilters }: { options: React.ReactNode[], dateValues: DateRangeType, setDateValues: (value: DateRangeType) => void, handleApplyFilters: () => void, tabsTypeCopy: string | null, setTabsTypeCopy: (tab: string | null) => void, newFilters: boolean, setNewFilters: (value: boolean) => void }) {
 
     return (
-        <div className='flex flex-col justify-start items-center gap-4 p-4 bg-gray-100 p-1 divide-y divide-gray-400 w-full'>
+        <div className='flex flex-col justify-start items-center gap-4 p-4 bg-gray-100 p-1 divide-y divide-gray-400 w-[96dvw] sm:w-full h-auto max-h-[80dvh]'>
             <div className="flex flex-row justify-between items-center w-full pb-2">
                 <p>
                     {`Current: ${dateValues.range[0] ? dateValues.range[0].toLocaleDateString() : 'N/A'}${dateValues.range[1] ? ` - ${dateValues.range[1].toLocaleDateString()}` : ''}`}

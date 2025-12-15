@@ -1,12 +1,13 @@
 'use client';
 
-import { Checkbox, Combobox, Group, useCombobox } from '@mantine/core';
+import { Checkbox, Combobox, Group, ScrollArea, useCombobox } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import LeftBoardContent from './left-board-content';
 import LoadingSpinner from '@/app/(content)/projects/school/infoVis-DatasetProject/components/components/misc/loadingSpinner';
 import { DateRangeType, useDataStore } from '@/context/dataStore';
 import { FiFilter } from 'react-icons/fi';
+import { useStateStore } from '@/context/stateStore';
 
 export type HobbyCheckMarkType = {
     _id: string;
@@ -22,7 +23,7 @@ export default function LeftBoard({ hobbies }: { hobbies: { _id: string, title: 
     const currHobbyFilters = useDataStore(state => state.filteredHobbies);
     const setCurrFilteredDates = useDataStore(state => state.setFilteredDates);
     const setCurrFilteredHobbies = useDataStore(state => state.setFilteredHobbies);
-
+    const width = useStateStore(state => state.widthQuery);
     const combobox = useCombobox({
 
     });
@@ -113,22 +114,23 @@ export default function LeftBoard({ hobbies }: { hobbies: { _id: string, title: 
         <Combobox
             store={combobox}
             withinPortal={false}
-            width={'auto'}
-
+            width={'100%'}
         >
             <Combobox.DropdownTarget>
-                <button type='button' className={`flex flex-row justify-center items-center space-x-2 hover:bg-gray-300 rounded-md px-8 py-2 sm:py-1 rounded-md bg-gray-400/40 border w-content`} onClick={() => combobox.toggleDropdown()}>
-                    <FiFilter className='h-4 w-4' />
+                <button type='button' className={`flex flex-row justify-center items-center ${width > 400 && 'space-x-2'} hover:bg-gray-300 rounded-md px-4 py-1 sm:py-1 rounded-md bg-gray-400/40 border w-1/3 sm:w-1/4 md:w-1/5 h-content cursor-pointer`} onClick={() => combobox.toggleDropdown()}>
+                    {width > 400 && <FiFilter className='h-4 w-4' />}
                     <p className={`text-xs sm:text-sm md:text-base hover:text-gray-800`}>Filter</p>
                 </button>
             </Combobox.DropdownTarget>
 
-            <Combobox.Dropdown>
-                {loading ? (
-                    <LoadingSpinner />
-                ) : (
-                    <LeftBoardContent options={options} dateValues={dateValues} setDateValues={setDateValues} handleApplyFilters={handleApplyFilters} tabsTypeCopy={tabsTypeCopy} setTabsTypeCopy={setTabsTypeCopy} newFilters={newFilters} setNewFilters={setNewFilters} />
-                )}
+            <Combobox.Dropdown w={'auto'} h={'auto'}>
+                <ScrollArea.Autosize maw={'100%'} mah={width > 640 ? '80%' : 'auto'} type='always' w={'100%'}>
+                    {loading ? (
+                        <LoadingSpinner />
+                    ) : (
+                        <LeftBoardContent options={options} dateValues={dateValues} setDateValues={setDateValues} handleApplyFilters={handleApplyFilters} tabsTypeCopy={tabsTypeCopy} setTabsTypeCopy={setTabsTypeCopy} newFilters={newFilters} setNewFilters={setNewFilters} />
+                    )}
+                </ScrollArea.Autosize>
             </Combobox.Dropdown>
         </Combobox>
     );

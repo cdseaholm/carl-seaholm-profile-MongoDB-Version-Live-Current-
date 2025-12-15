@@ -5,10 +5,12 @@ import { IoIosStats } from "react-icons/io";
 import { FaCalendar } from "react-icons/fa";
 import { useDataStore } from "@/context/dataStore";
 import { Menu } from "@mantine/core";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { toast } from "sonner";
 import { PiListHeartLight } from "react-icons/pi";
+import { useStateStore } from "@/context/stateStore";
+import { IoMdColorPalette } from "react-icons/io";
 
 export default function RightBoard({ dashToShow, handleDashToShow, handleDaySelected, daySelected, adminID }: { dashToShow: string, handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, handleDaySelected: (date: string) => void, daySelected: string, adminID: boolean }) {
 
@@ -21,14 +23,18 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
     const [chevUp, setChevUp] = useState(false);
     const setNewHobbyModalOpen = useModalStore((state) => state.setShowAddHobbyModal);
     const setLogSessionModalOpen = useModalStore((state) => state.setLogSessionModalOpen);
+    const width = useStateStore(state => state.widthQuery);
+    const setShowColorIndexModal = useModalStore(state => state.setShowColorIndexModal);
 
     return (
-        <div className="flex flex-row items-center justify-end space-x-2">
-            <Menu shadow="md" width={200} onOpen={() => setChevUp(true)} onClose={() => setChevUp(false)} closeOnClickOutside={true} closeOnEscape={true} closeOnItemClick={true}>
+        <div className="flex flex-row items-center justify-end space-x-2 w-full">
+            <Menu shadow="md" width={200} onOpen={() => setChevUp(true)} onClose={() => setChevUp(false)} closeOnClickOutside={true} closeOnEscape={true} closeOnItemClick={true} styles={{
+
+            }}>
                 <Menu.Target>
-                    <div className="flex flex-row justify-center items-center space-x-2 hover:bg-gray-300 rounded-md px-4 py-1 sm:py-1 rounded-md bg-gray-400/40 border w-content cursor-pointer" >
-                        <p>Actions</p>
-                        {chevUp ? <ChevronDownIcon className="h-5 w-5 transform rotate-180" /> : <ChevronDownIcon className="h-5 w-5" />}
+                    <div className={`flex flex-row justify-center items-center ${width > 400 && 'space-x-2'} hover:bg-gray-300 rounded-md px-4 py-1 sm:py-1 rounded-md bg-gray-400/40 border w-1/3 sm:w-1/4 md:w-1/5 h-content cursor-pointer`}>
+                        <p className={`text-xs sm:text-sm md:text-base hover:text-gray-800`}>Actions</p>
+                        {width > 400 && chevUp ? <ChevronUpIcon className="h-4 w-4 transform rotate-180" /> : width > 400 && !chevUp ? <ChevronDownIcon className="h-4 w-4" /> : null}
                     </div>
                 </Menu.Target>
 
@@ -55,6 +61,13 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
                     }}>
                         <p className={`${dashToShow === 'hobbies' ? offTextClass : onTextClass}`}>
                             Veiw Hobbies
+                        </p>
+                    </Menu.Item>
+                    <Menu.Item leftSection={<IoMdColorPalette size={14} />} onClick={() => {
+                        setShowColorIndexModal(true);
+                    }}>
+                        <p className={onTextClass}>
+                            View Color Indexes
                         </p>
                     </Menu.Item>
 
