@@ -365,7 +365,8 @@ export default function LogSessionDataInit() {
             setInitDaySelected(daySelected);
             initFormHobbies();
         }
-    }, [daySelected, hobbySessionsInfo.length, initDaySelected]);
+        
+    }, [daySelected, hobbySessionsInfo.length, initDaySelected, logSessionModalOpen]);
 
     return (
 

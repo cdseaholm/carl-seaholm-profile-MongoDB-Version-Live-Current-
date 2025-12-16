@@ -72,11 +72,9 @@ export default function CalendarModalInit() {
     //functions
 
     const handleMonthChange = async (month: Date) => {
-        // const monthIndex = month.getMonth() + 1;
-        // Only update if the month actually changed
-
         setCurrentMonth(month);
-        const color = monthInfo.find(m => m.monthInfo.month === month.getMonth())?.monthInfo.monthColorInfo;
+        const monthIndex = month.getMonth() + 1;
+        const color = monthInfo.find(m => m.monthInfo.month === monthIndex)?.monthInfo.monthColorInfo;
         if (!color) {
             setThisMonthsColors(JanColors);
         } else {
@@ -87,7 +85,7 @@ export default function CalendarModalInit() {
 
     const setNewDay = async (arg: Date) => {
         handleDaySelected(arg.toLocaleDateString());
-        setDashToShow('calendar');
+        setDashToShow('sessions');
     }
 
     const handleDaySelect = async (arg: Date) => {
@@ -111,8 +109,9 @@ export default function CalendarModalInit() {
     const hydrateObjects = useCallback(async () => {
         setDayData(calData)
         // Use currentMonth instead of thisMonth for initial load
-        const month = currentMonth.getMonth();
+        const month = currentMonth.getMonth() + 1;
         const color = monthInfo.find(m => m.monthInfo.month === month)?.monthInfo.monthColorInfo;
+        console.log('Hydrating calendar colors for month:', month, 'with color info:', color);
         if (!color) {
             setThisMonthsColors(JanColors);
         } else {
@@ -138,13 +137,12 @@ export default function CalendarModalInit() {
     }, [hydrateObjects, showCalendar]);
 
     return (
-        <Modal.Root opened={showCalendar} onClose={() => setShowCalendar(false)} centered size={'85%'} padding={0} closeOnClickOutside closeOnEscape>
+        <Modal.Root opened={showCalendar} onClose={() => setShowCalendar(false)} centered size={'95%'} padding={0} closeOnClickOutside closeOnEscape>
             <Modal.Overlay backgroundOpacity={.55} blur={3} className="drop-shadow-xl" />
             <Modal.Content
                 w={'100%'}
-                h={'85vh'}
+                h={'auto'}
                 style={{
-                    maxHeight: '85vh',
                     overflow: 'hidden',
                     margin: 'auto',
                     display: 'flex',
@@ -154,11 +152,19 @@ export default function CalendarModalInit() {
                 <Modal.Header bg={thisMonthsColors.monthColor} >
                     <div className="flex flex-row justify-between items-center justify-evenly h-content w-full px-4 py-2 border-b border-black">
                         <Modal.Title>
-                            <p className="font-semibold text-lg underline">
+                            <p className="font-semibold text-lg underline" style={{ color: thisMonthsColors.today.text }}>
                                 Pick a day
                             </p>
                         </Modal.Title>
-                        <Modal.CloseButton styles={{ close: { color: 'black', hover: { backgroundColor: 'rgba(0,0,0,0.1)' } } }} />
+                        <Modal.CloseButton 
+                            styles={{ close: { color: thisMonthsColors.today.text } }}
+                            onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                e.currentTarget.style.color = '#000000';
+                            }}
+                            onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                e.currentTarget.style.color = thisMonthsColors.today.text;
+                            }}
+                        />
                     </div>
                 </Modal.Header>
                 <Modal.Body className="flex flex-col h-full p-0" style={{ height: 'calc(100% - 60px)', overflow: 'hidden', backgroundColor: thisMonthsColors.monthColor }}>
@@ -170,11 +176,24 @@ export default function CalendarModalInit() {
                         />
                     </div>
                     <div className='flex-shrink-0 flex flex-row h-auto w-full border-t border-black px-4 py-2 justify-between items-center' style={{ backgroundColor: thisMonthsColors.monthColor }}>
-                        <button type="button" onClick={handleIndexOpen} className="py-1 text-blue-800 hover:text-blue-200 text-sm">
-                            {indexOpen ? 'Close Color Index' : 'Open Color Index'}
+                        <button
+                            type="button"
+                            onClick={handleIndexOpen}
+                            onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                e.currentTarget.style.backgroundColor = thisMonthsColors.hover.regular;
+                            }}
+                            onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                e.currentTarget.style.backgroundColor = thisMonthsColors.today.background;
+                            }}
+                            className={`flex flex-row justify-center items-center p-1 text-sm hover:underline rounded-md ${indexOpen ? 'w-5 h-5' : 'w-content'}`}
+                            style={{ backgroundColor: thisMonthsColors.today.background }}
+                        >
+                            <p style={{ color: thisMonthsColors.today.text }} className="text-xs sm:text-sm">
+                                {indexOpen ? 'X' : 'Open Color Index'}
+                            </p>
                         </button>
                         {indexOpen &&
-                            <div className={`grid grid-cols-2 gap-2 p-2`}>
+                            <div className={`grid grid-cols-2 gap-2 p-2 border border-black rounded-md`} style={{ backgroundColor: thisMonthsColors.regularDay.background }}>
                                 {nummericalColorMap.map((map: numericalColorMap, index: number) => {
                                     const color = map.color;
                                     const numOfSessions = map.numOfSessions;

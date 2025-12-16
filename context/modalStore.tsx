@@ -9,8 +9,8 @@ interface ModalStore {
     setModalParent: (modalParent: string) => void;
     showCalendar: boolean;
     setShowCalendar: (showCalendar: boolean) => void;
-    dashToShow: string;
-    setDashToShow: (dashToShow: string) => void;
+    dashToShow: 'stats' | 'hobbies' | 'sessions';
+    setDashToShow: (dashToShow: 'stats' | 'hobbies' | 'sessions') => void;
     logSessionModalOpen: boolean;
     setLogSessionModalOpen: (logSessionModalOpen: boolean) => void;
     showAddHobbyModal: boolean;

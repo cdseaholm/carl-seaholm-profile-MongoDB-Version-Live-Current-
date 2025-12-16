@@ -5,8 +5,8 @@ import LeftBoard, { HobbyCheckMarkType } from "./left-board/left-board";
 import RightBoard from "./right-board";
 
 interface DashBoardProps {
-  dashToShow: string;
-  handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void;
+  dashToShow: 'hobbies' | 'stats' | 'sessions';
+  handleDashToShow: (dashToShow: 'hobbies' | 'stats' | 'sessions') => void;
   adminID: boolean;
   handleDaySelected: (date: string) => void;
   daySelected: string;

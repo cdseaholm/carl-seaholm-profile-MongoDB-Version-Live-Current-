@@ -6,7 +6,7 @@ import { HobbySessionInfo } from "@/utils/apihelpers/get/initData/initDashboardP
 import { useDisclosure } from "@mantine/hooks";
 import HobbyCard from "@/components/misc/hobby-card";
 
-export default function CalendarView({ adminID, handleDateDecrease, handleDateIncrease, entriesOTD, daySelected, handleDaySelected, handleCats, handleDescriptions, handleGoals, handleTotalTime, showCats, showDescriptions, showGoals, showTotTime }: { adminID: boolean, handleDateDecrease: () => void, handleDateIncrease: () => void, entriesOTD: HobbySessionInfo[], daySelected: string, handleDaySelected: (daySelected: string) => void, handleCats: () => void, handleDescriptions: () => void, handleGoals: () => void, handleTotalTime: () => void, showCats: boolean, showDescriptions: boolean, showGoals: boolean, showTotTime: boolean }) {
+export default function SessionsView({ adminID, handleDateDecrease, handleDateIncrease, entriesOTD, daySelected, handleDaySelected, handleCats, handleDescriptions, handleGoals, handleTotalTime, showCats, showDescriptions, showGoals, showTotTime }: { adminID: boolean, handleDateDecrease: () => void, handleDateIncrease: () => void, entriesOTD: HobbySessionInfo[], daySelected: string, handleDaySelected: (daySelected: string) => void, handleCats: () => void, handleDescriptions: () => void, handleGoals: () => void, handleTotalTime: () => void, showCats: boolean, showDescriptions: boolean, showGoals: boolean, showTotTime: boolean }) {
 
     const setLogSessionModalOpen = useModalStore((state) => state.setLogSessionModalOpen);
     const setModalParent = useModalStore((state) => state.setModalParent);

@@ -12,7 +12,7 @@ import { PiListHeartLight } from "react-icons/pi";
 import { useStateStore } from "@/context/stateStore";
 import { IoMdColorPalette } from "react-icons/io";
 
-export default function RightBoard({ dashToShow, handleDashToShow, handleDaySelected, daySelected, adminID }: { dashToShow: string, handleDashToShow: (dashToShow: string, handleModalOpen: string | null) => void, handleDaySelected: (date: string) => void, daySelected: string, adminID: boolean }) {
+export default function RightBoard({ dashToShow, handleDashToShow, handleDaySelected, daySelected, adminID }: { dashToShow: 'hobbies' | 'stats' | 'sessions', handleDashToShow: (dashToShow: 'hobbies' | 'stats' | 'sessions') => void, handleDaySelected: (date: string) => void, daySelected: string, adminID: boolean }) {
 
     //const buttonClass = `flex flex-row justify-center items-center space-x-2 hover:bg-gray-300 rounded-md px-2 py-2 sm:py-1 rounded-md bg-gray-400/40 border w-content`;
     const onTextClass = `text-xs sm:text-sm md:text-base text-gray-800 cursor-pointer`;
@@ -44,15 +44,23 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
                         setFilteredDates({ range: [null, null], type: 'range' });
                         setFilteredHobbies([]);
                         setShowCalendar(true);
+                    }}>
+                        <p className={onTextClass}>{'View Calendar'}</p>
+                    </Menu.Item>
+                    <Menu.Item leftSection={<PiListHeartLight size={14} />} disabled={dashToShow === 'sessions'} onClick={() => {
+                        setFilteredDates({ range: [null, null], type: 'range' });
+                        setFilteredHobbies([]);
                         handleDaySelected(daySelected);
-                        handleDashToShow('calendar', null);
-                    }} disabled={dashToShow === 'calendar'}>
-                        <p className={`${dashToShow === 'calendar' ? offTextClass : onTextClass}`}>{'View Calendar'}</p>
+                        handleDashToShow('sessions');
+                    }}>
+                        <p className={`${dashToShow === 'sessions' ? offTextClass : onTextClass}`}>
+                            View Sessions
+                        </p>
                     </Menu.Item>
                     <Menu.Item leftSection={<IoIosStats size={14} />} onClick={() => {
                         setFilteredDates({ range: [null, null], type: 'range' });
                         setFilteredHobbies([]);
-                        handleDashToShow('stats', null);
+                        handleDashToShow('stats');
                     }} disabled={dashToShow === 'stats'}>
                         <p className={`${dashToShow === 'stats' ? offTextClass : onTextClass}`}>{"View Stats"}</p>
                     </Menu.Item>
@@ -60,7 +68,7 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
                         toast.info('Coming soon!');
                     }}>
                         <p className={`${dashToShow === 'hobbies' ? offTextClass : onTextClass}`}>
-                            Veiw Hobbies
+                            View Hobbies
                         </p>
                     </Menu.Item>
                     <Menu.Item leftSection={<IoMdColorPalette size={14} />} onClick={() => {

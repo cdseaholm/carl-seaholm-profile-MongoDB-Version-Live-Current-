@@ -1,15 +1,19 @@
 'use client'
 
-import { useAlertStore } from "@/context/alertStore";
 import { useModalStore } from "@/context/modalStore";
 import { useStateStore } from "@/context/stateStore";
+import { toast } from "sonner";
 
 export default function ModalSubscribe() {
 
     const setModalOpen = useModalStore((state) => state.setModalOpen);
-    const setShowAlert = useAlertStore((state) => state.setShowAlert);
-    const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
     const urlToUse = useStateStore((state) => state.urlToUse);
+
+    const throwToast = (message: string, type: 'success' | 'error' | 'info') => {
+        if (type === 'success') toast.success(message)
+        if (type === 'error') toast.error(message)
+        if (type === 'info') toast.info(message)
+    }
 
     const handleSub = async (event: React.FormEvent<HTMLFormElement>) => {
         
@@ -30,14 +34,11 @@ export default function ModalSubscribe() {
         }).catch(e => {
             console.error('Fetch error:', e);
         });
-        
-        console.log('tryLogin', sub);
     
         if (sub.status === 400 || sub.status === 401 || sub.status === 500) {
-            setShowAlert(true);
-            setAlertMessage(sub.message);
-            console.log(sub.message);
+            throwToast(sub.message, 'error');
         } else {
+            throwToast('Subscription successful! Please check your email to confirm.', 'success');
             setModalOpen('');
         }
     }

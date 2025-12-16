@@ -2,7 +2,6 @@
 'use client'
 
 import MainModal from '@/components/modals/mainmodal/mainmodal';
-import AlertModal from '@/components/modals/Alert/alertmodal';
 import LifeAspectModal from '@/components/modals/LifeAspect/lifeAspectModal';
 import CalendarModalInit from '@/components/modals/modalContent/Calendar/calendarModalInit';
 import NewHobbyFormModal from '@/components/modals/modalContent/AddHobbyTracker/hobbymodaldatainit';
@@ -14,7 +13,6 @@ export function Providers() {
 
   return (
     <ModalsProvider>
-      <AlertModal />
       <MainModal />
       <LifeAspectModal />
       <CalendarModalInit />
