@@ -14,7 +14,7 @@ import LoadingSpinner from "../../projects/school/infoVis-DatasetProject/compone
 import DashHooks from "../hooks/dash-hooks";
 import { useDashboardData } from "../hooks/dashboard-data";
 import DashButtonBoard from "./button-board/dashButtonBoard";
-import CalendarView from "./calendarView";
+import SessionsView from "./calendarView";
 import StatsView from "./statsView";
 
 
@@ -145,8 +145,8 @@ export default function DashProvider() {
                 daySelected={daySelected} 
             />
             <InnerTemplate>
-                {dashToShow === 'calendar' ? (
-                    <CalendarView 
+                {dashToShow === 'sessions' ? (
+                    <SessionsView 
                         handleDateIncrease={handleDateIncrease} 
                         handleDateDecrease={handleDateDecrease} 
                         entriesOTD={entriesOTD} 
@@ -171,6 +171,10 @@ export default function DashProvider() {
                         allHobbies={allHobbies}
                         timeFilter={dateFilters}
                     />
+                ) : dashToShow === 'hobbies' ? (
+                    <div className="flex items-center justify-center w-full h-full">
+                        <p className="text-gray-600">Hobbies view coming soon!</p>
+                    </div>
                 ) : null}
             </InnerTemplate>
         </div>

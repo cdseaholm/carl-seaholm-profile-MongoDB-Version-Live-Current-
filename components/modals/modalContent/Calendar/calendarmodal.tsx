@@ -58,16 +58,16 @@ export default function CalendarModal({ handleDaySelect, monthColors, onMonthCha
 
         const sessionColor =
             sessionCount === 1
-                ? {color: '#ff3a3aff', colorName: 'Red'}
+                ? { color: '#ff3a3aff', colorName: 'Red' }
                 : sessionCount === 2
-                    ?{color: '#fca728ff', colorName: 'Orange'}
+                    ? { color: '#fca728ff', colorName: 'Orange' }
                     : sessionCount === 3
-                        ? {color: '#fff63aff', colorName: 'Yellow'}
+                        ? { color: '#fff63aff', colorName: 'Yellow' }
                         : sessionCount === 4
-                            ? {color: '#0451f8ff', colorName: 'Blue'}
+                            ? { color: '#0451f8ff', colorName: 'Blue' }
                             : sessionCount > 4
-                                ? {color: '#05c205ff', colorName: 'Green'}
-                                : {color: 'transparent', colorName: ''};
+                                ? { color: '#05c205ff', colorName: 'Green' }
+                                : { color: 'transparent', colorName: '' };
 
         // Get the appropriate day styles based on state
         const getDayStyles = () => {
@@ -213,15 +213,28 @@ export default function CalendarModal({ handleDaySelect, monthColors, onMonthCha
                         width: '100%',
                         padding: '0.25rem 0.5rem',
                         fontSize: '0.9rem',
-                        marginBottom: '0.25rem'
+                        marginBottom: '0.25rem',
+                        color: thisMonthsColors.textOnMonth,
+                        display: 'flex',
+                        alignItems: 'center',
                     },
                     calendarHeaderLevel: {
                         fontSize: '1rem',
-                        fontWeight: '600'
+                        fontWeight: '600',
+                        display: 'flex',
+                        alignItems: 'center',
+                        flex: '1',
+                        justifyContent: 'center',
+                        margin: '0',
+                        padding: '0',
                     },
                     calendarHeaderControl: {
                         width: '1.75rem',
-                        height: '1.75rem'
+                        height: '1.75rem',
+                        color: thisMonthsColors.textOnMonth,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     },
                     // Month table - this is the main calendar grid
                     month: {

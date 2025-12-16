@@ -14,7 +14,6 @@ export default function DashHooks() {
 
     // Zustand states
     const setDashToShow = useModalStore((state) => state.setDashToShow);
-    const setShowCalendar = useModalStore((state) => state.setShowCalendar);
     const setDaySelected = useDataStore(state => state.setDaySelected);
 
     // handlers
@@ -23,11 +22,8 @@ export default function DashHooks() {
     const handleDescriptions = () => setShowDescriptions(!showDescriptions);
     const handleTotalTime = () => setShowTotTime(!showTotTime);
 
-    const handleDashToShow = (dashToShow: string, handleModalOpen: string | null) => {
+    const handleDashToShow = (dashToShow: 'hobbies' | 'stats' | 'sessions') => {
         setDashToShow(dashToShow);
-        if (handleModalOpen) {
-            setShowCalendar(true);
-        }
     };
 
     const handleDaySelected = (date: string) => {

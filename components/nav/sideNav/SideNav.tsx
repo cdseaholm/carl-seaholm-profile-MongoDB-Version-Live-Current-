@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import SocialButton from '@/components/buttons/socialButton';
-import { useAlertStore } from '@/context/alertStore';
 import { useModalStore } from '@/context/modalStore';
 import { useStateStore } from '@/context/stateStore';
 import { IoIosClose, IoMdHome } from "react-icons/io";
@@ -17,9 +16,6 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
   const router = useRouter();
   const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
   const setModalOpen = useModalStore((state) => state.setModalOpen);
-  const setAlertMessage = useAlertStore((state) => state.setAlertMessage);
-  const setAlertParent = useAlertStore((state) => state.setAlertParent);
-  const setShowAlert = useAlertStore((state) => state.setShowAlert);
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -30,10 +26,12 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
   };
 
   const handleClickedLogout = () => {
-    setAlertParent('logout');
-    setAlertMessage('Are you sure you want to log out?');
-    setShowAlert(true);
-    toggle();
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+      toggle();
+    } else {
+      return;
+    }
   };
 
   const handleClickedSub = () => {
@@ -43,7 +41,7 @@ export default function Sidenav({ open, toggle, children }: { open: boolean; tog
   const style = {
     closeIcon: `flex flex-row justify-end items-center px-6 pt-4 text-white w-full h-content`,
     sidenav: {
-      open: `w-3/5 xs:w-1/2 sm:w-5/12 md:w-1/3 lg:w-3/12 bg-emerald-900 text-white overflow-x-hidden z-40`,
+      open: `w-3/4 sm:w-1/2 lg:w-2/5 bg-emerald-900 text-white overflow-x-hidden z-40`,
       close: `w-0 bg-gray-800 text-white overflow-x-hidden`,
       default: `h-screen fixed z-30 top-0 left-0 transition-all ease duration-200 font-sans`,
     }
