@@ -1,8 +1,8 @@
 
 import { HobbyCheckMarkType } from "@/app/(content)/dashboard/components/button-board/left-board/left-board";
-import { DateRangeType } from "@/context/dataStore";
 import { IHobbyData } from "@/models/types/hobbyData";
 import { ISession } from "@/models/types/session";
+import { DateRangeType } from "@/models/types/time-types/date-range";
 
 export type FilterOptions = {
     hobbies?: IHobbyData[];

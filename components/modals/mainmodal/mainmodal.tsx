@@ -1,14 +1,31 @@
 'use client'
 
-import ModalLogin from "../modalContent/Login/loginModal";
-import SignupModal from "../modalContent/signup/signupModal";
-import ModalSubscribe from "../modalContent/subscribe/subscribeModal";
-import EditUser from "../modalContent/EditUser/editUser";
-import AddRecipes from "../modalContent/Recipes/Add";
+import dynamic from "next/dynamic";
 import { useModalStore } from "@/context/modalStore";
-import ForgotPassword from "../modalContent/forgotpassword/forgotPassword";
-import ChangePassword from "../modalContent/changePassword/changePassword";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
+
+const ModalLogin = dynamic(() => import("../modalContent/Login/loginModal"), {
+    ssr: false
+});
+const SignupModal = dynamic(() => import('../modalContent/signup/signupModal'), {
+    ssr: false
+});
+const ModalSubscribe = dynamic(() => import('../modalContent/subscribe/subscribeModal'), {
+    ssr: false
+});
+const EditUser = dynamic(() => import('../modalContent/EditUser/editUser'), {
+    ssr: false
+});
+const AddRecipes = dynamic(() => import('../modalContent/Recipes/Add'), {
+    ssr: false
+});
+const ForgotPassword = dynamic(() => import('../modalContent/forgotpassword/forgotPassword'), {
+    ssr: false
+});
+const ChangePassword = dynamic(() => import('../modalContent/changePassword/changePassword'), {
+    ssr: false
+});
+
 
 
 export default function MainModal() {

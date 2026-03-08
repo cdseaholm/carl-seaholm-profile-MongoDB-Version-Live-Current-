@@ -58,7 +58,7 @@ export default function StoryPageFour({ userName, textClass, data }: { userName:
             init();
             setLoading(false);
         }
-    }, [data, loading, formatPageFour]);
+    }, [data, loading]);
 
     return (
         loading ? (

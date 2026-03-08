@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useStateStore } from "@/context/stateStore";
-import { initData, SetBaseData } from "@/utils/apihelpers/get/initData/initData";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Box, LoadingOverlay } from "@mantine/core";
@@ -13,16 +12,16 @@ import { Providers } from "../providers/providers";
 
 export default function PageWrapper({ children }: Readonly<{ children: React.ReactNode; }>) {
 
-  const init = useRef(false);
+  //const init = useRef(false);
   const { data: _session, status } = useSession();
   const globalLoading = useStateStore((state) => state.globalLoading);
-  const setGlobalLoading = useStateStore(state => state.setGlobalLoading);
+  //const setGlobalLoading = useStateStore(state => state.setGlobalLoading);
   const [localLoading, setLocalLoading] = useState(true);
   const widthRef = useRef<number | null>(null);
   const heightRef = useRef<number | null>(null);
   const setWidthQuery = useStateStore((state) => state.setWidthQuery);
   const setHeightQuery = useStateStore((state) => state.setHeightQuery);
-  const urlToUse = process.env.NEXT_PUBLIC_BASE_URL ? process.env.NEXT_PUBLIC_BASE_URL : '';
+  //const urlToUse = process.env.NEXT_PUBLIC_BASE_URL ? process.env.NEXT_PUBLIC_BASE_URL : '';
   const pathname = usePathname();
 
   const initializeWidths = useCallback((newWidth: number, newHeight: number) => {
@@ -61,39 +60,39 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
     return () => window.removeEventListener('resize', updateMedia);
   }, [updateMedia, initializeWidths]);
 
-  useEffect(() => {
-    if (!init.current) {
-      init.current = true;
-      setGlobalLoading(true);
+  // useEffect(() => {
+  //   if (!init.current) {
+  //     init.current = true;
+  //     setGlobalLoading(true);
 
-      const initUserData = async () => {
-        //console.log('Initializing base data...');
-        const result = await initData({ urlToUse: urlToUse });
-        //console.log('Base data init result:', result.status, result.message);
-        await SetBaseData(result.sessionInfo, result.hobbyData, result.monthlyInfo, result.userInfo);
-        // const settingResult = await SetBaseData(result.sessionInfo, result.hobbyData, result.monthlyInfo, result.userInfo);
-        // console.log('Base data set result:', settingResult.status, settingResult.message);
-        setGlobalLoading(false);
-      }
+  //     const initUserData = async () => {
+  //       //console.log('Initializing base data...');
+  //       const result = await initData({ urlToUse: urlToUse });
+  //       //console.log('Base data init result:', result.status, result.message);
+  //       await SetBaseData(result.sessionInfo, result.hobbyData, result.monthlyInfo, result.userInfo);
+  //       // const settingResult = await SetBaseData(result.sessionInfo, result.hobbyData, result.monthlyInfo, result.userInfo);
+  //       // console.log('Base data set result:', settingResult.status, settingResult.message);
+  //       setGlobalLoading(false);
+  //     }
 
-      initUserData();
-    }
-  }, [setGlobalLoading, urlToUse]);
+  //     initUserData();
+  //   }
+  // }, [setGlobalLoading, urlToUse]);
 
-  useEffect(() => {
-    if (init.current && globalLoading) {
-      console.log('Re-fetching data due to globalLoading trigger...');
+  // useEffect(() => {
+  //   if (init.current && globalLoading) {
+  //     console.log('Re-fetching data due to globalLoading trigger...');
       
-      const refetchData = async () => {
-        const result = await initData({ urlToUse: urlToUse });
-        console.log('Re-fetch result:', result.status, result.message);
-        await SetBaseData(result.sessionInfo, result.hobbyData, result.monthlyInfo, result.userInfo);
-        setGlobalLoading(false);
-      };
+  //     const refetchData = async () => {
+  //       const result = await initData({ urlToUse: urlToUse });
+  //       console.log('Re-fetch result:', result.status, result.message);
+  //       await SetBaseData(result.sessionInfo, result.hobbyData, result.monthlyInfo, result.userInfo);
+  //       setGlobalLoading(false);
+  //     };
 
-      refetchData();
-    }
-  }, [globalLoading, urlToUse, setGlobalLoading]);
+  //     refetchData();
+  //   }
+  // }, [globalLoading, urlToUse, setGlobalLoading]);
 
   useEffect(() => {
     setLocalLoading(globalLoading);

@@ -5,25 +5,20 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import LeftBoardContent from './left-board-content';
 import LoadingSpinner from '@/app/(content)/projects/school/infoVis-DatasetProject/components/components/misc/loadingSpinner';
-import { DateRangeType, useDataStore } from '@/context/dataStore';
 import { FiFilter } from 'react-icons/fi';
 import { useStateStore } from '@/context/stateStore';
+import { DateRangeType } from '@/models/types/time-types/date-range';
 
 export type HobbyCheckMarkType = {
     _id: string;
     title: string;
 };
 
-export default function LeftBoard({ hobbies }: { hobbies: { _id: string, title: string }[] }) {
+export default function LeftBoard({ hobbies, currDateFilters, currHobbyFilters, handleCurrFilteredDates, handleCurrFilteredHobbies }: { hobbies: { _id: string, title: string }[], currDateFilters: DateRangeType, currHobbyFilters: HobbyCheckMarkType[], handleCurrFilteredDates: (filters: DateRangeType) => void, handleCurrFilteredHobbies: (hobbies: HobbyCheckMarkType[]) => void }) {
 
     const [loading, setLoading] = useState(true);
-
-    // Subscribe to store state - this makes component re-render on changes
-    const currDateFilters = useDataStore(state => state.filteredDates);
-    const currHobbyFilters = useDataStore(state => state.filteredHobbies);
-    const setCurrFilteredDates = useDataStore(state => state.setFilteredDates);
-    const setCurrFilteredHobbies = useDataStore(state => state.setFilteredHobbies);
     const width = useStateStore(state => state.widthQuery);
+    
     const combobox = useCombobox({
 
     });
@@ -92,8 +87,8 @@ export default function LeftBoard({ hobbies }: { hobbies: { _id: string, title: 
 
     const handleApplyFilters = () => {
         setNewFilters(false);
-        setCurrFilteredDates(dateValues);
-        setCurrFilteredHobbies(filteredHobbies);
+        handleCurrFilteredDates(dateValues);
+        handleCurrFilteredHobbies(filteredHobbies);
         toast.success('Filters applied');
         combobox.closeDropdown();
     }
@@ -104,11 +99,11 @@ export default function LeftBoard({ hobbies }: { hobbies: { _id: string, title: 
             // Only set if not already set
             if (currHobbyFilters.length === 0) {
                 setFilteredHobbies(hobbiesData);
-                setCurrFilteredHobbies(hobbiesData);
+                handleCurrFilteredHobbies(hobbiesData);
             }
             setLoading(false);
         }
-    }, [hobbies, currHobbyFilters.length, setCurrFilteredHobbies]);
+    }, [hobbies, currHobbyFilters.length, handleCurrFilteredHobbies]);
 
     return (
         <Combobox

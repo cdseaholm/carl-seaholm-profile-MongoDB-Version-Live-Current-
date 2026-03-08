@@ -45,7 +45,7 @@ export default function StoryPageTwo({ userName, textClass, data }: { userName: 
             init();
             setLoading(false);
         }
-    }, [data, loading, formatPageTwoData]);
+    }, [data, loading]);
 
     return (
         loading ? (

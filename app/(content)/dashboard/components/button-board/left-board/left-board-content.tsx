@@ -1,6 +1,6 @@
 'use client'
 
-import { DateRangeType } from "@/context/dataStore";
+import { DateRangeType } from "@/models/types/time-types/date-range";
 import { Tabs, Tooltip } from "@mantine/core";
 import { DatePicker, MonthPicker, YearPicker } from "@mantine/dates"
 

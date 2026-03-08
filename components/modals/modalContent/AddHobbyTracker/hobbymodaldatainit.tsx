@@ -1,25 +1,21 @@
 'use client'
 
-import { useModalStore } from "@/context/modalStore";
 import { InitialNewHobbyFormValues, NewHobbyFormType, NewHobbyFormValues } from "@/models/types/newHobby";
 import { Modal } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import NewHobbyFormComponents from "./hobbymodal";
 import { useSession } from "next-auth/react";
-import { useHobbyStore } from "@/context/hobbyStore";
 import { AttemptToCreateNewHobby } from "@/utils/apihelpers/create/attemptToCreateNewHobby";
 import { IHobbyData } from "@/models/types/hobbyData";
 import { ITimeFrequency } from "@/models/types/time-frequency";
 import LoadingSpinner from "@/app/(content)/projects/school/infoVis-DatasetProject/components/components/misc/loadingSpinner";
 import { IUser } from "@/models/types/user";
-import { useStateStore } from "@/context/stateStore";
-import { useDataStore } from "@/context/dataStore";
+import { HobbyCheckMarkType } from "@/app/(content)/dashboard/components/button-board/left-board/left-board";
 
 
 
-export default function NewHobbyFormModal() {
+export default function NewHobbyFormModal({ titles, handleTitles, openModal, handleModal, loading, handleLoading, handleFilteredHobbies, handleFilteredDates }: { titles: string[], handleTitles: (titles: string[]) => void, loading: boolean, handleFilteredHobbies: (hobbies: HobbyCheckMarkType[]) => void, handleFilteredDates: (dates: { type: 'range', range: [Date | null, Date | null] }) => void, openModal: boolean, handleModal: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void, handleLoading: (loading: boolean) => void }) {
 
     const { data: session } = useSession();
 
@@ -37,45 +33,43 @@ export default function NewHobbyFormModal() {
 
     const user = session ? session.user as IUser : {} as IUser;
     const userEmail = user ? (user.email as string) : '';
-    const titles = useHobbyStore(state => state.titles);
-    const setTitles = useHobbyStore(state => state.setTitles);
-    const showAddHobbyModal = useModalStore(state => state.showAddHobbyModal);
-    const setShowAddHobbyModal = useModalStore(state => state.setShowAddHobbyModal);
-    const [loading, setLoading] = useState(true);
-    const setGlobalLoading = useStateStore(state => state.setGlobalLoading);
-    const setFilteredHobbies = useDataStore(state => state.setFilteredHobbies);
-    const setFilteredDates = useDataStore(state => state.setFilteredDates);
 
     const HandleCreateHobby = async (hobbyFormToMake: NewHobbyFormType) => {
+        handleLoading(true);
         try {
 
             if (user === null || !user || user === {} as IUser) {
-                toast.error('You are unauthorized!~user')
+                toast.error('You are unauthorized!~user');
+                handleLoading(false);
                 return;
             }
             if (!userEmail || userEmail === '') {
                 toast.error('You are unauthorized!~email')
+                handleLoading(false);
                 return;
             }
 
             const newHobbyTitle = hobbyFormToMake.getValues().hobbyTitle;
             if (!newHobbyTitle) {
                 toast.warning('Must include title');
+                handleLoading(false);
                 return;
             }
 
             if (titles.includes(newHobbyTitle)) {
-                toast.warning('This title is already in use!')
+                toast.warning('This title is already in use!');
+                handleLoading(false);
                 return;
             } else {
-                setTitles([...titles, newHobbyTitle]);
+                handleTitles([...titles, newHobbyTitle]);
             }
 
             const colorToUse = hobbyFormToMake.getValues().hobbyColor;
             const categoryToUse = hobbyFormToMake.getValues().hobbyCategory;
 
             if (!categoryToUse) {
-                toast.error('Category needed!')
+                toast.error('Category needed!');
+                handleLoading(false);
                 return;
             }
             let newHobbyGoalType = hobbyFormToMake.getValues().hobbyGoalType;
@@ -108,20 +102,23 @@ export default function NewHobbyFormModal() {
                 toast.success('Hobby created successfully!');
                 hobbyFormToMake.reset();
                 hobbyFormToMake.setValues(InitialNewHobbyFormValues);
-                setFilteredHobbies([]);
+                handleFilteredHobbies([]);
                 const today = new Date();
                 const minusFiveMonths = new Date();
                 minusFiveMonths.setMonth(today.getMonth() - 5);
-                setFilteredDates({ type: 'range', range: [minusFiveMonths, today] });
-                setShowAddHobbyModal(false);
-                setGlobalLoading(true);
+                handleFilteredDates({ type: 'range', range: [minusFiveMonths, today] });
+                handleModal(null);
+                handleLoading(false);
 
             } else {
                 console.log('Error creating hobby');
+                handleLoading(false);
             }
 
         } catch (error) {
             console.log('Error creating hobby:', error ? error : 'No error');
+            toast.error('Error creating hobby');
+            handleLoading(false);
         }
 
     };
@@ -130,25 +127,19 @@ export default function NewHobbyFormModal() {
 
         newHobbyForm.reset();
         newHobbyForm.setValues(InitialNewHobbyFormValues);
-
+        
     }
 
-    const toRender = <Modal opened={showAddHobbyModal} onClose={() => { resetModal(); setShowAddHobbyModal(false); }} size={'90%'} withCloseButton={true} centered={true} closeOnClickOutside={true}>
-        {loading ? (
-            <div className="flex items-center justify-center w-full h-full">
-                <LoadingSpinner />
-            </div>
-        ) : (<NewHobbyFormComponents newHobbyForm={newHobbyForm} HandleCreateHobby={HandleCreateHobby} />
-        )}
-    </Modal>;
-
-
-    useEffect(() => {
-        //if (colorName === '') {
-        //    setColorName(colorChoice !== null ? ntc.name(colorChoice)[1] : 'Black');
-        //}
-        setLoading(false)
-    }, []);
+    const toRender = (
+        <Modal opened={openModal} onClose={() => { resetModal(); handleModal(null) }} size={'90%'} withCloseButton={true} centered={true} closeOnClickOutside={true}>
+            {loading ? (
+                <div className="flex items-center justify-center w-full h-full">
+                    <LoadingSpinner />
+                </div>
+            ) : (<NewHobbyFormComponents newHobbyForm={newHobbyForm} HandleCreateHobby={HandleCreateHobby} />
+            )}
+        </Modal>
+    );
 
     return toRender;
 }

@@ -1,3 +1,5 @@
+import { IMonthlyData } from "./monthlyData";
+import { ISession } from "./session";
 import { ITimeFrequency } from "./time-frequency";
 
 export interface IHobbyData {
@@ -13,3 +15,6 @@ export interface IHobbyData {
     updatedAt?: string;
     _id?: string;
 }
+
+export type HobbySessionInfo = { hobbyData: IHobbyData, totalMinutes: number, totalSessions: number, sessions: ISession[], timeFrequencies: ITimeFrequency[] };
+export type MonthlyInfo = { monthInfo: IMonthlyData, totalMinutes: number, totalSessions: number };

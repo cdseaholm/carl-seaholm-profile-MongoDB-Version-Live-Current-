@@ -1,5 +1,4 @@
 
-import { useDataStore } from "@/context/dataStore";
 import { IHobbyData } from "@/models/types/hobbyData";
 import { getBaseUrl } from "@/utils/helpers/helpers";
 import { toast } from "sonner";
@@ -39,9 +38,10 @@ export async function AttemptToCreateNewHobby({ hobbyToCreate, userEmail }: { ho
             console.log('Error creating session');
             return false;
         }
-        console.log('Hobby created:', data.newHobby);
-        const currHobbyData = useDataStore.getState().hobbyData;
-        useDataStore.getState().setHobbyData([...currHobbyData, data.newHobby]);
+        // console.log('Hobby created:', data.newHobby);
+        // const currHobbyData = useDataStore.getState().hobbyData;
+        // useDataStore.getState().setHobbyData([...currHobbyData, data.newHobby]);
+        //NEED TO UPDATE THIS TO SERVER ACTION
 
         return true;
 

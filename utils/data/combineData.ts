@@ -1,6 +1,7 @@
-import { newSesh } from "@/components/modals/modalContent/LogSession/logsessiondatainit";
+
 import { IIndexedEntry } from "@/models/old/types/entry";
 import { IField, IFieldObject } from "@/models/types/field";
+import { newSesh } from "@/models/types/log-session";
 
 export async function CombineNewAndOld({ fieldObjects, sessionsFound, seshCheck }: { fieldObjects: IFieldObject[], sessionsFound: IIndexedEntry[], seshCheck: newSesh[] }) {
 

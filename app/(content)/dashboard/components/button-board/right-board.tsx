@@ -1,9 +1,7 @@
 'use client'
 
-import { useModalStore } from "@/context/modalStore";
 import { IoIosStats } from "react-icons/io";
 import { FaCalendar } from "react-icons/fa";
-import { useDataStore } from "@/context/dataStore";
 import { Menu } from "@mantine/core";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
@@ -11,20 +9,16 @@ import { toast } from "sonner";
 import { PiListHeartLight } from "react-icons/pi";
 import { useStateStore } from "@/context/stateStore";
 import { IoMdColorPalette } from "react-icons/io";
+import { HobbyCheckMarkType } from "./left-board/left-board";
+import { DateRangeType } from "@/models/types/time-types/date-range";
 
-export default function RightBoard({ dashToShow, handleDashToShow, handleDaySelected, daySelected, adminID }: { dashToShow: 'hobbies' | 'stats' | 'sessions', handleDashToShow: (dashToShow: 'hobbies' | 'stats' | 'sessions') => void, handleDaySelected: (date: string) => void, daySelected: string, adminID: boolean }) {
+export default function RightBoard({ dashToShow, handleDashToShow, handleDaySelected, daySelected, adminID, handleFilteredDates, handleFilteredHobbies, handleOpenModal }: { dashToShow: 'hobbies' | 'stats' | 'sessions' | 'calendar', handleDashToShow: (dashToShow: 'hobbies' | 'stats' | 'sessions' | 'calendar') => void, handleDaySelected: (date: string) => void, daySelected: string, adminID: boolean, handleFilteredDates: (filters: DateRangeType) => void, handleFilteredHobbies: (hobbies: HobbyCheckMarkType[]) => void, handleOpenModal: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void }) {
 
     //const buttonClass = `flex flex-row justify-center items-center space-x-2 hover:bg-gray-300 rounded-md px-2 py-2 sm:py-1 rounded-md bg-gray-400/40 border w-content`;
     const onTextClass = `text-xs sm:text-sm md:text-base text-gray-800 cursor-pointer`;
     const offTextClass = `text-xs sm:text-sm md:text-base text-gray-500 underline cursor-not-allowed`;
-    const setShowCalendar = useModalStore(state => state.setShowCalendar);
-    const setFilteredDates = useDataStore(state => state.setFilteredDates);
-    const setFilteredHobbies = useDataStore(state => state.setFilteredHobbies);
     const [chevUp, setChevUp] = useState(false);
-    const setNewHobbyModalOpen = useModalStore((state) => state.setShowAddHobbyModal);
-    const setLogSessionModalOpen = useModalStore((state) => state.setLogSessionModalOpen);
     const width = useStateStore(state => state.widthQuery);
-    const setShowColorIndexModal = useModalStore(state => state.setShowColorIndexModal);
 
     return (
         <div className="flex flex-row items-center justify-end space-x-2 w-full">
@@ -32,7 +26,7 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
 
             }}>
                 <Menu.Target>
-                    <div className={`flex flex-row justify-center items-center ${width > 400 && 'space-x-2'} hover:bg-gray-300 rounded-md px-4 py-1 sm:py-1 rounded-md bg-gray-400/40 border w-1/3 sm:w-1/4 md:w-1/5 h-content cursor-pointer`}>
+                    <div className={`flex flex-row justify-center items-center xs:space-x-2 hover:bg-gray-300 rounded-md px-4 py-1 sm:py-1 rounded-md bg-gray-400/40 border w-1/3 sm:w-1/4 md:w-1/5 h-content cursor-pointer`}>
                         <p className={`text-xs sm:text-sm md:text-base hover:text-gray-800`}>Actions</p>
                         {width > 400 && chevUp ? <ChevronUpIcon className="h-4 w-4 transform rotate-180" /> : width > 400 && !chevUp ? <ChevronDownIcon className="h-4 w-4" /> : null}
                     </div>
@@ -40,16 +34,18 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
 
                 <Menu.Dropdown>
                     <Menu.Label>Application</Menu.Label>
-                    <Menu.Item leftSection={<FaCalendar size={14} />} onClick={() => {
-                        setFilteredDates({ range: [null, null], type: 'range' });
-                        setFilteredHobbies([]);
-                        setShowCalendar(true);
+                    <Menu.Item leftSection={<FaCalendar size={14} />} disabled={dashToShow === 'calendar'} onClick={() => {
+                        handleFilteredDates({ range: [null, null], type: 'range' });
+                        handleFilteredHobbies([]);
+                        handleDashToShow('calendar');
                     }}>
-                        <p className={onTextClass}>{'View Calendar'}</p>
+                        <p className={`${dashToShow === 'calendar' ? offTextClass : onTextClass}`}>
+                            {'View Calendar'}
+                        </p>
                     </Menu.Item>
                     <Menu.Item leftSection={<PiListHeartLight size={14} />} disabled={dashToShow === 'sessions'} onClick={() => {
-                        setFilteredDates({ range: [null, null], type: 'range' });
-                        setFilteredHobbies([]);
+                        handleFilteredDates({ range: [null, null], type: 'range' });
+                        handleFilteredHobbies([]);
                         handleDaySelected(daySelected);
                         handleDashToShow('sessions');
                     }}>
@@ -58,8 +54,8 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
                         </p>
                     </Menu.Item>
                     <Menu.Item leftSection={<IoIosStats size={14} />} onClick={() => {
-                        setFilteredDates({ range: [null, null], type: 'range' });
-                        setFilteredHobbies([]);
+                        handleFilteredDates({ range: [null, null], type: 'range' });
+                        handleFilteredHobbies([]);
                         handleDashToShow('stats');
                     }} disabled={dashToShow === 'stats'}>
                         <p className={`${dashToShow === 'stats' ? offTextClass : onTextClass}`}>{"View Stats"}</p>
@@ -72,7 +68,7 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
                         </p>
                     </Menu.Item>
                     <Menu.Item leftSection={<IoMdColorPalette size={14} />} onClick={() => {
-                        setShowColorIndexModal(true);
+                        handleOpenModal('colorIndex');
                     }}>
                         <p className={onTextClass}>
                             View Color Indexes
@@ -83,19 +79,14 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
                         <>
                             <Menu.Divider />
                             <Menu.Label>Admin</Menu.Label>
-                            <Menu.Item onClick={() => setNewHobbyModalOpen(true)}>
+                            <Menu.Item onClick={() => handleOpenModal('newHobby')}>
                                 <p className={onTextClass}>
                                     Add Tracker
                                 </p>
                             </Menu.Item>
-                            <Menu.Item onClick={() => setLogSessionModalOpen(true)}>
+                            <Menu.Item onClick={() => handleOpenModal('logSession')}>
                                 <p className={onTextClass}>
                                     Log Session
-                                </p>
-                            </Menu.Item>
-                            <Menu.Item onClick={() => toast.info('Edit soon to come')}>
-                                <p className={onTextClass}>
-                                    Edit
                                 </p>
                             </Menu.Item>
                         </>
