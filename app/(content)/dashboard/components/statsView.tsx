@@ -4,7 +4,7 @@ import React from 'react'
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
 import { PieChartCell } from '@mantine/charts';
-import { DateRangeType } from '@/context/dataStore';
+import { DateRangeType } from '@/models/types/time-types/date-range';
 
 export type PercentageType = {
     name: string;

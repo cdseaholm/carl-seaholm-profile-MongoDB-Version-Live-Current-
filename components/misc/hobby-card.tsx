@@ -2,9 +2,11 @@
 
 
 
-import { IHobbyData } from "@/models/types/hobbyData";
-import { HobbySessionInfo } from "@/utils/apihelpers/get/initData/initDashboardParams";
-import { FiWatch, FiList, FiAlignLeft, FiCrosshair, FiClock } from "react-icons/fi";
+import { HobbySessionInfo, IHobbyData } from "@/models/types/hobbyData";
+import { FiWatch, FiList, FiAlignLeft, FiCrosshair, FiClock, FiTrash } from "react-icons/fi";
+import LogSessionDatabaseHooks from "../hooks/database-hooks/log-session-database-hooks";
+import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
 
 function ConvertTime(time: number) {
     let timeToShow = '0 minutes' as string;
@@ -23,10 +25,10 @@ function ConvertTime(time: number) {
     return timeToShow;
 }
 
-export default function HobbyCard({ hobby, index, showCats, showDescriptions, showGoals, showTotTime }: { hobby: HobbySessionInfo, index: number, showCats: boolean, showDescriptions: boolean, showGoals: boolean, showTotTime: boolean }) {
+export default function HobbyCard({ hobby, index, showCats, showDescriptions, showGoals, showTotTime, handleLoading, session, hobbySessionInfo }: { hobby: HobbySessionInfo, index: number, showCats: boolean, showDescriptions: boolean, showGoals: boolean, showTotTime: boolean, handleLoading: (loading: boolean) => void, session: Session | null, hobbySessionInfo: HobbySessionInfo }) {
 
-    // const setOpenEditSessionModal = useDataStore(state => state.setOpenEditSessionModal);
-    // const setSessionToEdit = useDataStore(state => state.setSessionToEdit);
+    const router = useRouter();
+    const { handleSessionCall } = LogSessionDatabaseHooks();
     const infoClass = 'text-start flex-row flex items-center justify-start py-2 text-sm md:text-base';
     const hobbyInfo = hobby.hobbyData as IHobbyData;
     const category = hobbyInfo.category;
@@ -43,23 +45,47 @@ export default function HobbyCard({ hobby, index, showCats, showDescriptions, sh
     const hobbyVal = ConvertTime(hobby ? hobby.totalMinutes : 0);
     const title = hobbyInfo.title as string;
 
-    // const handleEditButton = () => {
-    //     const sessionToEdit = {
-    //         hobbyTitle: sesh.hobbyTitle,
-    //         sessionInfo: sesh,
-    //         sessionTime: sesh.minutes.toString(),
-    //         mostFrequentlyUseTime: hobby.timeFrequencies.map(tf => tf.time)
-    //     } as EditSessionType;
-    //     setSessionToEdit(sessionToEdit);
-    //     setOpenEditSessionModal(true);
-    // }
+    const handleDeleteSession = async () => {
+        if (!sesh) return;
+
+        const confirmed = window.confirm(`Delete ${title} session (${specVal})?`);
+        if (!confirmed) return;
+
+        handleLoading(true);
+
+        const sessionsToManipulate = [{
+            hobbyKeyId: index,
+            session: title,
+            time: '0',
+            mostFrequentlyUseTime: []
+        }];
+
+        await handleSessionCall({
+            session,
+            sessionsToManipulate,
+            hobbySessionInfo: [hobbySessionInfo],
+            handleModalLoading: handleLoading,
+            sessionsOTDCopy: [sesh],
+            daySelected: '',
+            handleLoading: () => { },
+            closeModal: () => { },
+            router
+        });
+
+        handleLoading(false);
+    }
 
     return (
         <div key={index} className="flex flex-col justify-center items-center border border-neutral-400 rounded-md p-2 inset-shadow-md bg-orange-50 rounded-md w-full h-[20dvh] divide-y-1">
-            <div className="flex flex-row justify-start items-center w-full px-4 py-1 h-content" style={{ width: '100%' }}>
+            <div className="flex flex-row justify-between items-center w-full px-4 py-1 h-content" style={{ width: '100%' }}>
                 <h1 className={`text-sm md:text-base font-semibold underline flex-1`}>
                     {title || 'No title available'}
                 </h1>
+                <button onClick={() => {
+                    handleDeleteSession();
+                }}>
+                    <FiTrash title="Delete this session" className="m-1 text-red-400 hover:text-red-200" size={20} />
+                </button>
             </div>
             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2 w-full p-2">
                 <p className={infoClass}>

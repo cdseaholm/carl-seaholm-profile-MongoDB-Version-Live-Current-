@@ -2,8 +2,6 @@
 
 export default function ColorIndexContent({ hobbyColorMap, monthColorMap }: { hobbyColorMap: { color: string, title: string }[], monthColorMap: { color: string, title: string }[] }) {
 
-    console.log('Rendering ColorIndexContent with:', { hobbyColorMap, monthColorMap });
-
     return (
         <section className="flex flex-col w-full max-h-[80dvh] justify-start items-start divide-y divide-gray-400 overflow-y-auto p-2 space-y-2">
             <div className="flex flex-col w-full justify-start items-start h-full">

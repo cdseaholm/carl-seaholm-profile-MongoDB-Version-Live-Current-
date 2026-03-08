@@ -3,12 +3,12 @@
 import { Combobox, InputBase, Tooltip, useCombobox } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { UseFormReturnType } from "@mantine/form";
-import { LogSessionFormType, logSessionType } from "./logsessiondatainit";
 import { useState } from "react";
 import { FiInfo } from "react-icons/fi";
 import { useStateStore } from "@/context/stateStore";
+import { LogSessionFormReturnType, LogSessionFormType, logSessionType } from "@/models/types/log-session";
 
-export default function LogSessionModal({ daySelected, handleSessionCall, handleModalOpen, handleDaySelected, logSessionForm }: { handleSessionCall: ({ logSessionForm }: { logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) => void, handleModalOpen: (title: string) => void, daySelected: string, handleDaySelected: (arg: Date) => void, logSessionForm: UseFormReturnType<LogSessionFormType, (values: LogSessionFormType) => LogSessionFormType> }) {
+export default function LogSessionModal({ daySelected, handleSessionCall, handleModalOpen, handleDaySelected, logSessionForm }: { handleSessionCall: ({ sessionsToManipulate }: { sessionsToManipulate: logSessionType[] }) => void, handleModalOpen: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void, daySelected: string, handleDaySelected: (arg: string) => void, logSessionForm: LogSessionFormReturnType }) {
 
     const width = useStateStore(state => state.widthQuery);
 
@@ -37,7 +37,7 @@ export default function LogSessionModal({ daySelected, handleSessionCall, handle
     ));
 
     return (
-        <form className="flex flex-col justify-start items-center max-w-[90vw] max-h-[75vh] bg-green-200 overflow-hidden" onSubmit={logSessionForm.onSubmit(() => handleSessionCall({ logSessionForm }))}>
+        <form className="flex flex-col justify-start items-center max-w-[90vw] max-h-[75vh] bg-green-200 overflow-hidden" onSubmit={logSessionForm.onSubmit(() => handleSessionCall({ sessionsToManipulate: logSessionForm.getValues().newSessions }))}>
             <div className="flex flex-row justify-between items-center w-full h-content border-b border-gray-400 pb-2 mb-2">
                 <DatePickerInput
                     label="Pick date"
@@ -45,7 +45,7 @@ export default function LogSessionModal({ daySelected, handleSessionCall, handle
                     value={new Date(daySelected)}
                     onChange={(date) => {
                         if (date) {
-                            handleDaySelected(date);
+                            handleDaySelected(date.toLocaleDateString());
                         }
                     }}
                 />
@@ -58,7 +58,7 @@ export default function LogSessionModal({ daySelected, handleSessionCall, handle
                 <button type="submit" className={`text-white text-[8px] sm:text-sm p-1 sm:px-2 sm:py-1.5 text-center w-1/2 sm:w-1/4 font-medium rounded-lg ${logSessionForm.isDirty() ? "bg-blue-400 hover:bg-blue-200 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" : "bg-gray-400 cursor-not-allowed"}`} data-modal-toggle="crud-modal" disabled={!logSessionForm.isDirty()}>
                     {`Save`}
                 </button>
-                <button type="button" className={`text-blue-400 bg-transparent hover:text-blue-200 rounded-lg text-[8px] sm:text-sm p-1 sm:px-2 sm:py-1.5  dark:hover:bg-gray-600 dark:hover:text-white w-1/2 sm:w-1/4`} data-modal-toggle="crud-modal" onClick={() => { handleModalOpen('addhobby') }}>
+                <button type="button" className={`text-blue-400 bg-transparent hover:text-blue-200 rounded-lg text-[8px] sm:text-sm p-1 sm:px-2 sm:py-1.5  dark:hover:bg-gray-600 dark:hover:text-white w-1/2 sm:w-1/4`} data-modal-toggle="crud-modal" onClick={() => { handleModalOpen('newHobby') }}>
                     Create Hobby
                 </button>
             </div>

@@ -40,7 +40,7 @@ export default function StoryPageThree({ userName, textClass, data }: { userName
             init();
             setLoading(false);
         }
-    }, [data, loading, formatPageThree]);
+    }, [data, loading]);
 
     return (
         loading ? (

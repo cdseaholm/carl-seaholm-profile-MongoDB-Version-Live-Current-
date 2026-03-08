@@ -1,17 +1,13 @@
 'use client'
 
-import { useDataStore } from "@/context/dataStore";
+import { HobbySessionInfo, IHobbyData } from "@/models/types/hobbyData";
 import { ISession } from "@/models/types/session";
-import { HobbySessionInfo } from "@/utils/apihelpers/get/initData/initDashboardParams";
 import { useMemo } from "react";
+import { HobbyCheckMarkType } from "../components/button-board/left-board/left-board";
 
 
-export function useDashboardData(daySelected: string) {
-    
-    const sessions = useDataStore(state => state.sessions);
-    const hobbySessionsInfo = useDataStore(state => state.hobbySessionInfo) as HobbySessionInfo[];
-    const hobbiesData = useDataStore(state => state.hobbyData);
-    const filteredHobbies = useDataStore(state => state.filteredHobbies);
+export function useDashboardData({ daySelected, sessions, hobbySessionsInfo, hobbiesData, filteredHobbies }: { daySelected: string, sessions: ISession[], hobbySessionsInfo: HobbySessionInfo[], hobbiesData: IHobbyData[], filteredHobbies: HobbyCheckMarkType[] }) {
+
 
     const allHobbies = useMemo(
         () => filteredHobbies.length === hobbiesData.length,

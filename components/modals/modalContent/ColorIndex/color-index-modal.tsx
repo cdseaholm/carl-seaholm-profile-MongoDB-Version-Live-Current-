@@ -1,22 +1,15 @@
 'use client'
 
-import { useModalStore } from "@/context/modalStore";
 import { Modal } from "@mantine/core";
 import ColorIndexContent from "./color-index-content";
-import { useDataStore } from "@/context/dataStore";
 import { MonthColorNames } from "@/models/types/calColorInfo";
 
-export default function ColorIndexModal() {
-
-    const showColorIndexModal = useModalStore(state => state.showColorIndexModal);
-    const setShowColorIndexModal = useModalStore(state => state.setShowColorIndexModal);
-    const hobbyColorMap = useDataStore(state => state.hobbySessionInfo)?.map(hobby => {
-        return { color: hobby.hobbyData.color, title: hobby.hobbyData.title }
-    });
+export default function ColorIndexModal({openModal, handleOpenModal, hobbyColorMap}: { openModal: boolean, handleOpenModal: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void, hobbyColorMap: { color: string, title: string }[] }) {
+    
     const monthColorMap = MonthColorNames;
 
     return (
-        <Modal opened={showColorIndexModal} onClose={() => setShowColorIndexModal(false)} title="Colors" centered closeOnClickOutside size={'90%'} overlayProps={{
+        <Modal opened={openModal} onClose={() => handleOpenModal(null)} title="Colors" centered closeOnClickOutside size={'90%'} overlayProps={{
             backgroundOpacity: 0.55, blur: 3, className: 'drop-shadow-xl overflow-hidden'
         }} styles={{
             header: { backgroundColor: '#e4e6d5ff', color: 'black', borderBottom: '1px solid #334155' },

@@ -57,7 +57,7 @@ export default function StoryPageFive({ userName, textClass, data }: { userName:
             init();
             setLoading(false);
         }
-    }, [data, loading, formatPageFour]);
+    }, [data, loading]);
 
     return (
         loading ? (

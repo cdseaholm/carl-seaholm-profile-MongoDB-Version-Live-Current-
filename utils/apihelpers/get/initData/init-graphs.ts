@@ -1,10 +1,10 @@
 import { Tracker, PercentageType } from "@/app/(content)/dashboard/components/statsView";
-import { DateRangeType, useDataStore } from "@/context/dataStore";
 import { ISession } from "@/models/types/session";
 import { PieChartCell } from "@mantine/charts";
-import { MonthlyInfo, HobbySessionInfo } from "./initDashboardParams";
 import { MonthProv } from "@/components/helpers/monthprov";
 import { GetMonthLength } from "@/utils/data/month-lengths";
+import { MonthlyInfo, HobbySessionInfo } from "@/models/types/hobbyData";
+import { DateRangeType } from "@/models/types/time-types/date-range";
 
 function getDayCount(start: Date, end: Date): number {
     // Normalize to start of day
@@ -12,16 +12,15 @@ function getDayCount(start: Date, end: Date): number {
     const endDate = new Date(end);
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(0, 0, 0, 0);
-    
+
     const diffInMs = endDate.getTime() - startDate.getTime();
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-    
+
     return diffInDays + 1; // +1 because we include both start and end dates
 }
 
-export async function InitGraphs({ sessions, monthlyInfoCounts, hobbySessionsCounts, allHobbies, dateFilters }: { sessions: ISession[], monthlyInfoCounts: MonthlyInfo[], hobbySessionsCounts: HobbySessionInfo[], allHobbies: boolean, dateFilters: DateRangeType }) {
+export async function InitGraphs({ sessions, monthlyInfoCounts, hobbySessionsCounts, allHobbies, dateFilters, thisMonth }: { sessions: ISession[], monthlyInfoCounts: MonthlyInfo[], hobbySessionsCounts: HobbySessionInfo[], allHobbies: boolean, dateFilters: DateRangeType, thisMonth: number }) {
 
-    const thisMonth = useDataStore.getState().thisMonth;
     let datesToUse: DateRangeType;
 
     if (!dateFilters || dateFilters === undefined || dateFilters === null || !dateFilters.range || (dateFilters.range[0] === null && dateFilters.range[1] === null)) {
@@ -33,14 +32,14 @@ export async function InitGraphs({ sessions, monthlyInfoCounts, hobbySessionsCou
         datesToUse = dateFilters;
     }
 
-    const { barData, barDataTwo, pieData } = await InitBarData(useDataStore.getState().thisMonth, sessions, monthlyInfoCounts, hobbySessionsCounts, allHobbies, datesToUse);
+    const { barData, barDataTwo, pieData } = await InitBarData(thisMonth, sessions, monthlyInfoCounts, hobbySessionsCounts, allHobbies, datesToUse);
 
     if (!barData || !barDataTwo || !pieData) {
-        return false;
+        return { status: false, hobbySessionInfo: null, daysWithPie: null, percentagesByHobbies: null, barData: null, barDataTwo: null, tracker: null };
     }
 
-    useDataStore.getState().setBarData(barData);
-    useDataStore.getState().setBarDataTwo(barDataTwo);
+    // useDataStore.getState().setBarData(barData);
+    // useDataStore.getState().setBarDataTwo(barDataTwo);
 
 
 
@@ -121,11 +120,11 @@ export async function InitGraphs({ sessions, monthlyInfoCounts, hobbySessionsCou
 
 
 
-    useDataStore.getState().setDaysWithPieChart(daysWithPie);
-    useDataStore.getState().setHobbySessionInfo(hobbySessionsCounts);
-    useDataStore.getState().setPercentagesByHobbies(pieChartTwo);
+    // useDataStore.getState().setDaysWithPieChart(daysWithPie);
+    // useDataStore.getState().setHobbySessionInfo(hobbySessionsCounts);
+    // useDataStore.getState().setPercentagesByHobbies(pieChartTwo);
 
-    return true;
+    return { status: true, hobbySessionInfo: hobbySessionsCounts, daysWithPie: daysWithPie, percentagesByHobbies: pieChartTwo, barData: barData, barDataTwo: barDataTwo, tracker: newTracker };
 
 }
 
@@ -197,7 +196,7 @@ export async function InitBarData(thisMonth: number, sessions: ISession[], month
             const sessionDay = new Date(session.date).getDate() || 1;
             return sessionDay >= startDay && sessionDay <= endDay;
         });
-
+        
         // ✅ Calculate totals from FILTERED sessions only
         const totalMinutes = monthSessions.reduce((sum, session) => sum + session.minutes, 0);
         const sessionCount = monthSessions.length;
