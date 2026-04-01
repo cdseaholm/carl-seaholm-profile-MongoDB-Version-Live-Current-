@@ -5,12 +5,12 @@ import { DatePickerInput } from "@mantine/dates";
 import { UseFormReturnType } from "@mantine/form";
 import { useState } from "react";
 import { FiInfo } from "react-icons/fi";
-import { useStateStore } from "@/context/stateStore";
 import { LogSessionFormReturnType, LogSessionFormType, logSessionType } from "@/models/types/log-session";
+import { useWindowSizes } from "@/context/width-height-store";
 
 export default function LogSessionModal({ daySelected, handleSessionCall, handleModalOpen, handleDaySelected, logSessionForm }: { handleSessionCall: ({ sessionsToManipulate }: { sessionsToManipulate: logSessionType[] }) => void, handleModalOpen: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void, daySelected: string, handleDaySelected: (arg: string) => void, logSessionForm: LogSessionFormReturnType }) {
 
-    const width = useStateStore(state => state.widthQuery);
+    const { width } = useWindowSizes();
 
     const sessionsMapped = logSessionForm.getValues().newSessions.map((session, newSeshI) => (
         <div className="flex flex-col justify-start items-start sm:flex-row sm:justify-between sm:items-center border-1 border-slate/30 p-2 rounded-md w-full h-content text-black" key={newSeshI}>
@@ -165,7 +165,7 @@ function IndividualTimeSelect({ session, logSessionForm, passedIndex, width }: {
                             >
                                 <p className="text-xs sm:text-sm md:text-base text-center text-black cursor-pointer">
                                     {num}
-                                    </p>
+                                </p>
                             </Combobox.Option>
                         ))}
                     </div>

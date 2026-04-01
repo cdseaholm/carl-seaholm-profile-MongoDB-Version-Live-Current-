@@ -5,7 +5,7 @@ import MainChild from '@/components/pagetemplates/mainchild/mainchild';
 import { jobsArray, schoolsArray } from '@/components/pagecomponents/professional/jobsarray';
 import { JobBite, SchoolBite } from '@/components/pagecomponents/professional/proBites';
 import InnerTemplate from '@/components/pagetemplates/innerTemplate/innerTemplate';
-import { useStateStore } from '@/context/stateStore';
+import { useWindowSizes } from '@/context/width-height-store';
 
 type JobType = {
   company: string;
@@ -26,7 +26,7 @@ export default function ProfessionalPage() {
   const [category, setCategory] = useState('Timeline');
   const [filteredSchools, setFilteredSchools] = useState(schoolsArray);
   const [filteredJobs, setFilteredJobs] = useState(jobsArray);
-  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
+  const isBreakpoint = useWindowSizes().width < 768 ? true : false;
 
   /**Variables */
 

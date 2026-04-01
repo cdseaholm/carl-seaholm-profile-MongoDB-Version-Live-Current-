@@ -1,34 +1,35 @@
 'use client'
 
-import { useState } from "react";
-import { HobbyCheckMarkType } from "../components/button-board/left-board/left-board";
+import { useState, useTransition } from "react";
 import { DateRangeType } from "@/models/types/time-types/date-range";
+import { HobbyCheckMarkType } from "../components/button-board/left-board/left-board";
+import { useRouter } from "next/navigation";
 
+export default function DashHooks({ titlesToSet, initialDaySelected }: { titlesToSet: string[], initialDaySelected: string }) {
+    const router = useRouter();
 
-export default function DashHooks({ titlesToSet, categoriesToSet, initialDaySelected }: { titlesToSet: string[], categoriesToSet: string[], initialDaySelected: string }) {
-    // Local states
-    const [loading, setLoading] = useState(false);
+    // State
     const [showGoals, setShowGoals] = useState(false);
     const [showCats, setShowCats] = useState(false);
     const [showDescriptions, setShowDescriptions] = useState(false);
     const [showTotTime, setShowTotTime] = useState(false);
-    const [dashToShow, setDashToShow] = useState<'sessions' | 'stats' | 'hobbies' | 'calendar'>('stats');
-    const [daySelected, setDaySelected] = useState(initialDaySelected || new Date().toLocaleDateString());
     const [currDateFilters, setCurrDateFilters] = useState<DateRangeType>({ type: 'range', range: [null, null] });
-    const [currHobbyFilters, setCurrHobbyFilters] = useState<HobbyCheckMarkType[]>([] as HobbyCheckMarkType[]);
+    const [currHobbyFilters, setCurrHobbyFilters] = useState<HobbyCheckMarkType[]>([]);
     const [modalOpen, setModalOpen] = useState<'newHobby' | 'logSession' | 'colorIndex' | null>(null);
-    const [titles, setTitles] = useState<string[]>(titlesToSet);
-    const [categories, setCategories] = useState<string[]>(categoriesToSet);
+    const [loading, setLoading] = useState(false);
+    const [titles, setTitles] = useState(titlesToSet);
+    const [daySelected, setDaySelected] = useState(initialDaySelected);
+    const [isPending, startTransition] = useTransition();
 
-    // handlers
-    const handleGoals = () => setShowGoals(!showGoals);
-    const handleCats = () => setShowCats(!showCats);
-    const handleDescriptions = () => setShowDescriptions(!showDescriptions);
-    const handleTotalTime = () => setShowTotTime(!showTotTime);
-
+    // Handlers
+    
     const handleDashToShow = (dashToShow: 'hobbies' | 'stats' | 'sessions' | 'calendar') => {
-        setDashToShow(dashToShow);
-        setLoading(false);
+        startTransition(() => {
+            if (dashToShow === 'stats') router.push('/dashboard/stats');
+            else if (dashToShow === 'sessions') router.push('/dashboard/sessions');
+            else if (dashToShow === 'calendar') router.push('/dashboard/calendar');
+            else if (dashToShow === 'hobbies') router.push('/dashboard/hobbies');
+        });
     };
 
     const handleDaySelected = (date: string) => {
@@ -36,43 +37,27 @@ export default function DashHooks({ titlesToSet, categoriesToSet, initialDaySele
     };
 
     const handleDateIncrease = () => {
-        const date = new Date(daySelected);
-        date.setDate(date.getDate() + 1);
-        handleDaySelected(date.toLocaleDateString());
+        const currentDate = new Date(daySelected);
+        currentDate.setDate(currentDate.getDate() + 1);
+        setDaySelected(currentDate.toLocaleDateString());
     };
 
     const handleDateDecrease = () => {
-        const date = new Date(daySelected);
-        date.setDate(date.getDate() - 1);
-        handleDaySelected(date.toLocaleDateString());
+        const currentDate = new Date(daySelected);
+        currentDate.setDate(currentDate.getDate() - 1);
+        setDaySelected(currentDate.toLocaleDateString());
     };
 
-    const handleCurrFilteredDates = (filters: DateRangeType) => {
-        setCurrDateFilters(filters);
-        setLoading(false);
-    };
-
-    const handleCurrFilteredHobbies = (hobbies: HobbyCheckMarkType[]) => {
-        setCurrHobbyFilters(hobbies);
-        setLoading(false);
-    };
-
-    const handleOpenModal = (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => {
-        setModalOpen(modal);
-        setLoading(false);
-    }
-
-    const handleLoading = (loading: boolean) => {
-        setLoading(loading);
-    }
-
-    const handleTitles = (titles: string[]) => {
-        setTitles(titles);
-    }
-
-    const handleCategories = (categories: string[]) => {
-        setCategories(categories);
-    }
+    const handleGoals = () => setShowGoals(!showGoals);
+    const handleCats = () => setShowCats(!showCats);
+    const handleDescriptions = () => setShowDescriptions(!showDescriptions);
+    const handleTotalTime = () => setShowTotTime(!showTotTime);
+    const handleCurrFilteredDates = (filters: DateRangeType) => setCurrDateFilters(filters);
+    const handleCurrFilteredHobbies = (hobbies: HobbyCheckMarkType[]) => setCurrHobbyFilters(hobbies);
+    const handleOpenModal = (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => setModalOpen(modal);
+    const handleLoading = (loading: boolean) => setLoading(loading);
+    const handleTitles = (titles: string[]) => setTitles(titles);
+    const loadingState = isPending || loading;
 
     return {
         handleDashToShow,
@@ -83,28 +68,20 @@ export default function DashHooks({ titlesToSet, categoriesToSet, initialDaySele
         handleCats,
         handleDescriptions,
         handleTotalTime,
-        showGoals,
         showCats,
         showDescriptions,
+        showGoals,
         showTotTime,
-        daySelected,
-        dashToShow,
         handleCurrFilteredDates,
         handleCurrFilteredHobbies,
         handleOpenModal,
+        modalOpen,
         currDateFilters,
         currHobbyFilters,
-        modalOpen,
-        loading,
+        loadingState,
         handleLoading,
-        titles,
         handleTitles,
-        categories,
-        handleCategories
+        titles,
+        daySelected
     };
 }
-
-{/**
-    
-    handleDayData from Date-Picker is using PercentageType[] and I can't see where zustand was supplying dayData too, so removing for now until I find a better spot
-    */}

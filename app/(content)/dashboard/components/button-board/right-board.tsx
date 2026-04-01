@@ -4,13 +4,13 @@ import { IoIosStats } from "react-icons/io";
 import { FaCalendar } from "react-icons/fa";
 import { Menu } from "@mantine/core";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { startTransition, useState } from "react";
 import { toast } from "sonner";
 import { PiListHeartLight } from "react-icons/pi";
-import { useStateStore } from "@/context/stateStore";
 import { IoMdColorPalette } from "react-icons/io";
 import { HobbyCheckMarkType } from "./left-board/left-board";
 import { DateRangeType } from "@/models/types/time-types/date-range";
+import { useWindowSizes } from "@/context/width-height-store";
 
 export default function RightBoard({ dashToShow, handleDashToShow, handleDaySelected, daySelected, adminID, handleFilteredDates, handleFilteredHobbies, handleOpenModal }: { dashToShow: 'hobbies' | 'stats' | 'sessions' | 'calendar', handleDashToShow: (dashToShow: 'hobbies' | 'stats' | 'sessions' | 'calendar') => void, handleDaySelected: (date: string) => void, daySelected: string, adminID: boolean, handleFilteredDates: (filters: DateRangeType) => void, handleFilteredHobbies: (hobbies: HobbyCheckMarkType[]) => void, handleOpenModal: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void }) {
 
@@ -18,13 +18,12 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
     const onTextClass = `text-xs sm:text-sm md:text-base text-gray-800 cursor-pointer`;
     const offTextClass = `text-xs sm:text-sm md:text-base text-gray-500 underline cursor-not-allowed`;
     const [chevUp, setChevUp] = useState(false);
-    const width = useStateStore(state => state.widthQuery);
+    const { width } = useWindowSizes();
+    const menuWidth = width < 400 ? '80dvw' : 200;
 
     return (
         <div className="flex flex-row items-center justify-end space-x-2 w-full">
-            <Menu shadow="md" width={200} onOpen={() => setChevUp(true)} onClose={() => setChevUp(false)} closeOnClickOutside={true} closeOnEscape={true} closeOnItemClick={true} styles={{
-
-            }}>
+            <Menu shadow="md" width={menuWidth} onOpen={() => setChevUp(true)} onClose={() => setChevUp(false)} closeOnClickOutside={true} closeOnEscape={true} closeOnItemClick={true}>
                 <Menu.Target>
                     <div className={`flex flex-row justify-center items-center xs:space-x-2 hover:bg-gray-300 rounded-md px-4 py-1 sm:py-1 rounded-md bg-gray-400/40 border w-1/3 sm:w-1/4 md:w-1/5 h-content cursor-pointer`}>
                         <p className={`text-xs sm:text-sm md:text-base hover:text-gray-800`}>Actions</p>
@@ -35,9 +34,11 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
                 <Menu.Dropdown>
                     <Menu.Label>Application</Menu.Label>
                     <Menu.Item leftSection={<FaCalendar size={14} />} disabled={dashToShow === 'calendar'} onClick={() => {
-                        handleFilteredDates({ range: [null, null], type: 'range' });
-                        handleFilteredHobbies([]);
-                        handleDashToShow('calendar');
+                        startTransition(() => {
+                            handleFilteredDates({ range: [null, null], type: 'range' });
+                            handleFilteredHobbies([]);
+                            handleDashToShow('calendar');
+                        });
                     }}>
                         <p className={`${dashToShow === 'calendar' ? offTextClass : onTextClass}`}>
                             {'View Calendar'}

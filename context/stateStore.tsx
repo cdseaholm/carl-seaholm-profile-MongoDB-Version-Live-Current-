@@ -8,10 +8,6 @@ interface StateStore {
     setUrlToUse: (url: string) => void;
     globalLoading: boolean;
     setGlobalLoading: (globalLoading: boolean) => void;
-    widthQuery: number;
-    setWidthQuery: (width: number) => void;
-    heightQuery: number;
-    setHeightQuery: (width: number) => void;
     taskDetailToShow: IEntry;
     setTaskDetailToShow: (taskDetailToShow: IEntry) => void;
     overlay: boolean;
@@ -23,10 +19,6 @@ export const useStateStore = create<StateStore>((set) => ({
     setUrlToUse: (url) => set({ urlToUse: url }),
     globalLoading: false,
     setGlobalLoading: (globalLoading) => set({ globalLoading }),
-    widthQuery: 0,
-    setWidthQuery: (width) => set({ widthQuery: width }),
-    heightQuery: 0,
-    setHeightQuery: (height) => set({ heightQuery: height }),
     taskDetailToShow: {} as IEntry,
     setTaskDetailToShow: (taskDetailToShow) => set({ taskDetailToShow }),
     overlay: false,

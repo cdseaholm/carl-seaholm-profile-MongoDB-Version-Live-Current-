@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import LogSessionModal from "./logsession";
 import { toast } from "sonner";
 import { useForm } from "@mantine/form";
@@ -36,7 +36,7 @@ export default function LogSessionDataInit({ handleModalOpen, handleLoading, day
         modalLoading
     } = LogSessionHooks({ handleModalOpen, handleLoading, daySelected, hobbySessionInfo, logSessionForm, router });
 
-    const initFormHobbies = () => {
+    const initFormHobbies = useCallback(() => {
         const formReady = hobbySessionInfo.map((object, i) => {
             const sessionsForHobbyForDay = sessions.filter((session) => session.hobbyTitle === object.hobbyData.title && session.date === daySelected);
             const timeFreqOne = object.timeFrequencies[0] ? object.timeFrequencies[0].time : 0;
@@ -59,7 +59,7 @@ export default function LogSessionDataInit({ handleModalOpen, handleLoading, day
         logSessionForm.resetDirty();
         logSessionForm.clearErrors();
         //console.log('Initialized form hobbies:', formReady);
-    }
+    }, [daySelected, hobbySessionInfo, logSessionForm, sessions, handleSessionsOTDCopy]);
 
 
 

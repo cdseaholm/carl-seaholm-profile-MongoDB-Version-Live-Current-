@@ -1,7 +1,7 @@
 'use client'
 
 import { LoadingOverlay } from "@mantine/core";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import StoryPageWrapper from "../../components/templates/storyPageWrapper";
 import { FormattedData } from "../../types/data";
 import { PageFourType } from "../../types/pageFourType";
@@ -23,7 +23,7 @@ export default function StoryPageFive({ userName, textClass, data }: { userName:
         alcohol: number;
     }[]>([]);
 
-    const formatPageFour = async () => {
+    const formatPageFour = useCallback(async () => {
         const formatted = await PageFourFormat({ data: data }) as {
             returnedData: PageFourType[];
             success: boolean;
@@ -47,7 +47,7 @@ export default function StoryPageFive({ userName, textClass, data }: { userName:
 
             setCompare(transformedData);
         }
-    }
+    }, [data]);
 
     useEffect(() => {
         if (loading) {
@@ -57,7 +57,7 @@ export default function StoryPageFive({ userName, textClass, data }: { userName:
             init();
             setLoading(false);
         }
-    }, [data, loading]);
+    }, [data, loading, formatPageFour]);
 
     return (
         loading ? (
@@ -73,7 +73,7 @@ export default function StoryPageFive({ userName, textClass, data }: { userName:
                         {`${userName}. We hope you've come to the coorlation that these two aspects stand out as two that coorelate strongly with quality. What happens when we compare them to eachother?`}
                     </p>
                 </TextWrapper>
-                <Line title="Wine Comparison" dataKey={"whichAvg"} data={compare} series={[{ name: 'freeSulfurDioxide', color: 'grape' }, { name: 'totalSulfurDioxide', color: 'red' }]} story={true}/>
+                <Line title="Wine Comparison" dataKey={"whichAvg"} data={compare} series={[{ name: 'freeSulfurDioxide', color: 'grape' }, { name: 'totalSulfurDioxide', color: 'red' }]} story={true} />
             </StoryPageWrapper>
         )
     )

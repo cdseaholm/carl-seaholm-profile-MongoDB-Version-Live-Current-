@@ -6,15 +6,15 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import SocialButton from '@/components/buttons/socialButton';
 import { useModalStore } from '@/context/modalStore';
-import { useStateStore } from '@/context/stateStore';
 import { IoIosClose, IoMdHome } from "react-icons/io";
+import { useWindowSizes } from '@/context/width-height-store';
 
 export default function Sidenav({ open, toggle, children }: { open: boolean; toggle: () => void; children: React.ReactNode }) {
 
   // constants
   const ref = React.useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
+  const isBreakpoint = useWindowSizes().width < 768 ? true : false;
   const setModalOpen = useModalStore((state) => state.setModalOpen);
   const { data: session } = useSession();
   const user = session?.user;

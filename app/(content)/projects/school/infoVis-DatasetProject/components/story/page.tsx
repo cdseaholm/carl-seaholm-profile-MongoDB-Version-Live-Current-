@@ -3,7 +3,7 @@
 import { LoadingOverlay, Pagination } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import NameForm from "../components/forms/nameForm";
 import { AlertModal } from "../components/modals/alertModal";
 import Header from "../components/nav/header";
@@ -36,7 +36,25 @@ export default function Page() {
         }
     });
 
-    const makeName = () => modals.openConfirmModal({
+    const handleCreateName = useCallback(() => {
+        const errors = nameForm.validate();
+        if (errors.hasErrors) {
+            AlertModal({ message: errors.errors })
+        } else {
+            setUserName(nameForm.getValues().name);
+            initName.current = true;
+            setLoading(false)
+            modals.closeAll();
+        }
+    }, [nameForm]);
+
+    const handleCancel = useCallback(() => {
+        initName.current = true;
+        setLoading(false);
+        modals.closeAll();
+    }, []);
+
+    const makeName = useCallback(() => modals.openConfirmModal({
         title: 'What is the name you would like to use? Or use the default name',
         labels: { confirm: 'Create', cancel: userName === 'Esteban' ? 'Use default name' : 'Use name you have created' },
         closeOnConfirm: false,
@@ -47,9 +65,9 @@ export default function Page() {
         closeOnClickOutside: false,
         onConfirm: () => handleCreateName(),
         onCancel: () => handleCancel()
-    });
+    }), [userName, nameForm, handleCreateName, handleCancel]);
 
-    const nameOrNoName = () => modals.openConfirmModal({
+    const nameOrNoName = useCallback(() => modals.openConfirmModal({
         title: 'Would you like to use your name for the story?',
         labels: { confirm: 'Create a Name', cancel: 'Use Default name' },
         withCloseButton: false,
@@ -58,25 +76,7 @@ export default function Page() {
             makeName()
         ),
         onCancel: () => handleCancel(),
-    })
-
-    const handleCreateName = () => {
-        const errors = nameForm.validate();
-        if (errors.hasErrors) {
-            AlertModal({ message: errors.errors })
-        } else {
-            setUserName(nameForm.getValues().name);
-            initName.current = true;
-            setLoading(false)
-            modals.closeAll();
-        }
-    }
-
-    const handleCancel = () => {
-        initName.current = true;
-        setLoading(false);
-        modals.closeAll();
-    }
+    }), [makeName, handleCancel]);
 
     useEffect(() => {
         if (initName.current === false) {
@@ -120,7 +120,7 @@ export default function Page() {
         />,
         <StoryPageFour userName={userName} textClass={textClass} data={csvData} key={4} />,
         <StoryPageFive userName={userName} textClass={textClass} data={csvData} key={5} />,
-        <StoryPageSix userName={userName} textClass={textClass} page={page} key={6}/>,
+        <StoryPageSix userName={userName} textClass={textClass} page={page} key={6} />,
     ];
 
     return (

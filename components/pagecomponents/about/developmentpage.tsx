@@ -1,13 +1,13 @@
 'use client'
 
-import { useStateStore } from "@/context/stateStore"
 import React, { useState, useRef, useCallback } from "react";
 import { schoolsArray, jobsArray } from "../professional/jobsarray";
 import { SchoolBite, JobBite } from "../professional/proBites";
 import Image from 'next/image';
+import { useWindowSizes } from "@/context/width-height-store";
 
 export default function DevelopmentPage() {
-    const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
+    const isBreakpoint = useWindowSizes().width < 768 ? true : false;
     const [isHovered, setIsHovered] = useState(false);
     const [clicked, setClicked] = useState(false);
     const [category, setCategory] = useState('Timeline');

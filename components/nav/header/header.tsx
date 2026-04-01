@@ -6,13 +6,13 @@ import React from "react";
 import Sidenav from "../sideNav/SideNav";
 import { SideMenuAccordian } from "../../dropdowns/SideMenuAccordian";
 import SocialButton from "@/components/buttons/socialButton";
-import { useStateStore } from "@/context/stateStore";
 import { FiMenu } from "react-icons/fi";
+import { useWindowSizes } from "@/context/width-height-store";
 
 
 const SideNavHeader = () => {
 
-  const isBreakpoint = useStateStore((state) => state.widthQuery) < 768;
+  const isBreakpoint = useWindowSizes().width < 768;
   const [open, setOpen] = useState(false);
   const [pageSelected, setPageSelected] = useState('');
   const pathname = usePathname();
