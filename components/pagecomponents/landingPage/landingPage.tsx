@@ -1,12 +1,12 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { useStateStore } from "@/context/stateStore";
 import React, { useEffect, useState } from 'react';
 import SocialBar from '@/components/buttons/socialbar';
 import Image from 'next/image';
 import openInNewTab from '@/components/listeners/OpenInNewTab';
 import SectionWrapper from "@/components/pagetemplates/sectionWrapper";
+import { useWindowSizes } from "@/context/width-height-store";
 
 export default function LandingPage() {
 
@@ -50,7 +50,7 @@ export default function LandingPage() {
         setProShow(false);
         setFadeOutBegin(true);
         setTimeout(() => {
-            router.replace('/dashboard');
+            router.replace('/dashboard/stats');
         }, 750);
     };
 
@@ -62,7 +62,7 @@ export default function LandingPage() {
         }, 750);
     };
 
-    const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
+    const isBreakpoint = useWindowSizes().width < 768 ? true : false;
     const size = isBreakpoint ? 50 : 100;
     
     return (

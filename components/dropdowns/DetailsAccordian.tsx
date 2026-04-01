@@ -1,6 +1,6 @@
 'use client'
 
-import { useStateStore } from '@/context/stateStore';
+import { useWindowSizes } from '@/context/width-height-store';
 import React from 'react';
 
 export const DetailsAccordianPage = ({details, detailsIndex}: {details: Array<string>; detailsIndex: number}) => {
@@ -48,7 +48,7 @@ const useAccordion = () => React.useContext(Context);
 
 function AccordionItem({ toggle, children, className }: { toggle: string; children: React.ReactNode; className?: string; }) {
     const { selected, toggleItem } = useAccordion() as { selected: string; toggleItem: (id: string) => () => void };
-    const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
+    const isBreakpoint = useWindowSizes().width < 768 ? true : false;
     return (
         <>
       <div

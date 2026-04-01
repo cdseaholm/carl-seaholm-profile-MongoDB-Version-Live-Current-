@@ -1,7 +1,7 @@
 'use client'
 
 import { LoadingOverlay } from "@mantine/core";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Bar from "../../components/charts/barChart";
 import StoryPageWrapper from "../../components/templates/storyPageWrapper";
 import { FormattedData } from "../../types/data";
@@ -17,7 +17,7 @@ export default function StoryPageThree({ userName, textClass, data }: { userName
     const [loading, setLoading] = useState(true);
     const [compare, setCompare] = useState<PageThreeType[]>([]);
 
-    const formatPageThree = async () => {
+    const formatPageThree = useCallback(async () => {
         const formatted = await PageThreeFormat({ data }) as {
             returnedData: PageThreeType[];
             success: boolean;
@@ -30,7 +30,7 @@ export default function StoryPageThree({ userName, textClass, data }: { userName
         } else {
             setCompare(formatted.returnedData);
         }
-    }
+    }, [data]);
 
     useEffect(() => {
         if (loading) {
@@ -40,7 +40,7 @@ export default function StoryPageThree({ userName, textClass, data }: { userName
             init();
             setLoading(false);
         }
-    }, [data, loading]);
+    }, [data, loading, formatPageThree]);
 
     return (
         loading ? (

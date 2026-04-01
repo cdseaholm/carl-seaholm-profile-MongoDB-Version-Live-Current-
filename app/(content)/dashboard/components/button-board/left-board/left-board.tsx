@@ -6,8 +6,8 @@ import { toast } from 'sonner';
 import LeftBoardContent from './left-board-content';
 import LoadingSpinner from '@/app/(content)/projects/school/infoVis-DatasetProject/components/components/misc/loadingSpinner';
 import { FiFilter } from 'react-icons/fi';
-import { useStateStore } from '@/context/stateStore';
 import { DateRangeType } from '@/models/types/time-types/date-range';
+import { useWindowSizes } from '@/context/width-height-store';
 
 export type HobbyCheckMarkType = {
     _id: string;
@@ -17,8 +17,8 @@ export type HobbyCheckMarkType = {
 export default function LeftBoard({ hobbies, currDateFilters, currHobbyFilters, handleCurrFilteredDates, handleCurrFilteredHobbies }: { hobbies: { _id: string, title: string }[], currDateFilters: DateRangeType, currHobbyFilters: HobbyCheckMarkType[], handleCurrFilteredDates: (filters: DateRangeType) => void, handleCurrFilteredHobbies: (hobbies: HobbyCheckMarkType[]) => void }) {
 
     const [loading, setLoading] = useState(true);
-    const width = useStateStore(state => state.widthQuery);
-    
+    const { width } = useWindowSizes();
+
     const combobox = useCombobox({
 
     });

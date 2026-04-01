@@ -17,8 +17,8 @@ export default function ToDoList({ adminID, setModalOpen, handleDateDecrease, ha
     const [urlToUse, setUrlToUse] = useState<string>('');
     const [filteredTasks, setFilteredTasks] = useState<IEntry[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const isBreakpoint = useStateStore((state) => state.widthQuery) < 768 ? true : false;
-    const smallBreakpoint = useStateStore((state) => state.widthQuery) < 580 ? true : false;
+    const isBreakpoint = useWindowSizes(); < 768 ? true : false;
+    const smallBreakpoint = useWindowSizes(); < 580 ? true : false;
     const tasks = entriesOTD.find((field: IUserObject) => field.title === 'tasks');
     const setTaskDetailsToShow = useStateStore((state) => state.setTaskDetailToShow);
     const {data: session} = useSession();

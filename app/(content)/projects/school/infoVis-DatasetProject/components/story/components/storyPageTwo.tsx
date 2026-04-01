@@ -1,7 +1,7 @@
 'use client'
 
 import { LoadingOverlay } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import StoryPageWrapper from "../../components/templates/storyPageWrapper";
 import TextWrapper from "../../components/templates/textWrapper";
@@ -22,7 +22,7 @@ export default function StoryPageTwo({ userName, textClass, data }: { userName: 
     const [loading, setLoading] = useState(true);
     const [compare, setCompare] = useState<PageTwoCompareType[]>([]);
 
-    const formatPageTwoData = async () => {
+    const formatPageTwoData = useCallback(async () => {
         const formatted = await PageTwoFormat({ data }) as {
             returnedData: PageTwoCompareType[];
             success: boolean;
@@ -35,7 +35,7 @@ export default function StoryPageTwo({ userName, textClass, data }: { userName: 
         } else {
             setCompare(formatted.returnedData);
         }
-    }
+    }, [data]);
 
     useEffect(() => {
         if (loading) {
@@ -45,7 +45,7 @@ export default function StoryPageTwo({ userName, textClass, data }: { userName: 
             init();
             setLoading(false);
         }
-    }, [data, loading]);
+    }, [data, loading, formatPageTwoData]);
 
     return (
         loading ? (

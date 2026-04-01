@@ -1,12 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import React from 'react';
 import { CalendarColors, JanColors } from "@/models/types/calColorInfo";
 import { useSession } from "next-auth/react";
-import { ISession } from "@/models/types/session";
 import CalendarCore from "./calendar-core";
-import { MonthlyInfo } from "@/models/types/hobbyData";
+import { useDash } from "../../context/dashContext";
 
 export interface CalEvent {
     allDay: boolean;
@@ -21,23 +20,17 @@ type numericalColorMap = {
     color: string
 }
 
-export default function CalendarPicker({
-    monthInfo,
-    handleLoading,
-    handleDaySelected,
-    handleDashToShow,
-    handleModalOpen,
-    sessions,
-    selectedDay
-}: {
-    monthInfo: MonthlyInfo[],
-    handleLoading: (loading: boolean) => void,
-    handleDaySelected: (date: string) => void,
-    handleDashToShow: (dash: 'sessions' | 'stats' | 'hobbies' | 'calendar') => void,
-    handleModalOpen: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void,
-    sessions: ISession[],
-    selectedDay: string
-}) {
+export default function CalendarPicker() {
+
+    const {
+        daySelected,
+        sessions,
+        monthInfo,
+        handleDashToShow,
+        handleOpenModal,
+        handleDaySelected,
+        handleLoading,
+    } = useDash();
 
     //state
     const [indexOpen, setIndexOpen] = useState<boolean>(false);
@@ -69,8 +62,17 @@ export default function CalendarPicker({
             color: 'green'
         }
     ] as numericalColorMap[]
-
     const [thisMonthsColors, setThisMonthsColors] = useState<CalendarColors>(JanColors);
+
+    const visibleSessions = useMemo(() => {
+        const monthStart = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+        const monthEnd = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+
+        return sessions.filter(session => {
+            const sessionDate = new Date(session.date);
+            return sessionDate >= monthStart && sessionDate <= monthEnd;
+        });
+    }, [sessions, currentMonth]);
 
     //functions
 
@@ -103,7 +105,7 @@ export default function CalendarPicker({
         });
         await setNewDay(arg);
         if (sessionsOnThisDay.length < 1 && adminOrNot) {
-            handleModalOpen('logSession');
+            handleOpenModal('logSession');
         } else {
             handleDashToShow('sessions');
         }
@@ -152,8 +154,8 @@ export default function CalendarPicker({
                     handleDaySelect={handleDaySelect}
                     monthColors={thisMonthsColors}
                     onMonthChange={handleMonthChange}
-                    selectedDay={selectedDay}
-                    sessions={sessions}
+                    selectedDay={daySelected}
+                    sessions={visibleSessions}
                 />
             </div>
             <div className='flex-shrink-0 flex flex-row h-auto w-full border-t border-black px-4 py-2 justify-between items-center' style={{ backgroundColor: thisMonthsColors.monthColor }}>
