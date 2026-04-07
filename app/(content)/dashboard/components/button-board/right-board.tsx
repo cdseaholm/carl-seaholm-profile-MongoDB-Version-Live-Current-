@@ -12,7 +12,7 @@ import { HobbyCheckMarkType } from "./left-board/left-board";
 import { DateRangeType } from "@/models/types/time-types/date-range";
 import { useWindowSizes } from "@/context/width-height-store";
 
-export default function RightBoard({ dashToShow, handleDashToShow, handleDaySelected, daySelected, adminID, handleFilteredDates, handleFilteredHobbies, handleOpenModal }: { dashToShow: 'hobbies' | 'stats' | 'sessions' | 'calendar', handleDashToShow: (dashToShow: 'hobbies' | 'stats' | 'sessions' | 'calendar') => void, handleDaySelected: (date: string) => void, daySelected: string, adminID: boolean, handleFilteredDates: (filters: DateRangeType) => void, handleFilteredHobbies: (hobbies: HobbyCheckMarkType[]) => void, handleOpenModal: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void }) {
+export default function RightBoard({ dashToShow, handleDashToShow, handleDaySelected, daySelected, adminID, handleCurrFilters, handleOpenModal }: { dashToShow: 'hobbies' | 'stats' | 'sessions' | 'calendar', handleDashToShow: (dashToShow: 'hobbies' | 'stats' | 'sessions' | 'calendar') => void, handleDaySelected: (date: string) => void, daySelected: string, adminID: boolean, handleCurrFilters: ({dateFilters, hobbyFilters}: {dateFilters: DateRangeType, hobbyFilters: HobbyCheckMarkType[]}) => Promise<void>, handleOpenModal: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void }) {
 
     //const buttonClass = `flex flex-row justify-center items-center space-x-2 hover:bg-gray-300 rounded-md px-2 py-2 sm:py-1 rounded-md bg-gray-400/40 border w-content`;
     const onTextClass = `text-xs sm:text-sm md:text-base text-gray-800 cursor-pointer`;
@@ -35,8 +35,7 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
                     <Menu.Label>Application</Menu.Label>
                     <Menu.Item leftSection={<FaCalendar size={14} />} disabled={dashToShow === 'calendar'} onClick={() => {
                         startTransition(() => {
-                            handleFilteredDates({ range: [null, null], type: 'range' });
-                            handleFilteredHobbies([]);
+                            handleCurrFilters({ dateFilters: { range: [null, null], type: 'range' }, hobbyFilters: [] });
                             handleDashToShow('calendar');
                         });
                     }}>
@@ -45,8 +44,7 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
                         </p>
                     </Menu.Item>
                     <Menu.Item leftSection={<PiListHeartLight size={14} />} disabled={dashToShow === 'sessions'} onClick={() => {
-                        handleFilteredDates({ range: [null, null], type: 'range' });
-                        handleFilteredHobbies([]);
+                        handleCurrFilters({ dateFilters: { range: [null, null], type: 'range' }, hobbyFilters: [] });
                         handleDaySelected(daySelected);
                         handleDashToShow('sessions');
                     }}>
@@ -55,8 +53,7 @@ export default function RightBoard({ dashToShow, handleDashToShow, handleDaySele
                         </p>
                     </Menu.Item>
                     <Menu.Item leftSection={<IoIosStats size={14} />} onClick={() => {
-                        handleFilteredDates({ range: [null, null], type: 'range' });
-                        handleFilteredHobbies([]);
+                        handleCurrFilters({ dateFilters: { range: [null, null], type: 'range' }, hobbyFilters: [] });
                         handleDashToShow('stats');
                     }} disabled={dashToShow === 'stats'}>
                         <p className={`${dashToShow === 'stats' ? offTextClass : onTextClass}`}>{"View Stats"}</p>

@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useStateStore } from "@/context/stateStore";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Box, LoadingOverlay } from "@mantine/core";
 import MainWrapper from "./mainWrapper";
 import { Providers } from "../providers/providers";
-
-
+import { isValidRoute } from "@/lib/routes/route";
 
 export default function PageWrapper({ children }: Readonly<{ children: React.ReactNode; }>) {
 
@@ -17,10 +16,14 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
   const globalLoading = useStateStore((state) => state.globalLoading);
   const [localLoading, setLocalLoading] = useState<boolean>(true);
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
+    if (!isValidRoute(pathname)) {
+      router.replace('/')
+    }
     setLocalLoading(globalLoading);
-  }, [globalLoading]);
+  }, [globalLoading, pathname, router]);
 
   const isLoading = status === 'loading' || localLoading;
 

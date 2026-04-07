@@ -55,6 +55,12 @@ export const getCategorisedPosts = (): Record<string, post[]> => {
 
 export const getPostData = async (id: string) => {
   const fullPath = path.join(postsDirectory, `${id}.md`);
+
+  if (!fs.existsSync(fullPath)) {
+    console.error(`Post not found at: ${fullPath}`);
+    return null;
+  }
+  
   const fileContents = fs.readFileSync(fullPath, "utf-8");
 
   const matterResult = matter(fileContents);

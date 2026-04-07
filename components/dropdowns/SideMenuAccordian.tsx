@@ -2,170 +2,79 @@ import React from 'react';
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import openInNewTab from '../listeners/OpenInNewTab';
-import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { Menu } from '@mantine/core';
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
 
 
-export const SideMenuAccordian = ({ toggle }: { toggle: () => void; }) => {
+export const SideMenuAccordian = ({ toggleMenu }: { toggleMenu: () => void }) => {
+
+  //const accordianWidth = width > 1024 ? '80%' : width > 640 ? '100%' : '90%';
 
   const pathname = usePathname();
-  var defaultPanel = "";
-  if (pathname === "projects") {
-    defaultPanel = "panel-1";
-  } else if (pathname === "services") {
-    defaultPanel = "panel-2";
-  } else if (pathname === "about") {
-    defaultPanel = "panel-3";
-  } else {
-    defaultPanel = "";
-  }
 
-  const basicTextClass = `flex flex-row justify-start items-center w-full md:w-[90%] lg:w-4/5 block text-slate-200 hover:text-slate-400 text-sm sm:text-base px-4 sm:px-8 rounded-lg cursor-pointer`;
+  const itemManifest = [
+    // {
+    //   name: "Projects", toggle: "panel-1", subItems: [
+    //     { name: "New Progress Applications", href: "/projects/npapps" },
+    //     { name: "Web Applications", href: "/projects/npwebapps" },
+    //     { name: "Writing Projects", href: "/projects/writing" },
+    //   ]
+    // },
+    // {
+    //   name: "Services", toggle: "panel-2", subItems: [
+    //     { name: "Bug Fixes", href: "/services/bugs" },
+    //     { name: "Single Page Creation", href: "/services/singlepage" },
+    //     { name: "Full Site/App Creation", href: "/services/fullsite" },
+    //   ]
+    // },
+    {
+      name: "About", toggle: "panel-3", subItems: [
+        { name: "Professional", href: "/about/professional" },
+        { name: "Personal", href: "/about/personal" },
+      ]
+    },
+  ]
+
+  const basicTextClass = `flex flex-row justify-start items-center w-full md:w-[90%] lg:w-4/5 block text-slate-200 hover:text-slate-400 text-sm sm:text-base px-4 sm:px-8 rounded-md cursor-pointer text-center`;
   const subTextClass = `flex flex-row cursor-pointer justify-center items-center text-slate-200 w-full h-content text-sm sm:text-base py-2 px-4 sm:px-8 hover:text-slate-400 my-2`
 
   return (
-    <div className='flex flex-col justify-between h-content w-full items-center border-b border-gray-200/20 py-6 space-y-12'>
-      <Link onClick={toggle} href={"/dashboard"} className={`${pathname === "/dashboard" ? "underline" : ""} ${basicTextClass}`}>
-        <p className={`max-md:text-sm`}>Dashboard</p>
+    <div className='flex flex-col justify-center h-content w-full items-center space-y-8 md:space-y-12 py-4'>
+      <Link onClick={toggleMenu} href={"/dashboard"} className={`${pathname === "/dashboard" ? "underline bg-white/10" : "bg-white/10 hover:bg-white/30"} ${basicTextClass} h-[3.5dvh]`}>
+        <p className={`max-md:text-sm text-center w-full`}>Dashboard</p>
+      </Link> 
+      <Link onClick={toggleMenu} href={"/blog"} className={`${pathname === "/blog" ? "underline bg-white/10" : "bg-white/10 hover:bg-white/30"} ${basicTextClass} h-[3.5dvh]`}>
+        <p className={`max-md:text-sm text-center w-full`}>Blog</p>
       </Link>
-      <Link onClick={toggle} href={"/blog"} className={`${pathname === "/blog" ? "underline" : ""} ${basicTextClass}`}>
-        <p className={`max-md:text-sm`}>Blog</p>
-      </Link>
-      <Accordion defaultPanel={defaultPanel}>
-        {/**
-         * <AccordionItem toggle="panel-1" className="text-slate-200 hover:text-slate-400 text-xs px-10 rounded-lg">
-          Projects
-        </AccordionItem>
-        <AccordionPanel id="panel-1">
+      {itemManifest.map((item, id) => (
+        <Menu key={id} width={'100%'} transitionProps={{ transition: 'pop-top-left', duration: 150 }} withinPortal={true} position='right' zIndex={1000} closeOnItemClick={true}>
+          <Menu.Target >
+            <div className={`${pathname.includes(item.toggle.split("-")[1]) ? "underline bg-white/10" : "bg-white/10 hover:bg-white/30"} flex flex-row justify-center items-center w-full md:w-[90%] lg:w-4/5 block text-slate-200 hover:text-slate-400 text-sm sm:text-base pl-4 pr-2 sm:pl-8 sm:pr-4 rounded-md cursor-pointer text-center h-[3.5dvh]`}>
+              <p className={`max-md:text-sm text-center w-full`}>{item.name}</p>
+              <ChevronRightIcon width={22} />
+            </div>
+          </Menu.Target>
+          <Menu.Dropdown className='bg-slate-400/40 border-slate-200/20 w-[50%] flex flex-col justify-start items-center py-2 rounded-md' w={'auto'} >
+            {item.subItems.map((subItem, subId) => (
+              <Menu.Item key={subId} onClick={toggleMenu} component={Link} href={subItem.href} className={`${pathname === subItem.href ? "underline bg-white/10" : "bg-white/10 hover:bg-white/30"} ${subTextClass}`} >
+                {subItem.name}
+              </Menu.Item>
+            ))}
+          </Menu.Dropdown>
+        </Menu>
+      ))}
+      {/* Removing until model is sorted out
         <div className="mb-4 px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={""} className={`px-10 rounded-lg text-slate-200 text-xs hover:text-slate-400 ${pathname === "/projects/npapps" ? "underline" : ""}`}>
-            - New Progress Applications
+          <Link onClick={toggle} href={"/recipes"} className={`px-10 rounded-lg text-slate-200 text-xs hover:text-slate-400 ${pathname === "/recipes" ? "underline bg-white/10" : "bg-white/10 hover:bg-white/30"}`}>
+            - Recipe Ratings
           </Link>
         </div>
-        <div className="mb-4 px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={"/projects/npwebapps"} className={`px-10 rounded-lg text-slate-200 text-xs hover:text-slate-400 ${pathname === "/projects/npwebapps" ? "underline" : ""}`}>
-            - Web Applications
-          </Link>
-        </div>
-        <div className="px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={"/projects/writing"} className={`px-10 rounded-lg text-slate-200 text-xs hover:text-slate-400 ${pathname === "/projects/writing" ? "underline" : ""}`}>
-            - Writing Projects
-          </Link>
-        </div>
-        </AccordionPanel>
-         */}
-        <div className='flex flex-col justify-center items-center w-full h-content'>
-          <AccordionItem toggle="panel-2">
-            Services
-          </AccordionItem>
-          <AccordionPanel id="panel-2">
-            <Link onClick={() => openInNewTab('https://www.newprogressco.com/webdevelopment')} href={''} className={subTextClass}>
-              Click here to take you to the New Progress Co. website
-            </Link>
           </AccordionPanel>
-        </div>
-        {/*
-        <AccordionPanel id="panel-2">
-        <div className="mb-4 px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={"/services/bugs"} className={`px-10 rounded-lg text-slate-200 text-xs hover:text-slate-400 ${pathname === "/services/bugs" ? "underline" : ""}`}>
-            - Bug Fixes
-          </Link>
-        </div>
-        <div className="mb-4 px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={"/services/fullsite"} className={`px-10 rounded-lg text-slate-200 text-xs hover:text-slate-400 ${pathname === "/services/fullsite" ? "underline" : ""}`}>
-            - Single Page Creation
-          </Link>
-        </div>
-        <div className="px-2 py-1 cursor-pointer">
-            <Link onClick={toggle} href={"/services/singlepage"} className={`px-10 rounded-lg text-slate-200 text-xs hover:text-slate-400 ${pathname === "/services/singlepage" ? "underline" : ""}`}>
-            - Full Site/App Creation
-          </Link>
-        </div>
-        </AccordionPanel>
-        */}
-        <div className='flex flex-col justify-center items-center w-full h-content'>
-          <AccordionItem toggle="panel-3">
-            About
-          </AccordionItem>
-          <AccordionPanel id="panel-3">
-            {/**<div className="mb-4 px-2 py-1 cursor-pointer">
-              <Link onClick={toggle} href={'' "/about/overview"} className={`px-10 rounded-lg text-slate-200 text-xs hover:text-slate-400 ${pathname === "/about/overview" ? "underline" : ""}`}>
-              - Overview - Soon
-              </Link>
-            </div> */}
-            <Link onClick={toggle} href={"/about/professional"} className={`${subTextClass} ${pathname === "/about/professional" ? "underline" : ""}`}>
-              Professional
-            </Link>
-            <Link onClick={toggle} href={"/about/personal"} className={`${subTextClass} ${pathname === "/about/personal" ? "underline" : ""}`}>
-              Personal
-            </Link>
-            {/** Removing until model is sorted out
-             * <div className="mb-4 px-2 py-1 cursor-pointer">
-              <Link onClick={toggle} href={"/recipes"} className={`px-10 rounded-lg text-slate-200 text-xs hover:text-slate-400 ${pathname === "/recipes" ? "underline" : ""}`}>
-              - Recipe Ratings
-              </Link>
-            </div> */}
-          </AccordionPanel>
-        </div>
-      </Accordion>
-      <Link onClick={toggle} href={"/contact"} className={`${pathname === "/contact" ? "underline" : ""} ${basicTextClass}`}>
-        <p className={`max-md:text-sm`}>Contact</p>
+        </div> */}
+      <Link onClick={toggleMenu} href={"/contact"} className={`${pathname === "/contact" ? "underline bg-white/10" : "bg-white/10 hover:bg-white/30"} ${basicTextClass} h-[3.5dvh]`}>
+        <p className={`max-md:text-sm text-center w-full`}>Contact</p>
       </Link>
+
     </div>
   );
 };
-
-/* Logic */
-
-const Context = React.createContext({});
-
-function Accordion({ children, defaultPanel }: { children: React.ReactNode; defaultPanel?: string }) {
-  const [selected, setSelected] = React.useState(defaultPanel || '');
-
-  const toggleItem = React.useCallback(
-    (id: string) => () => {
-      setSelected((prevState) => (prevState !== id ? id : ''));
-    },
-    [],
-  );
-
-  return (
-    <Context.Provider value={{ selected, toggleItem }}>
-      {children}
-    </Context.Provider>
-  );
-}
-
-const useAccordion = () => React.useContext(Context);
-
-const style = {
-  item: `flex flex-row justify-between items-center w-full md:w-[90%] lg:w-4/5 text-sm sm:text-base px-4 sm:px-8 h-full text-slate-200 hover:text-slate-400 rounded-lg`,
-  panel: `overflow-hidden md:overflow-x-hidden transition-height ease duration-300 text-gray-600 flex flex-col w-full bg-slate-400/40`,
-};
-
-function AccordionItem({ toggle, children }: { toggle: string; children: React.ReactNode }) {
-  const { selected, toggleItem } = useAccordion() as { selected: string; toggleItem: (id: string) => () => void };
-  return (
-    <button
-      role="button"
-      onClick={toggleItem(toggle)}
-      className={`${style.item}`}
-    >
-      <p className={`max-md:text-sm`}>{children}</p>
-      {selected === toggle ? <FiChevronUp size={18} /> : <FiChevronDown size={18} />}
-    </button>
-  );
-}
-
-function AccordionPanel({ children, id }: { children: React.ReactNode; id: string }) {
-  const { selected } = useAccordion() as { selected: string };
-  const ref = React.useRef<HTMLDivElement>(null);
-  const inlineStyle =
-    selected === id ? { height: ref.current?.scrollHeight } : { height: 0 };
-
-  return (
-    <div ref={ref} id={id} className={`${style.panel} ${selected === id ? 'my-2' : ''}`} style={inlineStyle}>
-      <p className={`max-md:text-sm`}>{children}</p>
-    </div>
-  );
-}

@@ -15,7 +15,7 @@ import { HobbyCheckMarkType } from "@/app/(content)/dashboard/components/button-
 
 
 
-export default function NewHobbyFormModal({ titles, handleTitles, openModal, handleModal, loading, handleLoading, handleFilteredHobbies, handleFilteredDates }: { titles: string[], handleTitles: (titles: string[]) => void, loading: boolean, handleFilteredHobbies: (hobbies: HobbyCheckMarkType[]) => void, handleFilteredDates: (dates: { type: 'range', range: [Date | null, Date | null] }) => void, openModal: boolean, handleModal: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void, handleLoading: (loading: boolean) => void }) {
+export default function NewHobbyFormModal({ titles, handleTitles, openModal, handleModal, loading, handleLoading, handleCurrFilters }: { titles: string[], handleTitles: (titles: string[]) => void, loading: boolean, handleCurrFilters: ({dateFilters, hobbyFilters}: { dateFilters: { type: 'range', range: [Date | null, Date | null] }, hobbyFilters: HobbyCheckMarkType[] }) => void, openModal: boolean, handleModal: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void, handleLoading: (loading: boolean) => void }) {
 
     const { data: session } = useSession();
 
@@ -102,11 +102,10 @@ export default function NewHobbyFormModal({ titles, handleTitles, openModal, han
                 toast.success('Hobby created successfully!');
                 hobbyFormToMake.reset();
                 hobbyFormToMake.setValues(InitialNewHobbyFormValues);
-                handleFilteredHobbies([]);
                 const today = new Date();
                 const minusFiveMonths = new Date();
                 minusFiveMonths.setMonth(today.getMonth() - 5);
-                handleFilteredDates({ type: 'range', range: [minusFiveMonths, today] });
+                handleCurrFilters({ dateFilters: { type: 'range', range: [minusFiveMonths, today] }, hobbyFilters: [] });
                 handleModal(null);
                 handleLoading(false);
 
