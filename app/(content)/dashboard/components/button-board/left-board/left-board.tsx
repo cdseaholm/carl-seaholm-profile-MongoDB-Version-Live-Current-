@@ -14,7 +14,7 @@ export type HobbyCheckMarkType = {
     title: string;
 };
 
-export default function LeftBoard({ hobbies, currDateFilters, currHobbyFilters, handleCurrFilteredDates, handleCurrFilteredHobbies }: { hobbies: { _id: string, title: string }[], currDateFilters: DateRangeType, currHobbyFilters: HobbyCheckMarkType[], handleCurrFilteredDates: (filters: DateRangeType) => void, handleCurrFilteredHobbies: (hobbies: HobbyCheckMarkType[]) => void }) {
+export default function LeftBoard({ hobbies, currDateFilters, currHobbyFilters, handleCurrFilters }: { hobbies: { _id: string, title: string }[], currDateFilters: DateRangeType, currHobbyFilters: HobbyCheckMarkType[], handleCurrFilters: ({dateFilters, hobbyFilters}: { dateFilters: DateRangeType, hobbyFilters: HobbyCheckMarkType[] }) => Promise<void> }) {
 
     const [loading, setLoading] = useState(true);
     const { width } = useWindowSizes();
@@ -22,10 +22,7 @@ export default function LeftBoard({ hobbies, currDateFilters, currHobbyFilters, 
     const combobox = useCombobox({
 
     });
-
-    const today = new Date();
-    const minusFiveMonths = new Date();
-    minusFiveMonths.setMonth(today.getMonth() - 5);
+    
     // Local state for temporary filter values while dropdown is open
     const [newFilters, setNewFilters] = useState(false);
     const [tabsTypeCopy, setTabsTypeCopy] = useState<string | null>(currDateFilters.type || 'range');
@@ -87,8 +84,7 @@ export default function LeftBoard({ hobbies, currDateFilters, currHobbyFilters, 
 
     const handleApplyFilters = () => {
         setNewFilters(false);
-        handleCurrFilteredDates(dateValues);
-        handleCurrFilteredHobbies(filteredHobbies);
+        handleCurrFilters({ dateFilters: dateValues, hobbyFilters: filteredHobbies });
         toast.success('Filters applied');
         combobox.closeDropdown();
     }
@@ -99,11 +95,12 @@ export default function LeftBoard({ hobbies, currDateFilters, currHobbyFilters, 
             // Only set if not already set
             if (currHobbyFilters.length === 0) {
                 setFilteredHobbies(hobbiesData);
-                handleCurrFilteredHobbies(hobbiesData);
+                handleCurrFilters({ dateFilters: currDateFilters, hobbyFilters: hobbiesData });
             }
             setLoading(false);
         }
-    }, [hobbies, currHobbyFilters.length, handleCurrFilteredHobbies]);
+    }, [hobbies, currHobbyFilters.length, handleCurrFilters, currDateFilters]);
+
 
     return (
         <Combobox

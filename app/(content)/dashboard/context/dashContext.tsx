@@ -15,9 +15,8 @@ interface DashContextType {
     handleDateIncrease: () => void;
     handleDateDecrease: () => void;
     currDateFilters: DateRangeType;
-    handleCurrFilteredDates: (filters: DateRangeType) => void;
+    handleCurrFilters: ({ dateFilters, hobbyFilters }: { dateFilters: DateRangeType, hobbyFilters: { _id: string; title: string }[] }) => Promise<void>;
     currHobbyFilters: { _id: string; title: string }[];
-    handleCurrFilteredHobbies: (hobbies: { _id: string; title: string }[]) => void;
     modalOpen: 'newHobby' | 'logSession' | 'colorIndex' | null;
     handleOpenModal: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void;
     loadingState: boolean;
@@ -35,11 +34,8 @@ interface DashContextType {
     sessions: ISession[];
     hobbySessionInfo: HobbySessionInfo[];
     hobbyData: IHobbyData[];
-    monthInfo: MonthlyInfo[];
-    perc: PieChartCell[];
-    barData: BarChartDataType[];
-    barDataTwo: BarChartDataType[];
-    tracker: PieChartCell[];
+    mixedMonthlyInfo: MonthlyInfo[];
+    chartData: { perc: PieChartCell[]; tracker: PieChartCell[]; barData: BarChartDataType[]; barDataTwo: BarChartDataType[] };
     categoriesToSet: string[];
     titlesToSet: string[];
     adminID: boolean;

@@ -53,7 +53,7 @@ export default async function DashboardLayout({
             Session.find({ userId: user._id }).lean(),
         ]);
 
-        const monthlyInfo = serializeDoc(monthlyDoc || []) as IMonthlyData[];
+        const rawMonthlyData = serializeDoc(monthlyDoc || []) as IMonthlyData[];
         const hobbyDataInfo = serializeDoc(hobbyDoc || []) as IHobbyData[];
         const sessionsInfo = serializeDoc(sessionsDoc || []) as ISession[];
 
@@ -74,10 +74,9 @@ export default async function DashboardLayout({
         })) as HobbyCheckMarkType[];
 
         const result = await InitDashboardProps({
-            userInfo: user,
             sessions: sessionsInfo,
             hobbiesData: hobbyDataInfo,
-            monthlyInfo: monthlyInfo,
+            rawMonthlyData: rawMonthlyData,
             hobbyFilters: hobbyFilters,
             dateFilters: { type: "range", range: [minusFiveMonths, today] },
             thisMonth: thisMonth
@@ -100,7 +99,7 @@ export default async function DashboardLayout({
                 categoriesToSet={categoriesToSet}
                 titlesToSet={titlesToSet}
                 hobbyData={hobbyDataInfo}
-                monthInfo={result.monthlyInfo}
+                mixedMonthlyInfo={result.mixedMonthlyInfo}
             >
                 {children}
             </DashProvider>

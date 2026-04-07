@@ -1,44 +1,22 @@
 'use client'
 
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import React from "react";
-import Sidenav from "../sideNav/SideNav";
-import { SideMenuAccordian } from "../../dropdowns/SideMenuAccordian";
 import SocialButton from "@/components/buttons/socialButton";
 import { FiMenu } from "react-icons/fi";
 import { useWindowSizes } from "@/context/width-height-store";
+import { useDisclosure } from "@mantine/hooks";
+import NavDrawer from "../drawer/drawer";
+import { FormatRouteName } from "@/lib/routes/route";
 
 
-const SideNavHeader = () => {
+const Header = ({ pathname }: { pathname: string }) => {
 
   const isBreakpoint = useWindowSizes().width < 768;
-  const [open, setOpen] = useState(false);
-  const [pageSelected, setPageSelected] = useState('');
-  const pathname = usePathname();
-  const toggle = () => {
-    setOpen((prevState) => !prevState);
+  const [opened, { open, close }] = useDisclosure(false);
+  const pageSelected = FormatRouteName(pathname);
+  const toggleMenu = () => {
+    opened ? close() : open();
   };
-
-  useEffect(() => {
-    if (pathname === '/dashboard') {
-      setPageSelected('Dashboard');
-    } else if (pathname === '/blog') {
-      setPageSelected('Blog');
-    } else if (pathname === '/projects') {
-      setPageSelected('Projects');
-    } else if (pathname === '/services') {
-      setPageSelected('Services');
-    } else if (pathname === '/about') {
-      setPageSelected('About');
-    } else if (pathname === '/about/professional') {
-      setPageSelected('Professional')
-    }  else if (pathname === '/about/personal') {
-      setPageSelected('Personal')
-    }  else if (pathname === '/recipes') {
-      setPageSelected('Recipe Ratings')
-    }
-  }, [pathname]);
 
   return (
     <>
@@ -48,10 +26,10 @@ const SideNavHeader = () => {
             <div className={`flex flex-row items-center space-x-3`}>
               <button
                 type='button'
-                aria-disabled={open}
-                disabled={open}
-                onClick={toggle}
-                className={`text-black text-sm md:text-base font-medium ${open ? 'text-transparent' : 'text-black'}`}
+                aria-disabled={opened}
+                disabled={opened}
+                onClick={toggleMenu}
+                className={`text-black text-sm md:text-base font-medium ${opened ? 'text-transparent' : 'text-black'}`}
               >
                 <FiMenu size={20} />
               </button>
@@ -68,10 +46,10 @@ const SideNavHeader = () => {
               <div className={`flex flex-row items-center space-x-3`}>
                 <button
                   type='button'
-                  aria-disabled={open}
-                  disabled={open}
-                  onClick={toggle}
-                  className={`text-black text-sm md:text-base font-medium ${open ? 'text-transparent' : 'text-black'}`}
+                  aria-disabled={opened}
+                  disabled={opened}
+                  onClick={toggleMenu}
+                  className={`text-black text-sm md:text-base font-medium ${opened ? 'text-transparent' : 'text-black'}`}
                 >
                   <FiMenu size={25} />
                 </button>
@@ -90,11 +68,7 @@ const SideNavHeader = () => {
             </>
           }
 
-          <Sidenav open={open} toggle={toggle}>
-            {open ? (
-              <SideMenuAccordian toggle={toggle} />
-            ) : null}
-          </Sidenav>
+          <NavDrawer open={opened} toggleMenu={toggleMenu}/>
         </div>
       }
     </>
@@ -102,4 +76,4 @@ const SideNavHeader = () => {
 };
 
 
-export default SideNavHeader;
+export default Header;

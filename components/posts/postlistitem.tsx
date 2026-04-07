@@ -9,7 +9,7 @@ export default function PostItemList({ category, posts }: { category: string; po
             <h2 className='md:text-2xl text-base font-cormorantGaramond underline text-black'>{category}</h2>
             <div className={`grid grid-cols-2 grid-rows-${rows} w-full h-full`}>
                 {sortedPosts.map((post, id) => (
-                    <Link href={`/${post.id}`} key={id} className='text-neutral-700 hover:text-amber-700 transition duration-150 py-2 text-xs md:text-base'>
+                    <Link href={`/blog/${post.id}`} key={id} className='text-neutral-700 hover:text-amber-700 transition duration-150 py-2 text-xs md:text-base'>
                         <li>{post.title}</li>
                     </Link>
                 ))}

@@ -10,9 +10,9 @@ export type FilterOptions = {
 };
 
 export async function filterSessions(
-    sessions: ISession[], 
-    hobbyFilters: HobbyCheckMarkType[], 
-    hobbiesData: IHobbyData[], 
+    sessions: ISession[],
+    hobbyFilters: HobbyCheckMarkType[],
+    hobbiesData: IHobbyData[],
     dateFilters: DateRangeType
 ): Promise<{ filteredSessions: ISession[], filteredHobbies: IHobbyData[] }> {
 
@@ -29,20 +29,12 @@ export async function filterSessions(
     let filtered = [...sessions];
     let hobbiesToUse: IHobbyData[] = [];
 
-    // If no filters, return all sessions and all hobbies
-    if ((!hobbyFilters || hobbyFilters.length === 0) && (!dateFilters || !dateFilters.type || !dateFilters.range || (dateFilters.range[0] === null && dateFilters.range[1] === null))) {
-        console.log('No filters applied, returning all sessions');
-        return { filteredSessions: filtered, filteredHobbies: hobbiesData };
-    }
-
     // Filter by hobbies
     if (!hobbyFilters || hobbyFilters.length === 0) {
-        // No hobby filter specified, use all hobbies
         hobbiesToUse = [...hobbiesData];
     } else {
-        // Filter to specific hobbies
         const hobbyTitles: string[] = [];
-        
+
         hobbyFilters.forEach(filter => {
             const matchedHobby = hobbiesData.find(hobbyData => hobbyData.title === filter.title);
             if (matchedHobby && !hobbiesToUse.some(h => h.title === matchedHobby.title)) {
@@ -51,33 +43,43 @@ export async function filterSessions(
             }
         });
 
-        // Filter sessions by these hobby titles
         filtered = filtered.filter(s => hobbyTitles.includes(s.hobbyTitle));
-        //console.log('Filtered by hobbies:', hobbyTitles, 'Sessions count:', filtered.length);
     }
 
     // Filter by date range
-    if (dateFilters) {
+    if (dateFilters && dateFilters.range) {
         const [start, end] = dateFilters.range;
-        
+
         if (start && end) {
+            // Normalize dates to start/end of day
+            const startDate = new Date(start);
+            startDate.setHours(0, 0, 0, 0);
+            const endDate = new Date(end);
+            endDate.setHours(23, 59, 59, 999);
+
             filtered = filtered.filter(s => {
                 const sessionDate = new Date(s.date);
-                return sessionDate >= start && sessionDate <= end;
+                sessionDate.setHours(0, 0, 0, 0);
+                return sessionDate >= startDate && sessionDate <= endDate;
             });
-            //console.log('Filtered by date range:', start, 'to', end, 'Sessions count:', filtered.length);
         } else if (start) {
+            const startDate = new Date(start);
+            startDate.setHours(0, 0, 0, 0);
+
             filtered = filtered.filter(s => {
                 const sessionDate = new Date(s.date);
-                return sessionDate >= start;
+                sessionDate.setHours(0, 0, 0, 0);
+                return sessionDate >= startDate;
             });
-            //console.log('Filtered by start date:', start, 'Sessions count:', filtered.length);
-        } else {
+        } else if (end) {
+            const endDate = new Date(end);
+            endDate.setHours(23, 59, 59, 999);
+
             filtered = filtered.filter(s => {
                 const sessionDate = new Date(s.date);
-                return sessionDate;
+                sessionDate.setHours(0, 0, 0, 0);
+                return sessionDate <= endDate;
             });
-            //console.log('Filtered by end date:', end, 'Sessions count:', filtered.length);
         }
     }
 

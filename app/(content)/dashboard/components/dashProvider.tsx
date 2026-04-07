@@ -15,32 +15,33 @@ import { HobbySessionInfo, IHobbyData, MonthlyInfo } from "@/models/types/hobbyD
 import DashButtonBoard from "./button-board/dashButtonBoard";
 import { usePathname } from "next/navigation";
 import DashContext from "../context/dashContext";
+import { BarDataType } from "@/utils/apihelpers/get/initData/init-graphs";
 
-export default function DashboardProvider({ 
+export default function DashboardProvider({
     initialDaySelected,
-    perc, 
-    barData, 
-    barDataTwo, 
-    tracker, 
-    sessions, 
-    hobbySessionInfo, 
-    categoriesToSet, 
-    titlesToSet, 
-    hobbyData, 
-    monthInfo, 
-    children 
-}: { 
+    perc,
+    barData,
+    barDataTwo,
+    tracker,
+    sessions,
+    hobbySessionInfo,
+    categoriesToSet,
+    titlesToSet,
+    hobbyData,
+    mixedMonthlyInfo,
+    children
+}: {
     initialDaySelected: string;
     perc: PieChartCell[];
-    barData: any;
-    barDataTwo: any;
+    barData: BarDataType[];
+    barDataTwo: BarDataType[];
     tracker: PieChartCell[];
     sessions: ISession[];
     hobbySessionInfo: HobbySessionInfo[];
     categoriesToSet: string[];
     titlesToSet: string[];
     hobbyData: IHobbyData[];
-    monthInfo: MonthlyInfo[];
+    mixedMonthlyInfo: MonthlyInfo[];
     children: React.ReactNode;
 }) {
     const { data: session } = useSession();
@@ -49,38 +50,33 @@ export default function DashboardProvider({
     const email = user?.email || '';
     const adminID = email === 'cdseaholm@gmail.com';
 
-    const hobbyColorMap = useMemo(() => 
+    const hobbyColorMap = useMemo(() =>
         hobbySessionInfo?.map(hobby => ({
             color: hobby.hobbyData.color,
             title: hobby.hobbyData.title
-        })) || [], 
+        })) || [],
         [hobbySessionInfo]
     );
 
-    const dashState = DashHooks({ titlesToSet, initialDaySelected });
+    const dashState = DashHooks({ titlesToSet, initialDaySelected, percToSet: perc, barDataToSet: barData, barDataTwoToSet: barDataTwo, trackerToSet: tracker, sessions: sessions, hobbyData, mixedMonthlyInfo: mixedMonthlyInfo });
 
-    const currentView: 'hobbies' | 'stats' | 'sessions' | 'calendar' = pathname.includes('/stats') ? 'stats' 
-        : pathname.includes('/sessions') ? 'sessions' 
-        : pathname.includes('/calendar') ? 'calendar' 
-        : 'hobbies';
+    const currentView: 'hobbies' | 'stats' | 'sessions' | 'calendar' = pathname.includes('/stats') ? 'stats'
+        : pathname.includes('/sessions') ? 'sessions'
+            : pathname.includes('/calendar') ? 'calendar'
+                : 'hobbies';
 
     const contextValue = useMemo(() => ({
         ...dashState,
         dashToShow: currentView,
-        sessions,
         hobbySessionInfo,
         hobbyData,
-        monthInfo,
-        perc,
-        barData,
-        barDataTwo,
-        tracker,
+        mixedMonthlyInfo,
+        sessions,
         categoriesToSet,
         titlesToSet,
         adminID,
-    }), [dashState, currentView, sessions, hobbySessionInfo, hobbyData, monthInfo, perc, barData, barDataTwo, tracker, categoriesToSet, titlesToSet, adminID]);
+    }), [dashState, currentView, sessions, hobbySessionInfo, hobbyData, mixedMonthlyInfo, categoriesToSet, titlesToSet, adminID]);
 
-    console.log('Loading: ', dashState.loadingState);
     return (
         <DashContext.Provider value={contextValue}>
             <LoadingOverlay visible={dashState.loadingState} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
@@ -92,8 +88,7 @@ export default function DashboardProvider({
                     adminID={adminID}
                     handleDaySelected={dashState.handleDaySelected}
                     daySelected={dashState.daySelected}
-                    handleCurrFilteredDates={dashState.handleCurrFilteredDates}
-                    handleCurrFilteredHobbies={dashState.handleCurrFilteredHobbies}
+                    handleCurrFilters={dashState.handleCurrFilters}
                     handleOpenModal={dashState.handleOpenModal}
                     currDateFilters={dashState.currDateFilters}
                     currHobbyFilters={dashState.currHobbyFilters}
@@ -102,9 +97,9 @@ export default function DashboardProvider({
                 <InnerTemplate>
                     {children}
                 </InnerTemplate>
-                
+
                 {dashState.modalOpen === 'logSession' && (
-                    <LogSessionDataInit 
+                    <LogSessionDataInit
                         handleModalOpen={dashState.handleOpenModal}
                         handleLoading={dashState.handleLoading}
                         daySelected={dashState.daySelected}
@@ -114,22 +109,21 @@ export default function DashboardProvider({
                         hobbySessionInfo={hobbySessionInfo}
                     />
                 )}
-                
+
                 {dashState.modalOpen === 'newHobby' && (
-                    <NewHobbyFormModal 
+                    <NewHobbyFormModal
                         titles={dashState.titles}
                         handleTitles={dashState.handleTitles}
                         handleModal={dashState.handleOpenModal}
                         loading={dashState.loadingState}
                         handleLoading={dashState.handleLoading}
-                        handleFilteredHobbies={dashState.handleCurrFilteredHobbies}
-                        handleFilteredDates={dashState.handleCurrFilteredDates}
+                        handleCurrFilters={dashState.handleCurrFilters}
                         openModal={true}
                     />
                 )}
-                
+
                 {dashState.modalOpen === 'colorIndex' && (
-                    <ColorIndexModal 
+                    <ColorIndexModal
                         openModal={true}
                         handleOpenModal={dashState.handleOpenModal}
                         hobbyColorMap={hobbyColorMap}

@@ -26,10 +26,7 @@ export default function StatsView() {
     const {
         currDateFilters,
         currHobbyFilters,
-        perc,
-        barData,
-        barDataTwo,
-        tracker,
+        chartData: { perc, tracker, barData, barDataTwo }
     } = useDash();
 
     const allHobbies = currHobbyFilters.length === 0;

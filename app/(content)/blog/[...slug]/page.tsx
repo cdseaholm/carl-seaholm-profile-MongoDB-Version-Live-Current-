@@ -5,7 +5,8 @@ import ScrollerTemplate from "@/components/pagetemplates/mainpagebody/mainpagebo
 
 const PostPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
     const { slug } = await params;
-    const postData = await getPostData(slug);
+    const id = slug[slug.length - 1]; 
+    const postData = await getPostData(id);
 
     return postData ? (
         <div className="childFirst min-w-screen h-dvh">

@@ -11,30 +11,29 @@ interface DashBoardProps {
   adminID: boolean;
   handleDaySelected: (date: string) => void;
   daySelected: string;
-  handleCurrFilteredDates: (filters: DateRangeType) => void;
-  handleCurrFilteredHobbies: (hobbies: HobbyCheckMarkType[]) => void;
+  handleCurrFilters: ({dateFilters, hobbyFilters}: {dateFilters: DateRangeType, hobbyFilters: HobbyCheckMarkType[]}) => Promise<void>;
   handleOpenModal: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void;
   currDateFilters: DateRangeType;
   currHobbyFilters: HobbyCheckMarkType[];
   hobbyData: IHobbyData[];
 }
 
-export default function DashButtonBoard({ dashToShow, handleDashToShow, adminID, handleDaySelected, daySelected, handleCurrFilteredDates, handleCurrFilteredHobbies, handleOpenModal, currDateFilters, currHobbyFilters, hobbyData }: DashBoardProps) {
+export default function DashButtonBoard({ dashToShow, handleDashToShow, adminID, handleDaySelected, daySelected, handleCurrFilters, handleOpenModal, currDateFilters, currHobbyFilters, hobbyData }: DashBoardProps) {
 
   let hobbies = [] as HobbyCheckMarkType[];
   if (hobbyData && hobbyData.length > 0) {
-      hobbyData.forEach(hobbySession => {
-          hobbies.push({
-              _id: hobbySession._id,
-              title: hobbySession.title
-          } as HobbyCheckMarkType);
-      });
+    hobbyData.forEach(hobbySession => {
+      hobbies.push({
+        _id: hobbySession._id,
+        title: hobbySession.title
+      } as HobbyCheckMarkType);
+    });
   }
 
   return (
     <div className="flex flex-row items-center justify-between w-full px-2 md:px-6 border-t border-gray-600 pt-2 mb-2">
-      <LeftBoard hobbies={hobbies} currDateFilters={currDateFilters} handleCurrFilteredDates={handleCurrFilteredDates} handleCurrFilteredHobbies={handleCurrFilteredHobbies} currHobbyFilters={currHobbyFilters} />
-      <RightBoard dashToShow={dashToShow} handleDashToShow={handleDashToShow} handleDaySelected={handleDaySelected} daySelected={daySelected} adminID={adminID} handleFilteredDates={handleCurrFilteredDates} handleFilteredHobbies={handleCurrFilteredHobbies} handleOpenModal={handleOpenModal} />
+      <LeftBoard hobbies={hobbies} currDateFilters={currDateFilters} handleCurrFilters={handleCurrFilters} currHobbyFilters={currHobbyFilters} />
+      <RightBoard dashToShow={dashToShow} handleDashToShow={handleDashToShow} handleDaySelected={handleDaySelected} daySelected={daySelected} adminID={adminID} handleCurrFilters={handleCurrFilters} handleOpenModal={handleOpenModal} />
     </div>
   )
 }

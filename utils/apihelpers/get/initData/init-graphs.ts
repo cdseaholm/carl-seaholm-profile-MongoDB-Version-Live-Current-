@@ -6,6 +6,8 @@ import { GetMonthLength } from "@/utils/data/month-lengths";
 import { MonthlyInfo, HobbySessionInfo } from "@/models/types/hobbyData";
 import { DateRangeType } from "@/models/types/time-types/date-range";
 
+export type BarDataType = { date: string, time: number, color: string };
+
 function getDayCount(start: Date, end: Date): number {
     // Normalize to start of day
     const startDate = new Date(start);
@@ -24,6 +26,7 @@ export async function InitGraphs({ sessions, monthlyInfoCounts, hobbySessionsCou
     let datesToUse: DateRangeType;
 
     if (!dateFilters || dateFilters === undefined || dateFilters === null || !dateFilters.range || (dateFilters.range[0] === null && dateFilters.range[1] === null)) {
+        console.log('No date filters provided, defaulting to past 5 months');
         const pastFiveMonths = thisMonth - 5 <= 0 ? 12 + (thisMonth - 5) : thisMonth - 5;
         const startDate = new Date();
         startDate.setMonth(pastFiveMonths);
@@ -131,8 +134,8 @@ export async function InitGraphs({ sessions, monthlyInfoCounts, hobbySessionsCou
 
 export async function InitBarData(thisMonth: number, sessions: ISession[], monthlyInfoCounts: MonthlyInfo[], hobbyDataInfo: HobbySessionInfo[], allHobbies: boolean, datesToUse: DateRangeType) {
 
-    const barData = [] as { date: string, time: number, color: string }[];
-    const barDataTwo = [] as { date: string, time: number, color: string }[];
+    const barData = [] as BarDataType[];
+    const barDataTwo = [] as BarDataType[];
     const pieData = [] as PercentageType[];
 
     const d = [] as { month: number, year: number }[];
@@ -166,6 +169,7 @@ export async function InitBarData(thisMonth: number, sessions: ISession[], month
         d.push({ month: singleDay.getMonth() + 1, year: singleDay.getFullYear() });
         dStartStops.push({ start: singleDay.getDate(), stop: singleDay.getDate() });
     } else {
+        console.log('No valid date filters provided, defaulting to past 5 months');
         // Default to past 5 months
         for (let i = 5; i > 0; i--) {
             let monthToAdd = thisMonth - i;
@@ -196,7 +200,7 @@ export async function InitBarData(thisMonth: number, sessions: ISession[], month
             const sessionDay = new Date(session.date).getDate() || 1;
             return sessionDay >= startDay && sessionDay <= endDay;
         });
-        
+
         // ✅ Calculate totals from FILTERED sessions only
         const totalMinutes = monthSessions.reduce((sum, session) => sum + session.minutes, 0);
         const sessionCount = monthSessions.length;
@@ -206,6 +210,8 @@ export async function InitBarData(thisMonth: number, sessions: ISession[], month
             m.monthInfo.month === monthYear.month
         );
 
+        const colorForBar = monthInfo?.monthInfo?.monthColorInfo?.monthColor || monthNames.monthColors[index] || '#888888';
+
         const initialDate = monthNames && monthNames.monthNamesOnly.length > 0 ? monthNames.monthNamesOnly[index] : '';
         const sameDay = datesToUse.range[1] === null ||
             datesToUse.range[1] === undefined ||
@@ -213,19 +219,19 @@ export async function InitBarData(thisMonth: number, sessions: ISession[], month
                 datesToUse.range[0].toDateString() === datesToUse.range[1].toDateString());
         const secondaryDate = dStartStops.length > 0 && !sameDay ? ` ${dStartStops[index].start}-${dStartStops[index].stop}` : '';
         const monthLabel = `${initialDate}${secondaryDate}`;
-
         const timeRoundedToTwo = Math.round((totalMinutes / 60) * 100) / 100;
+
         barData.push({
             date: monthLabel,
             time: timeRoundedToTwo,
-            color: monthInfo?.monthInfo.monthColorInfo.monthColor || '#888888'
+            color: colorForBar
         });
 
         const avgMinutes = sessionCount > 0 ? totalMinutes / sessionCount : 0;
         barDataTwo.push({
             date: monthLabel,
             time: Math.round(avgMinutes * 100) / 100,
-            color: monthInfo?.monthInfo.monthColorInfo.monthColor || '#888888'
+            color: colorForBar
         });
     });
 
