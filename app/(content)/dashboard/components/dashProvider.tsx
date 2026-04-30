@@ -2,7 +2,6 @@
 
 import NavBar from "@/components/nav/Navbar";
 import InnerTemplate from "@/components/pagetemplates/innerTemplate/innerTemplate";
-import { PieChartCell } from "@mantine/charts";
 import { useSession } from "next-auth/react";
 import DashHooks from "../hooks/dash-hooks";
 import { LoadingOverlay } from "@mantine/core";
@@ -11,38 +10,28 @@ import LogSessionDataInit from "@/components/modals/modalContent/LogSession/logs
 import { ISession } from "@/models/types/session";
 import NewHobbyFormModal from "@/components/modals/modalContent/AddHobbyTracker/hobbymodaldatainit";
 import ColorIndexModal from "@/components/modals/modalContent/ColorIndex/color-index-modal";
-import { HobbySessionInfo, IHobbyData, MonthlyInfo } from "@/models/types/hobbyData";
+import { IHobbyData } from "@/models/types/hobbyData";
 import DashButtonBoard from "./button-board/dashButtonBoard";
 import { usePathname } from "next/navigation";
 import DashContext from "../context/dashContext";
-import { BarDataType } from "@/utils/apihelpers/get/initData/init-graphs";
+import { IMonthlyData } from "@/models/types/monthlyData";
 
 export default function DashboardProvider({
     initialDaySelected,
-    perc,
-    barData,
-    barDataTwo,
-    tracker,
     sessions,
-    hobbySessionInfo,
     categoriesToSet,
     titlesToSet,
     hobbyData,
-    mixedMonthlyInfo,
-    children
+    children,
+    rawMonthlyData
 }: {
     initialDaySelected: string;
-    perc: PieChartCell[];
-    barData: BarDataType[];
-    barDataTwo: BarDataType[];
-    tracker: PieChartCell[];
     sessions: ISession[];
-    hobbySessionInfo: HobbySessionInfo[];
     categoriesToSet: string[];
     titlesToSet: string[];
     hobbyData: IHobbyData[];
-    mixedMonthlyInfo: MonthlyInfo[];
     children: React.ReactNode;
+    rawMonthlyData: IMonthlyData[];
 }) {
     const { data: session } = useSession();
     const pathname = usePathname();
@@ -50,15 +39,14 @@ export default function DashboardProvider({
     const email = user?.email || '';
     const adminID = email === 'cdseaholm@gmail.com';
 
-    const hobbyColorMap = useMemo(() =>
-        hobbySessionInfo?.map(hobby => ({
-            color: hobby.hobbyData.color,
-            title: hobby.hobbyData.title
-        })) || [],
-        [hobbySessionInfo]
-    );
+    const hobbyColorMap = useMemo(() => {
+        return hobbyData.map((hobby) => ({
+            color: hobby.color,
+            title: hobby.title,
+        }));
+    }, [hobbyData]);
 
-    const dashState = DashHooks({ titlesToSet, initialDaySelected, percToSet: perc, barDataToSet: barData, barDataTwoToSet: barDataTwo, trackerToSet: tracker, sessions: sessions, hobbyData, mixedMonthlyInfo: mixedMonthlyInfo });
+    const dashState = DashHooks({ titlesToSet, initialDaySelected });
 
     const currentView: 'hobbies' | 'stats' | 'sessions' | 'calendar' = pathname.includes('/stats') ? 'stats'
         : pathname.includes('/sessions') ? 'sessions'
@@ -68,14 +56,22 @@ export default function DashboardProvider({
     const contextValue = useMemo(() => ({
         ...dashState,
         dashToShow: currentView,
-        hobbySessionInfo,
+        sessions, 
         hobbyData,
-        mixedMonthlyInfo,
-        sessions,
+        rawMonthlyData,
         categoriesToSet,
         titlesToSet,
         adminID,
-    }), [dashState, currentView, sessions, hobbySessionInfo, hobbyData, mixedMonthlyInfo, categoriesToSet, titlesToSet, adminID]);
+    }), [
+        dashState,
+        currentView,
+        sessions,
+        hobbyData,
+        rawMonthlyData,
+        categoriesToSet,
+        titlesToSet,
+        adminID,
+    ]);
 
     return (
         <DashContext.Provider value={contextValue}>
@@ -106,7 +102,7 @@ export default function DashboardProvider({
                         handleDaySelected={dashState.handleDaySelected}
                         sessions={sessions}
                         modalOpen={true}
-                        hobbySessionInfo={hobbySessionInfo}
+                        hobbyData={hobbyData}
                     />
                 )}
 

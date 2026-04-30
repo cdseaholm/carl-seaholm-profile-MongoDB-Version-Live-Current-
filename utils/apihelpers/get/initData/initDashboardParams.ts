@@ -6,9 +6,9 @@ import { ITimeFrequency } from "@/models/types/time-frequency";
 import { BarDataType, InitGraphs } from "./init-graphs";
 import { filterSessions } from "./filter-info";
 import { HobbyCheckMarkType } from "@/app/(content)/dashboard/components/button-board/left-board/left-board";
-import { Tracker } from "@/app/(content)/dashboard/components/statsView";
 import { PieChartCell } from "@mantine/charts";
 import { DateRangeType } from "@/models/types/time-types/date-range";
+import { Tracker } from "@/app/(content)/dashboard/components/statsView";
 
 //order of operations for checklist
 //set sessions/userInfo previous

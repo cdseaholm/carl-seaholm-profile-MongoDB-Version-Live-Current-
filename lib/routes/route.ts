@@ -7,6 +7,7 @@ export const ROUTE_MANIFEST = [
     '/dashboard/compare',
     '/dashboard/hobbies',
     '/dashboard/hooks',
+    '/dashboard/sessions',
     '/dashboard/stats',
     '/login',
     '/signup',

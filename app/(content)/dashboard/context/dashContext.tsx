@@ -1,11 +1,15 @@
 'use client'
 
 import { createContext, useContext } from 'react';
-import { PieChartCell } from "@mantine/charts";
 import { ISession } from "@/models/types/session";
-import { HobbySessionInfo, IHobbyData, MonthlyInfo } from "@/models/types/hobbyData";
+import { IHobbyData } from "@/models/types/hobbyData";
 import { DateRangeType } from "@/models/types/time-types/date-range";
-import { BarChartDataType } from "@/models/types/dash-types";
+import { IMonthlyData } from "@/models/types/monthlyData";
+
+export type HobbySessionGroup = {
+  hobbyData: IHobbyData;
+  sessions: ISession[];
+};
 
 interface DashContextType {
     dashToShow: 'hobbies' | 'stats' | 'sessions' | 'calendar';
@@ -32,13 +36,11 @@ interface DashContextType {
     titles: string[];
     handleTitles: (titles: string[]) => void;
     sessions: ISession[];
-    hobbySessionInfo: HobbySessionInfo[];
     hobbyData: IHobbyData[];
-    mixedMonthlyInfo: MonthlyInfo[];
-    chartData: { perc: PieChartCell[]; tracker: PieChartCell[]; barData: BarChartDataType[]; barDataTwo: BarChartDataType[] };
     categoriesToSet: string[];
     titlesToSet: string[];
     adminID: boolean;
+    rawMonthlyData: IMonthlyData[];
 }
 
 const DashContext = createContext<DashContextType | undefined>(undefined);

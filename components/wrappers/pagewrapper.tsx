@@ -14,14 +14,16 @@ export default function PageWrapper({ children }: Readonly<{ children: React.Rea
   //const init = useRef(false);
   const { data: _session, status } = useSession();
   const globalLoading = useStateStore((state) => state.globalLoading);
-  const [localLoading, setLocalLoading] = useState<boolean>(true);
+  const [localLoading, setLocalLoading] = useState<boolean>(false);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     if (!isValidRoute(pathname)) {
-      router.replace('/')
+      router.replace('/');
+      return;
     }
+
     setLocalLoading(globalLoading);
   }, [globalLoading, pathname, router]);
 

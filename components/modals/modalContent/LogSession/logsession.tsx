@@ -1,44 +1,139 @@
 'use client'
 
-import { Combobox, InputBase, Tooltip, useCombobox } from "@mantine/core";
+import { Combobox, InputBase, Select, Tooltip, useCombobox } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { UseFormReturnType } from "@mantine/form";
 import { useState } from "react";
 import { FiInfo } from "react-icons/fi";
 import { LogSessionFormReturnType, LogSessionFormType, logSessionType } from "@/models/types/log-session";
 import { useWindowSizes } from "@/context/width-height-store";
+import { IHobbyData } from "@/models/types/hobbyData";
 
-export default function LogSessionModal({ daySelected, handleSessionCall, handleModalOpen, handleDaySelected, logSessionForm }: { handleSessionCall: ({ sessionsToManipulate }: { sessionsToManipulate: logSessionType[] }) => void, handleModalOpen: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void, daySelected: string, handleDaySelected: (arg: string) => void, logSessionForm: LogSessionFormReturnType }) {
+export default function LogSessionModal({ daySelected, handleSessionCall, handleModalOpen, handleDaySelected, logSessionForm, hobbyData }: { handleSessionCall: ({ sessionsToManipulate }: { sessionsToManipulate: logSessionType[] }) => void, handleModalOpen: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void, daySelected: string, handleDaySelected: (arg: string) => void, logSessionForm: LogSessionFormReturnType, hobbyData: IHobbyData[] }) {
 
     const { width } = useWindowSizes();
+    const autoCompleteWidth = width && width <= 640 ? '100%' : '40%';
+    const usesTouchTooltip = width < 768;
+    const [openTooltipIndex, setOpenTooltipIndex] = useState<number | null>(null);
+    const emptySessionRow: logSessionType = {
+        hobbyKeyId: -1,
+        session: '',
+        time: '',
+        mostFrequentlyUseTime: [],
+    };
 
-    const sessionsMapped = logSessionForm.getValues().newSessions.map((session, newSeshI) => (
-        <div className="flex flex-col justify-start items-start sm:flex-row sm:justify-between sm:items-center border-1 border-slate/30 p-2 rounded-md w-full h-content text-black" key={newSeshI}>
-            <p className="text-sm sm:text-md md:text-lg font-medium mb-2 sm:mb-0">
-                {`${session.session}: `}
-            </p>
-            <div key={newSeshI} className="flex flex-row sm:justify-end items-center justify-evenly space-x-2 h-content w-content sm:w-3/5 w-full">
-                <Tooltip label="Select from most frequently used times or input your own value" withArrow>
-                    <FiInfo className="text-gray-500 hover:text-gray-800 cursor-pointer" />
-                </Tooltip>
-                {session.mostFrequentlyUseTime.map((time, timeI) => (
-                    width && width <= 640 && timeI >= 2 ? null : (
-                        <button type="button" key={timeI} className={`flex flex-row justify-center items-center bg-blue-100 border border-gray-400 rounded-md hover:bg-blue-400 w-1/4 sm:w-[15%] h-[25px] sm:h-[30px]`} data-modal-toggle="crud-modal" onClick={() => logSessionForm.setFieldValue(`newSessions.${newSeshI}.time`, time && time !== 0 ? time.toString() : '')}>
-                            <p className="text-xs sm:text-sm md:text-base text-center w-full text-black">
-                                {`${time}`}
-                            </p>
-                        </button>)
-                ))}
-                <div className="flex flex-row justify-center items-center w-1/3 sm:w-1/4 h-[30px]">
-                    <IndividualTimeSelect session={session} logSessionForm={logSessionForm} passedIndex={newSeshI} width={width} />
+    const ensureSingleEmptySessionRow = (rows: logSessionType[]) => {
+        const filledRows = rows.filter((row) => row.session);
+
+        return [...filledRows, emptySessionRow];
+    };
+
+    const sessionsMapped = logSessionForm.getValues().newSessions.map((session, newSeshI) => {
+
+        const selectedByOtherRows = logSessionForm
+            .getValues()
+            .newSessions
+            .filter((_, index) => index !== newSeshI)
+            .map((sesh) => sesh.session);
+
+        return (
+            <div className="flex flex-col justify-start items-start sm:flex-row sm:justify-between sm:items-center border-1 border-slate/30 p-2 rounded-md w-full h-content text-black max-sm:space-y-2 sm:space-x-2" key={newSeshI}>
+
+                <Select
+                    placeholder="Search hobby..."
+                    data={hobbyData
+                        .map((hobby) => hobby.title)
+                        .filter((title) => !selectedByOtherRows.includes(title))
+                    }
+                    w={autoCompleteWidth}
+                    value={session.session || null}
+                    allowDeselect
+                    onChange={(value) => {
+                        const freqUsedTimes =
+                            hobbyData
+                                .find((hobby) => hobby.title === value)
+                                ?.timeFrequency
+                                ?.map((freq) => freq.time)
+                                .filter((time) => time !== 0) || [];
+                        const newSessions = logSessionForm.getValues().newSessions.map((row, index) => {
+                            if (index !== newSeshI) {
+                                return row;
+                            }
+
+                            return {
+                                ...row,
+                                session: value || '',
+                                mostFrequentlyUseTime: freqUsedTimes.slice(0, 3),
+                            };
+                        });
+
+                        logSessionForm.setValues({
+                            newSessions: ensureSingleEmptySessionRow(newSessions),
+                        });
+                    }}
+                />
+
+                <div key={newSeshI} className="flex flex-row sm:justify-end items-center justify-start space-x-2 h-full sm:w-3/5 w-full">
+                    {logSessionForm.getValues().newSessions[newSeshI].mostFrequentlyUseTime.length > 0 &&
+                        <div className="flex flex-row justify-between items-center w-full h-[36px] border border-gray-400 rounded-md space-x-1 px-2">
+                            <Tooltip
+                                label="Select from most frequently used times or input your own value"
+                                withArrow
+                                opened={usesTouchTooltip ? openTooltipIndex === newSeshI : undefined}
+                            >
+                                <button
+                                    type="button"
+                                    aria-label="Show time selection help"
+                                    className="flex h-[28px] w-[28px] items-center justify-center text-gray-500 hover:text-gray-800"
+                                    onClick={() => {
+                                        if (usesTouchTooltip) {
+                                            setOpenTooltipIndex(openTooltipIndex === newSeshI ? null : newSeshI);
+                                        }
+                                    }}
+                                    onBlur={() => {
+                                        if (usesTouchTooltip) {
+                                            setOpenTooltipIndex(null);
+                                        }
+                                    }}
+                                >
+                                    <FiInfo width={'16px'} />
+                                </button>
+                            </Tooltip>
+                            <div className="flex flex-row justify-center items-center rounded-md flex-1 ml-2 h-[33px] min-w-0">
+                                {logSessionForm.getValues().newSessions[newSeshI].mostFrequentlyUseTime.map((time, timeI) =>
+                                    width && width <= 640 && timeI >= 2 ? null : (
+                                        <button
+                                            type="button"
+                                            key={timeI}
+                                            className="flex-1 min-w-0 flex justify-center items-center bg-blue-100 border border-gray-400 rounded-md hover:bg-blue-400 mx-1 h-[33px]"
+                                            onClick={() =>
+                                                logSessionForm.setFieldValue(
+                                                    `newSessions.${newSeshI}.time`,
+                                                    time && time !== 0 ? time.toString() : ""
+                                                )
+                                            }
+                                        >
+                                            <p className="text-xs sm:text-sm md:text-base text-center w-full text-black p-2 truncate">
+                                                {`${time}`}
+                                            </p>
+                                        </button>
+                                    )
+                                )}
+                            </div>
+                        </div>
+                    }
+
+                    <div className="flex flex-row justify-center items-center w-full sm:w-1/3 h-[36px]">
+                        <IndividualTimeSelect session={session} logSessionForm={logSessionForm} passedIndex={newSeshI} width={width} />
+                    </div>
                 </div>
             </div>
-        </div>
-    ));
+        )
+    });
 
     return (
         <form className="flex flex-col justify-start items-center max-w-[90vw] max-h-[75vh] bg-green-200 overflow-hidden" onSubmit={logSessionForm.onSubmit(() => handleSessionCall({ sessionsToManipulate: logSessionForm.getValues().newSessions }))}>
-            <div className="flex flex-row justify-between items-center w-full h-content border-b border-gray-400 pb-2 mb-2">
+            <div className="flex flex-row justify-between items-end w-full h-content border-b border-gray-400 pb-2 mb-2 h-content">
                 <DatePickerInput
                     label="Pick date"
                     placeholder="Session Date"
@@ -48,17 +143,17 @@ export default function LogSessionModal({ daySelected, handleSessionCall, handle
                             handleDaySelected(date.toLocaleDateString());
                         }
                     }}
+                    w={'auto'}
                 />
-                <p className="underline text-[12px] font-semibold">Times to record</p>
             </div>
-            <section className={`flex flex-col justify-start items-center w-full h-[85%] md:h-[70vh] py-2 px-1 sm:py-3 sm:px-2 bg-slate-100/70 rounded-md shadow-[inset_0_2px_8px_rgba(0,0,0,0.10),inset_0_-2px_8px_rgba(0,0,0,0.10)] border border-gray-300 overflow-auto scrollbar-thin scrollbar-webkit scrollbar-track-rounded-full space-y-2`}>
+            <section className={`flex flex-col justify-start items-center w-full h-[70dvh] py-2 px-1 sm:py-3 sm:px-2 bg-slate-100/70 rounded-md shadow-[inset_0_2px_8px_rgba(0,0,0,0.10),inset_0_-2px_8px_rgba(0,0,0,0.10)] border border-gray-300 overflow-auto scrollbar-thin scrollbar-webkit scrollbar-track-rounded-full space-y-2`}>
                 {sessionsMapped}
             </section>
-            <div className="flex flex-row justify-between space-x-1 items-center border-t border-gray-400 w-full h-content pt-2 mt-2">
-                <button type="submit" className={`text-white text-[8px] sm:text-sm p-1 sm:px-2 sm:py-1.5 text-center w-1/2 sm:w-1/4 font-medium rounded-lg ${logSessionForm.isDirty() ? "bg-blue-400 hover:bg-blue-200 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" : "bg-gray-400 cursor-not-allowed"}`} data-modal-toggle="crud-modal" disabled={!logSessionForm.isDirty()}>
+            <div className="flex flex-row justify-between space-x-1 items-center border-t border-gray-400 w-full h-content p-2 mt-2">
+                <button type="submit" className={`text-white text-[8px] sm:text-sm p-1 sm:px-2 sm:py-1.5 text-center w-1/3 sm:w-1/4 font-medium rounded-lg ${logSessionForm.isDirty() ? "bg-blue-400 hover:bg-blue-200 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" : "bg-gray-400 cursor-not-allowed"}`} data-modal-toggle="crud-modal" disabled={!logSessionForm.isDirty()}>
                     {`Save`}
                 </button>
-                <button type="button" className={`text-blue-400 bg-transparent hover:text-blue-200 rounded-lg text-[8px] sm:text-sm p-1 sm:px-2 sm:py-1.5  dark:hover:bg-gray-600 dark:hover:text-white w-1/2 sm:w-1/4`} data-modal-toggle="crud-modal" onClick={() => { handleModalOpen('newHobby') }}>
+                <button type="button" className={`text-blue-400 bg-transparent hover:text-blue-200 rounded-lg text-[8px] sm:text-sm p-1 sm:px-2 sm:py-1.5 border border-gray-400 dark:hover:bg-gray-600 dark:hover:text-white w-1/3 sm:w-1/4`} data-modal-toggle="crud-modal" onClick={() => { handleModalOpen('newHobby') }}>
                     Create Hobby
                 </button>
             </div>
@@ -73,6 +168,7 @@ function IndividualTimeSelect({ session, logSessionForm, passedIndex, width }: {
     const combobox = useCombobox({
         onDropdownClose: () => combobox.resetSelectedOption(),
     });
+    const widthToUse = width && width <= 640 ? '100%' : '220px';
 
     const exactOptionMatch = optionRows.some((item) => item === search);
     const filteredOptions = exactOptionMatch
@@ -95,7 +191,7 @@ function IndividualTimeSelect({ session, logSessionForm, passedIndex, width }: {
                 }
                 combobox.closeDropdown();
             }}
-            width={220}
+            width={widthToUse}
         >
             <Combobox.Target>
                 <InputBase
@@ -134,19 +230,20 @@ function IndividualTimeSelect({ session, logSessionForm, passedIndex, width }: {
                     // ✅ Match button dimensions exactly
                     styles={{
                         input: {
-                            height: width && width <= 640 ? '25px' : '30px',
-                            minHeight: '25px',
+                            height: '36px',
+                            minHeight: '36px',
                             padding: '0 8px',
                             fontSize: width && width <= 640 ? '12px' : '14px',
                             lineHeight: '30px',
                         },
                         wrapper: {
-                            height: width && width <= 640 ? '25px' : '30px',
+                            height: '36px',
                         },
                         root: {
-                            height: width && width <= 640 ? '25px' : '30px',
+                            height: '36px',
                         }
                     }}
+                    w={width && width <= 640 ? '100%' : '220px'}
                 />
             </Combobox.Target>
 

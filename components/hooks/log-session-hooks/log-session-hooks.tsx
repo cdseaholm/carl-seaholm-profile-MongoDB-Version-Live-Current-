@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from "react";
-import { HobbySessionInfo } from "@/models/types/hobbyData";
+import { IHobbyData } from "@/models/types/hobbyData";
 import { LogSessionFormReturnType } from "@/models/types/log-session";
 import { ISession } from "@/models/types/session";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -13,14 +13,14 @@ export default function LogSessionHooks({
     handleModalOpen,
     handleLoading,
     daySelected,
-    hobbySessionInfo,
+    hobbyData,
     logSessionForm,
     router
 }: {
     handleModalOpen: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void,
     handleLoading: (loading: boolean) => void,
     daySelected: string,
-    hobbySessionInfo: HobbySessionInfo[],
+    hobbyData: IHobbyData[],
     logSessionForm: LogSessionFormReturnType,
     router: AppRouterInstance
 }) {
@@ -35,11 +35,11 @@ export default function LogSessionHooks({
     const { handleSessionCall: handleSessionCallDB } = LogSessionDatabaseHooks();
 
     const handleSessionCall = async () => {
-        const sessionsToManipulate = logSessionForm.getValues().newSessions;
+        const sessionsToManipulate = logSessionForm.getValues().newSessions.filter((session) => session.time !== null && session.session !== '');
 
         await handleSessionCallDB({
             sessionsToManipulate,
-            hobbySessionInfo,
+            hobbyData,
             session: session,
             handleModalLoading: setModalLoading,
             sessionsOTDCopy,

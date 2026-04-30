@@ -25,24 +25,24 @@ function ConvertTime(time: number) {
     return timeToShow;
 }
 
-export default function HobbyCard({ hobby, index, showCats, showDescriptions, showGoals, showTotTime, handleLoading, session, hobbySessionInfo }: { hobby: HobbySessionInfo, index: number, showCats: boolean, showDescriptions: boolean, showGoals: boolean, showTotTime: boolean, handleLoading: (loading: boolean) => void, session: Session | null, hobbySessionInfo: HobbySessionInfo }) {
+export default function HobbyCard({ hobbySessionInfo, index, showCats, showDescriptions, showGoals, showTotTime, handleLoading, session, hobbyData }: { hobbySessionInfo: HobbySessionInfo, index: number, showCats: boolean, showDescriptions: boolean, showGoals: boolean, showTotTime: boolean, handleLoading: (loading: boolean) => void, session: Session | null, hobbyData: IHobbyData[] }) {
 
     const router = useRouter();
     const { handleSessionCall } = LogSessionDatabaseHooks();
     const infoClass = 'text-start flex-row flex items-center justify-start py-2 text-sm md:text-base';
-    const hobbyInfo = hobby.hobbyData as IHobbyData;
+    const hobbyInfo = hobbySessionInfo.hobbyData as IHobbyData;
     const category = hobbyInfo.category;
     const description = hobbyInfo.description;
     const goals = hobbyInfo.goals;
-    if (!hobby.sessions || hobby.sessions.length === 0) {
-        return null; // Skip rendering if no sessions
+    if (!hobbySessionInfo.sessions || hobbySessionInfo.sessions.length === 0) {
+        return null;
     }
-    if (hobby.sessions.length > 1) {
-        console.log('Multiple sessions for this hobby on this day, showing first only');
-    }
-    const sesh = hobby.sessions[0];
-    const specVal = ConvertTime(sesh.minutes as number);
-    const hobbyVal = ConvertTime(hobby ? hobby.totalMinutes : 0);
+    const sesh = hobbySessionInfo.sessions[0];
+    const selectedDayMinutes = hobbySessionInfo.sessions.reduce((total, session) => {
+        return total + (session.minutes ?? 0);
+    }, 0);
+    const specVal = ConvertTime(selectedDayMinutes);
+    const hobbyVal = ConvertTime(hobbySessionInfo ? hobbySessionInfo.totalMinutes : 0);
     const title = hobbyInfo.title as string;
 
     const handleDeleteSession = async () => {
@@ -63,7 +63,7 @@ export default function HobbyCard({ hobby, index, showCats, showDescriptions, sh
         await handleSessionCall({
             session,
             sessionsToManipulate,
-            hobbySessionInfo: [hobbySessionInfo],
+            hobbyData: hobbyData,
             handleModalLoading: handleLoading,
             sessionsOTDCopy: [sesh],
             daySelected: '',
