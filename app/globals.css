@@ -76,5 +76,6 @@ button:hover {
 }
 
 .fade-out {
-  animation: fadeOut 1s ease-out;
+  animation: fadeOut 1s ease-out forwards;
+  opacity: 0;
 }

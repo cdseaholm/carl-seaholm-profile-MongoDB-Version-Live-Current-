@@ -1,9 +1,13 @@
-'use client'
+'use client';
 
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { Loader } from '@mantine/core';
 import { BarChartView } from '@/components/charts/barchart';
 import { PieChartView } from '@/components/charts/piechart';
 import { useDash } from '../context/dashContext';
+import { PieChartCell } from '@mantine/charts';
+import { BarChartDataType } from '@/models/types/dash-types';
+import InitDashboardProps from '@/utils/apihelpers/get/initData/initDashboardParams';
 
 export type PercentageType = {
     name: string;
@@ -24,37 +28,86 @@ export interface Tracker {
 export default function StatsView() {
 
     const {
+        sessions,
+        hobbyData,
+        rawMonthlyData,
         currDateFilters,
         currHobbyFilters,
-        chartData: { perc, tracker, barData, barDataTwo }
     } = useDash();
 
-    const allHobbies = currHobbyFilters.length === 0;
-    
-    const timeFilterType = currDateFilters ? currDateFilters.type : null;
-    const timeFilterRange = currDateFilters && currDateFilters.range ? currDateFilters.range : null;
-    const timeFilterStart = timeFilterRange && timeFilterRange[0] ? timeFilterRange[0] : null;
-    const timeFilterEnd = timeFilterRange && timeFilterRange[1] ? timeFilterRange[1] : null;
+    const [loading, setLoading] = useState(true);
 
-    const barOne = barData ? barData : [] as { date: string, time: number, color: string }[];
-    const barTwo = barDataTwo ? barDataTwo : [] as { date: string, time: number, color: string }[];
-    const timeRange = timeFilterType !== 'day' && timeFilterStart && timeFilterEnd ? `${timeFilterStart.toLocaleDateString()} - ${timeFilterEnd.toLocaleDateString()}` : timeFilterStart ? `${timeFilterStart.toLocaleDateString()}` : timeFilterEnd ? `${timeFilterEnd.toLocaleDateString()}` : 'All Time';
+    const [chartData, setChartData] = useState({
+        perc: [] as PieChartCell[],
+        tracker: [] as PieChartCell[],
+        barData: [] as BarChartDataType[],
+        barDataTwo: [] as BarChartDataType[],
+    });
 
-    const pieOneTitle = allHobbies ? `Time % Breakdown with Each Hobby` : `Hours with Selected Hobbies`;
-    const pieTwoTitle = `Days with or without a Session for ${allHobbies ? `All Hobbies` : `for Selected Hobbies`}`;
-    const statsDatesTitle = `Statistics for ${timeRange}`;
+    useEffect(() => {
+        let cancelled = false;
 
+        async function loadStats() {
+            setLoading(true);
+
+            try {
+                const data = await InitDashboardProps({
+                    sessions,
+                    hobbiesData: hobbyData,
+                    rawMonthlyData,
+                    hobbyFilters: currHobbyFilters,
+                    dateFilters: currDateFilters,
+                    thisMonth: new Date().getMonth(),
+                });
+
+                if (!cancelled) {
+
+                    setChartData({
+                        perc: data.percentagesByHobbies,
+                        tracker: data.daysWithPie,
+                        barData: data.barData,
+                        barDataTwo: data.barDataTwo,
+                    });
+                    // console.log("Stats data loaded successfully:", data);
+                }
+            } catch (error) {
+                console.error("Failed to load stats:", error);
+            } finally {
+                if (!cancelled) {
+                    setLoading(false);
+                }
+            }
+        }
+
+        loadStats();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [sessions, hobbyData, rawMonthlyData, currDateFilters, currHobbyFilters]);
+
+    if (loading) {
+        return (
+            <div className="flex h-full w-full items-center justify-center p-6">
+                <Loader />
+            </div>
+        );
+    }
+
+    const { perc, tracker, barData, barDataTwo } = chartData;
 
     return (
-            <div className='flex flex-col justify-start items-center w-full h-content space-y-4 p-4 divide-y-1'>
-                <p className='flex flex-row justify-start items-center w-full h-content text-md md:text-lg font-semibold'>{statsDatesTitle}</p>
-                <div className={`grid gap-4 md:grid-cols-2 md:grid-rows-2 grid-cols-1 grid-rows-4 w-full h-full p-2`}>
-                    <PieChartView dataPassed={perc} title={pieOneTitle} />
-                    <BarChartView data={barOne} title={`Total Hours Spent on Hobbies`} barOne={true} />
-                    {/* <TrackerUsage daysWithHobbies={daysWithHobbies} /> */}
-                    <PieChartView dataPassed={tracker} title={pieTwoTitle} />
-                    <BarChartView data={barTwo} title={`Average Minutes a Session`} barOne={false} />
-                </div>
+        <div className="flex flex-col justify-start items-center w-full h-content space-y-4 p-4 divide-y-1">
+            <p className="flex flex-row justify-start items-center w-full h-content text-md md:text-lg font-semibold">
+                Statistics
+            </p>
+
+            <div className="grid gap-4 md:grid-cols-2 md:grid-rows-2 grid-cols-1 grid-rows-4 w-full h-full p-2">
+                <PieChartView dataPassed={perc} title="Time % Breakdown with Each Hobby" />
+                <BarChartView data={barData} title="Total Hours Spent on Hobbies" barOne />
+                <PieChartView dataPassed={tracker} title="Days with or without a Session" />
+                <BarChartView data={barDataTwo} title="Average Minutes a Session" barOne={false} />
             </div>
-    )
+        </div>
+    );
 }

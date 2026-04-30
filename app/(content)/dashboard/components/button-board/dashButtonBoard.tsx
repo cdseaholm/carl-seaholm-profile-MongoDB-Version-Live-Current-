@@ -4,6 +4,7 @@ import { DateRangeType } from "@/models/types/time-types/date-range";
 import LeftBoard, { HobbyCheckMarkType } from "./left-board/left-board";
 import RightBoard from "./right-board";
 import { IHobbyData } from "@/models/types/hobbyData";
+import { useMemo } from "react";
 
 interface DashBoardProps {
   dashToShow: 'hobbies' | 'stats' | 'sessions' | 'calendar';
@@ -11,7 +12,7 @@ interface DashBoardProps {
   adminID: boolean;
   handleDaySelected: (date: string) => void;
   daySelected: string;
-  handleCurrFilters: ({dateFilters, hobbyFilters}: {dateFilters: DateRangeType, hobbyFilters: HobbyCheckMarkType[]}) => Promise<void>;
+  handleCurrFilters: ({ dateFilters, hobbyFilters }: { dateFilters: DateRangeType, hobbyFilters: HobbyCheckMarkType[] }) => Promise<void>;
   handleOpenModal: (modal: 'newHobby' | 'logSession' | 'colorIndex' | null) => void;
   currDateFilters: DateRangeType;
   currHobbyFilters: HobbyCheckMarkType[];
@@ -20,15 +21,12 @@ interface DashBoardProps {
 
 export default function DashButtonBoard({ dashToShow, handleDashToShow, adminID, handleDaySelected, daySelected, handleCurrFilters, handleOpenModal, currDateFilters, currHobbyFilters, hobbyData }: DashBoardProps) {
 
-  let hobbies = [] as HobbyCheckMarkType[];
-  if (hobbyData && hobbyData.length > 0) {
-    hobbyData.forEach(hobbySession => {
-      hobbies.push({
-        _id: hobbySession._id,
-        title: hobbySession.title
-      } as HobbyCheckMarkType);
-    });
-  }
+  const hobbies = useMemo(() => {
+    return hobbyData?.map(hobby => ({
+      _id: hobby._id,
+      title: hobby.title,
+    })) ?? [];
+  }, [hobbyData]);
 
   return (
     <div className="flex flex-row items-center justify-between w-full px-2 md:px-6 border-t border-gray-600 pt-2 mb-2">

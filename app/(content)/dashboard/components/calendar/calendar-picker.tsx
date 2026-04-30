@@ -25,11 +25,11 @@ export default function CalendarPicker() {
     const {
         daySelected,
         sessions,
-        mixedMonthlyInfo,
         handleDashToShow,
         handleOpenModal,
         handleDaySelected,
         handleLoading,
+        rawMonthlyData
     } = useDash();
 
     //state
@@ -79,7 +79,7 @@ export default function CalendarPicker() {
     const handleMonthChange = async (month: Date) => {
         setCurrentMonth(month);
         const monthIndex = month.getMonth() + 1;
-        const color = mixedMonthlyInfo.find(m => m.monthInfo.month === monthIndex)?.monthInfo.monthColorInfo;
+        const color = rawMonthlyData.find(m => m.month === monthIndex)?.monthColorInfo;
         if (!color) {
             setThisMonthsColors(JanColors);
         } else {
@@ -93,7 +93,7 @@ export default function CalendarPicker() {
     }
 
     const handleDaySelect = async (arg: Date) => {
-        console.log('Selected day:', arg.toLocaleDateString());
+        //console.log('Selected day:', arg.toLocaleDateString());
         handleLoading(true);
         const sessionsOnThisDay = sessions.filter((session) => {
             const sessionDate = new Date(session.date);
@@ -116,7 +116,7 @@ export default function CalendarPicker() {
     const hydrateObjects = useCallback(async () => {
 
         const month = currentMonth.getMonth() + 1;
-        const color = mixedMonthlyInfo.find(m => m.monthInfo.month === month)?.monthInfo.monthColorInfo;
+        const color = rawMonthlyData.find(m => m.month === month)?.monthColorInfo;
 
         if (!color) {
             setThisMonthsColors(JanColors);
@@ -124,7 +124,7 @@ export default function CalendarPicker() {
             setThisMonthsColors(color);
         }
 
-    }, [currentMonth, mixedMonthlyInfo]);
+    }, [currentMonth, rawMonthlyData]);
 
     const handleIndexOpen = () => {
         setIndexOpen(!indexOpen);

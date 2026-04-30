@@ -1,7 +1,7 @@
 'use client'
 
 import { EditSessionType } from "@/models/types/edit-session";
-import { HobbySessionInfo } from "@/models/types/hobbyData";
+import { IHobbyData } from "@/models/types/hobbyData";
 import { logSessionType } from "@/models/types/log-session";
 import { ISession } from "@/models/types/session";
 import { AttemptCreateSession } from "@/utils/apihelpers/create/attemptToCreateSession";
@@ -14,7 +14,9 @@ import { toast } from "sonner";
 
 export default function LogSessionDatabaseHooks() {
 
-    const handleSessionCall = async ({ closeModal, handleLoading, daySelected, hobbySessionInfo, session, router, sessionsToManipulate, sessionsOTDCopy, handleModalLoading }: { closeModal: () => void, handleLoading: (loading: boolean) => void, daySelected: string, hobbySessionInfo: HobbySessionInfo[], router: AppRouterInstance, sessionsToManipulate: logSessionType[], sessionsOTDCopy: ISession[], session: Session | null, handleModalLoading: (loading: boolean) => void }) => {
+    const handleSessionCall = async ({ closeModal, handleLoading, daySelected, hobbyData, session, router, sessionsToManipulate, sessionsOTDCopy, handleModalLoading }: { closeModal: () => void, handleLoading: (loading: boolean) => void, daySelected: string, hobbyData: IHobbyData[], router: AppRouterInstance, sessionsToManipulate: logSessionType[], sessionsOTDCopy: ISession[], session: Session | null, handleModalLoading: (loading: boolean) => void }) => {
+        
+        handleModalLoading(true);
 
         if (!session?.user?.email) {
             toast.error('You must be logged in to log a session');
@@ -26,15 +28,15 @@ export default function LogSessionDatabaseHooks() {
             return;
         }
 
-        if (!hobbySessionInfo || hobbySessionInfo.length === 0) {
+        if (!hobbyData || hobbyData.length === 0 || !hobbyData[0]) {
             toast.error('No hobbies found. Create a hobby first.');
             return;
         }
 
-        handleModalLoading(true);
-
-        const userId = hobbySessionInfo[0]?.hobbyData?.userId;
-
+        
+        console.log('User ID from hobby data:', hobbyData);
+        const userId = hobbyData[0].userId;
+        
         if (!userId) {
             console.error('❌ No userId found in hobby data');
             toast.error('User ID not found. Please refresh the page.');
@@ -55,8 +57,8 @@ export default function LogSessionDatabaseHooks() {
                 const hobbyTitle = thisSession.session;
                 const time = thisSession.time;
 
-                const specificHobby = hobbySessionInfo.findIndex((objectIndex) =>
-                    objectIndex.hobbyData.title === hobbyTitle
+                const specificHobby = hobbyData.findIndex((objectIndex) =>
+                    objectIndex.title === hobbyTitle
                 );
 
                 if (specificHobby === -1) {
