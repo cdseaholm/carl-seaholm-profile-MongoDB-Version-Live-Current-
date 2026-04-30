@@ -1,97 +1,44 @@
-'use client'
 
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+import '@mantine/charts/styles.css';
+import "@/app/globals.css";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import { Providers } from "./providers";
-import Navbar from '../components/nav/Navbar';
-import FooterNavBar from "@/components/nav/footer/footerNavbar";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import React, { useEffect } from "react";
-import { usePathname } from "next/navigation";
-import { SessionProvider } from "./SessionContext";
-import type { Session as SessionType } from "lucia";
-import { ActualUser } from "@/types/user";
-import Session from "./api/auth/session";
-import { set } from "date-fns";
+import React from "react";
+import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/core';
+import AuthWrapper from "@/components/wrappers/authWrapper";
+import PageWrapper from "@/components/wrappers/pagewrapper";
+import { Toaster } from "sonner";
+import { ModalsProvider } from "@mantine/modals";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  console.log('RootLayout Rendered');
-  const pathname = usePathname();
-  const [sessionState, setSessionState] = React.useState<SessionType | null>(null);
-  const [loading, setLoading] = React.useState(true);
-  const [userState, setUserState] = React.useState<ActualUser | null>(null);
-
-  useEffect(() => {
-      document.body.style.overflow = 'hidden';
-      return () => {
-          document.body.style.overflow = 'unset';
-      };
-  }, []);
-
-    useEffect(() => {
-      if (sessionState !== null) {
-        console.log('Session:', sessionState);
-        return;
-      }
-
-      const fetchSession = async () => {
-        console.log('Fetching session...');
-          try {
-              const { user, session } = await Session();
-              console.log('Session:', session, user);
-              setSessionState(session);
-              setUserState(user);
-          } catch (error) {
-              console.error("Failed to fetch session:", error);
-              // handle error appropriately
-          } finally {
-              setLoading(false);
-          }
-      };
-      fetchSession();
-    }, [setSessionState, setUserState, sessionState]);
-
-    const logout = () => {
-      setSessionState(null);
-      setUserState(null);
-    };
-
-
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
 
   return (
-    <html lang="en">
-      <SessionProvider session={sessionState} user={userState} loading={loading} logout={logout} setSession={setSessionState} setUser={setUserState}>
-      {pathname !== '/demo_303' &&
-      <body className={inter.className}>
-        <div className="first">
-          <div className="h-screen">
-          {loading ? (
-            <div>Loading...</div>
-          ) : (
-            
-              <Providers>
-                <Navbar />
-                <main>
-                  {children}
-                </main>
-                <FooterNavBar />
-              </Providers>
-          )}
-          </div>
-        </div>
+    <html lang="en" className={inter.className} {...mantineHtmlProps} suppressHydrationWarning>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <ColorSchemeScript />
+      </head>
+      <body className="overflow-hidden">
+        <AuthWrapper>
+          <MantineProvider>
+            <ModalsProvider>
+              <PageWrapper>
+                {children}
+              </PageWrapper>
+            </ModalsProvider>
+          </MantineProvider>
+          <Toaster />
+        </AuthWrapper>
       </body>
-      }
-
-      {pathname === '/demo_303' &&
-          <body>
-            <main className="min-h-screen bg-gray-800">
-              {children}
-            </main>
-          </body>
-        }
-      </SessionProvider>
     </html>
   );
 }
+
+//tooke out ModalWrapper as it was causing issues with modals not working properly implemented ModalsProvider directly here

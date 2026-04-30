@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 const useHeightMediaQuery = (height: number) => {
     const [targetReached, setTargetReached] = useState(false);
@@ -26,7 +26,7 @@ const useHeightMediaQuery = (height: number) => {
           } else {
             return () => media.removeEventListener("change", updateTarget);
           }
-        }, [updateTarget, height]);
+        }, [height, updateTarget]);
 
     return targetReached;
 

@@ -1,0 +1,300 @@
+'use client'
+
+import { DatePicker, DatePickerProps } from '@mantine/dates';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Tooltip } from '@mantine/core';
+import { CalendarColors, JanColors } from '@/models/types/calColorInfo';
+import { ISession } from '@/models/types/session';
+import { useWindowSizes } from '@/context/width-height-store';
+
+export default function CalendarCore({
+    handleDaySelect,
+    monthColors,
+    onMonthChange,
+    selectedDay,
+    sessions
+}: {
+    handleDaySelect: (arg: Date) => void;
+    monthColors: CalendarColors;
+    onMonthChange?: (month: Date) => void;
+    selectedDay: string;
+    sessions: ISession[];
+}) {
+
+    const { width } = useWindowSizes();
+    const [displayedMonth, setDisplayedMonth] = useState<Date>(new Date());
+    let thisMonthsColors = monthColors as CalendarColors;
+    if (!thisMonthsColors) {
+        thisMonthsColors = JanColors as CalendarColors;
+    }
+
+    const sessionsByDate = useMemo(() => {
+        return sessions.reduce((acc: Record<string, number>, session) => {
+            const sessionDate = new Date(session.date).toLocaleDateString();
+            acc[sessionDate] = (acc[sessionDate] || 0) + 1;
+            return acc;
+        }, {});
+    }, [sessions]);
+
+    //should add a loading state for any month change to avoid flicker
+
+    useEffect(() => {
+        if (onMonthChange) {
+            onMonthChange(displayedMonth);
+        }
+    }, [displayedMonth, onMonthChange]);
+
+    const DayRenderer: DatePickerProps['renderDay'] = useMemo(() => {
+        const renderer = (date: Date) => {
+            const day = date.getDate();
+            const currentDateKey = date.toLocaleDateString();
+            const sessionCount = sessionsByDate[currentDateKey] || 0;
+
+            const today = new Date();
+            const isToday = date.toLocaleDateString() === today.toLocaleDateString();
+            const isSelected = selectedDay && date.toLocaleDateString() === selectedDay;
+            const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+            const currentMonth = today.getMonth();
+            const isOutsideMonth = date.getMonth() !== currentMonth || date.getFullYear() !== today.getFullYear();
+
+            const sessionColor =
+                sessionCount === 1
+                    ? { color: '#ff3a3aff', colorName: 'Red' }
+                    : sessionCount === 2
+                        ? { color: '#ffa500ff', colorName: 'Orange' }
+                        : sessionCount === 3
+                            ? { color: '#ffff00ff', colorName: 'Yellow' }
+                            : sessionCount === 4
+                                ? { color: '#0000ffff', colorName: 'Blue' }
+                                : sessionCount >= 5
+                                    ? { color: '#008000ff', colorName: 'Green' }
+                                    : null;
+
+            const baseStyles = {
+                width: '100%',
+                height: '100%',
+                display: 'flex' as const,
+                alignItems: 'center' as const,
+                justifyContent: 'center' as const,
+                transition: 'all 0.2s ease',
+                fontSize: '0.8rem',
+                borderRadius: '0.25rem',
+                minHeight: '1.75rem',
+                maxHeight: '3rem',
+                maxWidth: width > 640 ? '98%' : '100%',
+                padding: '2px',
+            };
+
+            // Get the appropriate day styles based on state
+            const getDayStyles = () => {
+                // Handle special combinations first
+                if (isToday && isWeekend) {
+                    return {
+                        ...baseStyles,
+                        backgroundColor: thisMonthsColors.todayWeekend.background,
+                        color: thisMonthsColors.todayWeekend.text,
+                        border: `2px solid ${thisMonthsColors.todayWeekend.border}`,
+                        boxShadow: thisMonthsColors.todayWeekend.shadow,
+                        fontWeight: 'bold' as const,
+                    };
+                } else if (isWeekend && isOutsideMonth) {
+                    return {
+                        ...baseStyles,
+                        backgroundColor: thisMonthsColors.outsideWeekend.background,
+                        color: thisMonthsColors.outsideWeekend.text,
+                        border: `1px solid ${thisMonthsColors.outsideWeekend.border}`,
+                        opacity: thisMonthsColors.outsideWeekend.opacity,
+                    };
+                } else if (isToday && !isSelected) {
+                    return {
+                        ...baseStyles,
+                        backgroundColor: `${thisMonthsColors.regularDay.background}`,
+                        color: thisMonthsColors.regularDay.text,
+                        fontWeight: 'bold' as const,
+                        border: `2px solid ${thisMonthsColors.regularDay.text}`,
+                        boxShadow: thisMonthsColors.today.shadow,
+                    };
+                } else if (isSelected) {
+                    return {
+                        ...baseStyles,
+                        backgroundColor: thisMonthsColors.today.background,
+                        color: thisMonthsColors.today.text,
+                        border: `2px solid ${thisMonthsColors.today.border}`,
+                        fontWeight: 'bold' as const,
+                    };
+                } else if (isOutsideMonth) {
+                    return {
+                        ...baseStyles,
+                        backgroundColor: thisMonthsColors.outsideMonth.background,
+                        color: thisMonthsColors.outsideMonth.text,
+                        border: `1px solid ${thisMonthsColors.outsideMonth.border}`,
+                        opacity: thisMonthsColors.outsideMonth.opacity,
+                    };
+                } else if (isWeekend) {
+                    return {
+                        ...baseStyles,
+                        backgroundColor: thisMonthsColors.weekend.background,
+                        color: thisMonthsColors.weekend.text,
+                        border: `1px solid ${thisMonthsColors.weekend.border}`,
+                    };
+                } else {
+                    return {
+                        ...baseStyles,
+                        backgroundColor: thisMonthsColors.regularDay.background,
+                        color: thisMonthsColors.regularDay.text,
+                        border: `1px solid ${thisMonthsColors.regularDay.border}`,
+                    };
+                }
+            };
+
+
+            return (
+                <div
+                    style={getDayStyles()}
+                    onMouseEnter={(e) => {
+                        if (!isOutsideMonth) {
+                            const target = e.currentTarget;
+                            if (isSelected) {
+                                target.style.backgroundColor = thisMonthsColors.today.background;
+                            } else if (isToday && !isSelected) {
+                                target.style.backgroundColor = thisMonthsColors.hover.regular;
+                            } else if (isWeekend) {
+                                target.style.backgroundColor = thisMonthsColors.hover.weekend;
+                            } else {
+                                target.style.backgroundColor = thisMonthsColors.hover.regular;
+                            }
+                        } else {
+                            const target = e.currentTarget;
+                            target.style.backgroundColor = `${thisMonthsColors.regularDay.text}20`;
+                        }
+                    }}
+                    onMouseLeave={(e) => {
+                        const target = e.currentTarget;
+                        const styles = getDayStyles();
+                        target.style.backgroundColor = styles.backgroundColor as string;
+                    }}
+                >
+                    {sessionCount > 0 && sessionColor && (
+                        <Tooltip label={`${sessionColor.colorName}: ${sessionCount} session${sessionCount > 1 ? 's' : ''} logged`} withArrow position="top" color="dark">
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    top: '2px',
+                                    right: '2px',
+                                    width: width > 640 ? '1.2vw' : '12px',
+                                    height: width > 640 ? '1.2vw' : '12px',
+                                    borderRadius: '50%',
+                                    border: '1px solid #000',
+                                    backgroundColor: sessionColor.color as string,
+                                    zIndex: 1,
+                                }}
+                            />
+                        </Tooltip>
+                    )}
+                    <div>{day}</div>
+                </div>
+            );
+        };
+
+        renderer.displayName = 'DayRenderer';
+        return renderer;
+    }, [sessionsByDate, selectedDay, width, thisMonthsColors]);
+
+    return (
+        <div className='flex flex-col justify-start items-center w-full h-full max-h-full overflow-hidden'>
+            <DatePicker
+                renderDay={DayRenderer}
+                onChange={(date) => {
+                    if (date) {
+                        handleDaySelect(date);
+                    }
+                }}
+                onMonthSelect={(month) => {
+                    if (month) {
+                        setDisplayedMonth(month);
+                    }
+                }}
+                date={displayedMonth}
+                onDateChange={setDisplayedMonth}
+                value={new Date(selectedDay) || new Date()}
+                styles={{
+                    // Calendar header with controls
+                    calendarHeader: {
+                        width: '100%',
+                        padding: '0.25rem 0.5rem',
+                        fontSize: '0.9rem',
+                        marginBottom: '0.25rem',
+                        color: thisMonthsColors.textOnMonth,
+                        display: 'flex',
+                        alignItems: 'center',
+                    },
+                    calendarHeaderLevel: {
+                        fontSize: '1rem',
+                        fontWeight: '600',
+                        display: 'flex',
+                        alignItems: 'center',
+                        flex: '1',
+                        justifyContent: 'center',
+                        margin: '0',
+                        padding: '0',
+                    },
+                    calendarHeaderControl: {
+                        width: '1.75rem',
+                        height: '1.75rem',
+                        color: thisMonthsColors.textOnMonth,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    },
+                    // Month table - this is the main calendar grid
+                    month: {
+                        width: '100%',
+                        fontSize: '0.8rem',
+                        tableLayout: 'fixed',
+                        height: '100%',
+                    },
+                    // Weekday headers
+                    weekdaysRow: {
+                        height: '2rem',
+                        color: thisMonthsColors.textOnMonth,
+                        backgroundColor: thisMonthsColors.monthColor,
+                        borderBottom: thisMonthsColors.weekend.border,
+                    },
+                    weekday: {
+                        fontSize: '0.7rem',
+                        fontWeight: '500',
+                        textAlign: 'center',
+                        padding: '0.25rem 0',
+                        width: 'calc(100% / 7)',
+                        border: thisMonthsColors.weekend.border,
+                        height: '100%',
+                        color: thisMonthsColors.weekend.text,
+                        backgroundColor: thisMonthsColors.weekend.background,
+                    },
+                    // Month rows and cells
+                    monthRow: {
+                        height: '3rem'
+                    },
+                    monthCell: {
+                        width: 'calc(100% / 7)',
+                        height: '2.25rem',
+                        textAlign: 'center',
+                        verticalAlign: 'middle',
+                        padding: '0',
+                        position: 'relative'
+                    },
+                    // Day buttons - minimal styling since DayRenderer handles everything
+                    day: {
+                        width: '100%',
+                        height: '100%',
+                        border: 'none',
+                        backgroundColor: 'transparent',
+                        padding: '0',
+                        margin: '0',
+                        cursor: 'pointer',
+                    },
+                }}
+            />
+        </div>
+    )
+}
